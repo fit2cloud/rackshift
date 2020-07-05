@@ -5,6 +5,7 @@ import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.RoleMapper;
 import io.rackshift.mybatis.mapper.UserMapper;
 import io.rackshift.mybatis.mapper.UserRoleMapper;
+import io.rackshift.utils.CodingUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -51,5 +52,11 @@ public class UserService {
             return null;
         }
         return getUserDTO(users.get(0).getId());
+    }
+
+    public boolean checkPassword(String userName, String password) {
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andIdEqualTo(userName).andPasswordEqualTo(CodingUtil.md5(password));
+        return userMapper.countByExample(userExample) > 0;
     }
 }

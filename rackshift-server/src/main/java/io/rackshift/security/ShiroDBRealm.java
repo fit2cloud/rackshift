@@ -57,6 +57,11 @@ public class ShiroDBRealm extends AuthorizingRealm {
                 RSException.throwExceptions("");
             }
         }
+        if (!"local".equals(runMode)) {
+            if (!userService.checkPassword(userName, password)) {
+                RSException.throwExceptions("i18n_passowrd_wrong");
+            }
+        }
 
         SecurityUtils.getSubject().getSession().setAttribute("user", user);
         return new SimpleAuthenticationInfo(userName, password, getName());
