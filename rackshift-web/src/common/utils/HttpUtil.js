@@ -1,18 +1,16 @@
 import axios from 'axios'
-import Vue from 'vue'
-import {MessageBox} from 'element-ui'
+import {MessageBox} from 'element-ui';
 
-Vue.use(MessageBox);
 const HttpUtil = {
     get: function (url, params, resolve, reject) {
         axios.get(url, params).then((res) => {
             if (res.data.success) {
-                resolve(res.data.data);
+                resolve(res.data);
             } else {
                 if (reject) {
                     reject(res.data.message);
                 } else {
-                    Vue.$alert(res.data.message);
+                    MessageBox.alert(res.data.message);
                 }
             }
         }).catch((e) => {
@@ -23,12 +21,12 @@ const HttpUtil = {
     post: (url, data, resolve, reject) => {
         axios.post(url, data).then((res) => {
                 if (res.data.success) {
-                    resolve(res.data.data);
+                    resolve(res.data);
                 } else {
                     if (reject) {
                         reject(res.data.message);
                     } else {
-                        Vue.$alert(res.data.message);
+                        MessageBox.alert(res.data.message);
                     }
                 }
             }

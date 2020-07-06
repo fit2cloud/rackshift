@@ -6,9 +6,10 @@ import io.rackshift.model.ResultHolder;
 import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,16 +26,35 @@ public class LoginController {
         }
         AuthenticationToken authenticationToken = new UsernamePasswordToken(userName, password);
         Subject subject = SecurityUtils.getSubject();
-        subject.login(authenticationToken);
-        if (subject.isAuthenticated()) {
-            return ResultHolder.success(subject.getSession().getAttribute("user"));
-        } else {
-            return ResultHolder.error(Translator.get("login_fail"));
+        String msg = null;
+        try {
+            subject.login(authenticationToken);
+            if (subject.isAuthenticated()) {
+                return ResultHolder.success(subject.getSession().getAttribute("user"));
+            } else {
+                return ResultHolder.error(Translator.get("login_fail"));
+            }
+        } catch (ExcessiveAttemptsException e) {
+            msg = Translator.get("excessive_attempts");
+        } catch (LockedAccountException e) {
+            msg = Translator.get("user_locked");
+        } catch (DisabledAccountException e) {
+            msg = Translator.get("user_has_been_disabled");
+        } catch (ExpiredCredentialsException e) {
+            msg = Translator.get("user_expires");
+        } catch (AuthenticationException e) {
+            msg = e.getMessage();
+        } catch (UnauthorizedException e) {
+            msg = Translator.get("not_authorized") + e.getMessage();
         }
+        return ResultHolder.error(msg);
     }
 
-    @RequestMapping("/hello")
-    public String hello() {
-        return "hello";
+    @RequestMapping("/isLogin")
+    public ResultHolder isLogin() {
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            return ResultHolder.success(LocaleContextHolder.getLocale());
+        }
+        return ResultHolder.error("");
     }
 }
