@@ -63,29 +63,30 @@
                     @current-change="handlePageChange"
             ></el-pagination>
         </div>
-        <el-dialog
-                :title="$t('edit_role')"
-                :visible.sync="editDialogVisible"
-                width="30%"
+
+        <el-drawer
+                :title="editType == 'edit' ? '编辑用户' : '新增用户'"
+                :visible.sync="drawer"
+                direction="rtl"
                 :before-close="handleClose">
-            <el-form>
-                <el-form-item :label="$t('name')">
-                    <el-input v-model="editRole.name"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('desc')">
-                    <el-input v-model="editRole.description"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('type')">
-                    <el-input v-model="editRole.type"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-    <el-button @click="editDialogVisible = false">{{$t('cancel')}}</el-button>
-    <el-button type="primary" @click="confirmEdit">{{$t('confirm')}}</el-button>
-            </span>
-        </el-dialog>
-
-
+            <div class="demo-drawer__content">
+                <el-form :model="form">
+                    <el-form-item label="活动名称" :label-width="formLabelWidth">
+                        <el-input v-model="form.name" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="活动区域" :label-width="formLabelWidth">
+                        <el-select v-model="form.region" placeholder="请选择活动区域">
+                            <el-option label="区域一" value="shanghai"></el-option>
+                            <el-option label="区域二" value="beijing"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <div class="demo-drawer__footer">
+                    <el-button @click="cancelForm">取 消</el-button>
+                    <el-button type="primary" @click="$refs.drawer.closeDrawer()" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
+                </div>
+            </div>
+        </el-drawer>
     </div>
 </template>
 
@@ -107,8 +108,10 @@
                 multipleSelection: [],
                 delList: [],
                 editVisible: false,
+                formLabelWidth: '80px',
                 pageTotal: 0,
                 form: {},
+                loading:false,
                 idx: -1,
                 id: -1,
                 columns: [
@@ -125,7 +128,7 @@
                         prop: "email"
                     },
                 ],
-                editDialogVisible: false,
+                drawer: false,
                 editType: 'edit',
                 editRole: {
                     name: null,
@@ -144,25 +147,28 @@
                     this.tableData = res.data.listObject;
                     this.pageTotal = res.data.itemCount;
                 });
-
             },
             handleClose() {
-
+                this.drawer = false;
+            },
+            cancelForm() {
+                this.loading = false;
+                this.drawer = false;
             },
             add() {
-                this.editDialogVisible = true;
+                this.drawer = true;
                 this.editType = 'add';
             },
             confirmEdit() {
                 if (this.editType == 'edit') {
                     HttpUtil.post("/user/update", this.editRole, (res) => {
-                        this.editDialogVisible = false;
+                        this.drawer = false;
                         this.$message.success('编辑成功');
                         this.getData();
                     })
                 } else {
                     HttpUtil.post("/user/add", this.editRole, (res) => {
-                        this.editDialogVisible = false;
+                        this.drawer = false;
                         this.$message.success('新增成功');
                         this.getData();
                     })
@@ -189,7 +195,7 @@
             // 编辑操作
             handleEdit(row, type) {
                 if (type == 'edit') {
-                    this.editDialogVisible = true;
+                    this.drawer = true;
                     this.editType = type;
                     this.editRole = JSON.parse(JSON.stringify(row));
                 } else if (type == 'del') {
@@ -202,7 +208,7 @@
                         });
                     })
                 } else {
-                    this.editDialogVisible = true;
+                    this.drawer = true;
                     this.editType = type;
                     this.editRole = {};
                 }

@@ -17,6 +17,8 @@
             <result property="name" column="r_name"></result>
             <result property="description" column="r_description"></result>
             <result property="type" column="r_type"></result>
+            <result column="r_createTime" jdbcType="BIGINT" property="createTime"/>
+            <result column="r_updateTime" jdbcType="BIGINT" property="updateTime"/>
         </collection>
     </resultMap>
     <select id="list" parameterType="java.util.Map" resultMap="BaseResultMap">
@@ -25,7 +27,8 @@
         r.id r_id,
         r.name r_name,
         r.description r_description,
-        r.type r_type
+        r.create_time r_createTime,
+        r.update_time r_updateTime
         from user u
         left join user_role ur on u.id = ur.user_id
         left join role r on ur.role_id = r.id
