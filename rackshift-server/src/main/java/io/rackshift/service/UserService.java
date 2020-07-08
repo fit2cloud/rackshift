@@ -1,22 +1,32 @@
 package io.rackshift.service;
 
+import io.rackshift.constants.UserStatus;
+import io.rackshift.model.RSException;
 import io.rackshift.model.UserDTO;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.RoleMapper;
 import io.rackshift.mybatis.mapper.UserMapper;
 import io.rackshift.mybatis.mapper.UserRoleMapper;
+import io.rackshift.mybatis.mapper.ext.ExtUserMapper;
 import io.rackshift.utils.CodingUtil;
+import io.rackshift.utils.Translator;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private ExtUserMapper extUserMapper;
     @Resource
     private RoleMapper roleMapper;
     @Resource
@@ -26,6 +36,9 @@ public class UserService {
         User user = userMapper.selectByPrimaryKey(userName);
         if (user == null) {
             return null;
+        }
+        if (StringUtils.equals(UserStatus.DISABLED, user.getStatus())) {
+            RSException.throwExceptions(Translator.get("user has bean deleted!"));
         }
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.createCriteria().andUserIdEqualTo(userName);
@@ -58,5 +71,68 @@ public class UserService {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andIdEqualTo(userName).andPasswordEqualTo(CodingUtil.md5(password));
         return userMapper.countByExample(userExample) > 0;
+    }
+
+    public List<UserDTO> list(UserDTO queryVO) {
+        Map params = buidlExample(queryVO);
+        return extUserMapper.list(params);
+    }
+
+    private Map buidlExample(UserDTO queryVO) {
+        Map params = new HashMap<String, Object>();
+        if (StringUtils.isNotBlank(queryVO.getId())) {
+            params.put("id", queryVO.getId());
+        }
+        if (StringUtils.isNotBlank(queryVO.getEmail())) {
+            params.put("id", queryVO.getEmail());
+        }
+        if (StringUtils.isNotBlank(queryVO.getPhone())) {
+            params.put("id", queryVO.getPhone());
+        }
+        return params;
+    }
+
+    public boolean add(UserDTO queryVO) {
+        queryVO.setId(UUID.randomUUID().toString());
+        User user = new User();
+        BeanUtils.copyProperties(queryVO, user);
+        userMapper.insertSelective(user);
+        for (Role role : queryVO.getRoles()) {
+            UserRole userRole = new UserRole();
+            userRole.setId(UUID.randomUUID().toString());
+            userRole.setRoleId(role.getId());
+            userRole.setUserId(queryVO.getId());
+            userRoleMapper.insertSelective(userRole);
+        }
+        return true;
+    }
+
+    public boolean update(UserDTO queryVO) {
+        User user = new User();
+        BeanUtils.copyProperties(queryVO, user);
+        userMapper.updateByPrimaryKey(user);
+        UserRoleExample userRoleExample = new UserRoleExample();
+        userRoleExample.createCriteria().andUserIdEqualTo(queryVO.getId());
+        userRoleMapper.deleteByExample(userRoleExample);
+
+        for (Role role : queryVO.getRoles()) {
+            UserRole userRole = new UserRole();
+            userRole.setId(UUID.randomUUID().toString());
+            userRole.setRoleId(role.getId());
+            userRole.setUserId(queryVO.getId());
+            userRoleMapper.insertSelective(userRole);
+        }
+        return true;
+    }
+
+    public boolean del(String id) {
+        if (id.equalsIgnoreCase("admin")) {
+            return true;
+        }
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andIdEqualTo(id);
+        User user = new User();
+        user.setStatus(UserStatus.DISABLED);
+        return userMapper.updateByExample(user, userExample) > 0;
     }
 }

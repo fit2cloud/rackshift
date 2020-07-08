@@ -1,12 +1,16 @@
 package io.rackshift.config;
 
 import com.github.pagehelper.PageInterceptor;
+import io.rackshift.interceptor.MybatisInterceptor;
+import io.rackshift.utils.MybatisInterceptorConfig;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 @Configuration
@@ -26,5 +30,17 @@ public class MybatisConfig {
         properties.setProperty("pageSizeZero", "true");
         pageInterceptor.setProperties(properties);
         return pageInterceptor;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public MybatisInterceptor dbInterceptor() {
+        MybatisInterceptor interceptor = new MybatisInterceptor();
+        List<MybatisInterceptorConfig> configList = new ArrayList<>();
+//        configList.add(new MybatisInterceptorConfig(FileContent.class, "file", CompressUtils.class, "zip", "unzip"));
+//        configList.add(new MybatisInterceptorConfig(ApiTestReportDetail.class, "content", CompressUtils.class, "compress", "decompress"));
+//        configList.add(new MybatisInterceptorConfig(TestResource.class, "configuration"));
+        interceptor.setInterceptorConfigList(configList);
+        return interceptor;
     }
 }

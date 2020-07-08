@@ -1,0 +1,14 @@
+export default {
+  "batch_del": "批量删除",
+  "add": "添加啊啊",
+  "opt": "操作",
+  "edit": "编辑",
+  "edit_role": "编辑角色",
+  "del": "删除",
+  "name": "名称",
+  "desc": "描述",
+  "type": "类型",
+  "cancel": "取消",
+  "confirm": "确定",
+  "update_time": "更新时间",
+};

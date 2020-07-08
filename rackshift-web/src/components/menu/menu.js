@@ -8,7 +8,7 @@ export default {
             childs: [
                 {
                     "name": "使用向导",
-                    "router": "/wizard",
+                    "router": "/Wizard",
                     "requireRole": "user,admin",
                     "order" : "1"
                 }
@@ -26,12 +26,7 @@ export default {
                     "requireRole": "user,admin",
                     "order" : "1",
                 },
-                {
-                    "name": "插件",
-                    "router": "/Plugin",
-                    "requireRole": "user,admin",
-                    "order" : "2",
-                },
+
                 {
                     "name": "镜像",
                     "router": "/Image",
@@ -118,6 +113,12 @@ export default {
                     "router": "/Endpoint",
                     "requireRole": "admin",
                     "order" : "5",
+                },
+                {
+                    "name": "插件",
+                    "router": "/Plugin",
+                    "requireRole": "user,admin",
+                    "order" : "6",
                 },
             ]
         }

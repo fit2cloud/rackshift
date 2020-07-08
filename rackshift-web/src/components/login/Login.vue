@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="login-container">
         <el-row type="flex">
 
             <el-col :span="12">
@@ -62,7 +62,7 @@
         color: #151515;
     }
 
-    .container {
+    .login-container {
         min-width: 800px;
         max-width: 1440px;
         height: 560px;
@@ -81,7 +81,6 @@
         /*border-color: #8B479B;*/
         /*background-color: #8B479B;*/
     }
-
 
     .border {
         height: 2px;
@@ -167,7 +166,7 @@
                             password: this.ruleForm.password
                         }, () => {
                             localStorage.setItem('login', true);
-                            this.$router.push("index");
+                            window.location.href = "/";
                         }, (msg) => {
                             this.msg = msg;
                         })

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.mybatis.mapper.ext.ExtUserMapper">
+    <resultMap id="BaseResultMap" type="io.rackshift.model.UserDTO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+        <result column="language" jdbcType="VARCHAR" property="language"/>
+        <result column="last_workspace_id" jdbcType="VARCHAR" property="lastWorkspaceId"/>
+        <result column="last_organization_id" jdbcType="VARCHAR" property="lastOrganizationId"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <collection property="roles" ofType="io.rackshift.mybatis.domain.Role">
+            <id property="id" column="r_id"></id>
+            <result property="name" column="r_name"></result>
+            <result property="description" column="r_description"></result>
+            <result property="type" column="r_type"></result>
+        </collection>
+    </resultMap>
+    <select id="list" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        u.*,
+        r.id r_id,
+        r.name r_name,
+        r.description r_description,
+        r.type r_type
+        from user u
+        left join user_role ur on u.id = ur.user_id
+        left join role r on ur.role_id = r.id
+        where
+        1=1
+        <if test="id != null and id != ''">'
+            and u.id like concat('%', #{id}, '%')
+        </if>
+        <if test="name != null and name != ''">
+            and u.name like concat('%', #{name}, '%')
+        </if>
+        <if test="phone != null and phone != ''">
+            and u.phone like concat('%', #{phone}, '%')
+        </if>
+        <if test="status != null and status != ''">
+            and u.status = #{status}
+        </if>
+        <if test="status == null">
+            and u.status = 1
+        </if>
+    </select>
+</mapper>
