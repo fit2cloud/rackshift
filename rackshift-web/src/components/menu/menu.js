@@ -22,9 +22,9 @@ export default {
             childs: [
                 {
                     "name": "裸金属",
-                    "router": "/BareMetal",
+                    "router": "/bare-metal",
                     "requireRole": "user,admin",
-                    "order" : "1",
+                    "order": "1",
                 },
 
                 {
@@ -94,14 +94,14 @@ export default {
                 },
                 {
                     "name": "用户",
-                    "router": "/User",
+                    "router": "/user",
                     "requireRole": "admin",
-                    "order" : "2",
+                    "order": "2",
                 }, {
                     "name": "角色",
-                    "router": "/Role",
+                    "router": "/role",
                     "requireRole": "admin",
-                    "order" : "3",
+                    "order": "3",
                 },
                 {
                     "name": "执行记录",

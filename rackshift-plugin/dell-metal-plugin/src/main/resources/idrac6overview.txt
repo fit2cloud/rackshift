@@ -1,0 +1,278 @@
+<root><pwState>1</pwState>
+<sysDesc>PowerEdge R910</sysDesc>
+<sysRev>II</sysRev>
+<hostName>DC-ESXI71</hostName>
+<osName></osName>
+<osVersion></osVersion>
+<svcTag>17JBYX1</svcTag>
+<biosVer>2.8.2</biosVer>
+<fwVersion>1.95 (Build 05)</fwVersion>
+<LCCfwVersion>1.6.0.73</LCCfwVersion>
+<netConfig><v4DHCPServers>0</v4DHCPServers>
+<v4DNS1>0.0.0.0</v4DNS1>
+<v4DNS2>0.0.0.0</v4DNS2>
+<v6DHCPServers>0</v6DHCPServers>
+<v6DNS1>::</v6DNS1>
+<v6DNS2>::</v6DNS2>
+<hostname></hostname>
+<netMode>0</netMode>
+<dnsEnabled>0</dnsEnabled>
+<dhcpForDNSDomain>0</dhcpForDNSDomain>
+<dnsDomain></dnsDomain>
+<vlan>0</vlan>
+<vlanID>1</vlanID>
+<vlanPriority>0</vlanPriority>
+<NicEtherVMac3>90:B1:1C:48:7E:79</NicEtherVMac3>
+<NicEtherVMac2>90:B1:1C:48:7E:77</NicEtherVMac2>
+<NicEtherVMac2>00:0A:F7:18:C2:8E</NicEtherVMac2>
+<NicEtherVMac2>00:0A:F7:18:C2:8C</NicEtherVMac2>
+<NicEtherVMac2>00:0A:F7:18:C2:8A</NicEtherVMac2>
+<NicEtherVMac2>00:0A:F7:18:C2:88</NicEtherVMac2>
+<NicEtherVMac1>90:B1:1C:48:7E:75</NicEtherVMac1>
+<NicEtherMac1>90:b1:1c:48:7e:75</NicEtherMac1>
+<NiciSCSIMac1>90:b1:1c:48:7e:76</NiciSCSIMac1>
+<NicEtherMac2>90:b1:1c:48:7e:77</NicEtherMac2>
+<NiciSCSIMac2>90:b1:1c:48:7e:78</NiciSCSIMac2>
+<NicEtherMac3>90:b1:1c:48:7e:79</NicEtherMac3>
+<NiciSCSIMac3>90:b1:1c:48:7e:7a</NiciSCSIMac3>
+<NicEtherMac4>90:b1:1c:48:7e:7b</NicEtherMac4>
+<NiciSCSIMac4>90:b1:1c:48:7e:7c</NiciSCSIMac4>
+<ifConfig><ifName>iDRAC</ifName>
+<macAddr>90:B1:1C:44:D0:6B</macAddr>
+<netEnabled>1</netEnabled>
+<v4Enabled>1</v4Enabled>
+<v4DHCPEnabled>0</v4DHCPEnabled>
+<v4IPAddr>10.132.30.171</v4IPAddr>
+<v4Gateway>10.132.30.3</v4Gateway>
+<v4NetMask>255.255.255.0</v4NetMask>
+<autoNeg>1</autoNeg>
+<netSpeed>1</netSpeed>
+<duplex>0</duplex>
+<v6Enabled>0</v6Enabled>
+<v6DHCPEnabled>1</v6DHCPEnabled>
+<ipsecEnabled>0</ipsecEnabled>
+<v6Prefix>64</v6Prefix>
+<nicMTU>1500</nicMTU>
+<v6Addr>::</v6Addr>
+<v6Gateway>::</v6Gateway>
+<v6LinkLocal>::</v6LinkLocal>
+</ifConfig></netConfig><powerOn></powerOn><sensortype><sensorid>41</sensorid>
+<discreteSensorList><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board </name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>storage </name>
+<reading>Good</reading>
+</sensor></discreteSensorList></sensortype><sensortype><sensorid>256</sensorid>
+<discreteSensorList><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board Fan redundancydancy</name>
+<reading>Full</reading>
+</sensor></discreteSensorList></sensortype><sensortype><sensorid>4</sensorid>
+<thresholdSensorList><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 1</name>
+<reading>1440</reading>
+<units>RPM</units>
+<minWarning>N/A</minWarning>
+<maxWarning>N/A</maxWarning>
+<minFailure>720</minFailure>
+<maxFailure>N/A</maxFailure>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 2</name>
+<reading>1320</reading>
+<units>RPM</units>
+<minWarning>N/A</minWarning>
+<maxWarning>N/A</maxWarning>
+<minFailure>720</minFailure>
+<maxFailure>N/A</maxFailure>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 3</name>
+<reading>1440</reading>
+<units>RPM</units>
+<minWarning>N/A</minWarning>
+<maxWarning>N/A</maxWarning>
+<minFailure>720</minFailure>
+<maxFailure>N/A</maxFailure>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 4</name>
+<reading>1440</reading>
+<units>RPM</units>
+<minWarning>N/A</minWarning>
+<maxWarning>N/A</maxWarning>
+<minFailure>720</minFailure>
+<maxFailure>N/A</maxFailure>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 5</name>
+<reading>1320</reading>
+<units>RPM</units>
+<minWarning>N/A</minWarning>
+<maxWarning>N/A</maxWarning>
+<minFailure>720</minFailure>
+<maxFailure>N/A</maxFailure>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 6</name>
+<reading>1320</reading>
+<units>RPM</units>
+<minWarning>N/A</minWarning>
+<maxWarning>N/A</maxWarning>
+<minFailure>720</minFailure>
+<maxFailure>N/A</maxFailure>
+</sensor></thresholdSensorList></sensortype><sensortype><sensorid>5</sensorid>
+<discreteSensorList><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board Intrusion</name>
+<reading>Chassis is closed</reading>
+</sensor></discreteSensorList></sensortype><sensortype><sensorid>257</sensorid>
+<discreteSensorList><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board PS redundancydancy</name>
+<reading>Full</reading>
+</sensor></discreteSensorList></sensortype><sensortype><sensorid>8</sensorid>
+<psSensorList><sensor><sensorStatus>Normal</sensorStatus>
+<location>PS 1 </location>
+<inputWattage>1400</inputWattage>
+<fwVersion>01.01.03</fwVersion>
+<maxWattage>1100</maxWattage>
+<type>AC</type>
+<onlineStatus>Present</onlineStatus>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<location>PS 2 </location>
+<inputWattage>1400</inputWattage>
+<fwVersion>01.01.03</fwVersion>
+<maxWattage>1100</maxWattage>
+<type>AC</type>
+<onlineStatus>Present</onlineStatus>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<location>PS 3 </location>
+<inputWattage>1400</inputWattage>
+<fwVersion>01.01.03</fwVersion>
+<maxWattage>1100</maxWattage>
+<type>AC</type>
+<onlineStatus>Present</onlineStatus>
+</sensor><sensor><sensorStatus>Critical</sensorStatus>
+<location>PS 4 </location>
+<inputWattage>0</inputWattage>
+<fwVersion></fwVersion>
+<maxWattage>0</maxWattage>
+<type>AC</type>
+<onlineStatus>Present | Input lost</onlineStatus>
+</sensor></psSensorList></sensortype><sensortype><sensorid>258</sensorid>
+<discreteSensorList><sensor><sensorStatus></sensorStatus>
+<name>Redundancy Status</name>
+<reading>Disabled</reading>
+</sensor></discreteSensorList></sensortype><sensortype><sensorid>21</sensorid>
+<remsSensorList><sensor><sensorStatus>Normal</sensorStatus>
+<location>VFlash</location>
+<onlineStatus>Absent</onlineStatus>
+</sensor></remsSensorList></sensortype><sensortype><sensorid>1</sensorid>
+<thresholdSensorList><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board ambient</name>
+<reading>19</reading>
+<units>C</units>
+<minWarning>8</minWarning>
+<maxWarning>42</maxWarning>
+<minFailure>3</minFailure>
+<maxFailure>47</maxFailure>
+</sensor></thresholdSensorList></sensortype><sensortype><sensorid>2</sensorid>
+<discreteSensorList><sensor><sensorStatus>Normal</sensorStatus>
+<name>CPU1 VCORE PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>CPU2 VCORE PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>CPU3 VCORE</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>CPU4 VCORE</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>CPU1 VCACHE PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>CPU2 VCACHE PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>CPU3 VCACHE</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>CPU4 VCACHE</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>CPU1 VIO PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>CPU2 VIO PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board CPU 1.8 PLL PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 8V Rear PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 8V Front PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 5V Rear PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 5V Front PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 3.3V PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 1.8V PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 1.5V PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 1.1V PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>system board 0.9V PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>memory Riser A memory VR PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>memory Riser B memory VR PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>memory Riser C memory VR PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>memory Riser D memory VR PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>memory Riser E memory VR PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>memory Riser F memory VR PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>memory Riser G memory VR PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>memory Riser H memory VR PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>storage VR PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>IO Riser VR1 PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>IO Riser VR2 PG</name>
+<reading>Good</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>PS 1 Voltage</name>
+<reading>228V</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>PS 2 Voltage</name>
+<reading>228V</reading>
+</sensor><sensor><sensorStatus>Normal</sensorStatus>
+<name>PS 3 Voltage</name>
+<reading>228V</reading>
+</sensor></discreteSensorList></sensortype><kvmEnabled>1</kvmEnabled>
+<status>ok</status>
+</root>

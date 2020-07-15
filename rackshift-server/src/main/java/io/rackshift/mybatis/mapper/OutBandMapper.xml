@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.mybatis.mapper.OutBandMapper">
+  <resultMap id="BaseResultMap" type="io.rackshift.mybatis.domain.OutBand">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="mac" jdbcType="VARCHAR" property="mac" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    <result column="origin" jdbcType="TINYINT" property="origin" />
+    <result column="asset_id" jdbcType="VARCHAR" property="assetId" />
+    <result column="machine_room" jdbcType="VARCHAR" property="machineRoom" />
+    <result column="machine_rack" jdbcType="VARCHAR" property="machineRack" />
+    <result column="u_number" jdbcType="VARCHAR" property="uNumber" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="apply_user" jdbcType="VARCHAR" property="applyUser" />
+    <result column="optimistic_lock_version" jdbcType="INTEGER" property="optimisticLockVersion" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, mac, ip, user_name, pwd, status, update_time, origin, asset_id, machine_room, 
+    machine_rack, u_number, remark, apply_user, optimistic_lock_version
+  </sql>
+  <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.OutBandExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from out_band
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from out_band
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from out_band
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="io.rackshift.mybatis.domain.OutBandExample">
+    delete from out_band
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="io.rackshift.mybatis.domain.OutBand">
+    insert into out_band (id, mac, ip, 
+      user_name, pwd, status, 
+      update_time, origin, asset_id, 
+      machine_room, machine_rack, u_number, 
+      remark, apply_user, optimistic_lock_version
+      )
+    values (#{id,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=BIGINT}, #{origin,jdbcType=TINYINT}, #{assetId,jdbcType=VARCHAR}, 
+      #{machineRoom,jdbcType=VARCHAR}, #{machineRack,jdbcType=VARCHAR}, #{uNumber,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{applyUser,jdbcType=VARCHAR}, #{optimisticLockVersion,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.OutBand">
+    insert into out_band
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="mac != null">
+        mac,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="pwd != null">
+        pwd,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="origin != null">
+        origin,
+      </if>
+      <if test="assetId != null">
+        asset_id,
+      </if>
+      <if test="machineRoom != null">
+        machine_room,
+      </if>
+      <if test="machineRack != null">
+        machine_rack,
+      </if>
+      <if test="uNumber != null">
+        u_number,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="applyUser != null">
+        apply_user,
+      </if>
+      <if test="optimisticLockVersion != null">
+        optimistic_lock_version,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null">
+        #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="origin != null">
+        #{origin,jdbcType=TINYINT},
+      </if>
+      <if test="assetId != null">
+        #{assetId,jdbcType=VARCHAR},
+      </if>
+      <if test="machineRoom != null">
+        #{machineRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="machineRack != null">
+        #{machineRack,jdbcType=VARCHAR},
+      </if>
+      <if test="uNumber != null">
+        #{uNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUser != null">
+        #{applyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="optimisticLockVersion != null">
+        #{optimisticLockVersion,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="io.rackshift.mybatis.domain.OutBandExample" resultType="java.lang.Long">
+    select count(*) from out_band
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update out_band
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mac != null">
+        mac = #{record.mac,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ip != null">
+        ip = #{record.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pwd != null">
+        pwd = #{record.pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.origin != null">
+        origin = #{record.origin,jdbcType=TINYINT},
+      </if>
+      <if test="record.assetId != null">
+        asset_id = #{record.assetId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.machineRoom != null">
+        machine_room = #{record.machineRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="record.machineRack != null">
+        machine_rack = #{record.machineRack,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uNumber != null">
+        u_number = #{record.uNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyUser != null">
+        apply_user = #{record.applyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optimisticLockVersion != null">
+        optimistic_lock_version = #{record.optimisticLockVersion,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update out_band
+    set id = #{record.id,jdbcType=VARCHAR},
+      mac = #{record.mac,jdbcType=VARCHAR},
+      ip = #{record.ip,jdbcType=VARCHAR},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      pwd = #{record.pwd,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=BIGINT},
+      origin = #{record.origin,jdbcType=TINYINT},
+      asset_id = #{record.assetId,jdbcType=VARCHAR},
+      machine_room = #{record.machineRoom,jdbcType=VARCHAR},
+      machine_rack = #{record.machineRack,jdbcType=VARCHAR},
+      u_number = #{record.uNumber,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      apply_user = #{record.applyUser,jdbcType=VARCHAR},
+      optimistic_lock_version = #{record.optimisticLockVersion,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="io.rackshift.mybatis.domain.OutBand">
+    update out_band
+    <set>
+      <if test="mac != null">
+        mac = #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="origin != null">
+        origin = #{origin,jdbcType=TINYINT},
+      </if>
+      <if test="assetId != null">
+        asset_id = #{assetId,jdbcType=VARCHAR},
+      </if>
+      <if test="machineRoom != null">
+        machine_room = #{machineRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="machineRack != null">
+        machine_rack = #{machineRack,jdbcType=VARCHAR},
+      </if>
+      <if test="uNumber != null">
+        u_number = #{uNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUser != null">
+        apply_user = #{applyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="optimisticLockVersion != null">
+        optimistic_lock_version = #{optimisticLockVersion,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.OutBand">
+    update out_band
+    set mac = #{mac,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=BIGINT},
+      origin = #{origin,jdbcType=TINYINT},
+      asset_id = #{assetId,jdbcType=VARCHAR},
+      machine_room = #{machineRoom,jdbcType=VARCHAR},
+      machine_rack = #{machineRack,jdbcType=VARCHAR},
+      u_number = #{uNumber,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      apply_user = #{applyUser,jdbcType=VARCHAR},
+      optimistic_lock_version = #{optimisticLockVersion,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

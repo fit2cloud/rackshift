@@ -6,11 +6,11 @@
     <parent>
         <groupId>io.rackshift</groupId>
         <artifactId>rackshift</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <groupId>io.rackshift.server</groupId>
     <artifactId>rackshift-server</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Archetype - rackshift-server</name>
     <url>http://maven.apache.org</url>
 
@@ -116,17 +116,32 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.45</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-        </dependency>
-
         <!-- easyexcel -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
             <version>2.1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.rackshift</groupId>
+            <artifactId>metal-plugin-sdk</artifactId>
+            <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j-over-slf4j</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.12.6</version>
         </dependency>
     </dependencies>
 

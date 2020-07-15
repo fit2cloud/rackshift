@@ -1,0 +1,357 @@
+<root><HWINVs><DCIM_ControllerViews><DCIM_ControllerView><InstanceID>RAID.Integrated.1-1</InstanceID>
+<ProductName>PERC H700 Integrated</ProductName>
+<ControllerFirmwareVersion>12.10.4-0001</ControllerFirmwareVersion>
+</DCIM_ControllerView></DCIM_ControllerViews><DCIM_MemoryViews><DCIM_MemoryView><InstanceID>DIMM.Socket.H4</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.H3</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.H2</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.H1</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.G4</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.G3</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.G2</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.G1</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.F4</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.F3</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.F2</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.F1</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.E4</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.E3</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.E2</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.E1</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.D4</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.D3</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.D2</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.D1</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.C4</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.C3</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.C2</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.C1</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.B4</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.B3</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.B2</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.B1</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.A4</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.A3</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.A2</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.A1</InstanceID>
+<PartNumber>HMT31GR7EFR4A-H9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>8192 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView></DCIM_MemoryViews><DCIM_NICViews><DCIM_NICView><InstanceID>NIC.Slot.5-4</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 00:0A:F7:1E:A8:BE</ProductName>
+<PermanentiSCSIMACAddress>00:0A:F7:1E:A8:BF</PermanentiSCSIMACAddress>
+<PermanentMACAddress>00:0A:F7:1E:A8:BE</PermanentMACAddress>
+<CurrentMACAddress>00:0A:F7:1E:A8:BE</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.5-3</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 00:0A:F7:1E:A8:BC</ProductName>
+<PermanentiSCSIMACAddress>00:0A:F7:1E:A8:BD</PermanentiSCSIMACAddress>
+<PermanentMACAddress>00:0A:F7:1E:A8:BC</PermanentMACAddress>
+<CurrentMACAddress>00:0A:F7:1E:A8:BC</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.5-2</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 00:0A:F7:1E:A8:BA</ProductName>
+<PermanentiSCSIMACAddress>00:0A:F7:1E:A8:BB</PermanentiSCSIMACAddress>
+<PermanentMACAddress>00:0A:F7:1E:A8:BA</PermanentMACAddress>
+<CurrentMACAddress>00:0A:F7:1E:A8:BA</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.5-1</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 00:0A:F7:1E:A8:B8</ProductName>
+<PermanentiSCSIMACAddress>00:0A:F7:1E:A8:B9</PermanentiSCSIMACAddress>
+<PermanentMACAddress>00:0A:F7:1E:A8:B8</PermanentMACAddress>
+<CurrentMACAddress>00:0A:F7:1E:A8:B8</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.4-4</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 00:0A:F7:1E:A8:A6</ProductName>
+<PermanentiSCSIMACAddress>00:0A:F7:1E:A8:A7</PermanentiSCSIMACAddress>
+<PermanentMACAddress>00:0A:F7:1E:A8:A6</PermanentMACAddress>
+<CurrentMACAddress>00:0A:F7:1E:A8:A6</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.4-3</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 00:0A:F7:1E:A8:A4</ProductName>
+<PermanentiSCSIMACAddress>00:0A:F7:1E:A8:A5</PermanentiSCSIMACAddress>
+<PermanentMACAddress>00:0A:F7:1E:A8:A4</PermanentMACAddress>
+<CurrentMACAddress>00:0A:F7:1E:A8:A4</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.4-2</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 00:0A:F7:1E:A8:A2</ProductName>
+<PermanentiSCSIMACAddress>00:0A:F7:1E:A8:A3</PermanentiSCSIMACAddress>
+<PermanentMACAddress>00:0A:F7:1E:A8:A2</PermanentMACAddress>
+<CurrentMACAddress>00:0A:F7:1E:A8:A2</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.4-1</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 00:0A:F7:1E:A8:A0</ProductName>
+<PermanentiSCSIMACAddress>00:0A:F7:1E:A8:A1</PermanentiSCSIMACAddress>
+<PermanentMACAddress>00:0A:F7:1E:A8:A0</PermanentMACAddress>
+<CurrentMACAddress>00:0A:F7:1E:A8:A0</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.3-4</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 00:0A:F7:1E:A8:1E</ProductName>
+<PermanentiSCSIMACAddress>00:0A:F7:1E:A8:1F</PermanentiSCSIMACAddress>
+<PermanentMACAddress>00:0A:F7:1E:A8:1E</PermanentMACAddress>
+<CurrentMACAddress>00:0A:F7:1E:A8:1E</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.3-3</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 00:0A:F7:1E:A8:1C</ProductName>
+<PermanentiSCSIMACAddress>00:0A:F7:1E:A8:1D</PermanentiSCSIMACAddress>
+<PermanentMACAddress>00:0A:F7:1E:A8:1C</PermanentMACAddress>
+<CurrentMACAddress>00:0A:F7:1E:A8:1C</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.3-2</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 00:0A:F7:1E:A8:1A</ProductName>
+<PermanentiSCSIMACAddress>00:0A:F7:1E:A8:1B</PermanentiSCSIMACAddress>
+<PermanentMACAddress>00:0A:F7:1E:A8:1A</PermanentMACAddress>
+<CurrentMACAddress>00:0A:F7:1E:A8:1A</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.3-1</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 00:0A:F7:1E:A8:18</ProductName>
+<PermanentiSCSIMACAddress>00:0A:F7:1E:A8:19</PermanentiSCSIMACAddress>
+<PermanentMACAddress>00:0A:F7:1E:A8:18</PermanentMACAddress>
+<CurrentMACAddress>00:0A:F7:1E:A8:18</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.2-2</InstanceID>
+<ProductName>Intel(R) Ethernet Server Adapter X520-2 - 90:E2:BA:4A:61:81</ProductName>
+<PermanentiSCSIMACAddress>N/A</PermanentiSCSIMACAddress>
+<PermanentMACAddress>90:E2:BA:4A:61:81</PermanentMACAddress>
+<CurrentMACAddress>N/A</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.2-1</InstanceID>
+<ProductName>Intel(R) Ethernet Server Adapter X520-2 - 90:E2:BA:4A:61:80</ProductName>
+<PermanentiSCSIMACAddress>N/A</PermanentiSCSIMACAddress>
+<PermanentMACAddress>90:E2:BA:4A:61:80</PermanentMACAddress>
+<CurrentMACAddress>N/A</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Embedded.4-1</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 90:B1:1C:59:A0:40</ProductName>
+<PermanentiSCSIMACAddress>90:B1:1C:59:A0:41</PermanentiSCSIMACAddress>
+<PermanentMACAddress>90:B1:1C:59:A0:40</PermanentMACAddress>
+<CurrentMACAddress>90:B1:1C:59:A0:40</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Embedded.3-1</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 90:B1:1C:59:A0:3E</ProductName>
+<PermanentiSCSIMACAddress>90:B1:1C:59:A0:3F</PermanentiSCSIMACAddress>
+<PermanentMACAddress>90:B1:1C:59:A0:3E</PermanentMACAddress>
+<CurrentMACAddress>90:B1:1C:59:A0:3E</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Embedded.2-1</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 90:B1:1C:59:A0:3C</ProductName>
+<PermanentiSCSIMACAddress>90:B1:1C:59:A0:3D</PermanentiSCSIMACAddress>
+<PermanentMACAddress>90:B1:1C:59:A0:3C</PermanentMACAddress>
+<CurrentMACAddress>90:B1:1C:59:A0:3C</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Embedded.1-1</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 90:B1:1C:59:A0:3A</ProductName>
+<PermanentiSCSIMACAddress>90:B1:1C:59:A0:3B</PermanentiSCSIMACAddress>
+<PermanentMACAddress>90:B1:1C:59:A0:3A</PermanentMACAddress>
+<CurrentMACAddress>90:B1:1C:59:A0:3A</CurrentMACAddress>
+</DCIM_NICView></DCIM_NICViews><DCIM_VideoViews><DCIM_VideoView><InstanceID>Video.Embedded.1-1</InstanceID>
+<Description> MGA G200eW WPCM450</Description>
+<Manufacturer> Matrox Electronics Systems Ltd.</Manufacturer>
+</DCIM_VideoView></DCIM_VideoViews><DCIM_PowerSupplyViews><DCIM_PowerSupplyView><InstanceID>PSU.Slot.1</InstanceID>
+<FirmwareVersion>M1.01.0A</FirmwareVersion>
+<Manufacturer>Dell</Manufacturer>
+<PartNumber>01Y45RA01</PartNumber>
+<SerialNumber>PH1629836C00AJ</SerialNumber>
+<Model>PWR SPLY,1100W,RDNT           </Model>
+</DCIM_PowerSupplyView><DCIM_PowerSupplyView><InstanceID>PSU.Slot.2</InstanceID>
+<FirmwareVersion>M1.01.0A</FirmwareVersion>
+<Manufacturer>Dell</Manufacturer>
+<PartNumber>01Y45RA01</PartNumber>
+<SerialNumber>PH1629836C00AH</SerialNumber>
+<Model>PWR SPLY,1100W,RDNT           </Model>
+</DCIM_PowerSupplyView><DCIM_PowerSupplyView><InstanceID>PSU.Slot.3</InstanceID>
+<FirmwareVersion>M1.01.0A</FirmwareVersion>
+<Manufacturer>Dell</Manufacturer>
+<PartNumber>01Y45RA01</PartNumber>
+<SerialNumber>PH162982AM00LF</SerialNumber>
+<Model>PWR SPLY,1100W,RDNT           </Model>
+</DCIM_PowerSupplyView><DCIM_PowerSupplyView><InstanceID>PSU.Slot.4</InstanceID>
+<FirmwareVersion>M1.01.0A</FirmwareVersion>
+<Manufacturer>Dell</Manufacturer>
+<PartNumber>01Y45RA01</PartNumber>
+<SerialNumber>PH1629836C00AK</SerialNumber>
+<Model>PWR SPLY,1100W,RDNT           </Model>
+</DCIM_PowerSupplyView></DCIM_PowerSupplyViews><DCIM_PhysicalDiskViews><DCIM_PhysicalDiskView><InstanceID>Disk.Bay.0:Enclosure.Internal.0-0:RAID.Integrated.1-1</InstanceID>
+<Model>AL13SEB600      </Model>
+<Manufacturer>TOSHIBA </Manufacturer>
+<SerialNumber>63F0A05LFRD4        </SerialNumber>
+<SizeInBytes>599550590976 Bytes</SizeInBytes>
+</DCIM_PhysicalDiskView><DCIM_PhysicalDiskView><InstanceID>Disk.Bay.1:Enclosure.Internal.0-0:RAID.Integrated.1-1</InstanceID>
+<Model>AL13SEB600      </Model>
+<Manufacturer>TOSHIBA </Manufacturer>
+<SerialNumber>63F0A06BFRD4        </SerialNumber>
+<SizeInBytes>599550590976 Bytes</SizeInBytes>
+</DCIM_PhysicalDiskView><DCIM_PhysicalDiskView><InstanceID>Disk.Bay.2:Enclosure.Internal.0-0:RAID.Integrated.1-1</InstanceID>
+<Model>AL13SEB600      </Model>
+<Manufacturer>TOSHIBA </Manufacturer>
+<SerialNumber>63G0A017FRD4        </SerialNumber>
+<SizeInBytes>599550590976 Bytes</SizeInBytes>
+</DCIM_PhysicalDiskView><DCIM_PhysicalDiskView><InstanceID>Disk.Bay.3:Enclosure.Internal.0-0:RAID.Integrated.1-1</InstanceID>
+<Model>AL13SEB600      </Model>
+<Manufacturer>TOSHIBA </Manufacturer>
+<SerialNumber>63G0A006FRD4        </SerialNumber>
+<SizeInBytes>599550590976 Bytes</SizeInBytes>
+</DCIM_PhysicalDiskView><DCIM_PhysicalDiskView><InstanceID>Disk.Bay.4:Enclosure.Internal.0-0:RAID.Integrated.1-1</InstanceID>
+<Model>AL13SEB600      </Model>
+<Manufacturer>TOSHIBA </Manufacturer>
+<SerialNumber>63F0A05OFRD4        </SerialNumber>
+<SizeInBytes>599550590976 Bytes</SizeInBytes>
+</DCIM_PhysicalDiskView><DCIM_PhysicalDiskView><InstanceID>Disk.Bay.5:Enclosure.Internal.0-0:RAID.Integrated.1-1</InstanceID>
+<Model>AL13SEB600      </Model>
+<Manufacturer>TOSHIBA </Manufacturer>
+<SerialNumber>63J0A043FRD4        </SerialNumber>
+<SizeInBytes>599550590976 Bytes</SizeInBytes>
+</DCIM_PhysicalDiskView><DCIM_PhysicalDiskView><InstanceID>Disk.Bay.6:Enclosure.Internal.0-0:RAID.Integrated.1-1</InstanceID>
+<Model>AL13SEB600      </Model>
+<Manufacturer>TOSHIBA </Manufacturer>
+<SerialNumber>63J0A04OFRD4        </SerialNumber>
+<SizeInBytes>599550590976 Bytes</SizeInBytes>
+</DCIM_PhysicalDiskView><DCIM_PhysicalDiskView><InstanceID>Disk.Bay.7:Enclosure.Internal.0-0:RAID.Integrated.1-1</InstanceID>
+<Model>AL13SEB600      </Model>
+<Manufacturer>TOSHIBA </Manufacturer>
+<SerialNumber>63G0A00CFRD4        </SerialNumber>
+<SizeInBytes>599550590976 Bytes</SizeInBytes>
+</DCIM_PhysicalDiskView></DCIM_PhysicalDiskViews><DCIM_iDRACCardViews><DCIM_iDRACCardView><InstanceID>iDRAC.Embedded.1</InstanceID>
+<Model>Enterprise</Model>
+<FirmwareVersion>2.90</FirmwareVersion>
+</DCIM_iDRACCardView></DCIM_iDRACCardViews><DCIM_FCViews><DCIM_FCView><InstanceID>FC.Slot.1-2</InstanceID>
+<DeviceName>QLogic QLE2562 8Gb Fibre Channel Adapter - 21000024FF4BF84B</DeviceName>
+<WWPN>21:00:00:24:FF:4B:F8:4B</WWPN>
+<WWN>20:00:00:24:FF:4B:F8:4B</WWN>
+</DCIM_FCView><DCIM_FCView><InstanceID>FC.Slot.1-1</InstanceID>
+<DeviceName>QLogic QLE2562 8Gb Fibre Channel Adapter - 21000024FF4BF84A</DeviceName>
+<WWPN>21:00:00:24:FF:4B:F8:4A</WWPN>
+<WWN>20:00:00:24:FF:4B:F8:4A</WWN>
+</DCIM_FCView></DCIM_FCViews><DCIM_VFlashViews><DCIM_VFlashView><InstanceID>Disk.vFlashCard.1</InstanceID>
+<Capacity>N/A</Capacity>
+<ComponentName>No SD Card</ComponentName>
+</DCIM_VFlashView></DCIM_VFlashViews><DCIM_CPUViews><DCIM_CPUView><InstanceID>CPU.Socket.4</InstanceID>
+<Model>Intel(R) Xeon(R) CPU E7- 4850 @ 2.00GHz</Model>
+<Manufacturer>Intel</Manufacturer>
+</DCIM_CPUView><DCIM_CPUView><InstanceID>CPU.Socket.3</InstanceID>
+<Model>Intel(R) Xeon(R) CPU E7- 4850 @ 2.00GHz</Model>
+<Manufacturer>Intel</Manufacturer>
+</DCIM_CPUView><DCIM_CPUView><InstanceID>CPU.Socket.2</InstanceID>
+<Model>Intel(R) Xeon(R) CPU E7- 4850 @ 2.00GHz</Model>
+<Manufacturer>Intel</Manufacturer>
+</DCIM_CPUView><DCIM_CPUView><InstanceID>CPU.Socket.1</InstanceID>
+<Model>Intel(R) Xeon(R) CPU E7- 4850 @ 2.00GHz</Model>
+<Manufacturer>Intel</Manufacturer>
+</DCIM_CPUView></DCIM_CPUViews></HWINVs><SWINVs><BIOS>2.10.0</BIOS>
+<Lifecycle_Controller>1.6.0.73</Lifecycle_Controller>
+<DIAG>5158A3</DIAG>
+<Diagnostic>5158A3</Diagnostic>
+<OS_Drivers>7.3.0.10</OS_Drivers>
+<Embedded_1-1>7.4.8</Embedded_1-1>
+<Embedded_2-1>7.4.8</Embedded_2-1>
+<Embedded_3-1>7.4.8</Embedded_3-1>
+<Embedded_4-1>7.4.8</Embedded_4-1>
+</SWINVs><status>ok</status>
+</root>

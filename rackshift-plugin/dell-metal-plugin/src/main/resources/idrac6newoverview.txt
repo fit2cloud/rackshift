@@ -1,0 +1,61 @@
+<root><sysDesc>PowerEdge R910</sysDesc>
+<biosVer>2.10.0</biosVer>
+<svcTag>9C8X83X</svcTag>
+<hostName>QC-ESX66.ssedomain</hostName>
+<osName></osName>
+<osVersion></osVersion>
+<sysRev>II</sysRev>
+<LCCfwVersion>1.5.1.57</LCCfwVersion>
+<recoveryAction>None</recoveryAction>
+<initCountdown>15</initCountdown>
+<presentCountdown>15</presentCountdown>
+<datetime>Tue Mar 10 02:35:52 2020
+</datetime>
+<fwVersion>2.85 (Build 04)</fwVersion>
+<fwUpdated>Tue Apr 26 17:34:54 2016
+</fwUpdated>
+<hwVersion>0.01</hwVersion>
+<racName>iDRAC6</racName>
+<netConfig><v4DHCPServers>0</v4DHCPServers>
+<v4DNS1>0.0.0.0</v4DNS1>
+<v4DNS2>0.0.0.0</v4DNS2>
+<v6DHCPServers>0</v6DHCPServers>
+<v6DNS1>::</v6DNS1>
+<v6DNS2>::</v6DNS2>
+<hostname>idrac-     </hostname>
+<netMode>0</netMode>
+<dnsEnabled>0</dnsEnabled>
+<dhcpForDNSDomain>0</dhcpForDNSDomain>
+<dnsDomain></dnsDomain>
+<vlan>0</vlan>
+<vlanID>1</vlanID>
+<vlanPriority>0</vlanPriority>
+<NicEtherMac1>78:2b:cb:73:97:b1</NicEtherMac1>
+<NiciSCSIMac1>78:2b:cb:73:97:b2</NiciSCSIMac1>
+<NicEtherMac2>78:2b:cb:73:97:b3</NicEtherMac2>
+<NiciSCSIMac2>78:2b:cb:73:97:b4</NiciSCSIMac2>
+<NicEtherMac3>78:2b:cb:73:97:b5</NicEtherMac3>
+<NiciSCSIMac3>78:2b:cb:73:97:b6</NiciSCSIMac3>
+<NicEtherMac4>78:2b:cb:73:97:b7</NicEtherMac4>
+<NiciSCSIMac4>78:2b:cb:73:97:b8</NiciSCSIMac4>
+<ifConfig><ifName>iDRAC</ifName>
+<macAddr>F0:1F:AF:E5:44:B6</macAddr>
+<netEnabled>1</netEnabled>
+<v4Enabled>1</v4Enabled>
+<v4DHCPEnabled>0</v4DHCPEnabled>
+<v4IPAddr>10.153.4.13</v4IPAddr>
+<v4Gateway>10.153.4.254</v4Gateway>
+<v4NetMask>255.255.255.0</v4NetMask>
+<autoNeg>1</autoNeg>
+<netSpeed>1</netSpeed>
+<duplex>0</duplex>
+<v6Enabled>0</v6Enabled>
+<v6DHCPEnabled>1</v6DHCPEnabled>
+<ipsecEnabled>0</ipsecEnabled>
+<v6Prefix>64</v6Prefix>
+<nicMTU>1500</nicMTU>
+<v6Addr>::</v6Addr>
+<v6Gateway>::</v6Gateway>
+<v6LinkLocal>::</v6LinkLocal>
+</ifConfig></netConfig><status>ok</status>
+</root>

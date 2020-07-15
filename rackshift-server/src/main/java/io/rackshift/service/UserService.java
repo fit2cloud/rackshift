@@ -93,14 +93,14 @@ public class UserService {
     }
 
     public boolean add(UserDTO queryVO) {
-        queryVO.setId(UUID.randomUUID().toString());
         User user = new User();
         BeanUtils.copyProperties(queryVO, user);
+        user.setStatus(UserStatus.NORMAL);
         userMapper.insertSelective(user);
-        for (Role role : queryVO.getRoles()) {
+        for (String roleId : queryVO.getRolesIds()) {
             UserRole userRole = new UserRole();
             userRole.setId(UUID.randomUUID().toString());
-            userRole.setRoleId(role.getId());
+            userRole.setRoleId(roleId);
             userRole.setUserId(queryVO.getId());
             userRoleMapper.insertSelective(userRole);
         }
@@ -115,10 +115,10 @@ public class UserService {
         userRoleExample.createCriteria().andUserIdEqualTo(queryVO.getId());
         userRoleMapper.deleteByExample(userRoleExample);
 
-        for (Role role : queryVO.getRoles()) {
+        for (String roleId : queryVO.getRolesIds()) {
             UserRole userRole = new UserRole();
             userRole.setId(UUID.randomUUID().toString());
-            userRole.setRoleId(role.getId());
+            userRole.setRoleId(roleId);
             userRole.setUserId(queryVO.getId());
             userRoleMapper.insertSelective(userRole);
         }
@@ -133,6 +133,6 @@ public class UserService {
         userExample.createCriteria().andIdEqualTo(id);
         User user = new User();
         user.setStatus(UserStatus.DISABLED);
-        return userMapper.updateByExample(user, userExample) > 0;
+        return userMapper.updateByExampleSelective(user, userExample) > 0;
     }
 }

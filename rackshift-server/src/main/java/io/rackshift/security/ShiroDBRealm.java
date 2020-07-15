@@ -5,6 +5,7 @@ import io.rackshift.model.UserDTO;
 import io.rackshift.mybatis.domain.Role;
 import io.rackshift.mybatis.mapper.UserMapper;
 import io.rackshift.service.UserService;
+import io.rackshift.utils.Translator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -36,9 +37,16 @@ public class ShiroDBRealm extends AuthorizingRealm {
         String userName = (String) principalCollection.getPrimaryPrincipal();
         SimpleAuthorizationInfo simpleAuthenticationInfo = new SimpleAuthorizationInfo();
         UserDTO userDTO = userService.getUserDTO(userName);
-        Set<String> roles = userDTO.getRoles().stream().map(Role::getId).collect(Collectors.toSet());
+        if (userDTO == null) {
+            userDTO = userService.getUserDTOByEmail(userName);
+            if (userDTO == null) {
+                RSException.throwExceptions(Translator.get("error"));
+            }
+        }
+        Set<String> roles = userDTO.getRoles().stream().map(Role::getType).collect(Collectors.toSet());
         simpleAuthenticationInfo.setRoles(roles);
-        return null;
+
+        return simpleAuthenticationInfo;
     }
 
     @Override

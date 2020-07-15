@@ -35,6 +35,8 @@ public class UserDTO {
 
     private List<UserRole> userRoles = new ArrayList<>();
 
+    private List<String> rolesIds = new ArrayList<>();
+
     private static final long serialVersionUID = 1L;
 
 }

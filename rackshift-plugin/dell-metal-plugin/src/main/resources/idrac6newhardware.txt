@@ -1,0 +1,419 @@
+<root><HWINVs><DCIM_ControllerViews><DCIM_ControllerView><InstanceID>RAID.Integrated.1-1</InstanceID>
+<ProductName>PERC H700 Integrated</ProductName>
+<ControllerFirmwareVersion>12.10.6-0001</ControllerFirmwareVersion>
+</DCIM_ControllerView></DCIM_ControllerViews><DCIM_MemoryViews><DCIM_MemoryView><InstanceID>DIMM.Socket.H8</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.H7</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.H6</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.H5</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.H4</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.H3</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.H2</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.H1</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.F8</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.F7</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.F6</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.F5</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.F4</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.F3</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.F2</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.F1</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.D8</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.D7</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.D6</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.D5</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.D4</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.D3</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.D2</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.D1</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.B8</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.B7</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.B6</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.B5</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.B4</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.B3</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.B2</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.B1</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.G8</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.G7</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.G6</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.G5</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.G4</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.G3</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.G2</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.G1</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.E8</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.E7</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.E6</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.E5</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.E4</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.E3</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.E2</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.E1</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.C8</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.C7</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.C6</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.C5</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.C4</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.C3</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.C2</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.C1</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.A8</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.A7</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.A6</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.A5</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.A4</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.A3</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.A2</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView><DCIM_MemoryView><InstanceID>DIMM.Socket.A1</InstanceID>
+<PartNumber>M393B5273CH0-YH9</PartNumber>
+<Model>DDR3 DIMM</Model>
+<Size>4096 MB</Size>
+<Speed>1333 MHz</Speed>
+</DCIM_MemoryView></DCIM_MemoryViews><DCIM_NICViews><DCIM_NICView><InstanceID>NIC.Slot.3-2</InstanceID>
+<ProductName>Intel(R) 82599 10 Gigabit Dual Port Netwo - 6C:92:BF:60:86:9 </ProductName>
+<PermanentiSCSIMACAddress>N/A</PermanentiSCSIMACAddress>
+<PermanentMACAddress>6C:92:BF:60:86:99</PermanentMACAddress>
+<CurrentMACAddress>6C:92:BF:60:86:99</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Slot.3-1</InstanceID>
+<ProductName>Intel(R) 82599 10 Gigabit Dual Port Netwo - 6C:92:BF:60:86:9 </ProductName>
+<PermanentiSCSIMACAddress>N/A</PermanentiSCSIMACAddress>
+<PermanentMACAddress>6C:92:BF:60:86:98</PermanentMACAddress>
+<CurrentMACAddress>6C:92:BF:60:86:98</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Embedded.4-1</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 78:2B:CB:73:97:B7</ProductName>
+<PermanentiSCSIMACAddress>78:2B:CB:73:97:B8</PermanentiSCSIMACAddress>
+<PermanentMACAddress>78:2B:CB:73:97:B7</PermanentMACAddress>
+<CurrentMACAddress>78:2B:CB:73:97:B7</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Embedded.3-1</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 78:2B:CB:73:97:B5</ProductName>
+<PermanentiSCSIMACAddress>78:2B:CB:73:97:B6</PermanentiSCSIMACAddress>
+<PermanentMACAddress>78:2B:CB:73:97:B5</PermanentMACAddress>
+<CurrentMACAddress>78:2B:CB:73:97:B5</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Embedded.2-1</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 78:2B:CB:73:97:B3</ProductName>
+<PermanentiSCSIMACAddress>78:2B:CB:73:97:B4</PermanentiSCSIMACAddress>
+<PermanentMACAddress>78:2B:CB:73:97:B3</PermanentMACAddress>
+<CurrentMACAddress>78:2B:CB:73:97:B3</CurrentMACAddress>
+</DCIM_NICView><DCIM_NICView><InstanceID>NIC.Embedded.1-1</InstanceID>
+<ProductName>Broadcom NetXtreme II Gigabit Ethernet - 78:2B:CB:73:97:B1</ProductName>
+<PermanentiSCSIMACAddress>78:2B:CB:73:97:B2</PermanentiSCSIMACAddress>
+<PermanentMACAddress>78:2B:CB:73:97:B1</PermanentMACAddress>
+<CurrentMACAddress>78:2B:CB:73:97:B1</CurrentMACAddress>
+</DCIM_NICView></DCIM_NICViews><DCIM_VideoViews><DCIM_VideoView><InstanceID>Video.Embedded.1-1</InstanceID>
+<Description> MGA G200eW WPCM450</Description>
+<Manufacturer> Matrox Electronics Systems Ltd.</Manufacturer>
+</DCIM_VideoView></DCIM_VideoViews><DCIM_PowerSupplyViews><DCIM_PowerSupplyView><InstanceID>PSU.Slot.1</InstanceID>
+<FirmwareVersion>01.01.03</FirmwareVersion>
+<Manufacturer>Dell</Manufacturer>
+<PartNumber>0GVHPXA00</PartNumber>
+<SerialNumber>CN71615684002D</SerialNumber>
+<Model>PWR SPLY,1100W,RDNT           </Model>
+</DCIM_PowerSupplyView><DCIM_PowerSupplyView><InstanceID>PSU.Slot.2</InstanceID>
+<FirmwareVersion>01.01.03</FirmwareVersion>
+<Manufacturer>Dell</Manufacturer>
+<PartNumber>0GVHPXA00</PartNumber>
+<SerialNumber>CN71615684003E</SerialNumber>
+<Model>PWR SPLY,1100W,RDNT           </Model>
+</DCIM_PowerSupplyView><DCIM_PowerSupplyView><InstanceID>PSU.Slot.3</InstanceID>
+<FirmwareVersion>01.01.03</FirmwareVersion>
+<Manufacturer>Dell</Manufacturer>
+<PartNumber>0GVHPXA00</PartNumber>
+<SerialNumber>CN71615684001D</SerialNumber>
+<Model>PWR SPLY,1100W,RDNT           </Model>
+</DCIM_PowerSupplyView><DCIM_PowerSupplyView><InstanceID>PSU.Slot.4</InstanceID>
+<FirmwareVersion>01.01.03</FirmwareVersion>
+<Manufacturer>Dell</Manufacturer>
+<PartNumber>0GVHPXA00</PartNumber>
+<SerialNumber>CN71615684003F</SerialNumber>
+<Model>PWR SPLY,1100W,RDNT           </Model>
+</DCIM_PowerSupplyView></DCIM_PowerSupplyViews><DCIM_PhysicalDiskViews><DCIM_PhysicalDiskView><InstanceID>Disk.Bay.0:Enclosure.Internal.0-0:RAID.Integrated.1-1</InstanceID>
+<Model>ST9600205SS     </Model>
+<Manufacturer>SEAGATE </Manufacturer>
+<SerialNumber>6XR1GXZA            </SerialNumber>
+<SizeInBytes>599550590976 Bytes</SizeInBytes>
+</DCIM_PhysicalDiskView><DCIM_PhysicalDiskView><InstanceID>Disk.Bay.1:Enclosure.Internal.0-0:RAID.Integrated.1-1</InstanceID>
+<Model>ST600MM0006     </Model>
+<Manufacturer>SEAGATE </Manufacturer>
+<SerialNumber>S0M5J0AM            </SerialNumber>
+<SizeInBytes>599550590976 Bytes</SizeInBytes>
+</DCIM_PhysicalDiskView></DCIM_PhysicalDiskViews><DCIM_iDRACCardViews><DCIM_iDRACCardView><InstanceID>iDRAC.Embedded.1</InstanceID>
+<Model>Enterprise</Model>
+<FirmwareVersion>2.85</FirmwareVersion>
+</DCIM_iDRACCardView></DCIM_iDRACCardViews><DCIM_VFlashViews><DCIM_VFlashView><InstanceID>Disk.vFlashCard.1</InstanceID>
+<Capacity>N/A</Capacity>
+<ComponentName>No SD Card</ComponentName>
+</DCIM_VFlashView></DCIM_VFlashViews><DCIM_CPUViews><DCIM_CPUView><InstanceID>CPU.Socket.4</InstanceID>
+<Model>Intel(R) Xeon(R) CPU E7- 4830 @ 2.13GHz</Model>
+<Manufacturer>Intel</Manufacturer>
+</DCIM_CPUView><DCIM_CPUView><InstanceID>CPU.Socket.3</InstanceID>
+<Model>Intel(R) Xeon(R) CPU E7- 4830 @ 2.13GHz</Model>
+<Manufacturer>Intel</Manufacturer>
+</DCIM_CPUView><DCIM_CPUView><InstanceID>CPU.Socket.2</InstanceID>
+<Model>Intel(R) Xeon(R) CPU E7- 4830 @ 2.13GHz</Model>
+<Manufacturer>Intel</Manufacturer>
+</DCIM_CPUView><DCIM_CPUView><InstanceID>CPU.Socket.1</InstanceID>
+<Model>Intel(R) Xeon(R) CPU E7- 4830 @ 2.13GHz</Model>
+<Manufacturer>Intel</Manufacturer>
+</DCIM_CPUView></DCIM_CPUViews></HWINVs><SWINVs><BIOS>2.10.0</BIOS>
+<Lifecycle_Controller>1.5.1.57</Lifecycle_Controller>
+<DIAG>5154A0</DIAG>
+<Diagnostic>5154A0</Diagnostic>
+<OS_Drivers>6.5.3</OS_Drivers>
+<Embedded_1-1>6.2.15</Embedded_1-1>
+<Embedded_2-1>6.2.15</Embedded_2-1>
+<Embedded_3-1>6.2.15</Embedded_3-1>
+<Embedded_4-1>6.2.15</Embedded_4-1>
+</SWINVs><status>ok</status>
+</root>

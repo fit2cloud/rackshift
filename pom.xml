@@ -4,15 +4,19 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.rackshift</groupId>
     <artifactId>rackshift</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Archetype - rackshift</name>
     <url>http://maven.apache.org</url>
     <packaging>pom</packaging>
     <modules>
         <module>rackshift-server</module>
         <module>rackshift-web</module>
+        <module>rackshift-plugin</module>
     </modules>
 
+    <properties>
+        <rackshift.version>1.0.0</rackshift.version>
+    </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>

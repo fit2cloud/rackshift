@@ -164,8 +164,9 @@
                         HttpUtil.post("/signin", {
                             userName: this.ruleForm.userName,
                             password: this.ruleForm.password
-                        }, () => {
+                        }, (res) => {
                             localStorage.setItem('login', true);
+                            localStorage.setItem('user', JSON.stringify(res.data));
                             window.location.href = "/";
                         }, (msg) => {
                             this.msg = msg;

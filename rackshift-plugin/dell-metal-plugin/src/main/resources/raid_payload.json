@@ -1,0 +1,24 @@
+{
+  "options": {
+    "bootstrap-rancher": {
+      "dockerFile": "dell.raid.docker.tar.xz"
+    },
+    "create-raid": {
+      "createDefault": false,
+      "controller": 0,
+      "path": "/opt/MegaRAID/perccli/perccli64",
+      "raidList": [
+        {
+          "enclosure": 32,
+          "type": "raid5",
+          "drives": [
+            0,
+            1,
+            2
+          ],
+          "name": "VD0"
+        }
+      ]
+    }
+  }
+}

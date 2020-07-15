@@ -1,0 +1,104 @@
+<root><sysDesc>PowerEdge R720</sysDesc>
+<biosVer>2.2.2</biosVer>
+<svcTag>2SWFY02</svcTag>
+<nodeId>2SWFY02</nodeId>
+<osVersion></osVersion>
+<sysRev>I</sysRev>
+<LCCfwVersion>1.4.0.128</LCCfwVersion>
+<iDSDMVersion>N/A</iDSDMVersion>
+<recoveryAction>None</recoveryAction>
+<initCountdown>15</initCountdown>
+<presentCountdown>15</presentCountdown>
+<datetime>Wed Apr  1 07:58:15 2020
+</datetime>
+<fwVersion>1.56.55 (Build 05)</fwVersion>
+<fwUpdated>Sat Apr 12 07:43:07 2014
+</fwUpdated>
+<hwVersion>0.01</hwVersion>
+<racName>iDRAC</racName>
+<prodClassName>Enterprise</prodClassName>
+<ndcmac><activemac lom="1"><nicname>NIC.Integrated.1-3-1</nicname>
+<mactype>Ethernet</mactype>
+<macaddr>C8:1F:66:B9:0B:C0</macaddr>
+<devicedescription>Integrated NIC 1 Port 3 Partition 1</devicedescription>
+</activemac><activemac lom="1"><nicname>NIC.Integrated.1-4-1</nicname>
+<mactype>Ethernet</mactype>
+<macaddr>C8:1F:66:B9:0B:C1</macaddr>
+<devicedescription>Integrated NIC 1 Port 4 Partition 1</devicedescription>
+</activemac><activemac lom="1"><nicname>NIC.Integrated.1-1-1</nicname>
+<mactype>Ethernet</mactype>
+<macaddr>C8:1F:66:B9:0B:BE</macaddr>
+<devicedescription>Integrated NIC 1 Port 1 Partition 1</devicedescription>
+</activemac><activemac lom="1"><nicname>NIC.Integrated.1-2-1</nicname>
+<mactype>Ethernet</mactype>
+<macaddr>C8:1F:66:B9:0B:BF</macaddr>
+<devicedescription>Integrated NIC 1 Port 2 Partition 1</devicedescription>
+</activemac></ndcmac><netConfig><v4DHCPServers>0</v4DHCPServers>
+<v4DNS1>0.0.0.0</v4DNS1>
+<v4DNS2>0.0.0.0</v4DNS2>
+<v4StaticDNS1>0.0.0.0</v4StaticDNS1>
+<v4StaticDNS2>0.0.0.0</v4StaticDNS2>
+<v6DHCPServers>0</v6DHCPServers>
+<v6DNS1>::</v6DNS1>
+<v6DNS2>::</v6DNS2>
+<v6StaticDNS1>::</v6StaticDNS1>
+<v6StaticDNS2>::</v6StaticDNS2>
+<hostname>idrac-2SWFY02</hostname>
+<netMode>, 1, 2, 3, 4, 5, [1]</netMode>
+<dedicatedNicPref>0</dedicatedNicPref>
+<ActiveNic>Dedicated</ActiveNic>
+<failOverMode>0, 2, 3, 4, 5, 6, [0]</failOverMode>
+<dnsEnabled>0</dnsEnabled>
+<dhcpForDNSDomain>0</dhcpForDNSDomain>
+<dhcpProvOpt>0</dhcpProvOpt>
+<dnsDomain></dnsDomain>
+<staticDnsDomain></staticDnsDomain>
+<vlan>0</vlan>
+<vlanID>1</vlanID>
+<vlanPriority>0</vlanPriority>
+<NicEtherMac1>c8:1f:66:b9:0b:c0</NicEtherMac1>
+<NiciSCSIMac1>c8:1f:66:b9:0b:c1</NiciSCSIMac1>
+<NicEtherMac2>c8:1f:66:b9:0b:be</NicEtherMac2>
+<NiciSCSIMac2>c8:1f:66:b9:0b:bf</NiciSCSIMac2>
+<NicEtherMac3></NicEtherMac3>
+<NiciSCSIMac3></NiciSCSIMac3>
+<NicEtherMac4></NicEtherMac4>
+<NiciSCSIMac4></NiciSCSIMac4>
+<ifConfig><ifName>ncsi0</ifName>
+<macAddr>F0:1F:AF:ED:51:50</macAddr>
+<netEnabled>1</netEnabled>
+<v4Enabled>1</v4Enabled>
+<v4DHCPEnabled>0</v4DHCPEnabled>
+<v4IPAddr>10.153.4.12</v4IPAddr>
+<v4StaticIPAddr>10.153.4.12</v4StaticIPAddr>
+<v4Gateway>10.153.4.254</v4Gateway>
+<v4StaticGateway>10.153.4.254</v4StaticGateway>
+<v4NetMask>255.255.255.0</v4NetMask>
+<v4StaticNetMask>255.255.255.0</v4StaticNetMask>
+<autoNeg>1</autoNeg>
+<netSpeed>2</netSpeed>
+<duplex>0</duplex>
+<v6Enabled>0</v6Enabled>
+<v6DHCPEnabled>1</v6DHCPEnabled>
+<ipsecEnabled>0</ipsecEnabled>
+<v6Prefix>64</v6Prefix>
+<v6StaticPrefix>64</v6StaticPrefix>
+<nicMTU>1500</nicMTU>
+<v6Addr>::</v6Addr>
+<v6StaticAddr>::</v6StaticAddr>
+<v6Gateway>::</v6Gateway>
+<v6StaticGateway>::</v6StaticGateway>
+<v6LinkLocal>::</v6LinkLocal>
+</ifConfig><certFlag>2</certFlag>
+</netConfig><powerOn></powerOn><deviceLocInfo><devDataCenter></devDataCenter>
+<devAisle></devAisle>
+<devRack></devRack>
+<devRackSlot>1</devRackSlot>
+<devRoomName></devRoomName>
+<devSize>2</devSize>
+<devChassis></devChassis>
+<devChassisServiceTag></devChassisServiceTag>
+<devChassisModel></devChassisModel>
+<devBladeSlot></devBladeSlot>
+</deviceLocInfo><status>ok</status>
+</root>

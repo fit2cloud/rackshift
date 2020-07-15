@@ -70,13 +70,16 @@
                 :before-close="handleClose">
             <el-form>
                 <el-form-item :label="$t('name')">
-                    <el-input v-model="editRole.name"></el-input>
+                    <el-input v-model="editObj.name"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('desc')">
-                    <el-input v-model="editRole.description"></el-input>
+                    <el-input v-model="editObj.description"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('type')">
-                    <el-input v-model="editRole.type"></el-input>
+                    <el-select v-model="editObj.type" :placeholder="$t('pls_select')">
+                        <el-option label="管理员" value="admin"></el-option>
+                        <el-option label="普通用户" value="user"></el-option>
+                    </el-select>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -125,7 +128,7 @@
                 ],
                 editDialogVisible: false,
                 editType: 'edit',
-                editRole: {
+                editObj: {
                     name: null,
                     description: null,
                     type: null
@@ -153,13 +156,13 @@
             },
             confirmEdit() {
                 if (this.editType == 'edit') {
-                    HttpUtil.post("/role/update", this.editRole, (res) => {
+                    HttpUtil.post("/role/update", this.editObj, (res) => {
                         this.editDialogVisible = false;
                         this.$message.success('编辑成功');
                         this.getData();
                     })
                 } else {
-                    HttpUtil.post("/role/add", this.editRole, (res) => {
+                    HttpUtil.post("/role/add", this.editObj, (res) => {
                         this.editDialogVisible = false;
                         this.$message.success('新增成功');
                         this.getData();
@@ -189,7 +192,7 @@
                 if (type == 'edit') {
                     this.editDialogVisible = true;
                     this.editType = type;
-                    this.editRole = JSON.parse(JSON.stringify(row));
+                    this.editObj = JSON.parse(JSON.stringify(row));
                 } else if (type == 'del') {
                     this.$confirm('确定要删除吗？', '提示', {
                         type: 'warning'
@@ -202,7 +205,7 @@
                 } else {
                     this.editDialogVisible = true;
                     this.editType = type;
-                    this.editRole = {};
+                    this.editObj = {};
                 }
             },
             // 分页导航

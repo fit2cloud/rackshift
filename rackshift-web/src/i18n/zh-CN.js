@@ -1,6 +1,6 @@
 export default {
   "batch_del": "批量删除",
-  "add": "添加啊啊",
+  "add": "添加",
   "opt": "操作",
   "edit": "编辑",
   "edit_role": "编辑角色",

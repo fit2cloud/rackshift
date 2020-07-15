@@ -2,24 +2,25 @@
   <div id="app">
     <el-container style=" border: 1px solid #eee" v-if="login">
       <el-header id="main-header">
-        <span class="user-name">王小虎</span>
+        <span id="main-title">RackShift</span>
+        <span class="user-name">{{user.name}}</span>
         <el-dropdown id="dropdown">
-          <i class="el-icon-setting" style="margin-right: 15px"></i>
+          <i class="el-icon-setting" style="margin-right: 15px;cursor: pointer;"></i>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>查看</el-dropdown-item>
-            <el-dropdown-item>新增</el-dropdown-item>
-            <el-dropdown-item>{{$t('del')}}</el-dropdown-item>
+            <el-dropdown-item>{{$t('info')}}</el-dropdown-item>
+            <el-dropdown-item><span v-on:click="logout">{{$t('logout')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
 
       </el-header>
       <el-container id="main-container">
-        <el-aside width="200px;" style="background-color: rgb(238, 241, 246); margin-top: 10px;">
-          <el-menu :default-openeds="['1', '3']">
+        <el-aside style="background-color: #F5F5F5;; margin-top: 10px;">
+          <!--          <el-menu :default-openeds="['2', '3']">-->
+          <el-menu id="main-menu">
             <el-submenu :index="m.order" v-for="m in menus" v-bind:key="m.order">
               <template slot="title"><i class="el-icon-message"></i>{{m.name}}</template>
-              <el-menu-item :index="c.order" v-for="c in m.childs" v-bind:key="c.order"
-                            @click="$router.push(c.router)">
+              <el-menu-item :index="m.order + '' + c.order" v-for="c in m.childs" v-bind:key="c.order"
+                            v-on:click="$router.push(c.router)">
                 {{c.name}}
               </el-menu-item>
             </el-submenu>
@@ -38,24 +39,32 @@
 
 <script>
   import menu from './components/menu/menu'
+  import HttpUtil from "./common/utils/HttpUtil";
 
   export default {
     name: 'App',
     data() {
       return {
         menus: menu.menus,
-        login: localStorage.getItem("login") == "true"
+        login: localStorage.getItem("login") == "true",
+        user: JSON.parse(localStorage.getItem("user"))
       };
+    },
+    methods: {
+      logout() {
+        HttpUtil.get("logout", null, () => {
+          localStorage.removeItem("login");
+          window.location.href = "/";
+          window.event.returnValue=false;
+        })
+      }
     }
   };
 </script>
 
 <style>
   body {
-    /*font-family: -apple-system, BlinkMacSystemFont, "Neue Haas Grotesk Text Pro", "Arial Nova", "Segoe UI", "Helvetica Neue", ".PingFang SC", "PingFang SC", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "Hiragino Sans GB", sans-serif;*/
     font-size: 10px !important;
-    background-color: #F5F5F5;
-    /*line-height: 26px;*/
     color: #2B415C;
     -webkit-font-smoothing: antialiased;
     margin: 0;
@@ -69,6 +78,7 @@
 
   .el-aside {
     color: #333;
+    width: 220px !important;
   }
 
   .container {
@@ -91,7 +101,7 @@
     text-align: right;
     font-size: 12px;
     height: 45px !important;
-    background-color: #409EFF;;
+    background: linear-gradient(to right, #000000 20%, #00447C 80%);
     color: #333;
     line-height: 45px;
     box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .12);
@@ -104,5 +114,22 @@
 
   #dropdown {
     color: #ffffff;
+    cursor: pointer;
+  }
+
+  #main-title {
+    font-size: 0.96667rem;
+    font-weight: 400;
+    font-family: Metropolis, Avenir Next, Helvetica Neue, Arial, sans-serif;
+    letter-spacing: .01em;
+    color: #fafafa;
+    text-decoration: none;
+    display: block;
+    position: fixed;
+    left: 1.6rem;
+  }
+
+  #main-menu {
+    background-color: #F5F5F5;
   }
 </style>

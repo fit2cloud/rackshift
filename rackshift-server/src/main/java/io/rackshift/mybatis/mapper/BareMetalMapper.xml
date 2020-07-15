@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.mybatis.mapper.BareMetalMapper">
+  <resultMap id="BaseResultMap" type="io.rackshift.mybatis.domain.BareMetal">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="hostname" jdbcType="VARCHAR" property="hostname" />
+    <result column="machine_type" jdbcType="VARCHAR" property="machineType" />
+    <result column="cpu" jdbcType="INTEGER" property="cpu" />
+    <result column="cpu_type" jdbcType="VARCHAR" property="cpuType" />
+    <result column="cpu_fre" jdbcType="VARCHAR" property="cpuFre" />
+    <result column="core" jdbcType="INTEGER" property="core" />
+    <result column="thread" jdbcType="INTEGER" property="thread" />
+    <result column="memory" jdbcType="INTEGER" property="memory" />
+    <result column="memory_type" jdbcType="VARCHAR" property="memoryType" />
+    <result column="disk_type" jdbcType="VARCHAR" property="diskType" />
+    <result column="disk" jdbcType="INTEGER" property="disk" />
+    <result column="management_ip" jdbcType="VARCHAR" property="managementIp" />
+    <result column="bmc_mac" jdbcType="VARCHAR" property="bmcMac" />
+    <result column="ip_array" jdbcType="VARCHAR" property="ipArray" />
+    <result column="os_type" jdbcType="VARCHAR" property="osType" />
+    <result column="os_version" jdbcType="VARCHAR" property="osVersion" />
+    <result column="machine_brand" jdbcType="VARCHAR" property="machineBrand" />
+    <result column="machine_model" jdbcType="VARCHAR" property="machineModel" />
+    <result column="server_id" jdbcType="VARCHAR" property="serverId" />
+    <result column="machine_sn" jdbcType="VARCHAR" property="machineSn" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="power" jdbcType="VARCHAR" property="power" />
+    <result column="workspace_id" jdbcType="VARCHAR" property="workspaceId" />
+    <result column="recycled_time" jdbcType="BIGINT" property="recycledTime" />
+    <result column="ssh_user" jdbcType="VARCHAR" property="sshUser" />
+    <result column="ssh_pwd" jdbcType="VARCHAR" property="sshPwd" />
+    <result column="ssh_port" jdbcType="INTEGER" property="sshPort" />
+    <result column="provider_id" jdbcType="VARCHAR" property="providerId" />
+    <result column="rule_id" jdbcType="VARCHAR" property="ruleId" />
+    <result column="apply_user" jdbcType="VARCHAR" property="applyUser" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, hostname, machine_type, cpu, cpu_type, cpu_fre, core, thread, memory, memory_type, 
+    disk_type, disk, management_ip, bmc_mac, ip_array, os_type, os_version, machine_brand, 
+    machine_model, server_id, machine_sn, status, power, workspace_id, recycled_time, 
+    ssh_user, ssh_pwd, ssh_port, provider_id, rule_id, apply_user, create_time, update_time
+  </sql>
+  <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.BareMetalExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bare_metal
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bare_metal
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bare_metal
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="io.rackshift.mybatis.domain.BareMetalExample">
+    delete from bare_metal
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="io.rackshift.mybatis.domain.BareMetal">
+    insert into bare_metal (id, hostname, machine_type, 
+      cpu, cpu_type, cpu_fre, 
+      core, thread, memory, 
+      memory_type, disk_type, disk, 
+      management_ip, bmc_mac, ip_array, 
+      os_type, os_version, machine_brand, 
+      machine_model, server_id, machine_sn, 
+      status, power, workspace_id, 
+      recycled_time, ssh_user, ssh_pwd, 
+      ssh_port, provider_id, rule_id, 
+      apply_user, create_time, update_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{hostname,jdbcType=VARCHAR}, #{machineType,jdbcType=VARCHAR}, 
+      #{cpu,jdbcType=INTEGER}, #{cpuType,jdbcType=VARCHAR}, #{cpuFre,jdbcType=VARCHAR}, 
+      #{core,jdbcType=INTEGER}, #{thread,jdbcType=INTEGER}, #{memory,jdbcType=INTEGER}, 
+      #{memoryType,jdbcType=VARCHAR}, #{diskType,jdbcType=VARCHAR}, #{disk,jdbcType=INTEGER}, 
+      #{managementIp,jdbcType=VARCHAR}, #{bmcMac,jdbcType=VARCHAR}, #{ipArray,jdbcType=VARCHAR}, 
+      #{osType,jdbcType=VARCHAR}, #{osVersion,jdbcType=VARCHAR}, #{machineBrand,jdbcType=VARCHAR}, 
+      #{machineModel,jdbcType=VARCHAR}, #{serverId,jdbcType=VARCHAR}, #{machineSn,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{power,jdbcType=VARCHAR}, #{workspaceId,jdbcType=VARCHAR}, 
+      #{recycledTime,jdbcType=BIGINT}, #{sshUser,jdbcType=VARCHAR}, #{sshPwd,jdbcType=VARCHAR}, 
+      #{sshPort,jdbcType=INTEGER}, #{providerId,jdbcType=VARCHAR}, #{ruleId,jdbcType=VARCHAR}, 
+      #{applyUser,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{updateTime,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.BareMetal">
+    insert into bare_metal
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="hostname != null">
+        hostname,
+      </if>
+      <if test="machineType != null">
+        machine_type,
+      </if>
+      <if test="cpu != null">
+        cpu,
+      </if>
+      <if test="cpuType != null">
+        cpu_type,
+      </if>
+      <if test="cpuFre != null">
+        cpu_fre,
+      </if>
+      <if test="core != null">
+        core,
+      </if>
+      <if test="thread != null">
+        thread,
+      </if>
+      <if test="memory != null">
+        memory,
+      </if>
+      <if test="memoryType != null">
+        memory_type,
+      </if>
+      <if test="diskType != null">
+        disk_type,
+      </if>
+      <if test="disk != null">
+        disk,
+      </if>
+      <if test="managementIp != null">
+        management_ip,
+      </if>
+      <if test="bmcMac != null">
+        bmc_mac,
+      </if>
+      <if test="ipArray != null">
+        ip_array,
+      </if>
+      <if test="osType != null">
+        os_type,
+      </if>
+      <if test="osVersion != null">
+        os_version,
+      </if>
+      <if test="machineBrand != null">
+        machine_brand,
+      </if>
+      <if test="machineModel != null">
+        machine_model,
+      </if>
+      <if test="serverId != null">
+        server_id,
+      </if>
+      <if test="machineSn != null">
+        machine_sn,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="power != null">
+        power,
+      </if>
+      <if test="workspaceId != null">
+        workspace_id,
+      </if>
+      <if test="recycledTime != null">
+        recycled_time,
+      </if>
+      <if test="sshUser != null">
+        ssh_user,
+      </if>
+      <if test="sshPwd != null">
+        ssh_pwd,
+      </if>
+      <if test="sshPort != null">
+        ssh_port,
+      </if>
+      <if test="providerId != null">
+        provider_id,
+      </if>
+      <if test="ruleId != null">
+        rule_id,
+      </if>
+      <if test="applyUser != null">
+        apply_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="hostname != null">
+        #{hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="machineType != null">
+        #{machineType,jdbcType=VARCHAR},
+      </if>
+      <if test="cpu != null">
+        #{cpu,jdbcType=INTEGER},
+      </if>
+      <if test="cpuType != null">
+        #{cpuType,jdbcType=VARCHAR},
+      </if>
+      <if test="cpuFre != null">
+        #{cpuFre,jdbcType=VARCHAR},
+      </if>
+      <if test="core != null">
+        #{core,jdbcType=INTEGER},
+      </if>
+      <if test="thread != null">
+        #{thread,jdbcType=INTEGER},
+      </if>
+      <if test="memory != null">
+        #{memory,jdbcType=INTEGER},
+      </if>
+      <if test="memoryType != null">
+        #{memoryType,jdbcType=VARCHAR},
+      </if>
+      <if test="diskType != null">
+        #{diskType,jdbcType=VARCHAR},
+      </if>
+      <if test="disk != null">
+        #{disk,jdbcType=INTEGER},
+      </if>
+      <if test="managementIp != null">
+        #{managementIp,jdbcType=VARCHAR},
+      </if>
+      <if test="bmcMac != null">
+        #{bmcMac,jdbcType=VARCHAR},
+      </if>
+      <if test="ipArray != null">
+        #{ipArray,jdbcType=VARCHAR},
+      </if>
+      <if test="osType != null">
+        #{osType,jdbcType=VARCHAR},
+      </if>
+      <if test="osVersion != null">
+        #{osVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="machineBrand != null">
+        #{machineBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="machineModel != null">
+        #{machineModel,jdbcType=VARCHAR},
+      </if>
+      <if test="serverId != null">
+        #{serverId,jdbcType=VARCHAR},
+      </if>
+      <if test="machineSn != null">
+        #{machineSn,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="power != null">
+        #{power,jdbcType=VARCHAR},
+      </if>
+      <if test="workspaceId != null">
+        #{workspaceId,jdbcType=VARCHAR},
+      </if>
+      <if test="recycledTime != null">
+        #{recycledTime,jdbcType=BIGINT},
+      </if>
+      <if test="sshUser != null">
+        #{sshUser,jdbcType=VARCHAR},
+      </if>
+      <if test="sshPwd != null">
+        #{sshPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="sshPort != null">
+        #{sshPort,jdbcType=INTEGER},
+      </if>
+      <if test="providerId != null">
+        #{providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleId != null">
+        #{ruleId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUser != null">
+        #{applyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="io.rackshift.mybatis.domain.BareMetalExample" resultType="java.lang.Long">
+    select count(*) from bare_metal
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update bare_metal
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hostname != null">
+        hostname = #{record.hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.machineType != null">
+        machine_type = #{record.machineType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cpu != null">
+        cpu = #{record.cpu,jdbcType=INTEGER},
+      </if>
+      <if test="record.cpuType != null">
+        cpu_type = #{record.cpuType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cpuFre != null">
+        cpu_fre = #{record.cpuFre,jdbcType=VARCHAR},
+      </if>
+      <if test="record.core != null">
+        core = #{record.core,jdbcType=INTEGER},
+      </if>
+      <if test="record.thread != null">
+        thread = #{record.thread,jdbcType=INTEGER},
+      </if>
+      <if test="record.memory != null">
+        memory = #{record.memory,jdbcType=INTEGER},
+      </if>
+      <if test="record.memoryType != null">
+        memory_type = #{record.memoryType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.diskType != null">
+        disk_type = #{record.diskType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.disk != null">
+        disk = #{record.disk,jdbcType=INTEGER},
+      </if>
+      <if test="record.managementIp != null">
+        management_ip = #{record.managementIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bmcMac != null">
+        bmc_mac = #{record.bmcMac,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ipArray != null">
+        ip_array = #{record.ipArray,jdbcType=VARCHAR},
+      </if>
+      <if test="record.osType != null">
+        os_type = #{record.osType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.osVersion != null">
+        os_version = #{record.osVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.machineBrand != null">
+        machine_brand = #{record.machineBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="record.machineModel != null">
+        machine_model = #{record.machineModel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serverId != null">
+        server_id = #{record.serverId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.machineSn != null">
+        machine_sn = #{record.machineSn,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.power != null">
+        power = #{record.power,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workspaceId != null">
+        workspace_id = #{record.workspaceId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recycledTime != null">
+        recycled_time = #{record.recycledTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.sshUser != null">
+        ssh_user = #{record.sshUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sshPwd != null">
+        ssh_pwd = #{record.sshPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sshPort != null">
+        ssh_port = #{record.sshPort,jdbcType=INTEGER},
+      </if>
+      <if test="record.providerId != null">
+        provider_id = #{record.providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ruleId != null">
+        rule_id = #{record.ruleId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyUser != null">
+        apply_user = #{record.applyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update bare_metal
+    set id = #{record.id,jdbcType=VARCHAR},
+      hostname = #{record.hostname,jdbcType=VARCHAR},
+      machine_type = #{record.machineType,jdbcType=VARCHAR},
+      cpu = #{record.cpu,jdbcType=INTEGER},
+      cpu_type = #{record.cpuType,jdbcType=VARCHAR},
+      cpu_fre = #{record.cpuFre,jdbcType=VARCHAR},
+      core = #{record.core,jdbcType=INTEGER},
+      thread = #{record.thread,jdbcType=INTEGER},
+      memory = #{record.memory,jdbcType=INTEGER},
+      memory_type = #{record.memoryType,jdbcType=VARCHAR},
+      disk_type = #{record.diskType,jdbcType=VARCHAR},
+      disk = #{record.disk,jdbcType=INTEGER},
+      management_ip = #{record.managementIp,jdbcType=VARCHAR},
+      bmc_mac = #{record.bmcMac,jdbcType=VARCHAR},
+      ip_array = #{record.ipArray,jdbcType=VARCHAR},
+      os_type = #{record.osType,jdbcType=VARCHAR},
+      os_version = #{record.osVersion,jdbcType=VARCHAR},
+      machine_brand = #{record.machineBrand,jdbcType=VARCHAR},
+      machine_model = #{record.machineModel,jdbcType=VARCHAR},
+      server_id = #{record.serverId,jdbcType=VARCHAR},
+      machine_sn = #{record.machineSn,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      power = #{record.power,jdbcType=VARCHAR},
+      workspace_id = #{record.workspaceId,jdbcType=VARCHAR},
+      recycled_time = #{record.recycledTime,jdbcType=BIGINT},
+      ssh_user = #{record.sshUser,jdbcType=VARCHAR},
+      ssh_pwd = #{record.sshPwd,jdbcType=VARCHAR},
+      ssh_port = #{record.sshPort,jdbcType=INTEGER},
+      provider_id = #{record.providerId,jdbcType=VARCHAR},
+      rule_id = #{record.ruleId,jdbcType=VARCHAR},
+      apply_user = #{record.applyUser,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="io.rackshift.mybatis.domain.BareMetal">
+    update bare_metal
+    <set>
+      <if test="hostname != null">
+        hostname = #{hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="machineType != null">
+        machine_type = #{machineType,jdbcType=VARCHAR},
+      </if>
+      <if test="cpu != null">
+        cpu = #{cpu,jdbcType=INTEGER},
+      </if>
+      <if test="cpuType != null">
+        cpu_type = #{cpuType,jdbcType=VARCHAR},
+      </if>
+      <if test="cpuFre != null">
+        cpu_fre = #{cpuFre,jdbcType=VARCHAR},
+      </if>
+      <if test="core != null">
+        core = #{core,jdbcType=INTEGER},
+      </if>
+      <if test="thread != null">
+        thread = #{thread,jdbcType=INTEGER},
+      </if>
+      <if test="memory != null">
+        memory = #{memory,jdbcType=INTEGER},
+      </if>
+      <if test="memoryType != null">
+        memory_type = #{memoryType,jdbcType=VARCHAR},
+      </if>
+      <if test="diskType != null">
+        disk_type = #{diskType,jdbcType=VARCHAR},
+      </if>
+      <if test="disk != null">
+        disk = #{disk,jdbcType=INTEGER},
+      </if>
+      <if test="managementIp != null">
+        management_ip = #{managementIp,jdbcType=VARCHAR},
+      </if>
+      <if test="bmcMac != null">
+        bmc_mac = #{bmcMac,jdbcType=VARCHAR},
+      </if>
+      <if test="ipArray != null">
+        ip_array = #{ipArray,jdbcType=VARCHAR},
+      </if>
+      <if test="osType != null">
+        os_type = #{osType,jdbcType=VARCHAR},
+      </if>
+      <if test="osVersion != null">
+        os_version = #{osVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="machineBrand != null">
+        machine_brand = #{machineBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="machineModel != null">
+        machine_model = #{machineModel,jdbcType=VARCHAR},
+      </if>
+      <if test="serverId != null">
+        server_id = #{serverId,jdbcType=VARCHAR},
+      </if>
+      <if test="machineSn != null">
+        machine_sn = #{machineSn,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="power != null">
+        power = #{power,jdbcType=VARCHAR},
+      </if>
+      <if test="workspaceId != null">
+        workspace_id = #{workspaceId,jdbcType=VARCHAR},
+      </if>
+      <if test="recycledTime != null">
+        recycled_time = #{recycledTime,jdbcType=BIGINT},
+      </if>
+      <if test="sshUser != null">
+        ssh_user = #{sshUser,jdbcType=VARCHAR},
+      </if>
+      <if test="sshPwd != null">
+        ssh_pwd = #{sshPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="sshPort != null">
+        ssh_port = #{sshPort,jdbcType=INTEGER},
+      </if>
+      <if test="providerId != null">
+        provider_id = #{providerId,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleId != null">
+        rule_id = #{ruleId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUser != null">
+        apply_user = #{applyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.BareMetal">
+    update bare_metal
+    set hostname = #{hostname,jdbcType=VARCHAR},
+      machine_type = #{machineType,jdbcType=VARCHAR},
+      cpu = #{cpu,jdbcType=INTEGER},
+      cpu_type = #{cpuType,jdbcType=VARCHAR},
+      cpu_fre = #{cpuFre,jdbcType=VARCHAR},
+      core = #{core,jdbcType=INTEGER},
+      thread = #{thread,jdbcType=INTEGER},
+      memory = #{memory,jdbcType=INTEGER},
+      memory_type = #{memoryType,jdbcType=VARCHAR},
+      disk_type = #{diskType,jdbcType=VARCHAR},
+      disk = #{disk,jdbcType=INTEGER},
+      management_ip = #{managementIp,jdbcType=VARCHAR},
+      bmc_mac = #{bmcMac,jdbcType=VARCHAR},
+      ip_array = #{ipArray,jdbcType=VARCHAR},
+      os_type = #{osType,jdbcType=VARCHAR},
+      os_version = #{osVersion,jdbcType=VARCHAR},
+      machine_brand = #{machineBrand,jdbcType=VARCHAR},
+      machine_model = #{machineModel,jdbcType=VARCHAR},
+      server_id = #{serverId,jdbcType=VARCHAR},
+      machine_sn = #{machineSn,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      power = #{power,jdbcType=VARCHAR},
+      workspace_id = #{workspaceId,jdbcType=VARCHAR},
+      recycled_time = #{recycledTime,jdbcType=BIGINT},
+      ssh_user = #{sshUser,jdbcType=VARCHAR},
+      ssh_pwd = #{sshPwd,jdbcType=VARCHAR},
+      ssh_port = #{sshPort,jdbcType=INTEGER},
+      provider_id = #{providerId,jdbcType=VARCHAR},
+      rule_id = #{ruleId,jdbcType=VARCHAR},
+      apply_user = #{applyUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

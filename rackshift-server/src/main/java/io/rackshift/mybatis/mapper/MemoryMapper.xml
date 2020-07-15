@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.mybatis.mapper.MemoryMapper">
+  <resultMap id="BaseResultMap" type="io.rackshift.mybatis.domain.Memory">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="bare_metal_id" jdbcType="VARCHAR" property="bareMetalId" />
+    <result column="mem_cpu_num" jdbcType="VARCHAR" property="memCpuNum" />
+    <result column="mem_mod_num" jdbcType="VARCHAR" property="memModNum" />
+    <result column="mem_mod_size" jdbcType="VARCHAR" property="memModSize" />
+    <result column="mem_mod_type" jdbcType="VARCHAR" property="memModType" />
+    <result column="mem_mod_frequency" jdbcType="VARCHAR" property="memModFrequency" />
+    <result column="mem_mod_part_num" jdbcType="VARCHAR" property="memModPartNum" />
+    <result column="mem_mod_min_volt" jdbcType="VARCHAR" property="memModMinVolt" />
+    <result column="sn" jdbcType="VARCHAR" property="sn" />
+    <result column="sync_time" jdbcType="BIGINT" property="syncTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, bare_metal_id, mem_cpu_num, mem_mod_num, mem_mod_size, mem_mod_type, mem_mod_frequency, 
+    mem_mod_part_num, mem_mod_min_volt, sn, sync_time, status
+  </sql>
+  <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.MemoryExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from memory
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from memory
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from memory
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="io.rackshift.mybatis.domain.MemoryExample">
+    delete from memory
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="io.rackshift.mybatis.domain.Memory">
+    insert into memory (id, bare_metal_id, mem_cpu_num, 
+      mem_mod_num, mem_mod_size, mem_mod_type, 
+      mem_mod_frequency, mem_mod_part_num, mem_mod_min_volt, 
+      sn, sync_time, status
+      )
+    values (#{id,jdbcType=VARCHAR}, #{bareMetalId,jdbcType=VARCHAR}, #{memCpuNum,jdbcType=VARCHAR}, 
+      #{memModNum,jdbcType=VARCHAR}, #{memModSize,jdbcType=VARCHAR}, #{memModType,jdbcType=VARCHAR}, 
+      #{memModFrequency,jdbcType=VARCHAR}, #{memModPartNum,jdbcType=VARCHAR}, #{memModMinVolt,jdbcType=VARCHAR}, 
+      #{sn,jdbcType=VARCHAR}, #{syncTime,jdbcType=BIGINT}, #{status,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.Memory">
+    insert into memory
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="bareMetalId != null">
+        bare_metal_id,
+      </if>
+      <if test="memCpuNum != null">
+        mem_cpu_num,
+      </if>
+      <if test="memModNum != null">
+        mem_mod_num,
+      </if>
+      <if test="memModSize != null">
+        mem_mod_size,
+      </if>
+      <if test="memModType != null">
+        mem_mod_type,
+      </if>
+      <if test="memModFrequency != null">
+        mem_mod_frequency,
+      </if>
+      <if test="memModPartNum != null">
+        mem_mod_part_num,
+      </if>
+      <if test="memModMinVolt != null">
+        mem_mod_min_volt,
+      </if>
+      <if test="sn != null">
+        sn,
+      </if>
+      <if test="syncTime != null">
+        sync_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="bareMetalId != null">
+        #{bareMetalId,jdbcType=VARCHAR},
+      </if>
+      <if test="memCpuNum != null">
+        #{memCpuNum,jdbcType=VARCHAR},
+      </if>
+      <if test="memModNum != null">
+        #{memModNum,jdbcType=VARCHAR},
+      </if>
+      <if test="memModSize != null">
+        #{memModSize,jdbcType=VARCHAR},
+      </if>
+      <if test="memModType != null">
+        #{memModType,jdbcType=VARCHAR},
+      </if>
+      <if test="memModFrequency != null">
+        #{memModFrequency,jdbcType=VARCHAR},
+      </if>
+      <if test="memModPartNum != null">
+        #{memModPartNum,jdbcType=VARCHAR},
+      </if>
+      <if test="memModMinVolt != null">
+        #{memModMinVolt,jdbcType=VARCHAR},
+      </if>
+      <if test="sn != null">
+        #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="syncTime != null">
+        #{syncTime,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="io.rackshift.mybatis.domain.MemoryExample" resultType="java.lang.Long">
+    select count(*) from memory
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update memory
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bareMetalId != null">
+        bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memCpuNum != null">
+        mem_cpu_num = #{record.memCpuNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memModNum != null">
+        mem_mod_num = #{record.memModNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memModSize != null">
+        mem_mod_size = #{record.memModSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memModType != null">
+        mem_mod_type = #{record.memModType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memModFrequency != null">
+        mem_mod_frequency = #{record.memModFrequency,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memModPartNum != null">
+        mem_mod_part_num = #{record.memModPartNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memModMinVolt != null">
+        mem_mod_min_volt = #{record.memModMinVolt,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sn != null">
+        sn = #{record.sn,jdbcType=VARCHAR},
+      </if>
+      <if test="record.syncTime != null">
+        sync_time = #{record.syncTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update memory
+    set id = #{record.id,jdbcType=VARCHAR},
+      bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
+      mem_cpu_num = #{record.memCpuNum,jdbcType=VARCHAR},
+      mem_mod_num = #{record.memModNum,jdbcType=VARCHAR},
+      mem_mod_size = #{record.memModSize,jdbcType=VARCHAR},
+      mem_mod_type = #{record.memModType,jdbcType=VARCHAR},
+      mem_mod_frequency = #{record.memModFrequency,jdbcType=VARCHAR},
+      mem_mod_part_num = #{record.memModPartNum,jdbcType=VARCHAR},
+      mem_mod_min_volt = #{record.memModMinVolt,jdbcType=VARCHAR},
+      sn = #{record.sn,jdbcType=VARCHAR},
+      sync_time = #{record.syncTime,jdbcType=BIGINT},
+      status = #{record.status,jdbcType=TINYINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="io.rackshift.mybatis.domain.Memory">
+    update memory
+    <set>
+      <if test="bareMetalId != null">
+        bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
+      </if>
+      <if test="memCpuNum != null">
+        mem_cpu_num = #{memCpuNum,jdbcType=VARCHAR},
+      </if>
+      <if test="memModNum != null">
+        mem_mod_num = #{memModNum,jdbcType=VARCHAR},
+      </if>
+      <if test="memModSize != null">
+        mem_mod_size = #{memModSize,jdbcType=VARCHAR},
+      </if>
+      <if test="memModType != null">
+        mem_mod_type = #{memModType,jdbcType=VARCHAR},
+      </if>
+      <if test="memModFrequency != null">
+        mem_mod_frequency = #{memModFrequency,jdbcType=VARCHAR},
+      </if>
+      <if test="memModPartNum != null">
+        mem_mod_part_num = #{memModPartNum,jdbcType=VARCHAR},
+      </if>
+      <if test="memModMinVolt != null">
+        mem_mod_min_volt = #{memModMinVolt,jdbcType=VARCHAR},
+      </if>
+      <if test="sn != null">
+        sn = #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="syncTime != null">
+        sync_time = #{syncTime,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.Memory">
+    update memory
+    set bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
+      mem_cpu_num = #{memCpuNum,jdbcType=VARCHAR},
+      mem_mod_num = #{memModNum,jdbcType=VARCHAR},
+      mem_mod_size = #{memModSize,jdbcType=VARCHAR},
+      mem_mod_type = #{memModType,jdbcType=VARCHAR},
+      mem_mod_frequency = #{memModFrequency,jdbcType=VARCHAR},
+      mem_mod_part_num = #{memModPartNum,jdbcType=VARCHAR},
+      mem_mod_min_volt = #{memModMinVolt,jdbcType=VARCHAR},
+      sn = #{sn,jdbcType=VARCHAR},
+      sync_time = #{syncTime,jdbcType=BIGINT},
+      status = #{status,jdbcType=TINYINT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

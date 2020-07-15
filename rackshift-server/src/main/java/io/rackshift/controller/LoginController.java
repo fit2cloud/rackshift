@@ -57,4 +57,10 @@ public class LoginController {
         }
         return ResultHolder.error("");
     }
+
+    @RequestMapping("/logout")
+    public ResultHolder logout() {
+        SecurityUtils.getSubject().logout();
+        return ResultHolder.success("");
+    }
 }

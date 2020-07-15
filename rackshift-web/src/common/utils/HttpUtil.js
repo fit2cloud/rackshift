@@ -2,6 +2,10 @@ import axios from 'axios'
 import {MessageBox} from 'element-ui';
 
 axios.interceptors.response.use(function (response) {
+    if (JSON.stringify(response.data).indexOf('Authentication Status Invalid') != -1) {
+        localStorage.removeItem("login");
+        window.location.href = "/";
+    }
     return response;
 }, function (error) {
     if (error.response.data.message == 'Authentication Status Invalid') {

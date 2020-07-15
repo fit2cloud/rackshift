@@ -2,12 +2,14 @@ package io.rackshift.interceptor;
 
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.MybatisInterceptorConfig;
+import io.rackshift.utils.UUIDUtil;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -36,7 +38,11 @@ public class MybatisInterceptor implements Interceptor {
         if (parameter != null && methodName.equals("update")) {
             invocation.getArgs()[1] = process(parameter);
         }
-        if (parameter != null && (methodName.contains("insert") || methodName.contains("update"))) {
+        if (parameter != null && ((MappedStatement) invocation.getArgs()[0]).getSqlCommandType() == SqlCommandType.INSERT) {
+            processTime(parameter);
+            processId(parameter);
+        }
+        if (parameter != null && ((MappedStatement) invocation.getArgs()[0]).getSqlCommandType() == SqlCommandType.UPDATE) {
             processTime(parameter);
         }
         Object returnValue = invocation.proceed();
@@ -60,6 +66,20 @@ public class MybatisInterceptor implements Interceptor {
             result = undo(returnValue);
         }
         return result;
+    }
+
+    private void processId(Object parameter) {
+        Field[] fields = parameter.getClass().getDeclaredFields();
+        for (Field filed : fields) {
+            if (filed.getName().equals("id")) {
+                try {
+                    filed.setAccessible(true);
+                    filed.set(parameter, UUIDUtil.newUUID());
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     static Class instanceTypes[] = {Integer.class, String.class, Character.class, Float.class, Double.class, Boolean.class, Byte.class, Short.class};
