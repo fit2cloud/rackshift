@@ -82,7 +82,7 @@
   }
 
   .container {
-    padding: 30px;
+    padding: 10px;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;

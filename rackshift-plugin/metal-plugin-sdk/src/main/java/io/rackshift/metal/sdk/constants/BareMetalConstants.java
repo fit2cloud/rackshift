@@ -16,7 +16,12 @@ public class BareMetalConstants {
     public static final byte NOT_ALLOW_OS = 0;
 
     public enum PhysicalMachineStatus {
-        active, inactive
+        onrack,
+        provisioning,
+        discovering,
+        ready,
+        allocated,
+        deployed,
     }
 
     public enum PhysicalMachineRuleSyncStatus {

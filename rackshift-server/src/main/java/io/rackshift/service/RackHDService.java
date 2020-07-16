@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonArray;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoClient;
 import io.rackshift.constants.PluginConstants;
 import io.rackshift.constants.RackHDConstants;
 import io.rackshift.metal.sdk.IMetalProvider;
@@ -28,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,17 +38,40 @@ public class RackHDService {
     private CloudProviderManager metalProviderManager;
     @Value("${run.mode:local}")
     private String runMode;
-    @Resource
-    private MongoClient mongoClient;
 
     private JSONArray getCatalogs(String nodeId) {
         JSONArray arr = new JSONArray();
-        MongoUtil.setMongoClient(mongoClient);
+
         FindIterable<Document> catalogsR = MongoUtil.find("catalogs", new BasicDBObject("node", new ObjectId(nodeId)));
         for (Document document : catalogsR) {
             arr.add(JSONObject.toJSON(document));
         }
         return arr;
+    }
+
+    public JSONArray getLocalNodes() {
+        JSONArray arr = new JSONArray();
+        String nodes = "nodes";
+        FindIterable<Document> nodesR = MongoUtil.find(nodes, new BasicDBObject());
+        for (Document document : nodesR) {
+            JSONObject node = (JSONObject) JSONObject.toJSON(document);
+            node.put("id", document.get("_id").toString());
+            arr.add(node);
+        }
+        return arr;
+    }
+
+    public Pager<JSONArray> getGraphDefinitions(String name, int page, int pageSize) {
+        String collections = "graphdefinitions";
+        Pattern pattern = Pattern.compile(".*" + name + ".*", Pattern.CASE_INSENSITIVE);
+        List<BasicDBObject> cond = new ArrayList<BasicDBObject>() {{
+            add(new BasicDBObject("friendlyName", pattern));
+            add(new BasicDBObject("injectableName", pattern));
+        }};
+        if (StringUtils.isNotBlank(name)) {
+            return MongoUtil.page(collections, new BasicDBObject("$or", cond), page, pageSize);
+        }
+        return MongoUtil.page(collections, new BasicDBObject(), page, pageSize);
     }
 
     /**
@@ -657,7 +680,7 @@ public class RackHDService {
         physicalMachine.setId(UUIDUtil.newUUID());
         physicalMachine.setMachineModel(machineEntity.getBrand() + " " + machineEntity.getModel());
         physicalMachine.setUpdateTime(System.currentTimeMillis());
-        physicalMachine.setStatus(BareMetalConstants.PhysicalMachineStatus.active.toString());
+        physicalMachine.setStatus(BareMetalConstants.PhysicalMachineStatus.onrack.toString());
         physicalMachine.setManagementIp(machineEntity.getBmcIp());
         physicalMachine.setMachineSn(machineEntity.getSerialNo());
         //nodeId 存到serverId字段

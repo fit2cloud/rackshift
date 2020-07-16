@@ -1,5 +1,6 @@
 package io.rackshift.service;
 
+import io.rackshift.model.BareMetalDTO;
 import io.rackshift.model.MachineEntity;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.*;
@@ -41,9 +42,9 @@ public class BareMetalService {
         return null;
     }
 
-
     public void update(BareMetal bareMetal) {
         BareMetal oldBareMetal = getBareMetalBySn(bareMetal.getMachineSn());
+        bareMetal.setId(oldBareMetal.getId());
         BeanUtils.copyBean(oldBareMetal, bareMetal);
         bareMetalMapper.updateByPrimaryKeySelective(oldBareMetal);
     }
@@ -123,5 +124,14 @@ public class BareMetalService {
                 networkCardMapper.insertSelective(d);
             });
         }
+    }
+
+    public List<BareMetal> list(BareMetalDTO queryVO) {
+        BareMetalExample bareMetalExample = buildParams(queryVO);
+        return bareMetalMapper.selectByExample(bareMetalExample);
+    }
+
+    private BareMetalExample buildParams(BareMetalDTO queryVO) {
+        return new BareMetalExample();
     }
 }
