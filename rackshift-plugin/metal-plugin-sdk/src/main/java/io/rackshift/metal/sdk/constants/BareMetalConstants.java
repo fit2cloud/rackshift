@@ -1,5 +1,6 @@
 package io.rackshift.metal.sdk.constants;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class BareMetalConstants {
@@ -15,16 +16,8 @@ public class BareMetalConstants {
     public static final byte ALLOW_INSTALL_OS = 1;
     public static final byte NOT_ALLOW_OS = 0;
 
-    public enum PhysicalMachineStatus {
-        onrack,
-        provisioning,
-        discovering,
-        ready,
-        allocated,
-        deployed,
-    }
 
-    public enum PhysicalMachineRuleSyncStatus {
+    public enum BareMetalRuleSyncStatus {
         PENDING, SYNCING, DONE, ERROR
     }
 
@@ -43,7 +36,7 @@ public class BareMetalConstants {
     public static final byte NEW_INSERT = 1;
     public static final byte DELETED = 2;
 
-    public enum PhysicalMachineIsManage {
+    public enum BareMetalIsManage {
         YES, NO
     }
 

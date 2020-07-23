@@ -1,5 +1,6 @@
 package io.rackshift.interceptor;
 
+import io.rackshift.mybatis.domain.User;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.MybatisInterceptorConfig;
 import io.rackshift.utils.UUIDUtil;
@@ -71,7 +72,7 @@ public class MybatisInterceptor implements Interceptor {
     private void processId(Object parameter) {
         Field[] fields = parameter.getClass().getDeclaredFields();
         for (Field filed : fields) {
-            if (filed.getName().equals("id")) {
+            if (filed.getName().equals("id") && !(parameter instanceof User)) {
                 try {
                     filed.setAccessible(true);
                     filed.set(parameter, UUIDUtil.newUUID());

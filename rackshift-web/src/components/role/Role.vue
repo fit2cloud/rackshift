@@ -1,20 +1,23 @@
 <template>
     <div class="container">
-        <div class="handle-box">
-            <el-button
-                    type="primary"
-                    icon="el-icon-delete"
-                    class="handle-del mr10"
-                    @click="delAllSelection"
-            >{{$t('batch_del')}}
-            </el-button>
-            <el-button
-                    type="primary"
-                    icon="el-icon-delete"
-                    class="handle-del mr10"
-                    @click="handleEdit({}, 'add')"
-            >{{$t('add')}}
-            </el-button>
+        <div class="machine-title">
+            <i class="el-icon-user-solid">{{$t('Images')}}</i>
+            <div class="el-button-group batch-button">
+                <el-button
+                        type="primary"
+                        icon="el-icon-delete"
+                        class="handle-del mr10"
+                        @click="delAllSelection"
+                >{{$t('batch_del')}}
+                </el-button>
+                <el-button
+                        type="primary"
+                        icon="el-icon-delete"
+                        class="handle-del mr10"
+                        @click="handleEdit({}, 'add')"
+                >{{$t('add')}}
+                </el-button>
+            </div>
         </div>
         <el-table
                 :data="tableData"

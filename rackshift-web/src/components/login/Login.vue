@@ -167,6 +167,7 @@
                         }, (res) => {
                             localStorage.setItem('login', true);
                             localStorage.setItem('user', JSON.stringify(res.data));
+                            localStorage.setItem('first', true) ;
                             window.location.href = "/";
                         }, (msg) => {
                             this.msg = msg;

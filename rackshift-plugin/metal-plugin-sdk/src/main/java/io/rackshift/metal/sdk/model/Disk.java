@@ -85,7 +85,7 @@ public class Disk implements Serializable {
      * @return the value of physical_disk.physical_machine_id
      * @mbg.generated
      */
-    public String getPhysicalMachineId() {
+    public String getBareMetalId() {
         return physicalMachineId;
     }
 
@@ -96,7 +96,7 @@ public class Disk implements Serializable {
      * @param physicalMachineId the value for physical_disk.physical_machine_id
      * @mbg.generated
      */
-    public void setPhysicalMachineId(String physicalMachineId) {
+    public void setBareMetalId(String physicalMachineId) {
         this.physicalMachineId = physicalMachineId == null ? null : physicalMachineId.trim();
     }
 

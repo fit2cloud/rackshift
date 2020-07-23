@@ -91,7 +91,7 @@ public class Cpu implements Serializable {
      * @return the value of pm_cpu.physical_machine_id
      * @mbg.generated
      */
-    public String getPhysicalMachineId() {
+    public String getBareMetalId() {
         return physicalMachineId;
     }
 
@@ -102,7 +102,7 @@ public class Cpu implements Serializable {
      * @param physicalMachineId the value for pm_cpu.physical_machine_id
      * @mbg.generated
      */
-    public void setPhysicalMachineId(String physicalMachineId) {
+    public void setBareMetalId(String physicalMachineId) {
         this.physicalMachineId = physicalMachineId == null ? null : physicalMachineId.trim();
     }
 

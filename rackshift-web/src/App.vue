@@ -13,10 +13,10 @@
         </el-dropdown>
 
       </el-header>
-      <el-container id="main-container">
-        <el-aside style="background-color: #F5F5F5;; margin-top: 10px;">
+      <el-container>
+        <el-aside style="background-color: #F5F5F5;">
           <!--          <el-menu :default-openeds="['2', '3']">-->
-          <el-menu id="main-menu">
+          <el-menu id="main-menu" :default-openeds="['2']">
             <el-submenu :index="m.order" v-for="m in menus" v-bind:key="m.order">
               <template slot="title"><i class="el-icon-message"></i>{{m.name}}</template>
               <el-menu-item :index="m.order + '' + c.order" v-for="c in m.childs" v-bind:key="c.order"
@@ -50,12 +50,18 @@
         user: JSON.parse(localStorage.getItem("user"))
       };
     },
+    mounted() {
+      if (localStorage.getItem('first') == 'true') {
+        this.$router.push("/bare-metal");
+        localStorage.removeItem('first');
+      }
+    },
     methods: {
       logout() {
         HttpUtil.get("logout", null, () => {
           localStorage.removeItem("login");
           window.location.href = "/";
-          window.event.returnValue=false;
+          window.event.returnValue = false;
         })
       }
     }
@@ -63,8 +69,11 @@
 </script>
 
 <style>
+  * {
+    font-size: 13px !important;
+  }
+
   body {
-    font-size: 10px !important;
     color: #2B415C;
     -webkit-font-smoothing: antialiased;
     margin: 0;
@@ -79,16 +88,18 @@
   .el-aside {
     color: #333;
     width: 220px !important;
+    border-right: none;
+    z-index: 1;
   }
 
   .container {
-    padding: 10px;
+    /*padding: 10px;*/
     background: #fff;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    margin: 10px 10px;
+    /*border-left: none;*/
+    /*border-radius: 5px;*/
     width: 100%;
-    height: calc(100vh - 135px);
+    height: calc(100vh - 75px);
   }
 
   .user-name {
@@ -103,13 +114,10 @@
     height: 45px !important;
     background: linear-gradient(to right, #000000 20%, #00447C 80%);
     color: #333;
+    z-index: 2;
     line-height: 45px;
-    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .12);
-  }
-
-  #main-container {
-    margin: 0;
-    font-size: 14px !important;
+    /*box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .12);*/
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px;
   }
 
   #dropdown {
@@ -131,5 +139,21 @@
 
   #main-menu {
     background-color: #F5F5F5;
+  }
+
+  .machine-title {
+    padding: 10px;
+  }
+
+  .batch-button {
+    margin-left: 15px;
+  }
+
+  .demo-drawer__content{
+    padding: 20px;
+  }
+
+  .pagination{
+    margin-top : 10px;
   }
 </style>

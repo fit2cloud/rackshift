@@ -8,7 +8,6 @@ import com.mongodb.client.FindIterable;
 import io.rackshift.constants.PluginConstants;
 import io.rackshift.constants.RackHDConstants;
 import io.rackshift.metal.sdk.IMetalProvider;
-import io.rackshift.metal.sdk.constants.BareMetalConstants;
 import io.rackshift.metal.sdk.util.CloudProviderManager;
 import io.rackshift.metal.sdk.util.DiskUtils;
 import io.rackshift.model.MachineEntity;
@@ -16,6 +15,7 @@ import io.rackshift.model.RackHDResponse;
 import io.rackshift.model.WorkflowResponse;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.BareMetalRuleMapper;
+import io.rackshift.state.LifeStatus;
 import io.rackshift.utils.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -680,7 +680,7 @@ public class RackHDService {
         physicalMachine.setId(UUIDUtil.newUUID());
         physicalMachine.setMachineModel(machineEntity.getBrand() + " " + machineEntity.getModel());
         physicalMachine.setUpdateTime(System.currentTimeMillis());
-        physicalMachine.setStatus(BareMetalConstants.PhysicalMachineStatus.onrack.toString());
+        physicalMachine.setStatus(LifeStatus.onrack.toString());
         physicalMachine.setManagementIp(machineEntity.getBmcIp());
         physicalMachine.setMachineSn(machineEntity.getSerialNo());
         //nodeId 存到serverId字段

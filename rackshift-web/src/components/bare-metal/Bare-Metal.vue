@@ -18,7 +18,15 @@
         <!--                </el-button>-->
         <!--            </el-button-group>-->
         <!--        </div>-->
+        <div class="machine-title">
+            <i class="el-icon-user-solid">Machines</i>
 
+            <el-button-group class="batch-button">
+                <el-button type="primary" icon="el-icon-edit"></el-button>
+                <el-button type="primary" icon="el-icon-share"></el-button>
+                <el-button type="primary" icon="el-icon-delete"></el-button>
+            </el-button-group>
+        </div>
         <div id="control" style="display: flex;">
             <div id="run-workflow">
                 <div class="el-icon-caret-right h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">Run
@@ -27,6 +35,7 @@
                 <el-button class="el-icon-caret-right h50"></el-button>
                 <el-button class="el-icon-close h50"></el-button>
             </div>
+
             <div id="workflow-selector" style="display: flex;">
                 <div id="select-workflow">
                     <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">Workflow
@@ -37,6 +46,14 @@
                         <el-option v-for="g in allGraphDefinitions" :label="g.injectableName" :value="g.id"></el-option>
                     </el-select>
                     <el-button class="el-icon-close h50"></el-button>
+                </div>
+                <div id="select-params">
+                    <div class="el-icon-s-operation h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+                        Params
+                    </div>
+                    <div class="run-splitter h25"></div>
+                    <el-button class="h50">Workflow <span class="el-icon-caret-bottom"></span></el-button>
+
                 </div>
             </div>
         </div>
@@ -51,20 +68,22 @@
         >
             <el-table-column type="selection" align="center"></el-table-column>
             <el-table-column :prop="c.prop" :label="c.label" align="center"
-                             v-for="c in columns"></el-table-column>
+                             v-for="c in columns" sortable="custom"></el-table-column>
 
             <el-table-column prop="" :label="$t('opt')" align="center">
+
                 <template slot-scope="scope">
                     <el-dropdown>
                         <el-button type="primary">
                             操作<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>poweron</el-dropdown-item>
-                            <el-dropdown-item>poweroff</el-dropdown-item>
-                            <el-dropdown-item>powercycle</el-dropdown-item>
-                            <el-dropdown-item>nextbootpxe</el-dropdown-item>
-                            <el-dropdowKn-item>nextbootdisk</el-dropdowKn-item>
+                            <el-dropdown-item @click.native="power('on', scope.row)">poweron</el-dropdown-item>
+                            <el-dropdown-item @click.native="power('off', scope.row)">poweroff</el-dropdown-item>
+                            <el-dropdown-item @click.native="power('reset', scope.row)">powercycle
+                            </el-dropdown-item>
+                            <el-dropdown-item @click.native="power('pxe', scope.row)">pxeboot
+                            </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -72,57 +91,16 @@
         </el-table>
         <div class="pagination">
             <el-pagination
-                    background
-                    layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
-                    :total="pageTotal"
+                    @size-change="handleSizeChange"
                     @current-change="handlePageChange"
-            ></el-pagination>
+                    :current-page="query.pageIndex"
+                    :page-sizes="[10, 20, 50, 100]"
+                    :page-size="10"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="pageTotal">
+            </el-pagination>
         </div>
 
-        <el-drawer
-                :title="editType == 'edit' ? '编辑用户' : '新增用户'"
-                :visible.sync="drawer"
-                direction="rtl"
-                :before-close="handleClose">
-            <div class="demo-drawer__content">
-                <el-form :model="editObj">
-                    <el-form-item label="ID" :label-width="formLabelWidth">
-                        <el-input v-model="editObj.id" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item :label="$t('name')" :label-width="formLabelWidth">
-                        <el-input v-model="editObj.name" autocomplete="off"
-                                  :placeholder="$t('pls_input_name')"></el-input>
-                    </el-form-item>
-                    <el-form-item :label="$t('email')" :label-width="formLabelWidth">
-                        <el-input v-model="editObj.email" autocomplete="off"
-                                  :placeholder="$t('pls_input_email')"></el-input>
-                    </el-form-item>
-                    <el-form-item :label="$t('phone')" :label-width="formLabelWidth">
-                        <el-input v-model="editObj.phone" autocomplete="off"
-                                  :placeholder="$t('pls_input_phone')"></el-input>
-                    </el-form-item>
-                    <el-form-item :label="$t('role')" :label-width="formLabelWidth">
-                        <el-select v-model="editObj.rolesIds" multiple :placeholder="$t('pls_select')">
-                            <el-option
-                                    v-for="(item, key) in allRoles"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-form>
-                <div class="demo-drawer__footer">
-                    <el-button @click="cancelForm">{{$t('cancel')}}</el-button>
-                    <el-button type="primary" @click="confirmEdit" :loading="loading">{{ loading ? $t('submitting') +
-                        '...' : $t('confirm')
-                        }}
-                    </el-button>
-                </div>
-            </div>
-        </el-drawer>
     </div>
 </template>
 
@@ -157,6 +135,10 @@
                     {
                         label: this.$t('machine_sn'),
                         prop: "machineSn"
+                    },
+                    {
+                        label: this.$t('management_ip'),
+                        prop: "managementIp"
                     },
                     {
                         label: this.$t('cpu'),
@@ -194,14 +176,20 @@
             this.getAllGraphDefinitions();
         },
         methods: {
-            c(e) {
-
+            power(opt, row) {
+                HttpUtil.get("/bare-metal/power/" + row.id + "/" + opt, null, (res) => {
+                    this.$message.success($t('success!'));
+                });
             },
             getData() {
                 HttpUtil.post("/bare-metal/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
                     this.tableData = res.data.listObject;
                     this.pageTotal = res.data.itemCount;
                 });
+            },
+            handleSizeChange(val) {
+                this.query.pageSize = val;
+                this.handlePageChange(this.query.pageIndex);
             },
             handleClose() {
                 this.drawer = false;
@@ -306,15 +294,15 @@
         border: solid #d7d2d2 1px;
         width: 141px;
         height: 120px;
-        padding: 10px 10px 20px 10px;
+        padding: 10px 10px 15px 10px;
         border-radius: 5px;
     }
 
     #workflow-selector {
         border: solid #d7d2d2 1px;
-        width: 100%;
+        /*width: 100%;*/
         height: 120px;
-        padding: 10px 0 20px 10px;
+        padding: 10px 10px 15px 10px;
         border-radius: 5px;
         margin-left: 10px;
     }
@@ -323,8 +311,13 @@
         height: 25%;
     }
 
-    .h50 {
-        height: 50%;
+    #control {
+        display: flex;
+        padding-top: 10px;
+        padding-bottom: 20px;
+        /*border: solid #d7d2d2 1px;*/
+        padding-left: 10px;
+        border-left: none;
     }
 
 </style>

@@ -19,7 +19,7 @@ public class RoleService {
     @Resource
     RoleMapper roleMapper;
 
-    public List<Role> list(RoleDTO queryVO, int pageNum, int pageSize) {
+    public List<Role> list(RoleDTO queryVO) {
         return roleMapper.selectByExample(null);
     }
 
