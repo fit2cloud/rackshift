@@ -1,0 +1,62 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "definitions": {
+        "serverUsername": {
+            "description": "NFS/CIFS server usename if serverFilePath is nfs/cifs share folder",
+            "type": "string"
+        },
+        "serverPassword": {
+            "description": "NFS/CIFS server password if serverFilePath is nfs/cifs share folder",
+            "type": "string"
+        },
+        "serverFilePath": {
+            "description": "Full file path for image or configure file on cifs/nfs or local folder",
+            "type": "string",
+            "pattern": "^(\\\\|\/|(\\d{1,3}\\.){3}\\d{1,3}:).*(exe|d7|EXE|xml)$"
+        },
+        "forceReboot": {
+            "description": "Specify if reboot after racadm control tasks are done",
+            "type": "boolean"
+        },
+        "component": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/componentEnum"
+            }
+        },
+        "componentEnum": {
+            "description": "Specify component to be erased",
+            "enum": ["bios", "diag", "drvpack", "idrac", "lcdata"]
+        },
+        "action": {
+            "description": "Specify racadm actions to implement specified control",
+            "type": "string",
+            "enum": [
+                "setBiosConfig", "updateFirmware", "getBiosConfig", "resetComponents",
+                "getConfigCatalog", "enableIpmi", "disableIpmi",
+                "disableVTx", "enableVTx", "enableAlert", "enableRedfish","disableRedfish", "setIdracIP"
+            ]
+        }
+    },
+    "properties": {
+        "serverUsername": {
+            "$ref": "#/definitions/serverUsername"
+        },
+        "serverPassword": {
+            "$ref": "#/definitions/serverPassword"
+        },
+        "serverFilePath": {
+            "$ref": "#/definitions/serverFilePath"
+        },
+        "forceReboot": {
+            "$ref": "#/definitions/forceReboot"
+        },
+        "action": {
+            "$ref": "#/definitions/action"
+        },
+        "components": {
+            "$ref": "#/definitions/component"
+        }
+    },
+    "required": ["action"]
+}

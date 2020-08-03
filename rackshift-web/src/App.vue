@@ -14,9 +14,8 @@
 
       </el-header>
       <el-container>
-        <el-aside style="background-color: #F5F5F5;">
-          <!--          <el-menu :default-openeds="['2', '3']">-->
-          <el-menu id="main-menu" :default-openeds="['2']">
+        <el-aside>
+          <el-menu id="main-menu" :default-openeds="['2']" style="border-right: none;">
             <el-submenu :index="m.order" v-for="m in menus" v-bind:key="m.order">
               <template slot="title"><i class="el-icon-message"></i>{{m.name}}</template>
               <el-menu-item :index="m.order + '' + c.order" v-for="c in m.childs" v-bind:key="c.order"
@@ -112,7 +111,8 @@
     text-align: right;
     font-size: 12px;
     height: 45px !important;
-    background: linear-gradient(to right, #000000 20%, #00447C 80%);
+    background: linear-gradient(to right, #00447C ,#409EFF 80%, #00447C );
+    /*background: linear-gradient(to right, #000000 20%, #00447C 80%);*/
     color: #333;
     z-index: 2;
     line-height: 45px;
@@ -138,7 +138,7 @@
   }
 
   #main-menu {
-    background-color: #F5F5F5;
+    /*background-color: #F5F5F5;*/
   }
 
   .machine-title {

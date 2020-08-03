@@ -1,0 +1,51 @@
+{
+    "copyright": "Copyright 2017, Dell EMC, Inc.",
+    "definitions": {
+        "imageUrl": {
+            "description": "Image URL in on-http",
+            "type": "string",
+            "pattern": ".*\\.bin$"
+        },
+        "imageMode": {
+            "description": "Update mode",
+            "enum": [
+                "fullbios", "bios", "uefi", "serdes", "post", "me",
+                "0", "1", "2", "3", "4", "5",
+                0, 1, 2, 3, 4, 5,
+                "fullbmc", "bmcapp", "ssp", "bootblock", "adaptivecooling",
+                "0x5f", "0x140", "0x142", "0x144", "0x145"
+            ]
+        },
+        "imageName": {
+            "description": "Image bin file name",
+            "type": "string"
+        },
+        "firmwareType": {
+            "description": "Type of firmware to be updated",
+            "type": "string",
+            "enum": ["spi", "bmc"]
+        },
+        "skipReset": {
+            "description": "Whether skip reset SP after firmware update",
+            "type": "boolean"
+        }
+    },
+    "properties": {
+        "imageName": {
+            "$ref": "#/definitions/imageName"
+        },
+        "imageUrl": {
+            "$ref": "#/definitions/imageUrl"
+        },
+        "imageMode": {
+            "$ref": "#/definitions/imageMode"
+        },
+        "firmwareType": {
+            "$ref": "#/definitions/firmwareType"
+        },
+        "skipReset": {
+            "$ref": "#/definitions/skipReset"
+        }
+    },
+    "required": ["imageUrl", "firmwareType", "imageName", "imageMode"]
+}

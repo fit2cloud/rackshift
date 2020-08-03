@@ -1,0 +1,28 @@
+{
+    "copyright": "Copyright 2017, DELL EMC, Inc.",
+    "definitions": {
+        "verifySSL": {
+            "description": "Specify if SSL certificate is open",
+            "type": "boolean"
+        },
+        "target": {
+            "description": "Specify nodeId to execute graph",
+            "type": "string"
+        },
+        "domain": {
+            "description": "Specify service name",
+            "type": "string"
+        }
+    },
+    "properties": {
+        "verifySSL": {
+            "$ref": "#/definitions/verifySSL"
+        },
+        "target": {
+            "$ref": "#/definitions/target"
+        },
+        "domain": {
+            "$ref": "#/definitions/domain"
+        }
+    }
+}

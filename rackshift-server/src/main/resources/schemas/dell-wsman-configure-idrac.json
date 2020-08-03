@@ -1,0 +1,32 @@
+{
+    "copyright": "Copyright 2017, Dell EMC, Inc.",
+    "definitions": {
+        "gateway": {
+            "description": "The ipv4 gateway",
+            "type": "string",
+            "format": "ipv4"
+        },
+        "netmask": {
+            "description": "The ipv4 netmask",
+            "type": "string",
+            "format": "ipv4"
+        },
+        "address": {
+            "description": "The ipv4 address",
+            "type": "string",
+            "format": "ipv4"
+        }
+    },
+    "properties": {
+        "gateway": {
+            "$ref": "#/definitions/gateway"
+        },
+        "netmask": {
+            "$ref": "#/definitions/netmask"
+        },
+        "address": {
+            "$ref": "#/definitions/address"
+        }
+    },
+    "required": ["gateway", "address", "netmask"]
+}

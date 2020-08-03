@@ -1,0 +1,77 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "definitions": {
+        "SMBUser": {
+            "type": "string",
+            "description":"SMB user for the share to which Windows's ISO is mounted",
+            "minLength": 1
+        },
+        "SMBPassword": {
+            "type": "string",
+            "description":"SMB password",
+            "minLength": 1
+        },
+        "SMBRepo": {
+            "type": "string",
+            "description":"SMB repo address for the share to which Windows's ISO is mounted",
+            "minLength": 1,
+            "pattern": "^\\\\"
+        },
+        "ProductKey": {
+            "type": "string",
+            "description":"Windows license",
+            "minLength": 1
+        },
+        "FirewallDisable": {
+            "type": "boolean",
+            "description": "true to disable firewall after installation"
+        }
+    },
+    "properties": {
+        "osType": {
+            "$ref": "types-installos.json#/definitions/OsType",
+            "readonly": true
+        },
+        "repo": {
+            "$ref": "types-installos.json#/definitions/Repo"
+        },
+        "username": {
+            "$ref": "types-installos.json#/definitions/UserName"
+        },
+        "password": {
+            "$ref": "types-installos.json#/definitions/UserPassword"
+        },
+        "profile": {
+            "$ref": "types-installos.json#/definitions/Profile"
+        },
+        "domain": {
+            "$ref": "types-installos.json#/definitions/Domain"
+        },
+        "dnsServers": {
+            "$ref": "types-installos.json#/definitions/DnsServerArray"
+        },
+        "networkDevices": {
+            "$ref": "types-installos.json#/definitions/NetworkDeviceArray"
+        },
+        "smbUser": {
+            "$ref": "#/definitions/SMBUser"
+        },
+        "smbPassword": {
+            "$ref": "#/definitions/SMBPassword"
+        },
+        "smbRepo": {
+            "$ref": "#/definitions/SMBRepo"
+        },
+        "productkey": {
+            "$ref": "#/definitions/ProductKey"
+        },
+        "firewallDisable": {
+            "$ref": "#/definitions/FirewallDisable"
+        },
+        "progressMilestones": {
+            "$ref": "types-installos.json#/definitions/ProgressMilestones"
+        }
+    },
+    "required": ["osType", "profile", "repo", "productkey", "smbUser",
+        "smbPassword", "smbRepo"]
+}

@@ -1,0 +1,45 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "definitions": {
+        "DeleteAll": {
+            "description": "Indicate whether to delete all existing RAIDs",
+            "type": "boolean"
+        },
+        "Controller": {
+            "description": "The MegaRAID controller id",
+            "type": "integer",
+            "minimum": 0
+        },
+        "Path": {
+            "description": "The storcli command path in microkernel",
+            "type": "string",
+            "minLength": 1
+        },
+        "RaidIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+                "type": "integer",
+                "minimum": 0
+            }
+        }
+    },
+    "properties": {
+        "path": {
+            "$ref": "#/definitions/Path"
+        },
+        "controller": {
+            "$ref": "#/definitions/Controller"
+        },
+        "deleteAll": {
+            "$ref": "#/definitions/DeleteAll"
+        },
+        "raidIds": {
+            "$ref": "#/definitions/RaidIds"
+        }
+    },
+    "anyOf": [
+        { "required": ["controller", "path", "raidIds"] },
+        { "required": ["controller", "path", "deleteAll"] }
+    ]
+}

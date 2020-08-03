@@ -1,0 +1,29 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "definitions": {
+        "NodeId": {
+            "type": "string",
+            "minLength": 1
+        },
+        "NodeIdArray": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/NodeId"
+            }
+        },
+        "IpmiUser": {
+            "description": "The IPMI user name",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16,
+            "pattern": "^[ -~]{1,16}$"
+        },
+        "IpmiPassword": {
+            "description": "The IPMI password",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "pattern": "^[ -~]{1,20}$"
+        }
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "RackHD Task Common Options",
+    "description": "The common options that shared by all tasks",
+    "type": "object",
+    "definitions": {
+        "Timeout": {
+            "type": "integer",
+            "minimum": -1,
+            "description": "This property can be used to specify a maximum amount of time a task may be run, in milliseconds. By default, this value is 24 hours. a value of 0 or -1 means infinite timeout"
+        },
+        "SchedulerOverrides": {
+            "type": "object",
+            "properties": {
+                "timeout": {
+                    "$ref": "#/definitions/Timeout"
+                }
+            }
+        }
+    },
+    "properties": {
+        "_taskTimeout": {
+            "$ref": "#/definitions/Timeout"
+        },
+        "schedulerOverrides": {
+            "$ref": "#/definitions/SchedulerOverrides"
+        }
+    }
+}

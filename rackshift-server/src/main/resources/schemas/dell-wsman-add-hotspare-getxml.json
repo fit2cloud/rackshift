@@ -1,0 +1,23 @@
+{
+    "copyright": "Copyright © 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "driveId": {
+            "description": "Specify drive id to be added as hot spare",
+            "type": "string"
+        },
+        "shutdownType": {
+            "description": "Specify the type of system shutdown: Graceful(0), Forced(1), default value is 0",
+            "type": "integer",
+            "enum": [0, 1]
+        }
+    },
+    "properties": {
+        "driveId": {
+            "$ref": "#/definitions/driveId"
+        },
+        "shutdownType": {
+            "$ref": "#/definitions/shutdownType"
+        }
+    },
+    "required": ["driveId"]
+}

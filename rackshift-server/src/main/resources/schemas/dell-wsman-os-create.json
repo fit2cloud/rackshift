@@ -1,0 +1,63 @@
+{
+    "copyright": "Copyright 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "action": {
+            "description": "Action to be performed",
+            "type": "string"
+        },
+        "destinationDir": {
+            "description": "Dir for target file",
+            "type": "string"
+        },
+        "destinationFileName": {
+            "description": "Target file name",
+            "type": "string"
+        },
+        "fileName": {
+            "description": "source ISO file name",
+            "type": "string"
+        },
+        "kickStartFileName": {
+            "description": "Kickstart file name",
+            "type": "string"
+        },
+        "ksLocation": {
+            "description": "Kickstart file location or address",
+            "type": "string"
+        },
+        "shareAddress": {
+            "description": "Specify whehter use NFS or CIFS as share server to hold firmware repository",
+            "type": "string"
+        },
+        "sourceDir": {
+            "description": "source Dir for ISO file",
+            "type": "string"
+        }
+    },
+    "properties": {
+        "action": {
+            "$ref": "#/definitions/action"
+        },
+        "destinationDir": {
+            "$ref": "#/definitions/destinationDir"
+        },
+        "destinationFileName": {
+            "$ref": "#/definitions/destinationFileName"
+        },
+        "fileName": {
+            "$ref": "#/definitions/fileName"
+        },
+        "kickStartFileName": {
+            "$ref": "#/definitions/kickStartFileName"
+        },
+        "ksLocation": {
+            "$ref": "#/definitions/ksLocation"
+        },
+        "shareAddress": {
+            "$ref": "#/definitions/shareAddress"
+        },
+        "sourceDir": {
+            "$ref": "#/definitions/sourceDir"
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "copyright": "Copyright 2017, Dell EMC, Inc.",
+    "definitions": {
+        "shutdownType": {
+            "description": "Specify the type of system shutdown: Graceful(0), Forced(1), default value:0",
+            "type": "integer",
+            "enum": [0, 1]
+        },
+        "forceUpdate": {
+            "description": "Specify the forceUpdate",
+            "type": "boolean"
+        }
+    },
+    "properties": {
+        "shutdownType": {
+            "$ref": "#/definitions/shutdownType"
+        },
+        "forceUpdate": {
+            "$ref": "#/definitions/forceUpdate"
+        }
+    },
+    "required": ["shutdownType", "forceUpdate"]
+}

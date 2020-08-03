@@ -1,0 +1,45 @@
+{
+    "copyright": "Copyright © 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "drives": {
+            "description": "Specify drives for adding volume",
+            "type": "string"
+        },
+        "name": {
+            "description": "Specify name for added volume",
+            "type": "string"
+        },
+        "raidLevel": {
+            "description": "Specify raidLevel for adding volume. default value: 0",
+            "type": "integer",
+            "enum": [0,1,5,10,50]
+        },
+        "stripeSize": {
+            "description": "Specify stripeSize for adding volume, default value: 128",
+            "type": "integer"
+        },
+        "writePolicy": {
+            "description": "Specify writePolicy for adding volume, default value: WriteBack",
+            "type": "string",
+            "enum": ["WriteBack", "WriteThrough", "ForceWriteBack"]
+        }
+    },
+    "properties": {
+        "drives": {
+            "$ref": "#/definitions/drives"
+        },
+        "name": {
+            "$ref": "#/definitions/name"
+        },
+        "raidLevel": {
+            "$ref": "#/definitions/raidLevel"
+        },
+        "stripeSize": {
+            "$ref": "#/definitions/stripeSize"
+        },
+        "writePolicy": {
+            "$ref": "#/definitions/writePolicy"
+        }
+    },
+    "required": ["drives","name"]
+}

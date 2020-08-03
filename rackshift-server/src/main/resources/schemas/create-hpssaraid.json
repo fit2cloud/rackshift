@@ -1,0 +1,59 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "definitions": {
+        "CreateDefault": {
+            "description": "Indicate whether to create default RAIDs, the default is creating raid0 for each disk",
+            "type": "boolean"
+        },
+        "Controller": {
+            "description": "The HpssaRAID controller id",
+            "type": "integer",
+            "minimum": 0
+        },
+        "Path": {
+            "description": "The hpssacli command path in microkernel",
+            "type": "string",
+            "minLength": 1
+        },
+        "RaidOption": {
+            "description": "The RAID options",
+            "properties": {
+                "type": {
+                    "description": "The RAID types",
+                    "enum": ["0", "1", "5", "6", "1+0", "50", "60"]
+                },
+                "drives": {
+                    "description": "Specify a list of physical drives (via slot ID) that are used to create this RAID",
+                    "type": "string"
+                }
+            },
+            "required": ["type", "drives"],
+            "additionalProperties": false
+        },
+        "RaidList": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+                "$ref": "#/definitions/RaidOption"
+            }
+        }
+    },
+    "properties": {
+        "createDefault": {
+            "$ref": "#/definitions/CreateDefault"
+        },
+        "controller": {
+            "$ref": "#/definitions/Controller"
+        },
+        "raidList": {
+            "$ref": "#/definitions/RaidList"
+        },
+        "path": {
+            "$ref": "#/definitions/Path"
+        }
+    },
+    "anyOf": [
+        { "required": ["controller", "path", "raidList"] },
+        { "required": ["controller", "path", "createDefault"] }
+    ]
+}

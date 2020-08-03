@@ -1,0 +1,43 @@
+{
+  "options": {
+    "defaults": {
+      "version": "7",
+      "repo": "http://172.31.128.1:8080/centos/7/os/x86_64",
+      "rootPassword": "RackHDRocks!",
+      "hostname": "rackhd-node",
+      "networkDevices": [
+        {
+          "device": "em1",
+          "ipv4": {
+            "ipAddr": "172.31.128.10",
+            "gateway": "172.31.128.1",
+            "netmask": "255.255.255.0"
+          }
+        }
+      ],
+      "installDisk": "/dev/sda",
+      "installPartitions": [
+        {
+          "mountPoint": "/",
+          "size": "auto",
+          "fsType": "ext3"
+        },
+        {
+          "mountPoint": "swap",
+          "size": "5000",
+          "fsType": "swap"
+        },
+        {
+          "mountPoint": "/boot",
+          "size": "5000",
+          "fsType": "ext3"
+        },
+        {
+          "mountPoint": "biosboot",
+          "size": "1",
+          "fsType": "biosboot"
+        }
+      ]
+    }
+  }
+}

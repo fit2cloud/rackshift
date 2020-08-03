@@ -1,0 +1,11 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "properties": {
+       "file": {
+            "description": "Image file, must have specified suffix and be placed in sku pack static/bios, static/bmc folers or RackHD default file repo ",
+            "type": "string",
+            "pattern": "^(bios\/|bmc\/)?[^\/]+(.ima|.bin|.BIN|.zip|.img)$"
+        }
+    },
+    "required": ["file"]
+}

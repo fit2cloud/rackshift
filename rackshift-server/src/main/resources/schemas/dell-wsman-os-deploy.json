@@ -1,0 +1,111 @@
+{
+    "copyright": "Copyright 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "action": {
+            "description": "action to be performed",
+            "type": "string"
+        },
+        "hypervisorType": {
+            "description": "Operating system to be installed on target node",
+            "type": "string"
+        },
+        "hypervisorVersion": {
+            "description": "Operating System version",
+            "type": "string"
+        },
+        "serverAddress": {
+            "description": "Target bare metal server IP/DNS address",
+            "type": "string"
+        },
+        "userName": {
+            "description": "OOB controller user name",
+            "type": "string"
+        },
+        "password": {
+            "description": "OOB controller password",
+            "type": "string"
+        },
+       "isoFileShare": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string",
+                         "description": "Network share address"
+                    },
+                    "description: ": {
+                        "type": "string",
+                        "description": "share to used for hosting iso files"
+                    },
+                   "fileName": {
+                        "type": "string",
+                        "description": "ISO file"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "share name"
+                    },
+                    "path": {
+                        "type": "string",
+                        "description": "file path"
+                    },
+                    "scriptDirectory: ": {
+                        "type": "string",
+                        "description": "script Directory"
+                    },
+                    "scriptName": {
+                        "type": "string",
+                        "description": "script Name"
+                    },
+                   "type": {
+                        "type": "string",
+                        "description": "share type"
+                    },
+
+                      "passwordCredential": {
+                            "type": "object",
+                            "properties": {
+                                "address": {
+                                    "type": "string",
+                                    "description": "Network share address"
+                                },
+                                "domain": {
+                                    "type": "string",
+                                    "description": "Network domain name"
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "description": "Network user name"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "description": "Network share password"
+                                }
+                            }       
+                        }
+                 }
+          }
+    },
+    "properties": {
+        "action": {
+            "$ref": "#/definitions/action"
+        },
+        "hypervisorType": {
+            "$ref": "#/definitions/hypervisorType"
+        },
+        "hypervisorVersion": {
+            "$ref": "#/definitions/hypervisorVersion"
+        },
+        "serverAddress": {
+            "$ref": "#/definitions/serverAddress"
+        },
+        "userName": {
+            "$ref": "#/definitions/userName"
+        },
+        "password": {
+            "$ref": "#/definitions/password"
+        },
+        "isoFileShare": {
+            "$ref": "#/definitions/isoFileShare" 
+        }   
+    }
+  }

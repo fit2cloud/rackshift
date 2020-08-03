@@ -1,0 +1,9 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "properties": {
+        "adapter": {
+            "$ref": "flash-megaraid.json#/definitions/Adapter"
+        }
+    },
+    "required": ["adapter"]
+}

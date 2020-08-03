@@ -1,0 +1,84 @@
+{
+    "copyright": "Copyright 2017, Dell EMC, Inc.",
+    "definitions": {
+        "BaseUrl": {
+            "type": "string",
+            "description":"Url path to netboot installer directory",
+            "minLength": 1
+        }
+    },
+    "properties": {
+        "baseUrl": {
+            "$ref": "#/definitions/BaseUrl"
+        },
+        "osType": {
+            "$ref": "types-installos.json#/definitions/OsType",
+            "readonly": true
+        },
+	"osName": {
+            "$ref": "types-installos.json#/definitions/OsName"
+        },
+        "version": {
+            "$ref": "types-installos.json#/definitions/Version"
+        },
+        "repo": {
+            "$ref": "types-installos.json#/definitions/Repo"
+        },
+        "users": {
+            "$ref": "types-installos.json#/definitions/UserArrayAdvance"
+        },
+        "hostname": {
+            "$ref": "types-installos.json#/definitions/Hostname"
+        },
+        "installDisk": {
+            "$ref": "types-installos.json#/definitions/InstallDisk"
+        },
+        "profile": {
+            "$ref": "types-installos.json#/definitions/Profile"
+        },
+        "installScript": {
+            "$ref": "types-installos.json#/definitions/InstallScript"
+        },
+        "installScriptUri": {
+            "$ref": "types-installos.json#/definitions/InstallScriptUri"
+        },
+        "comport": {
+            "$ref": "types-installos.json#/definitions/Comport"
+        },
+        "rootPassword": {
+            "$ref": "types-installos.json#/definitions/UserPassword"
+        },
+        "rootSshKey": {
+            "$ref": "types-installos.json#/definitions/SshKey"
+        },
+        "domain": {
+            "$ref": "types-installos.json#/definitions/Domain"
+        },
+        "dnsServers": {
+            "$ref": "types-installos.json#/definitions/DnsServerArray"
+        },
+        "ntpServers": {
+            "$ref": "types-installos.json#/definitions/NtpServerArray"
+        },
+        "networkDevices": {
+            "$ref": "types-installos.json#/definitions/NetworkDeviceArray"
+        },
+        "kvm": {
+            "$ref": "types-installos.json#/definitions/Kvm"
+        },
+        "installPartitions": {
+            "$ref": "types-installos.json#/definitions/InstallPartitionArray"
+        },
+        "progressMilestones": {
+            "$ref": "types-installos.json#/definitions/ProgressMilestones"
+        },
+        "timezone": {
+           "$ref": "types-installos.json#/definitions/Timezone"
+        },
+        "ntp": {
+            "$ref": "types-installos.json#/definitions/Ntp"
+        }
+    },
+    "required": ["osType", "osName", "version", "repo", "profile", "installScript",
+        "installScriptUri", "comport", "rootPassword", "hostname", "baseUrl"]
+}

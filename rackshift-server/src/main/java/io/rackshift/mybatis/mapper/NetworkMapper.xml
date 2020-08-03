@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.mybatis.mapper.NetworkMapper">
+  <resultMap id="BaseResultMap" type="io.rackshift.mybatis.domain.Network">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="vlan_id" jdbcType="VARCHAR" property="vlanId" />
+    <result column="start_ip" jdbcType="VARCHAR" property="startIp" />
+    <result column="end_ip" jdbcType="VARCHAR" property="endIp" />
+    <result column="netmask" jdbcType="VARCHAR" property="netmask" />
+    <result column="dhcp_enable" jdbcType="BIT" property="dhcpEnable" />
+    <result column="pxe_enable" jdbcType="BIT" property="pxeEnable" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, name, vlan_id, start_ip, end_ip, netmask, dhcp_enable, pxe_enable, create_time
+  </sql>
+  <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.NetworkExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from network
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from network
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from network
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="io.rackshift.mybatis.domain.NetworkExample">
+    delete from network
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="io.rackshift.mybatis.domain.Network">
+    insert into network (id, name, vlan_id, 
+      start_ip, end_ip, netmask, 
+      dhcp_enable, pxe_enable, create_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{vlanId,jdbcType=VARCHAR}, 
+      #{startIp,jdbcType=VARCHAR}, #{endIp,jdbcType=VARCHAR}, #{netmask,jdbcType=VARCHAR}, 
+      #{dhcpEnable,jdbcType=BIT}, #{pxeEnable,jdbcType=BIT}, #{createTime,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.Network">
+    insert into network
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="vlanId != null">
+        vlan_id,
+      </if>
+      <if test="startIp != null">
+        start_ip,
+      </if>
+      <if test="endIp != null">
+        end_ip,
+      </if>
+      <if test="netmask != null">
+        netmask,
+      </if>
+      <if test="dhcpEnable != null">
+        dhcp_enable,
+      </if>
+      <if test="pxeEnable != null">
+        pxe_enable,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="vlanId != null">
+        #{vlanId,jdbcType=VARCHAR},
+      </if>
+      <if test="startIp != null">
+        #{startIp,jdbcType=VARCHAR},
+      </if>
+      <if test="endIp != null">
+        #{endIp,jdbcType=VARCHAR},
+      </if>
+      <if test="netmask != null">
+        #{netmask,jdbcType=VARCHAR},
+      </if>
+      <if test="dhcpEnable != null">
+        #{dhcpEnable,jdbcType=BIT},
+      </if>
+      <if test="pxeEnable != null">
+        #{pxeEnable,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="io.rackshift.mybatis.domain.NetworkExample" resultType="java.lang.Long">
+    select count(*) from network
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update network
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.vlanId != null">
+        vlan_id = #{record.vlanId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.startIp != null">
+        start_ip = #{record.startIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.endIp != null">
+        end_ip = #{record.endIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.netmask != null">
+        netmask = #{record.netmask,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dhcpEnable != null">
+        dhcp_enable = #{record.dhcpEnable,jdbcType=BIT},
+      </if>
+      <if test="record.pxeEnable != null">
+        pxe_enable = #{record.pxeEnable,jdbcType=BIT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update network
+    set id = #{record.id,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      vlan_id = #{record.vlanId,jdbcType=VARCHAR},
+      start_ip = #{record.startIp,jdbcType=VARCHAR},
+      end_ip = #{record.endIp,jdbcType=VARCHAR},
+      netmask = #{record.netmask,jdbcType=VARCHAR},
+      dhcp_enable = #{record.dhcpEnable,jdbcType=BIT},
+      pxe_enable = #{record.pxeEnable,jdbcType=BIT},
+      create_time = #{record.createTime,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="io.rackshift.mybatis.domain.Network">
+    update network
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="vlanId != null">
+        vlan_id = #{vlanId,jdbcType=VARCHAR},
+      </if>
+      <if test="startIp != null">
+        start_ip = #{startIp,jdbcType=VARCHAR},
+      </if>
+      <if test="endIp != null">
+        end_ip = #{endIp,jdbcType=VARCHAR},
+      </if>
+      <if test="netmask != null">
+        netmask = #{netmask,jdbcType=VARCHAR},
+      </if>
+      <if test="dhcpEnable != null">
+        dhcp_enable = #{dhcpEnable,jdbcType=BIT},
+      </if>
+      <if test="pxeEnable != null">
+        pxe_enable = #{pxeEnable,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.Network">
+    update network
+    set name = #{name,jdbcType=VARCHAR},
+      vlan_id = #{vlanId,jdbcType=VARCHAR},
+      start_ip = #{startIp,jdbcType=VARCHAR},
+      end_ip = #{endIp,jdbcType=VARCHAR},
+      netmask = #{netmask,jdbcType=VARCHAR},
+      dhcp_enable = #{dhcpEnable,jdbcType=BIT},
+      pxe_enable = #{pxeEnable,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

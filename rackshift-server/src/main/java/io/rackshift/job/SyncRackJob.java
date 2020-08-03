@@ -3,8 +3,11 @@ package io.rackshift.job;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.RackHDConstants;
+import io.rackshift.constants.ServiceConstants;
+import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.MachineEntity;
-import io.rackshift.service.BareMetalService;
+import io.rackshift.mybatis.domain.SystemParameter;
+import io.rackshift.mybatis.mapper.SystemParameterMapper;
 import io.rackshift.service.RackHDService;
 import io.rackshift.utils.RackHDHttpClientUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,17 +25,20 @@ public class SyncRackJob {
     @Resource
     private RackHDService rackHDService;
     @Resource
-    private BareMetalService bareMetalService;
+    private BareMetalManager bareMetalManager;
     @Value("${run.mode:local}")
     private String runModel;
+    @Resource
+    private SystemParameterMapper systemParameterMapper;
 
-//    @Scheduled(fixedDelay = 1000)
+    //    @Scheduled(fixedDelay = 1000)
     @Scheduled(fixedDelay = 60000)
     public void run() {
         List<MachineEntity> entities = new LinkedList<>();
         JSONArray nodesArr = null;
+        SystemParameter systemParameter = systemParameterMapper.selectByPrimaryKey(ServiceConstants.endPointParameterKey);
         if ("release".equalsIgnoreCase(runModel)) {
-            nodesArr = JSONArray.parseArray(RackHDHttpClientUtil.get(rackhdUrl + RackHDConstants.NODES_URL, null));
+            nodesArr = JSONArray.parseArray(RackHDHttpClientUtil.get("http://" + systemParameter.getParamValue() + ":9090" + RackHDConstants.NODES_URL, null));
         } else {
             nodesArr = rackHDService.getLocalNodes();
         }
@@ -40,7 +46,7 @@ public class SyncRackJob {
             JSONObject nodeObj = nodesArr.getJSONObject(i);
             String type = nodeObj.getString("type");
             if ("compute".equalsIgnoreCase(type)) {
-                MachineEntity en = rackHDService.getNodeEntity(rackhdUrl, nodeObj.getString("id"), null);
+                MachineEntity en = rackHDService.getNodeEntity("http://" + systemParameter.getParamValue() + ":9090", nodeObj.getString("id"), null);
                 if (en != null) {
                     entities.add(en);
                 }
@@ -48,7 +54,7 @@ public class SyncRackJob {
         }
 
         entities.forEach(e -> {
-            bareMetalService.saveOrUpdateEntity(e);
+            bareMetalManager.saveOrUpdateEntity(e);
         });
     }
 

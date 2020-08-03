@@ -1,0 +1,96 @@
+{
+    "copyright": "Copyright 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "serverIP": {
+            "description": "Dell server iDRAC IP address",
+            "type": "string",
+            "minLength": 1
+        },
+        "serverUsername": {
+            "description": "Dell server iDRAC username",
+            "type": "string",
+            "minLength": 1
+        },
+        "serverPassword": {
+            "description": "Dell server iDARC password",
+            "type": "string",
+            "minLength": 1
+        },
+        "shareAddress": {
+            "description": "NFS/CIFS server address which holds firmware repository",
+            "type": "string",
+            "minLength": 1
+        },
+        "shareUsername": {
+            "description": "NFS/CIFS server usename",
+            "type": "string",
+            "minLength": 1
+        },
+        "sharePassword": {
+            "description": "NFS/CIFS server password",
+            "type": "string",
+            "minLength": 1
+        },
+        "shareName": {
+            "description": "Share path of the firmware repository folder on share server",
+            "type": "string",
+            "minLength": 1
+        },
+        "shareType": {
+            "description": "Specify whether use NFS or CIFS as share server to hold firmware repository",
+            "type": "integer",
+            "enum": [0, 2]
+        },
+        "fileName": {
+            "description": "Exported XML File name used in sharefolder. Leave it blank will use a random filename",
+            "type": "string",
+            "pattern": ".*\\.xml$"
+        },
+        "shutdownType": {
+            "description": "Specify the type of system shutdown: Graceful(0), Forced(1), default value:0",
+            "type": "integer",
+            "enum": [0, 1]
+        },
+        "componentNames": {
+            "description": "A list of components to get config catalogs. Leave it empty will get all component catalogs",
+            "type": "array",
+            "uniqueItems": true,
+            "minItems": 0
+        }
+    },
+    "properties": {
+        "serverIP":{
+            "$ref": "#/definitions/serverIP"
+        },
+        "serverUsername": {
+            "$ref": "#/definitions/serverUsername"
+        },
+        "serverPassword": {
+            "$ref": "#/definitions/serverPassword"
+        },
+        "shareAddress": {
+            "$ref": "#/definitions/shareAddress"
+        },
+        "shareUsername": {
+            "$ref": "#/definitions/shareUsername"
+        },
+        "sharePassword": {
+            "$ref": "#/definitions/sharePassword"
+        },
+        "shareName": {
+            "$ref": "#/definitions/shareName"
+        },
+        "shareType": {
+            "$ref": "#/definitions/shareType"
+        },
+        "fileName":{
+            "$ref": "#/definitions/fileName"
+        },
+        "shutdownType": {
+            "$ref": "#/definitions/shutdownType"
+        },
+        "componentNames": {
+            "$ref": "#/definitions/componentNames"
+        }
+    }
+}

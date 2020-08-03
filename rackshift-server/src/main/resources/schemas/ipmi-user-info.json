@@ -1,0 +1,12 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "properties": {
+        "user": {
+            "$ref": "types.json#/definitions/IpmiUser"
+        },
+        "password": {
+            "$ref": "types.json#/definitions/IpmiPassword"
+        }
+    },
+    "required": ["user", "password"]
+}

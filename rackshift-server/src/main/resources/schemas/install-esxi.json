@@ -1,0 +1,191 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "definitions": {
+        "ClearDisk": {
+            "description": "The disk(s) that will have their partition tables cleared by the ESXi installer",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "description": "a disk path that the OS can recognize or 'alldrives' to clear the partition tables on every drive",
+                    "minLength": 1
+                },
+                {
+                    "type": "null",
+                    "description": "only clear the partition tables on the disk the OS is being installed to"
+                }
+            ]
+        },
+        "PostInstallCommands": {
+            "type": "array",
+            "description": "A list of commands that will be run at the end of the post installation step, this can be used by the customer to tweak final system configuration",
+            "items": {
+                "type": "string",
+                "minLength": 1
+            }
+        },
+        "SwitchDeviceItem": {
+            "type": "object",
+            "properties": {
+                "switchName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "virtual switch name, such as 'vSwitch0'"
+                },
+                "uplinks": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "uniqueItems": true,
+                    "description": "list of uplink adapters that connected with the virtual switch, the example name of uplink adapter is 'vmnic0' or MAC address"
+                }
+            },
+            "required": ["switchName"]
+        },
+        "SwitchDevices": {
+            "type": "array",
+            "description": "Virtual switch configuration",
+            "items": {
+                "$ref": "#/definitions/SwitchDeviceItem"
+            },
+            "uniqueItems": true
+        },
+        "EsxBootConfigTemplate": {
+            "type": "string",
+            "description": "The template file name for ESXi boot config",
+            "minLength": 1
+        },
+        "EsxBootConfigTemplateUri": {
+            "type": "string",
+            "description": "The URL address that to download the ESXi boot config file",
+            "minLength": 1
+        },
+        "ComportAddress": {
+            "description": "The COM port address, com1=0x3f8, com2=0x2f8, com3=0x3e8, com4=0x2e8",
+            "enum": [
+                "0x3f8",
+                "0x2f8",
+                "0x3e8",
+                "0x2e8"
+            ]
+        },
+        "gdbPort":{
+            "description":"Serial port used for GDB debug",
+            "enum":[
+                 "com1",
+                 "com2",
+                 "none",
+                 "default"        
+            ]
+        },  
+        "logPort":{
+             "description":"Serial port for log output in ESXi",
+             "enum": [ 
+                   "com1",
+                   "com2",
+                   "none",
+                   "default"
+             ]  
+         },
+         "debugLogToSerial":{
+             "description":"0 = Serial debug off; 1 = Serial debug on;2 = defer to config option file",
+             "enum": [
+                     "0",
+                     "1",
+                     "2"
+             ]  
+        }
+    },
+    "properties": {
+        "osType": {
+            "$ref": "types-installos.json#/definitions/OsType",
+            "readonly": true
+        },
+        "version": {
+            "$ref": "types-installos.json#/definitions/Version"
+        },
+        "repo": {
+            "$ref": "types-installos.json#/definitions/Repo"
+        },
+        "users": {
+            "$ref": "types-installos.json#/definitions/UserArrayBasic"
+        },
+        "hostname": {
+            "$ref": "types-installos.json#/definitions/Hostname"
+        },
+        "installDisk": {
+            "$ref": "types-installos.json#/definitions/InstallDisk"
+        },
+        "clearDisk": {
+            "$ref": "#/definitions/ClearDisk"
+        },
+        "profile": {
+            "$ref": "types-installos.json#/definitions/Profile"
+        },
+        "installScript": {
+            "$ref": "types-installos.json#/definitions/InstallScript"
+        },
+        "installScriptUri": {
+            "$ref": "types-installos.json#/definitions/InstallScriptUri"
+        },
+        "comport": {
+            "$ref": "types-installos.json#/definitions/Comport"
+        },
+        "rootPassword": {
+            "$ref": "types-installos.json#/definitions/UserPassword"
+        },
+        "rootSshKey": {
+            "$ref": "types-installos.json#/definitions/SshKey"
+        },
+        "domain": {
+            "$ref": "types-installos.json#/definitions/Domain"
+        },
+        "dnsServers": {
+            "$ref": "types-installos.json#/definitions/DnsServerArray"
+        },
+        "ntpServers": {
+            "$ref": "types-installos.json#/definitions/NtpServerArray"
+        },
+        "networkDevices": {
+            "$ref": "types-installos.json#/definitions/NetworkDeviceArray"
+        },
+        "rackhdCallbackScript": {
+            "$ref": "types-installos.json#/definitions/RackHDCallbackScript"
+        },
+        "postInstallCommands": {
+            "$ref": "#/definitions/PostInstallCommands"
+        },
+        "switchDevices": {
+            "$ref": "#/definitions/SwitchDevices"
+        },
+        "esxBootConfigTemplate": {
+            "$ref": "#/definitions/EsxBootConfigTemplate"
+        },
+        "esxBootConfigTemplateUri": {
+            "$ref": "#/definitions/EsxBootConfigTemplateUri"
+        },
+        "rackhdCallbackScript": {
+            "$ref": "types-installos.json#/definitions/RackHDCallbackScript"
+        },
+        "comportaddress": {
+            "$ref": "#/definitions/ComportAddress"
+        },
+        "gdbPort":{
+            "$ref": "#/definitions/gdbPort"
+        },
+        "logPort":{
+            "$ref": "#/definitions/logPort"
+        },
+        "debugLogToSerial":{
+            "$ref": "#/definitions/debugLogToSerial"
+        },
+        "progressMilestones": {
+            "$ref": "types-installos.json#/definitions/ProgressMilestones"
+        }
+    },
+    "required": ["osType", "version", "repo", "profile", "installScript",
+        "installScriptUri", "rootPassword", "rackhdCallbackScript",
+        "esxBootConfigTemplate", "esxBootConfigTemplateUri", "comportaddress",
+        "comport"]
+}

@@ -1,0 +1,43 @@
+{
+    "copyright": "Copyright © 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "shutdownType": {
+            "description": "Specify the type of system shutdown: Graceful(0), Forced(1), default value:0",
+            "type": "integer",
+            "enum": [0,1]
+        },
+        "removeXmlFile": {
+            "description": "Specify if the xml file is deleted. It's default value is true",
+            "type": "boolean"
+        },
+        "ipAddress": {
+            "description": "Specify ipAddress for obm setting",
+            "type": "string"
+        },
+        "username": {
+            "description": "Specify username for obm setting",
+            "type": "string"
+        },
+        "password": {
+            "description": "Specify password for obm setting",
+            "type": "string"
+        }
+    },
+    "properties": {
+        "shutdownType": {
+            "$ref": "#/definitions/shutdownType"
+        },
+        "removeXmlFile": {
+            "$ref": "#/definitions/removeXmlFile"
+        },
+        "ipAddress": {
+            "$ref": "#/definitions/ipAddress"
+        },
+        "username": {
+            "$ref": "#/definitions/username"
+        },
+        "password": {
+            "$ref": "#/definitions/password"
+        }
+    }
+}

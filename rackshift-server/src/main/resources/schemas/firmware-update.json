@@ -1,0 +1,24 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "definitions": {
+        "File": {
+            "description": "The filename of firmware image",
+            "type": "string",
+            "minLength": 1
+        },
+        "DownloadDir": {
+            "description": "The directory where the firmware image is stored",
+            "type": "string",
+            "minLength": 1
+        }
+    },
+    "properties": {
+        "file": {
+            "$ref": "#/definitions/File"
+        },
+        "downloadDir": {
+            "$ref": "#/definitions/DownloadDir"
+        }
+    },
+    "required": ["file", "downloadDir"]
+}

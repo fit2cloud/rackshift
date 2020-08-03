@@ -6,6 +6,7 @@ import Role from "../role/Role.vue"
 import User from "../user/User.vue"
 import BareMetal from "../bare-metal/Bare-Metal"
 import Image from "../image/Image"
+import Network from "../network/Network"
 
 Vue.use(VueRouter);
 
@@ -17,6 +18,7 @@ const routes = [
     {path: '/user', component: User},
     {path: '/bare-metal', component: BareMetal},
     {path: '/image', component: Image},
+    {path: '/network', component: Network},
 ]
 const router = new VueRouter({
     routes: routes

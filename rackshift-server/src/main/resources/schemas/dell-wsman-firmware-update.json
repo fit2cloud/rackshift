@@ -1,0 +1,50 @@
+{
+    "copyright": "Copyright 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "shareFolderAddress": {
+            "description": "NFS/CIFS server address which holds firmware repository",
+            "type": "string"
+        },
+        "shareFolderUserName": {
+            "description": "NFS/CIFS server usename",
+            "type": "string"
+        },
+        "shareFolderPassword": {
+            "description": "NFS/CIFS server password",
+            "type": "string"
+        },
+        "shareFolderName": {
+            "description": "Share path of the firmware repository folder on share server",
+            "type": "string"
+        },
+        "shareFolderType": {
+            "description": "Specify whehter use NFS or CIFS as share server to hold firmware repository",
+            "enum": ["NFS", "CIFS", "nfs", "cifs"]
+        },
+        "rebootNeeded": {
+            "description": "Specify if reboot after racadm control tasks are done",
+            "type": "boolean"
+        }
+    },
+    "properties": {
+        "shareFolderAddress": {
+            "$ref": "#/definitions/shareFolderAddress"
+        },
+        "shareFolderUserName": {
+            "$ref": "#/definitions/shareFolderUserName"
+        },
+        "shareFolderPassword": {
+            "$ref": "#/definitions/shareFolderPassword"
+        },
+        "shareFolderName": {
+            "$ref": "#/definitions/shareFolderName"
+        },
+        "shareFolderType": {
+            "$ref": "#/definitions/shareFolderType"
+        },
+        "rebootNeeded": {
+            "$ref": "#/definitions/rebootNeeded"
+        }
+    },
+    "required": ["shareFolderAddress", "shareFolderType", "shareFolderName"]
+}

@@ -1,0 +1,102 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "definitions": {
+        "SimpleCommandItem": {
+            "description": "The command line including the arguments",
+            "type": "string",
+            "readonly": true
+        },
+        "AdvanceCommandItem": {
+            "type": "object",
+            "properties": {
+                "catalog": {
+                    "description": "Indicate the command result should be stored into catalog and specify the parameter while storing catalog",
+                    "type": "object",
+                    "properties": {
+                        "source": {
+                            "description": "The source where the catalog data is from",
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "format": {
+                            "description": "The catalog format, such as 'json', 'raw', .etc",
+                            "type": "string",
+                            "enum": ["json", "raw"]
+                        }
+                    },
+                    "required": ["source"],
+                    "additionalProperties": false
+                },
+                "command": {
+                    "$ref": "#/definitions/SimpleCommandItem"
+                },
+                "retries": {
+                    "description": "The total retry times if the command execution fails",
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "downloadUrl": {
+                    "description": "Specify the download URL if the command needs to download some data or script before execution",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "acceptedResponseCodes": {
+                    "description": "The acceptable exit codes to mark the command success. Defaultly, exit code 0 means the command success, otherwise failure. If you want to specify other exit codes as success, write them here",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    },
+                    "uniqueItems": true,
+                    "minItems": 1
+                },
+                "timeout": {
+                    "description": "The timeout of the command execution, in milliseconds. (Some command may not support this parameter), for example '/api/current/files/abc.txt'",
+                    "type": "integer",
+                    "minimum": 0
+                }
+            },
+            "anyOf": [
+                { "required": [ "command" ] },
+                { "required": [ "downloadUrl" ] }
+            ],
+            "additionalProperties": false
+        },
+        "CommandItem": {
+            "oneOf": [
+                { "$ref": "#/definitions/SimpleCommandItem" },
+                { "$ref": "#/definitions/AdvanceCommandItem" }
+            ]
+        },
+        "CommandArray": {
+            "description": "The list of commands that will be exuected in microkernel, all commands are exuected one by one in order",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/CommandItem"
+            },
+            "readonly": true
+        },
+        "RunOnlyOnce": {
+            "description": "Indicate whether all commands should only be run once by node, if true, any additional request from node will be ignored. Default is true",
+            "type": "boolean"
+        },
+        "UpdateExistingCatalog": {
+            "description": "Indicate whether to update the specified catalog rather than create a new catalog",
+            "type": "boolean"
+        }
+    },
+    "properties": {
+        "commands": {
+            "oneOf": [
+                { "$ref": "#/definitions/CommandArray" },
+                { "$ref": "#/definitions/CommandItem" }
+            ]
+        },
+        "runOnlyOnce": {
+            "$ref": "#/definitions/RunOnlyOnce"
+        },
+        "updateExistingCatalog": {
+            "$ref": "#/definitions/UpdateExistingCatalog"
+        }
+    },
+    "required": ["commands"]
+}

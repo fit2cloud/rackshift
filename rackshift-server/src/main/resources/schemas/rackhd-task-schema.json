@@ -1,0 +1,29 @@
+{
+    "type": "object",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "RackHD Tasks Schema Extention",
+    "description": "The extension for RackHD tasks schema, all RackHD tasks schema should adhere to this schema.",
+    "allOf": [
+        {
+            "$ref": "http://json-schema.org/draft-04/schema"
+        }
+    ],
+    "definitions": {
+        "copyright": {
+            "type": "string",
+            "description": "This attribute shall contain the copyright notice for the schema."
+        },
+        "readonly": {
+            "type": "boolean",
+            "description": "This property shall designate a property to be readonly when set to true"
+        }
+    },
+    "properties": {
+        "copyright": {
+            "$ref": "#/definitions/copyright"
+        },
+        "readonly": {
+            "$ref": "#/definitions/readonly"
+        }
+    }
+}

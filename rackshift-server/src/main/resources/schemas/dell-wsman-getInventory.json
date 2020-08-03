@@ -1,0 +1,21 @@
+{
+    "copyright": "Copyright © 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "verifySSL": {
+            "description": "Specify if SSL certificate is enabled. It's default value is false",
+            "type": "boolean"
+        },
+        "domain": {
+            "description": "Specify domain name. It's default is domain",
+            "type": "string"
+        }
+    },
+    "properties": {
+        "verifySSL": {
+            "$ref": "#/definitions/verifySSL"
+        },
+        "domain": {
+            "$ref": "#/definitions/domain"
+        }
+    }
+}

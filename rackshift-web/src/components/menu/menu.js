@@ -29,7 +29,7 @@ export default {
 
                 {
                     "name": "镜像",
-                    "router": "/Image",
+                    "router": "/image",
                     "requireRole": "user,admin",
                     "order" : "3",
                 },
@@ -37,13 +37,13 @@ export default {
         },
         {
             "name": "网络",
-            "router": "/Network",
+            "router": "/network",
             "requireRole": "admin",
             "order" : "3",
             childs: [
                 {
                     "name": "子网",
-                    "router": "/Subnet",
+                    "router": "/network",
                     "requireRole": "admin",
                     "order" : "1",
                 },

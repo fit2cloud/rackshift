@@ -1,0 +1,37 @@
+{
+    "copyright": "Copyright 2017, Dell EMC, Inc.",
+    "definitions": {
+        "alertFilter": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "description": "Count of events should match the filter continuously",
+                    "type": "integer",
+                    "minimum": 1
+                }
+            }
+        },
+        "alertFilters": {
+            "description": "Filtering conditions to match a serial of specified SEL events",
+            "type": "array",
+            "uniqueItems": false,
+            "minItems": 1,
+            "items": { "$ref": "#/definitions/alertFilter"}
+        },
+        "pollInterval": {
+            "description": "Specified poll interval for sel events",
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 86400000
+        }
+    },
+    "properties": {
+        "alertFilters": {
+            "$ref": "#/definitions/alertFilters"
+        },
+        "pollInterval": {
+            "$ref": "#/definitions/pollInterval"
+        }
+    },
+    "required": ["alertFilters"]
+}

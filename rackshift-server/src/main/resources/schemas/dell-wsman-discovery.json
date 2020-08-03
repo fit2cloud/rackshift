@@ -1,0 +1,72 @@
+{
+    "copyright": "Copyright © 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "credentials": {
+            "description": "Specify credential for discovering",
+            "type": "object",
+            "properties": {
+                "userName": {
+                    "description": "Specify username of credential",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "Specify password of credential",
+                    "type": "string"
+                }
+            }
+        },
+        "deviceTypesToDiscover": {
+            "description": "Specify device types to be discovered",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "range": {
+            "description": "Specify ip range, credentials and device types to be discoverd",
+            "type": "object",
+            "properties": {
+                "startIp": {
+                    "description": "A valid IP address to be discoverd from",
+                    "type": "string"
+                },
+                "endIp": {
+                    "description": "A last IP address to be discovered to",
+                    "type": "string"
+                },
+                "credentials": {
+                    "$ref": "#/definitions/credentials"
+                },
+                "deviceTypesToDiscover": {
+                    "$ref": "#/definitions/deviceTypesToDiscover"
+                }
+            }
+        },
+        "ranges": {
+            "description": "Specify an range array to be discovered, each includes ip range, credential and device types",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/range"
+            }
+        },
+        "inventory": {
+            "description": "Specify whether to collect inventory data or not",
+            "type": "boolean"
+        }
+    },
+    "properties": {
+        "ranges": {
+            "$ref": "#/definitions/ranges"
+        },
+        "credentials": {
+            "$ref": "#/definitions/credentials"
+        },
+        "inventory": {
+            "$ref": "#/definitions/inventory"
+        },
+        "deviceTypesToDiscover": {
+            "$ref": "#/definitions/deviceTypesToDiscover"
+        }
+    },
+    "required": ["ranges"]
+}

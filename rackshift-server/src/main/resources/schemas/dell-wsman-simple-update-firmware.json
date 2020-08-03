@@ -1,0 +1,15 @@
+{
+    "copyright": "Copyright © 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "imageURI": {
+            "description": "Specify image URL in on-http which could be accessed from target node.",
+            "type": "string"
+        }
+    },
+    "properties": {
+        "imageURI": {
+            "$ref": "#/definitions/imageURI"
+        }
+    },
+    "required": ["imageURI"]
+}

@@ -1,0 +1,38 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "properties": {
+        "osType": {
+            "$ref": "types-installos.json#/definitions/OsType",
+            "readonly": true
+        },
+        "version": {
+            "$ref": "types-installos.json#/definitions/Version"
+        },
+        "repo": {
+            "$ref": "types-installos.json#/definitions/Repo"
+        },
+        "hostname": {
+            "$ref": "types-installos.json#/definitions/Hostname"
+        },
+        "installDisk": {
+            "$ref": "types-installos.json#/definitions/InstallDisk"
+        },
+        "profile": {
+            "$ref": "types-installos.json#/definitions/Profile"
+        },
+        "installScript": {
+            "$ref": "types-installos.json#/definitions/InstallScript"
+        },
+        "installScriptUri": {
+            "$ref": "types-installos.json#/definitions/InstallScriptUri"
+        },
+        "comport": {
+            "$ref": "types-installos.json#/definitions/Comport"
+        },
+        "progressMilestones": {
+            "$ref": "types-installos.json#/definitions/ProgressMilestones"
+        }
+    },
+    "required": ["osType", "version", "repo", "hostname", "profile",
+        "installScript", "installScriptUri", "comport"]
+}

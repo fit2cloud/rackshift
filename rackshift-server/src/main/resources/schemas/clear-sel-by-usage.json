@@ -1,0 +1,23 @@
+{
+    "copyright": "Copyright 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "selClearFlag": {
+            "type": "boolean",
+            "description": "User specifies whether force to clear sel when sel entry is almost full"
+        },
+        "maxSelUsagePercent": {
+            "type": "integer",
+            "maximum": 100,
+            "minimum": 1,
+            "description": "User specifies at which point sel should be clear, default is 60"
+        }
+    },
+    "properties": {
+        "selClear": {
+            "$ref": "#/definitions/selClearFlag"
+        },
+        "maxSelUsage": {
+            "$ref": "#/definitions/maxSelUsagePercent"
+        }
+    }
+}

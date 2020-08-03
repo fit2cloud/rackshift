@@ -1,0 +1,438 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "definitions": {
+        "OsType": {
+            "description": "The type of OS which is used by code internally",
+            "enum": [ "esx", "linux", "windows" ]
+        },
+        "OsName": {
+            "description": "The name of Linux OS based on LSB Distributor ID (debian, ubuntu)",
+            "enum": [ "debian", "ubuntu" ]
+        },
+        "UserName": {
+            "description": "The user account name",
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_]",
+            "minLength": 1
+        },
+        "UserPassword": {
+            "description": "The account password",
+            "type": "string",
+            "minLength": 1
+        },
+        "SshKey": {
+            "type": "string",
+            "description": "The trusted ssh key for the particular user",
+            "minLength": 1
+        },
+        "UserID": {
+            "description": "The unique user identifier for this user account",
+            "type": "integer",
+            "minimum": 500,
+            "maximum": 65535
+        },
+        "UserAccountBasic": {
+            "type": "object",
+            "description": "The basic information for an user account",
+            "properties": {
+                "name": {
+                    "$ref": "#/definitions/UserName"
+                },
+                "password": {
+                    "$ref": "#/definitions/UserPassword"
+                },
+                "sshKey": {
+                    "$ref": "#/definitions/SshKey"
+                }
+            },
+            "required": ["name", "password"]
+        },
+        "UserAccountAdvance": {
+            "type": "object",
+            "description": "The advance information for an user account",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/UserAccountBasic"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "uid": {
+                            "$ref": "#/definitions/UserID"
+                        }
+                    }
+                }
+            ]
+        },
+        "UserArrayBasic": {
+            "description": "The list of user account that will be created during OS installation, it supports basic user account information",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "#/definitions/UserAccountBasic"
+            },
+            "uniqueItems": true
+        },
+        "UserArrayAdvance": {
+            "description": "The list of user account that will be created during OS installation, it supports full user account information",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "#/definitions/UserAccountAdvance"
+            },
+            "uniqueItems": true
+        },
+        "VlanId": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4095
+        },
+        "Ipv4Configuration": {
+            "type": "object",
+            "properties": {
+                "ipAddr": {
+                    "description": "The ipv4 address",
+                    "type": "string",
+                    "format": "ipv4"
+                },
+                "netmask": {
+                    "description": "The ipv4 netmask",
+                    "type": "string",
+                    "format": "ipv4"
+                },
+                "gateway": {
+                    "description": "The ipv4 gateway",
+                    "type": "string",
+                    "format": "ipv4"
+                },
+                "vlanIds": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/VlanId"
+                    },
+                    "uniqueItems": true
+                },
+                "mtu": {
+                    "description": "The ipv4 MTU",
+                    "type": "integer",
+                    "minimum": 1500,
+                    "maximum": 9026
+                }
+            },
+            "required": ["ipAddr", "netmask"],
+            "additionalProperties": false
+        },
+        "Ipv6Configuration": {
+            "type": "object",
+            "properties": {
+                "ipAddr": {
+                    "description": "The ipv6 address",
+                    "type": "string",
+                    "format": "ipv6"
+                },
+                "gateway": {
+                    "description": "The ipv6 gateway",
+                    "type": "string",
+                    "format": "ipv6"
+                },
+                "vlanIds": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/VlanId"
+                    },
+                    "uniqueItems": true
+                },
+                "prefixlen": {
+                    "description": "The ipv6 prefixlen/netmask",
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 128
+                }
+            },
+            "required": ["ipAddr", "prefixlen", "gateway"],
+            "additionalProperties": false
+        },
+        "NetworkConfig": {
+            "description": "The network configuration for an interface",
+            "type": "object",
+            "properties": {
+                "device": {
+                    "description": "The interface name. For ESXi, it is portgroup name, also MAC Address is allowed for ESXi",
+                    "type": "string"
+                },
+                "ipv4": {
+                    "description": "the ipv4 configuration for this interface",
+                    "$ref": "#/definitions/Ipv4Configuration"
+                },
+                "ipv6": {
+                    "description": "the ipv6 configuration for this interface",
+                    "$ref": "#/definitions/Ipv6Configuration"
+                },
+                "esxSwitchName": {
+                    "type": "string",
+                    "description": "ESXi only. The name of vSwitch that the portgroup is attached to, if not specified, it is always attached to vSwitch0",
+                    "minLength": 1
+                }
+            },
+            "required": ["device"],
+            "additionalProperties": true
+        },
+        "Nics": {
+            "description": "List of NICs",
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        },
+        "BondVlanInterface": {
+            "description": "Bonded VLAN Interface Configuration",
+            "type": "object",
+            "properties": {
+                "vlanid": {
+                    "description": "Bonded VLAN sub-interface",
+                    "$ref": "#/definitions/VlanId"
+                },
+                "ipv4": {
+                    "description": "the ipv4 configuration for this interface",
+                    "$ref": "#/definitions/Ipv4Configuration"
+                },
+                "ipv6": {
+                    "description": "the ipv6 configuration for this interface",
+                    "$ref": "#/definitions/Ipv6Configuration"
+                }
+            },
+            "required": ["vlanid"],
+            "additionalProperties": true
+        },
+        "BondConfig": {
+            "description": "Bond Interface configuration",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "The bond interface name.",
+                    "type": "string"
+                },
+                "nics": {
+                    "description": "list of interfaces that needs to included in bond configuration",
+                    "$ref": "#/definitions/Nics"
+                },
+                "ipv4": {
+                    "description": "the ipv4 configuration for this bonded interface",
+                    "$ref": "#/definitions/Ipv4Configuration"
+                },
+                "ipv6": {
+                    "description": "the ipv6 configuration for this bonded interface",
+                    "$ref": "#/definitions/Ipv6Configuration"
+                },
+                "bondvlaninterfaces": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BondVlanInterface"
+                    },
+                    "uniqueItems": true
+                }
+            },
+            "required": ["name"],
+            "additionalProperties": true
+        },
+        "NetworkDeviceArray": {
+            "description": "The network configuration for each NIC",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "#/definitions/NetworkConfig"
+            },
+            "uniqueItems": true
+        },
+        "BondsArray": {
+            "description": "Bond Interface configuration definition",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "#/definitions/BondConfig"
+            },
+            "uniqueItems": true
+        },
+        "PartitionConfig": {
+            "description": "The configuration for a disk partition",
+            "type": "object",
+            "properties": {
+                "mountPoint": {
+                    "description": "Mount point, it could be '/boot', '/', 'swap', etc. just like the mount point input when manually installing OS.",
+                    "type": "string"
+                },
+                "size": {
+                    "description": "Partition size",
+                    "type": "string"
+                },
+                "fsType": {
+                    "description": "File system supported by OS",
+                    "type": "string"
+                }
+            },
+            "required": ["mountPoint", "size"]
+        },
+        "InstallPartitionArray": {
+            "description": "specify the installDisk's partition if you don't like OS's auto partition policy",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/PartitionConfig"
+            },
+            "uniqueItems": true,
+            "minItems": 1
+        },
+        "InstallDisk": {
+            "description": "The disk that OS will be installed on",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "description": "a disk path that the OS can recongize",
+                    "minLength": 1
+                },
+                {
+                    "type": "integer",
+                    "description": "The rackhd generated disk identifier, obtain from driveId catalog",
+                    "minimum": 0
+                },
+                {
+                    "type": "null",
+                    "description": "use default disk, '/dev/sda' for linux os, 'firstdisk' for esxi"
+                }
+            ]
+        },
+        "Kvm": {
+            "description": "a flag to indicate whether install kvm packages",
+            "type": "boolean"
+        },
+        "DnsServerArray": {
+            "description": "The list of DNS servers",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "string",
+                "format": "ipv4"
+            },
+            "uniqueItems": true
+        },
+        "NtpServerArray": {
+            "description": "The list of NTP servers",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "string",
+                "minLength": 1
+            },
+            "uniqueItems": true
+        },
+        "Version": {
+            "description": "The version of target OS",
+            "type": "string",
+            "pattern": "^[-0-9a-zA-Z._*+#]+$"
+        },
+        "Repo": {
+            "description": "The OS http repository which contains all data that required for os installation",
+            "type": "string",
+            "pattern": "^http://"
+        },
+        "Hostname": {
+            "description": "The hostname of target OS",
+            "type": "string",
+            "format": "hostname"
+        },
+        "Domain": {
+            "description": "The DNS domain suffix for target OS",
+            "type": "string"
+        },
+        "Comport": {
+            "type": "string",
+            "description": "Specify a console device, such as 'com1', 'ttyS0'"
+        },
+        "Profile": {
+            "type": "string",
+            "description": "The ipxe script name for this particular OS installation",
+            "minLength": 1
+        },
+        "InstallScript": {
+            "type": "string",
+            "description": "The script name that used to auto-config the target OS, such as kickstart for CentOS and preseed for Ubuntu",
+            "minLength": 1
+        },
+        "InstallScriptUri": {
+            "type": "string",
+            "description": "The URL address the node used to download the install script",
+            "pattern": "^http://"
+        },
+        "RackHDCallbackScript": {
+            "type": "string",
+            "description": "The file name of callback script that will be called when the first time the OS boots up",
+            "minLength": 1
+        },
+        "ProgressMilestones": {
+            "type": "object",
+            "description": "The progress milestones definition, each attribute is a milestone",
+            "patternProperties": {
+                "^([a-zA-Z_][a-zA-Z0-9_]*)$": {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "description": "The current progress value while reaching this milestone, this should be less or equal to the total number of milestones"
+                        },
+                        "description": {
+                            "type": "string",
+                            "description": "The description for this milestone"
+                        }
+                    },
+                    "required": [ "value" ]
+                }
+            },
+            "additionalProperties": false
+        },
+        "VaultToken": {
+            "type": "string",
+            "description": "The token used for unwrapping a wrapped Vault response",
+            "pattern": "^[a-zA-Z0-9_]{8}-[a-zA-Z0-9_]{4}-[a-zA-Z0-9_]{4}-[a-zA-Z0-9_]{4}-[a-zA-Z0-9_]{12}$"
+        },
+        "GrubLinuxAppend": {
+            "type": "string",
+            "description": "Extra (persistent) kernel boot parameters",
+            "minLength": 1
+        },
+        "Timezone": {
+            "description": "The Timezone based on $TZ (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)",
+            "type": "string",
+            "minLength": 1
+        },
+        "Ntp": {
+            "description": "The NTP server address",
+            "type": "string",
+            "minLength": 1
+        },
+        "PackagesArray": {
+            "description": "specify additional packages to install",
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        },
+        "EnableServices": {
+            "description": "List of services that needs to be enabled explicitly during post-installation phase",
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        },
+        "DisableServices": {
+            "description": "List of services that needs to be disabled during post-installation phase",
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        }
+    }
+}

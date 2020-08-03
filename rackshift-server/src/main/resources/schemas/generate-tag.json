@@ -1,0 +1,13 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "properties": {
+        "nodeIds": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "An array of nodeIds to process tags against"
+        }
+    },
+    "required": ["nodeIds"]
+}

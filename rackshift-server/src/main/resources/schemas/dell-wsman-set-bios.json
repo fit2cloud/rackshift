@@ -1,0 +1,78 @@
+{
+    "copyright": "Copyright 2017, DELL EMC, Inc.",
+    "definitions": {
+        "attributes": {
+            "description": "Specify the name and value of attributes",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "Specify attribute name",
+                        "type": "string"
+                    },
+                    "value": {
+                        "description": "Specify attribute value"
+                    }
+                }
+            },
+            "minItems": 1,
+            "uniqueItems": true
+        },
+        "biosBootSequenceOrder": {
+            "description": "Specify bios boot sequence order",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "hddSequenceOrder": {
+            "description": "Specify hdd sequence order",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "enableBootDevices": {
+            "description": "Specify if boot device is enabled",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "disableBootDevices": {
+            "description": "Specify if boot device is disabled",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "rebootJobType": {
+            "description": "Specify job reboot type",
+            "type": "integer",
+            "maximum": 3,
+            "minimum": 1
+        }
+    },
+    "properties": {
+        "attributes": {
+            "$ref": "#/definitions/attributes"
+        },
+        "biosBootSequenceOrder": {
+            "$ref": "#/definitions/biosBootSequenceOrder"
+        },
+        "hddSequenceOrder": {
+            "$ref": "#/definitions/hddSequenceOrder"
+        },
+        "enableBootDevices": {
+            "$ref": "#/definitions/enableBootDevices"
+        },
+        "disableBootDevices": {
+            "$ref": "#/definitions/disableBootDevices"
+        },
+        "rebootJobType": {
+            "$ref": "#/definitions/rebootJobType"
+        }
+    },
+    "required": ["attributes", "rebootJobType"]
+}

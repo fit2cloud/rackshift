@@ -1,0 +1,44 @@
+{
+    "copyright": "Copyright © 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "drives": {
+            "description": "Specify drives for adding volume",
+            "type": "string"
+        },
+        "shutdownType": {
+            "description": "Specify the type of system shutdown: Graceful(0), Forced(1), default value is 0",
+            "type": "integer",
+            "enum": [0,1]
+        },
+        "ipAddress": {
+            "description": "Specify ipAddress for obm setting",
+            "type": "string"
+        },
+        "username": {
+            "description": "Specify username for obm setting",
+            "type": "string"
+        },
+        "password": {
+            "description": "Specify password for obm setting",
+            "type": "string"
+        }
+    },
+    "properties": {
+        "drives": {
+            "$ref": "#/definitions/drives"
+        },
+        "shutdownType": {
+            "$ref": "#/definitions/shutdownType"
+        },
+        "ipAddress": {
+            "$ref": "#/definitions/ipAddress"
+        },
+        "username": {
+            "$ref": "#/definitions/username"
+        },
+        "password": {
+            "$ref": "#/definitions/password"
+        }
+    },
+    "required": ["drives"]
+}

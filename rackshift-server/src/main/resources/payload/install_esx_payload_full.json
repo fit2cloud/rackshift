@@ -1,0 +1,88 @@
+{
+  "options": {
+    "defaults": {
+      "version": "6.0",
+      "repo": "http://172.31.128.1:8080/esxi/6.0",
+      "rootPassword": "RackHDRocks!",
+      "hostname": "rackhd-node",
+      "domain": "example.com",
+      "users": [
+        {
+          "name": "rackhd1",
+          "password": "123456",
+          "sshKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJQ631/sw3D40h/6JfA+PFVy5Ofz6eu7caxbv0zdw4fTJsrFcOliHZTEtAvqx7Oa8gqSC6d7v61M0croQxtt1DGUcH2G4yhfdZOlK4pr5McwtX0T/APACdAr1HtP7Bt7u43mgHpUG4bHGc+NoY7cWCISkxl4apkYWbvcoJy/5bQn0uRgLuHUNXxK/XuLT5vG76xxY+1xRa5+OIoJ6l78nglNGrj2V+jH3+9yZxI43S9I3NOCl4BvX5Cp3CFMHyt80gk2yM1BJpQZZ4GHewkI/XOIFPU3rR5+toEYXHz7kzykZsqt1PtbaTwG3TX9GJI4C7aWyH9H+9Bt76vH/pLBIn rackhd@rackhd-demo"
+        },
+        {
+          "name": "rackhd2",
+          "password": "123456",
+          "sshKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJQ631/sw3D40h/6JfA+PFVy5Ofz6eu7caxbv0zdw4fTJsrFcOliHZTEtAvqx7Oa8gqSC6d7v61M0croQxtt1DGUcH2G4yhfdZOlK4pr5McwtX0T/APACdAr1HtP7Bt7u43mgHpUG4bHGc+NoY7cWCISkxl4apkYWbvcoJy/5bQn0uRgLuHUNXxK/XuLT5vG76xxY+1xRa5+OIoJ6l78nglNGrj2V+jH3+9yZxI43S9I3NOCl4BvX5Cp3CFMHyt80gk2yM1BJpQZZ4GHewkI/XOIFPU3rR5+toEYXHz7kzykZsqt1PtbaTwG3TX9GJI4C7aWyH9H+9Bt76vH/pLBIn rackhd@rackhd-demo"
+        }
+      ],
+      "rootSshKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJQ631/sw3D40h/6JfA+PFVy5Ofz6eu7caxbv0zdw4fTJsrFcOliHZTEtAvqx7Oa8gqSC6d7v61M0croQxtt1DGUcH2G4yhfdZOlK4pr5McwtX0T/APACdAr1HtP7Bt7u43mgHpUG4bHGc+NoY7cWCISkxl4apkYWbvcoJy/5bQn0uRgLuHUNXxK/XuLT5vG76xxY+1xRa5+OIoJ6l78nglNGrj2V+jH3+9yZxI43S9I3NOCl4BvX5Cp3CFMHyt80gk2yM1BJpQZZ4GHewkI/XOIFPU3rR5+toEYXHz7kzykZsqt1PtbaTwG3TX9GJI4C7aWyH9H+9Bt76vH/pLBIn rackhd@rackhd-demo",
+      "dnsServers": [
+        "172.12.88.91",
+        "192.168.20.77"
+      ],
+      "ntpServers": [
+        "0.vmware.pool.ntp.org",
+        "1.vmware.pool.ntp.org"
+      ],
+      "networkDevices": [
+        {
+          "device": "vmnic4",
+          "ipv4": {
+            "ipAddr": "172.31.128.7",
+            "gateway": "172.31.128.1",
+            "netmask": "255.255.255.0"
+          },
+          "ipv6": {
+            "ipAddr": "fec0::6ab4:0:5efe:157.60.14.21",
+            "gateway": "fe80::5efe:131.107.25.1",
+            "netmask": "ffff.ffff.ffff.ffff.0.0.0.0"
+          },
+          "esxSwitchName": "vSwitch0"
+        },
+        {
+          "device": "vmnic2",
+          "ipv4": {
+            "ipAddr": "192.168.100.29",
+            "gateway": "192.168.100.1",
+            "netmask": "255.255.255.0",
+            "vlanIds": [
+              10
+            ]
+          },
+          "ipv6": {
+            "ipAddr": "fec0::6ab4:0:5efe:157.60.14.21",
+            "gateway": "fe80::5efe:131.107.25.1",
+            "netmask": "ffff.ffff.ffff.ffff.0.0.0.0",
+            "vlanIds": [
+              101,
+              106
+            ]
+          },
+          "esxSwitchName": "vSwitch1"
+        }
+      ],
+      "installDisk": "t10.ATA_____SATADOM2DSH_TYPE_C_3SE___________________20151007AA8511725043",
+      "switchDevices": [
+        {
+          "switchName": "vSwitch0",
+          "uplinks": [
+            "vmnic4"
+          ]
+        },
+        {
+          "switchName": "vSwitch1",
+          "uplinks": [
+            "vmnic2"
+          ]
+        }
+      ],
+      "postInstallCommands": [
+        "echo This command will run at the end ",
+        "echo of the post installation step"
+      ]
+    }
+  }
+}

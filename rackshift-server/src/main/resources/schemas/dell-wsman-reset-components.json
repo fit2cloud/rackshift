@@ -1,0 +1,20 @@
+{
+    "copyright": "Copyright 2017, Dell EMC, Inc.",
+    "definitions": {
+        "components": {
+            "type": "array",
+            "description": "A list of components that will be reset",
+            "items": {
+                "enum": ["bios", "diag", "drvpack", "idrac", "lcdata"]
+            },
+            "uniqueItems": true,
+            "minItems": 1
+        }
+    },
+    "properties": {
+        "components": {
+            "$ref": "#/definitions/components"
+        }
+    },
+    "required": ["components"]
+}

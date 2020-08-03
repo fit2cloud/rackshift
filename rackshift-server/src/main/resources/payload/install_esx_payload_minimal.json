@@ -1,0 +1,8 @@
+{
+  "options": {
+    "defaults": {
+      "version": "6.0",
+      "repo": "http://172.31.128.1:8080/esxi/6.0"
+    }
+  }
+}

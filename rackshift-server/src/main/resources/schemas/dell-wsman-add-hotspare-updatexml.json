@@ -1,0 +1,30 @@
+{
+    "copyright": "Copyright © 2017 Dell Inc. or its subsidiaries. All Rights Reserved.",
+    "definitions": {
+        "volumeId": {
+            "description": "Specify volume id for adding hot spare",
+            "type": "string"
+        },
+        "driveId": {
+            "description": "Specify drive id to be added as hot spare",
+            "type": "string"
+        },
+        "hotspareType": {
+            "description": "Specify hotspare type for the drive",
+            "type": "string",
+            "enum": ["ghs", "dhs"]
+        }
+    },
+    "properties": {
+        "volumeId": {
+            "$ref": "#/definitions/volumeId"
+        },
+        "driveId": {
+            "$ref": "#/definitions/driveId"
+        },
+        "hotspareType": {
+            "$ref": "#/definitions/hotspareType"
+        }
+    },
+    "required": ["driveId", "hotspareType"]
+}

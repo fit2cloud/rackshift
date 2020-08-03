@@ -1,0 +1,94 @@
+{
+    "copyright": "Copyright 2016, EMC, Inc.",
+    "definitions": {
+        "CreateDefault": {
+            "description": "Indicate whether to create default RAIDs, the default is creating raid0 for each disk",
+            "type": "boolean"
+        },
+        "Controller": {
+            "description": "The MegaRAID controller id",
+            "type": "integer",
+            "minimum": 0
+        },
+        "Path": {
+            "description": "The storcli command path in microkernel",
+            "type": "string",
+            "minLength": 1
+        },
+        "RaidOption": {
+            "description": "The RAID options",
+            "properties": {
+                "enclosure": {
+                    "description": "The enclosure number",
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "type": {
+                    "description": "The RAID types",
+                    "enum": ["raid0", "raid1", "raid5", "raid6", "raid10", "raid50", "raid60"]
+                },
+                "drives": {
+                    "description": "Specify a list of physical drives (via slot ID) that are used to create this RAID",
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                },
+                "name": {
+                    "description": "The name of this RAID",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 15
+                },
+                "size": {
+                    "description": "The size of this RAID. The default value is for the capacity of all referenced disk, the maximum size bases on the physical drives and RAID type",
+                    "type": "string",
+                    "oneOf": [
+                        {
+                            "enum": ["all", "ALL"]
+                        },
+                        {
+                            "pattern": "^[0-9]+[kmgtKMGT]?[bB]?$"
+                        }
+                    ]
+                },
+                "drivePerArray": {
+                    "description": "Specify the number of physical drives per array. The default value is automatically chosen",
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 15
+                }
+            },
+            "required": ["enclosure", "type", "drives", "name"],
+            "additionalProperties": false
+        },
+        "RaidList": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+                "$ref": "#/definitions/RaidOption"
+            }
+        }
+    },
+    "properties": {
+        "createDefault": {
+            "$ref": "#/definitions/CreateDefault"
+        },
+        "controller": {
+            "$ref": "#/definitions/Controller"
+        },
+        "raidList": {
+            "$ref": "#/definitions/RaidList"
+        },
+        "path": {
+            "$ref": "#/definitions/Path"
+        }
+    },
+    "anyOf": [
+        { "required": ["controller", "path", "raidList"] },
+        { "required": ["controller", "path", "createDefault"] }
+    ]
+}
