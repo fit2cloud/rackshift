@@ -30,4 +30,9 @@ public class BareMetalController {
     public ResultHolder power(@PathVariable String id, @PathVariable String power) {
         return bareMetalService.power(id, power);
     }
+
+    @RequestMapping("/hardwares/{bareId}")
+    public ResultHolder hardwares(@PathVariable String bareId) {
+        return bareMetalService.hardwares(bareId);
+    }
 }

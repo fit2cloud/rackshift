@@ -108,7 +108,7 @@
                                      sortable="custom">
                         <template slot-scope="scope">
                             <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
-                                <el-link type="primary" @click="detailDrawer = true" target="_blank">
+                                <el-link type="primary" @click="showDetail(scope.row)" target="_blank">
                                     {{scope.row.machineModel}}
                                 </el-link>
                             </el-tooltip>
@@ -178,27 +178,108 @@
                         :with-header="false"
                         :before-close="handleClose">
                     <div class="demo-drawer__content">
-                        <el-tabs>
+                        <el-tabs v-model="detailShowName" @tab-click="changeDetail">
                             <el-tab-pane :label="$t('detail')" name="detail">
                                 <el-card class="box-card">
-                                    <div>
-
-                                    </div>
+                                    <el-form ref="form" :model="machine">
+                                        <el-form-item :label="$t('machine_model')">
+                                            {{machine.machineModel}}
+                                        </el-form-item>
+                                        <el-form-item :label="$t('machine_sn')">
+                                            {{machine.machineSn}}
+                                        </el-form-item>
+                                        <el-form-item :label="$t('management_ip')">
+                                            {{machine.managementIp}}
+                                        </el-form-item>
+                                        <el-form-item :label="$t('bmc_mac')">
+                                            {{machine.bmcMac}}
+                                        </el-form-item>
+                                        <el-form-item :label="$t('cpu')">
+                                            {{machine.cpuType}} {{machine.cpu}}{{$t('个')}}
+                                        </el-form-item>
+                                        <el-form-item :label="$t('memory')">
+                                            {{machine.memory}}{{$t('GB')}}
+                                        </el-form-item>
+                                        <el-form-item :label="$t('disk')">
+                                            {{machine.disk}}{{$t('GB')}}
+                                        </el-form-item>
+                                    </el-form>
                                 </el-card>
                             </el-tab-pane>
-                            <el-tab-pane :label="$t('cpu')" name="cpu">
-
+                            <el-tab-pane :label="$t('cpu_detail')" name="cpuDetail" class="detail-pane">
+                                <table class="detail-info">
+                                    <tr>
+                                        <td>{{$t('proc_name')}}</td>
+                                        <td>{{$t('proc_socket')}}</td>
+                                        <td>{{$t('proc_speed')}}</td>
+                                        <td>{{$t('proc_num_cores')}}</td>
+                                        <td>{{$t('proc_num_threads')}}</td>
+                                        <td>{{$t('sync_time')}}</td>
+                                    </tr>
+                                    <tr v-for="c in cpus">
+                                        <td>{{c.procName}}</td>
+                                        <td>{{c.procSocket}}</td>
+                                        <td>{{c.procSpeed}}</td>
+                                        <td>{{c.procNumCores}}</td>
+                                        <td>{{c.procNumThreads}}</td>
+                                        <td>{{c.syncTime}}</td>
+                                    </tr>
+                                </table>
+                            </el-tab-pane>
+                            <el-tab-pane :label="$t('memory_detail')" name="memoryDetail" class="detail-pane">
+                                <table class="detail-info">
+                                    <tr>
+                                        <td>{{$t('mem_cpu_num')}}</td>
+                                        <td>{{$t('mem_mod_num')}}</td>
+                                        <td>{{$t('mem_mod_size')}}</td>
+                                        <td>{{$t('mem_mod_type')}}</td>
+                                        <td>{{$t('mem_mod_num')}}</td>
+                                        <td>{{$t('mem_mod_frequency')}}</td>
+                                        <td>{{$t('mem_mod_part_num')}}</td>
+                                        <td>{{$t('mem_mod_min_volt')}}</td>
+                                        <td>{{$t('sync_time')}}</td>
+                                    </tr>
+                                    <tr v-for="c in memories">
+                                        <td>{{c.memCpuNum}}</td>
+                                        <td>{{c.memModNum}}</td>
+                                        <td>{{c.memModSize}}</td>
+                                        <td>{{c.memModType}}</td>
+                                        <td>{{c.memModFrequency}}</td>
+                                        <td>{{c.memModPartNum}}</td>
+                                        <td>{{c.memModMinVolt}}</td>
+                                        <td>{{c.syncTime}}</td>
+                                    </tr>
+                                </table>
+                            </el-tab-pane>
+                            <el-tab-pane :label="$t('disk_detail')" name="diskDetail" class="detail-pane">
+                                <table class="detail-info">
+                                    <tr>
+                                        <td>{{$t('enclosure_id')}}</td>
+                                        <td>{{$t('controller_id')}}</td>
+                                        <td>{{$t('drive')}}</td>
+                                        <td>{{$t('type')}}</td>
+                                        <td>{{$t('size')}}</td>
+                                        <td>{{$t('raid')}}</td>
+                                        <td>{{$t('manufactor')}}</td>
+                                        <td>{{$t('sn')}}</td>
+                                        <td>{{$t('sync_time')}}</td>
+                                    </tr>
+                                    <tr v-for="c in disks">
+                                        <td>{{c.enclosureId}}</td>
+                                        <td>{{c.controllerId}}</td>
+                                        <td>{{c.drive}}</td>
+                                        <td>{{c.type}}</td>
+                                        <td>{{c.size}}</td>
+                                        <td>{{c.raid}}</td>
+                                        <td>{{c.manufactor}}</td>
+                                        <td>{{c.sn}}</td>
+                                        <td>{{c.syncTime}}</td>
+                                    </tr>
+                                </table>
                             </el-tab-pane>
                         </el-tabs>
-                        <div class="demo-drawer__footer">
-                            <el-button @click="cancelForm">{{$t('cancel')}}</el-button>
-                            <el-button type="primary" @click="confirmEdit" :loading="loading">{{ loading ?
-                                $t('submitting') +
-                                '...' : $t('confirm')
-                                }}
-                            </el-button>
-                        </div>
                     </div>
+
                 </el-drawer>
 
             </div>
@@ -211,6 +292,7 @@
 <script>
     import HttpUtil from "../../common/utils/HttpUtil";
     import {isAnyBlank} from "../../common/utils/CommonUtil";
+    import Centos from "../../rackparams/Graph.InstallCentos"
 
     let _ = require('lodash');
     export default {
@@ -284,8 +366,17 @@
                     userName: null,
                     pwd: null
                 },
-                obmLoading: false
+                obmLoading: false,
+                machine: {},
+                detailShowName: 'detail',
+                cpuLoading: false,
+                cpus: [],
+                memories: [],
+                disks: [],
             };
+        },
+        components: {
+            Centos
         },
         mounted() {
             this.getData();
@@ -296,6 +387,17 @@
                 HttpUtil.get("/bare-metal/power/" + row.id + "/" + opt, null, (res) => {
                     this.$message.success($t('success!'));
                 });
+            },
+            changeDetail(tab, event) {
+                HttpUtil.get("/bare-metal/hardwares/" + this.machine.id, null, (res) => {
+                    this.cpus = res.data.cpus;
+                    this.memories = res.data.memories;
+                    this.disks = res.data.disks;
+                })
+            },
+            showDetail(machine) {
+                this.machine = machine;
+                this.detailDrawer = true
             },
             fillOBM(val) {
                 this.curObm.ip = val.managementIp;
@@ -308,7 +410,6 @@
                 this.curObm.bareMetalId = val.id;
                 this.fillOutObms = true;
             },
-
             submitOBM() {
                 this.obmLoading = true;
                 if (isAnyBlank(this.curObm.ip, this.curObm.userName, this.curObm.pwd)) {
@@ -432,7 +533,6 @@
                 }
                 let selList = this.multipleSelection;
 
-
                 HttpUtil.post("/workflow/run", reqList, (res) => {
                     this.getData();
                 })
@@ -527,6 +627,16 @@
         margin-right: 0;
         margin-bottom: 0;
         width: 50%;
+    }
+
+    .detail-pane {
+        overflow: scroll;
+        color: #303133;
+    }
+
+    .detail-info {
+        border: 1px solid #EBEEF5;
+        text-align: center;
     }
 
 </style>

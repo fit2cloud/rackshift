@@ -4,16 +4,19 @@ import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.BareMetalDTO;
 import io.rackshift.model.RSException;
 import io.rackshift.model.ResultHolder;
-import io.rackshift.mybatis.domain.BareMetal;
-import io.rackshift.mybatis.domain.OutBand;
-import io.rackshift.mybatis.domain.OutBandExample;
+import io.rackshift.mybatis.domain.*;
+import io.rackshift.mybatis.mapper.CpuMapper;
+import io.rackshift.mybatis.mapper.DiskMapper;
+import io.rackshift.mybatis.mapper.MemoryMapper;
 import io.rackshift.mybatis.mapper.OutBandMapper;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
 import io.rackshift.utils.IPMIUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BareMetalService {
@@ -21,9 +24,14 @@ public class BareMetalService {
     private BareMetalManager bareMetalManager;
     @Resource
     private OutBandMapper outBandMapper;
-
     @Resource
     private IPMIHandlerDecorator ipmiHandlerDecorator;
+    @Resource
+    private CpuMapper cpuMapper;
+    @Resource
+    private MemoryMapper memoryMapper;
+    @Resource
+    private DiskMapper diskMapper;
 
     public List<BareMetalDTO> list(BareMetalDTO queryVO) {
         return bareMetalManager.list(queryVO);
@@ -67,5 +75,27 @@ public class BareMetalService {
             RSException.throwExceptions(resultHolder.getMessage());
         }
         return ResultHolder.success("");
+    }
+
+    public ResultHolder hardwares(String bareId) {
+        Map r = new HashMap();
+        CpuExample cpuExample = new CpuExample();
+        cpuExample.createCriteria().andBareMetalIdEqualTo(bareId);
+
+        MemoryExample memoryExample = new MemoryExample();
+        memoryExample.createCriteria().andBareMetalIdEqualTo(bareId);
+
+        DiskExample diskExample = new DiskExample();
+        diskExample.createCriteria().andBareMetalIdEqualTo(bareId);
+
+        List<Cpu> cpus = cpuMapper.selectByExample(cpuExample);
+        List<Memory> memories = memoryMapper.selectByExample(memoryExample);
+        List<Disk> disks = diskMapper.selectByExample(diskExample);
+
+        r.put("cpus", cpus);
+        r.put("memories", memories);
+        r.put("disks", disks);
+
+        return ResultHolder.success(r);
     }
 }
