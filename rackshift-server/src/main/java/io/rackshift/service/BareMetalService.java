@@ -2,13 +2,11 @@ package io.rackshift.service;
 
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.BareMetalDTO;
+import io.rackshift.model.BareMetalQueryVO;
 import io.rackshift.model.RSException;
 import io.rackshift.model.ResultHolder;
 import io.rackshift.mybatis.domain.*;
-import io.rackshift.mybatis.mapper.CpuMapper;
-import io.rackshift.mybatis.mapper.DiskMapper;
-import io.rackshift.mybatis.mapper.MemoryMapper;
-import io.rackshift.mybatis.mapper.OutBandMapper;
+import io.rackshift.mybatis.mapper.*;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
 import io.rackshift.utils.IPMIUtil;
 import org.springframework.stereotype.Service;
@@ -32,8 +30,10 @@ public class BareMetalService {
     private MemoryMapper memoryMapper;
     @Resource
     private DiskMapper diskMapper;
+    @Resource
+    private NetworkCardMapper networkCardMapper;
 
-    public List<BareMetalDTO> list(BareMetalDTO queryVO) {
+    public List<BareMetalDTO> list(BareMetalQueryVO queryVO) {
         return bareMetalManager.list(queryVO);
     }
 
@@ -88,13 +88,19 @@ public class BareMetalService {
         DiskExample diskExample = new DiskExample();
         diskExample.createCriteria().andBareMetalIdEqualTo(bareId);
 
+        NetworkCardExample networkCardExample = new NetworkCardExample();
+        networkCardExample.createCriteria().andBareMetalIdEqualTo(bareId);
+
         List<Cpu> cpus = cpuMapper.selectByExample(cpuExample);
         List<Memory> memories = memoryMapper.selectByExample(memoryExample);
         List<Disk> disks = diskMapper.selectByExample(diskExample);
+        List<NetworkCard> nics = networkCardMapper.selectByExample(networkCardExample);
+
 
         r.put("cpus", cpus);
         r.put("memories", memories);
         r.put("disks", disks);
+        r.put("nics", nics);
 
         return ResultHolder.success(r);
     }

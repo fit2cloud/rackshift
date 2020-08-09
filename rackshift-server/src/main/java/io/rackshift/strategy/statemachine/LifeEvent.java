@@ -2,6 +2,7 @@ package io.rackshift.strategy.statemachine;
 
 import io.rackshift.model.WorkflowRequestDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public enum LifeEvent {
@@ -16,33 +17,35 @@ public enum LifeEvent {
     POST_OTHER_WORKFLOW_START("下发其他workflow", null),
     POST_OTHER_WORKFLOW_END("workflow执行完毕", null),
     POST_OTHER_WORKFLOW_CANCEL("取消workflow", null),
-    POST_OS_WORKFLOW_START("下发安装系统workflow", null),
+    POST_OS_WORKFLOW_START("下发安装系统workflow", new ArrayList<String>() {{
+        add("Graph.InstallCentOS");
+    }}),
     POST_OS_WORKFLOW_END("安装系统workflow执行完毕", null),
     POST_OS_WORKFLOW_CANCEL("取消安装系统workflow", null);
     private String desc;
     private List<String> workflows;
-    private WorkflowRequestDTO params = new WorkflowRequestDTO();
+    private WorkflowRequestDTO workflowRequestDTO = new WorkflowRequestDTO();
+
+    public void setBareMetalId(String id) {
+        this.workflowRequestDTO.setBareMetalId(id);
+    }
 
     LifeEvent(String desc, List<String> workflows) {
         this.desc = desc;
         this.workflows = workflows;
     }
 
-    public void withParams(WorkflowRequestDTO params) {
-        this.params = params;
+    public WorkflowRequestDTO getWorkflowRequestDTO() {
+        return workflowRequestDTO;
     }
 
-    public WorkflowRequestDTO getParams() {
-        return params;
-    }
-
-    public void setBareMetalId(String id) {
-        this.params.setBareMetalId(id);
+    public void setWorkflowRequestDTO(WorkflowRequestDTO workflowRequestDTO) {
+        this.workflowRequestDTO = workflowRequestDTO;
     }
 
     public static LifeEvent fromWorkflow(String name) {
         for (LifeEvent event : LifeEvent.values()) {
-            if (event.workflows.contains(name)) {
+            if (event.workflows != null && event.workflows.contains(name)) {
                 return event;
             }
         }

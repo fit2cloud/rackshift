@@ -5,12 +5,14 @@ export default {
             "router": "/OverView",
             "requireRole": "admin",
             "order" : "1",
+            "icon" : "el-icon-view",
             childs: [
                 {
                     "name": "使用向导",
                     "router": "/Wizard",
                     "requireRole": "user,admin",
-                    "order" : "1"
+                    "order" : "1",
+                    "icon" : "el-icon-question"
                 }
             ]
         },
@@ -19,12 +21,14 @@ export default {
             "router": "/Resource",
             "requireRole": "admin,user",
             "order" : "2",
+            "icon" : "el-icon-folder-opened",
             childs: [
                 {
                     "name": "裸金属",
                     "router": "/bare-metal",
                     "requireRole": "user,admin",
                     "order": "1",
+                    "icon" : "el-icon-monitor"
                 },
 
                 {
@@ -32,6 +36,7 @@ export default {
                     "router": "/image",
                     "requireRole": "user,admin",
                     "order" : "3",
+                    "icon" : "el-icon-view"
                 },
             ]
         },
@@ -40,18 +45,21 @@ export default {
             "router": "/network",
             "requireRole": "admin",
             "order" : "3",
+            "icon" : "el-icon-s-grid",
             childs: [
                 {
                     "name": "子网",
                     "router": "/network",
                     "requireRole": "admin",
                     "order" : "1",
+                    "icon" : "el-icon-menu"
                 },
                 {
                     "name": "发现",
                     "router": "/Discovery",
                     "requireRole": "admin",
                     "order" : "2",
+                    "icon" : "el-icon-s-promotion"
                 },
             ]
         },
@@ -60,24 +68,28 @@ export default {
             "router": "/Control",
             "requireRole": "admin",
             "order" : "4",
+            "icon" : "el-icon-unlock",
             childs: [
                 {
                     "name": "工作流",
                     "router": "/WorkFlow",
                     "requireRole": "admin",
                     "order" : "1",
+                    "icon" : "el-icon-s-unfold",
                 },
                 {
                     "name": "任务",
                     "router": "/Task",
                     "requireRole": "admin",
                     "order" : "2",
+                    "icon" : "el-icon-s-operation",
                 },
                 {
                     "name": "执行记录",
                     "router": "/WorkFlowLog",
                     "requireRole": "admin",
                     "order" : "3",
+                    "icon" : "el-icon-s-order",
                 },
             ]
         }, {
@@ -85,40 +97,47 @@ export default {
             "router": "/Setting",
             "requireRole": "admin",
             "order" : "5",
+            "icon" : "el-icon-s-tools",
             childs: [
                 {
                     "name": "License",
                     "router": "/License",
                     "requireRole": "admin",
                     "order" : "1",
+                    "icon" : "el-icon-s-goods",
                 },
                 {
                     "name": "用户",
                     "router": "/user",
                     "requireRole": "admin",
                     "order": "2",
+                    "icon" : "el-icon-user-solid",
                 }, {
                     "name": "角色",
                     "router": "/role",
                     "requireRole": "admin",
                     "order": "3",
+                    "icon" : "el-icon-user",
                 },
                 {
                     "name": "执行记录",
                     "router": "/WorkFlowLog",
                     "requireRole": "admin",
                     "order" : "4",
+                    "icon" : "el-icon-more",
                 }, {
                     "name": "Endpoint",
                     "router": "/Endpoint",
                     "requireRole": "admin",
                     "order" : "5",
+                    "icon" : "el-icon-s-home",
                 },
                 {
                     "name": "插件",
                     "router": "/Plugin",
                     "requireRole": "user,admin",
                     "order" : "6",
+                    "icon" : "el-icon-s-shop",
                 },
             ]
         }

@@ -17,9 +17,10 @@
         <el-aside>
           <el-menu id="main-menu" :default-openeds="['2']" style="border-right: none;">
             <el-submenu :index="m.order" v-for="m in menus" v-bind:key="m.order">
-              <template slot="title"><i class="el-icon-message"></i>{{m.name}}</template>
+              <template slot="title"><i :class="m.icon"></i>{{m.name}}</template>
               <el-menu-item :index="m.order + '' + c.order" v-for="c in m.childs" v-bind:key="c.order"
                             v-on:click="$router.push(c.router)">
+                <i :class="c.icon"></i>
                 {{c.name}}
               </el-menu-item>
             </el-submenu>

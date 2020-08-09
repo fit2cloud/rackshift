@@ -4,5 +4,5 @@ public interface IStateHandler {
 
     void handle(LifeEvent event);
 
-    void handleMyself(LifeEvent event);
+    void revert(LifeEvent event);
 }

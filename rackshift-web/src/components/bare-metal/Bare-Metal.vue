@@ -1,5 +1,5 @@
 <template>
-    <el-tabs v-model="activeName" style="width:100vw">
+    <el-tabs style="width:80vw" v-model="activeName">
         <el-tab-pane label="物理机" name="bare-metal">
             <div>
                 <!--        <div class="handle-box">-->
@@ -49,33 +49,42 @@
                             <div class="run-splitter h25"></div>
                             <!--                    <el-button class="h50">Workflow <span class="el-icon-caret-bottom"></span></el-button>-->
                             <el-select v-model="wfRequest.workflow" @change="getParamsTemplate">
-                                <el-option v-for="g in allGraphDefinitions" :label="g.injectableName"
-                                           :value="g.injectableName"></el-option>
+                                <el-option
+                                        v-for="g in filterList"
+                                        :label="g.injectableName"
+                                        :value="g.injectableName"></el-option>
                             </el-select>
+
+                            <el-button :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"
+                                       @click="addToSelectedWorkflow"
+                                       class="h50 ml10"><span
+                                    class="el-icon-circle-plus"></span>{{$t('add_to_selected_wf_list')}}
+                            </el-button>
                             <!--                    <el-button class="el-icon-close h50"></el-button>-->
                         </div>
-                        <div id="select-params">
-                            <div class="el-icon-s-operation h25"
-                                 style="border-bottom: yellowgreen 1px solid;    width: 100%;">
-                                Params
-                            </div>
-                            <div class="run-splitter h25"></div>
-                            <el-button class="h50 ml10" :disabled="!paramEditable">{{$t('Set')}}</el-button>
-                            <!--                    <el-button class="h50 ml10">{{$t('Set')}} <span class="el-icon-caret-bottom"></span></el-button>-->
+                        <!--                        <div id="select-params">-->
+                        <!--                            <div class="el-icon-s-operation h25"-->
+                        <!--                                 style="border-bottom: yellowgreen 1px solid;    width: 100%;">-->
+                        <!--                                Params-->
+                        <!--                            </div>-->
+                        <!--                            <div class="run-splitter h25"></div>-->
+                        <!--                            <el-button class="h50 ml10" :disabled="!paramEditable">{{$t('Set')}}</el-button>-->
+                        <!--                            &lt;!&ndash;                    <el-button class="h50 ml10">{{$t('Set')}} <span class="el-icon-caret-bottom"></span></el-button>&ndash;&gt;-->
 
-                        </div>
+                        <!--                        </div>-->
 
-                        <div id="workflow-todo">
-                            <div class="el-icon-s-operation h25"
-                                 style="border-bottom: yellowgreen 1px solid;    width: 100%;">
-                                Add to List
-                            </div>
-                            <div class="run-splitter h25"></div>
-                            <el-button class="h50 ml10" @click="addToSelectedWorkflow" :disabled="this.multipleSelection.length == 0"><span
-                                    class="el-icon-circle-plus"></span>{{$t('add_to_action_list')}}
-                            </el-button>
+                        <!--                        <div id="workflow-todo">-->
+                        <!--                            <div class="el-icon-s-operation h25"-->
+                        <!--                                 style="border-bottom: yellowgreen 1px solid;    width: 100%;">-->
+                        <!--                                Add to List-->
+                        <!--                            </div>-->
+                        <!--                            <div class="run-splitter h25"></div>-->
+                        <!--                            <el-button class="h50 ml10" @click="addToSelectedWorkflow"-->
+                        <!--                                       :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"><span-->
+                        <!--                                    class="el-icon-circle-plus"></span>{{$t('add_to_selected_wf_list')}}-->
+                        <!--                            </el-button>-->
 
-                        </div>
+                        <!--                        </div>-->
                     </div>
 
                     <div id="action-list">
@@ -84,9 +93,20 @@
                             {{$t('selected_workflows')}}
                         </div>
                         <div>
-                            <el-card v-for="w in selectedWorkflow">
-                                <div>
-                                    {{w}}
+                            <el-card v-for="(w, $index) in selectedWorkflow">
+                                <div style="display: flex">
+                                    <el-button @click="deleteSelectedWorkflow($index)" class="h50 ml10"><span
+                                            class="el-icon-remove"></span>{{$t('del')}}
+                                    </el-button>
+                                    <span style="display: block;padding: 12px 20px;">
+                                        {{w.machineModel + ' ' + w.machineSn}}
+                                    </span>
+                                    <span style="display: block;padding: 12px 20px;">
+                                        {{w.workflowName}}
+                                    </span>
+                                    <el-button @click="editWfParams($index)">
+                                        {{$t('set_workflow_param')}}
+                                    </el-button>
                                 </div>
                             </el-card>
                         </div>
@@ -117,9 +137,13 @@
 
                     <el-table-column :prop="c.prop" :label="c.label" align="center"
                                      v-for="c in columns" sortable="custom"></el-table-column>
-
                     <el-table-column prop="" :label="$t('opt')" align="center">
-
+                        <template slot="header" slot-scope="scope">
+                            <el-input
+                                    v-model="search"
+                                    size="mini"
+                                    placeholder="输入关键字搜索" v-on:change="getData"/>
+                        </template>
                         <template slot-scope="scope">
                             <el-dropdown>
                                 <el-button type="primary">
@@ -171,6 +195,22 @@
                     </div>
                 </el-dialog>
 
+                <!--参数配置-->
+                <el-dialog :title="$t('param_config')" :visible.sync="fillWfParams" ref="paramDialog">
+                    <keep-alive>
+                        <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
+                                   v-bind:is="currentWfParamTemplate"
+                                   :params="workflowParam"
+                                   :currentWorkflowIndex="editWorkflowIndex"
+                                   :bareMetalId="selectedWorkflow[editWorkflowIndex].bareMetalId"
+                                   :workflow="selectedWorkflow[editWorkflowIndex]"
+                                   ref="currentWfParamTemplate"></component>
+                    </keep-alive>
+                    <div class="dialog-footer" slot="footer">
+                        <el-button @click="saveParams" :loading="fillWfParamsLoading">确 定</el-button>
+                    </div>
+                </el-dialog>
+
                 <!--详情页-->
                 <el-drawer
                         :visible.sync="detailDrawer"
@@ -178,7 +218,7 @@
                         :with-header="false"
                         :before-close="handleClose">
                     <div class="demo-drawer__content">
-                        <el-tabs v-model="detailShowName" @tab-click="changeDetail">
+                        <el-tabs v-model="detailShowName">
                             <el-tab-pane :label="$t('detail')" name="detail">
                                 <el-card class="box-card">
                                     <el-form ref="form" :model="machine">
@@ -195,7 +235,7 @@
                                             {{machine.bmcMac}}
                                         </el-form-item>
                                         <el-form-item :label="$t('cpu')">
-                                            {{machine.cpuType}} {{machine.cpu}}{{$t('个')}}
+                                            {{machine.cpuType}} X {{machine.cpu}}
                                         </el-form-item>
                                         <el-form-item :label="$t('memory')">
                                             {{machine.memory}}{{$t('GB')}}
@@ -291,13 +331,16 @@
 
 <script>
     import HttpUtil from "../../common/utils/HttpUtil";
-    import {isAnyBlank} from "../../common/utils/CommonUtil";
-    import Centos from "../../rackparams/Graph.InstallCentos"
+    import {isAnyBlank, toLine} from "../../common/utils/CommonUtil";
+    import Vue from 'vue';
 
     let _ = require('lodash');
     export default {
         data() {
             return {
+                search: null,
+                payLoad: {},
+                fillWfParams: false,
                 activeName: 'bare-metal',
                 query: {
                     address: '',
@@ -316,10 +359,6 @@
                 idx: -1,
                 id: -1,
                 columns: [
-                    // {
-                    //     label: this.$t('machine_model'),
-                    //     prop: "machineModel"
-                    // },
                     {
                         label: this.$t('machine_sn'),
                         prop: "machineSn"
@@ -357,6 +396,7 @@
                 },
                 allGraphDefinitions: [],
                 wfRequest: {},
+                workflowParamList: [],
                 workflowParam: {},
                 paramEditable: false,
                 selectedWorkflow: [],
@@ -367,28 +407,64 @@
                     pwd: null
                 },
                 obmLoading: false,
+                fillWfParamsLoading: false,
                 machine: {},
                 detailShowName: 'detail',
                 cpuLoading: false,
                 cpus: [],
                 memories: [],
                 disks: [],
-            };
+                paramComponent: {},
+                currentWfParamTemplate: {},
+                editWorkflowIndex: -1,
+                queryVO: {
+                    searchKey: this.search
+                }
+            }
         },
-        components: {
-            Centos
+        computed: {
+            filterList: function () {
+                return this.allGraphDefinitions.filter(function (item) {
+                        return item.injectableName == 'Graph.InstallCentOS';
+                    }
+                )
+            },
         },
         mounted() {
             this.getData();
             this.getAllGraphDefinitions();
-        },
+        }
+        ,
         methods: {
+            buildRequest(workflow) {
+                let request = JSON.parse(JSON.stringify(workflow));
+                delete request.componentId;
+                delete request.machineModel;
+                delete request.machineSn;
+                return request;
+            },
+            saveParams() {
+                this.selectedWorkflow[this.editWorkflowIndex].params = this.$refs.currentWfParamTemplate.payLoad;
+                this.fillWfParamsLoading = true;
+                HttpUtil.post("/workflow/params", this.buildRequest(this.selectedWorkflow[this.editWorkflowIndex]), (res) => {
+                    this.fillWfParamsLoading = false;
+                    this.fillWfParams = false;
+                });
+            },
+            copy(obj) {
+                return JSON.parse(JSON.stringify(obj));
+            },
+            editWfParams(index) {
+                this.editWorkflowIndex = index;
+                this.fillWfParams = true;
+                this.currentWfParamTemplate = this.selectedWorkflow[index].componentId;
+            },
             power(opt, row) {
                 HttpUtil.get("/bare-metal/power/" + row.id + "/" + opt, null, (res) => {
                     this.$message.success($t('success!'));
                 });
             },
-            changeDetail(tab, event) {
+            getHardware() {
                 HttpUtil.get("/bare-metal/hardwares/" + this.machine.id, null, (res) => {
                     this.cpus = res.data.cpus;
                     this.memories = res.data.memories;
@@ -397,7 +473,8 @@
             },
             showDetail(machine) {
                 this.machine = machine;
-                this.detailDrawer = true
+                this.detailDrawer = true;
+                this.getHardware();
             },
             fillOBM(val) {
                 this.curObm.ip = val.managementIp;
@@ -427,11 +504,25 @@
                 });
             },
             sortChange(val) {
+                console.log(val);
                 console.log(val.order);
-                alert(val.prop);
+                if (val.order) {
+                    this.queryVO = {
+                        searchKey: '%' + this.search + '%',
+                        sort: toLine(val.prop) + " " + val.order.replace("ending", "")
+                    }
+                } else {
+                    delete this.queryVO.sort;
+                }
+                this.getData();
             },
             getData() {
-                HttpUtil.post("/bare-metal/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
+                if (this.search) {
+                    this.queryVO.searchKey = '%' + this.search + '%';
+                } else {
+                    this.queryVO.searchKey = null;
+                }
+                HttpUtil.post("/bare-metal/list/" + this.query.pageIndex + "/" + this.query.pageSize, this.queryVO, (res) => {
                     this.tableData = res.data.listObject;
                     this.pageTotal = res.data.itemCount;
                 });
@@ -526,32 +617,77 @@
                 })
             },
             runWorkflow() {
-                let ids = this.getSelectedIds();
-                if (!this.wfRequest.workflow) {
+
+                if (!this.selectedWorkflow.length) {
                     this.$notify.error(this.$t('pls_select_workflow') + "!");
                     return;
                 }
-                let selList = this.multipleSelection;
+                let that = this;
+                let reqList = _.map(this.copy(this.selectedWorkflow), (wf) => {
+                    return that.buildRequest(wf);
+                });
 
                 HttpUtil.post("/workflow/run", reqList, (res) => {
                     this.getData();
                 })
-            },
+            }
+            ,
             getParamsTemplate() {
                 HttpUtil.get("/workflow/params/" + this.wfRequest.workflow, {}, (res) => {
-                    this.workflowParam = res.data;
-                    if (this.workflowParam.length > 0) {
-                        this.paramEditable = true;
+                    if (res.data[0]) {
+                        this.workflowParamList = res.data;
                     } else {
-                        this.paramEditable = false;
+                        this.workflowParamList = [];
+                        this.workflowParam = null;
                     }
                 })
+            }
+            ,
+            createWorkflowParamComponent(workflowParam) {
+                //动态异步
+                if (!this.paramComponent[workflowParam.componentId]) {
+                    let comPointer = Vue.component(workflowParam.componentId, function (resolve) {
+                        require(["./../../rackparams/" + workflowParam.workflowName], resolve)
+                    });
+                    this.paramComponent[workflowParam.componentId] = comPointer;
+                }
             },
             addToSelectedWorkflow() {
                 if (this.wfRequest.workflow) {
-                    this.selectedWorkflow.push(this.wfRequest.workflow);
-                    // this.wfRequest.workflow = null;
+
+                    for (let i = 0; i < this.multipleSelection.length; i++) {
+                        this.selectedWorkflow.push(
+                            {
+                                componentId: this.wfRequest.workflow + "-" + this.multipleSelection[i].id,
+                                bareMetalId: this.multipleSelection[i].id,
+                                machineModel: this.multipleSelection[i].machineModel,
+                                machineSn: this.multipleSelection[i].machineSn,
+                                workflowName: this.wfRequest.workflow,
+                            }
+                        );
+
+                        this.createWorkflowParamComponent(this.selectedWorkflow[this.selectedWorkflow.length - 1]);
+                        if (this.workflowParamList.length) {
+                            let that = this;
+                            let paramTemplate = _.find(that.workflowParamList, function (p) {
+                                return p.bareMetalId == that.selectedWorkflow[that.selectedWorkflow.length - 1].bareMetalId;
+                            });
+                            if (paramTemplate == null)
+                                that.workflowParam = null;
+                            else
+                                that.workflowParam = JSON.parse(paramTemplate.paramsTemplate);
+
+                            that.selectedWorkflow[that.selectedWorkflow.length - 1].params = that.workflowParam;
+                        }
+                    }
+                    this.$refs.multipleTable.clearSelection();
                 }
+            }
+            ,
+            deleteSelectedWorkflow(index) {
+                if (this.$refs.currentWfParamTemplate)
+                    this.$refs.currentWfParamTemplate.$destroy(true);
+                this.selectedWorkflow.splice(index, 1);
             }
         }
     }
@@ -576,11 +712,12 @@
         height: 120px;
         padding: 10px 10px 15px 10px;
         border-radius: 5px;
+        min-width: 120px;
     }
 
     #workflow-selector {
         border: solid #d7d2d2 1px;
-        /*width: 100%;*/
+        min-width: 420px;
         height: 120px;
         padding: 10px 10px 15px 10px;
         border-radius: 5px;
@@ -589,7 +726,7 @@
 
     #action-list {
         border: solid #d7d2d2 1px;
-        width: 400px;
+        width: 100%;
         height: 120px;
         padding: 10px 10px 15px 10px;
         border-radius: 5px;

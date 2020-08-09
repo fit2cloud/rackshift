@@ -71,13 +71,30 @@ public class MybatisInterceptor implements Interceptor {
 
     private void processId(Object parameter) {
         Field[] fields = parameter.getClass().getDeclaredFields();
+        boolean setIdSuccess = false;
         for (Field filed : fields) {
             if (filed.getName().equals("id") && !(parameter instanceof User)) {
                 try {
                     filed.setAccessible(true);
                     filed.set(parameter, UUIDUtil.newUUID());
+                    setIdSuccess = true;
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
+                }
+            }
+        }
+
+        if (!setIdSuccess) {
+            //找父类
+            fields = parameter.getClass().getSuperclass().getDeclaredFields();
+            for (Field filed : fields) {
+                if (filed.getName().equals("id") && !(parameter instanceof User)) {
+                    try {
+                        filed.setAccessible(true);
+                        filed.set(parameter, UUIDUtil.newUUID());
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

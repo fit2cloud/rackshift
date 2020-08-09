@@ -46,7 +46,7 @@ public class OutBandService {
         JSONObject params = new JSONObject();
         params.put("outband", outBand);
         WorkflowRequestDTO requestDTO = new WorkflowRequestDTO(bareMetalId, null, params);
-        input.withParams(requestDTO);
+        input.setWorkflowRequestDTO(requestDTO);
         stateMachine.sendEvent(input);
     }
 }

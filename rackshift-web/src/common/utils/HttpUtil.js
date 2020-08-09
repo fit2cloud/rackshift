@@ -14,6 +14,7 @@ axios.interceptors.response.use(function (response) {
     }
     return Promise.reject(error);
 });
+// axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const HttpUtil = {
     get: function (url, params, resolve, reject) {
@@ -33,7 +34,11 @@ const HttpUtil = {
     },
 
     post: (url, data, resolve, reject) => {
-        axios.post(url, data).then((res) => {
+        axios.post(url, data, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then((res) => {
                 if (res.data.success) {
                     resolve(res.data);
                 } else {

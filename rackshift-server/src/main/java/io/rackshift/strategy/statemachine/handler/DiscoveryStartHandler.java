@@ -41,9 +41,9 @@ public class DiscoveryStartHandler extends AbstractHandler {
      * @param event
      */
     @Override
-    public void handleMyself(LifeEvent event) {
+    public void handleYourself(LifeEvent event) {
 
-        WorkflowRequestDTO requestDTO = event.getParams();
+        WorkflowRequestDTO requestDTO = event.getWorkflowRequestDTO();
         BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
         OutBand o = outBandManager.getByIp(bareMetal.getManagementIp()).get(0);
         String originStatus = bareMetal.getStatus();

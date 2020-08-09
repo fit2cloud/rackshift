@@ -6,7 +6,8 @@
                     <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('root_pwd')">
-                    <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"></el-input>
+                    <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
+                              type="password"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('image')">
                     <el-select v-model="payLoad.options.defaults.repo">
@@ -14,18 +15,6 @@
                                    :value="g.url"></el-option>
                     </el-select>
                 </el-form-item>
-
-                <!--                <el-form-item :label="$t('network_devices')">-->
-                <!--                    <el-table>-->
-                <!--                        <el-table-column :label="$t('ip_addr')">-->
-                <!--                            {{$t('network_card')}}-->
-                <!--                        </el-table-column>-->
-
-                <!--                        <el-table-column :label="$t('ip_addr')">-->
-                <!--                            <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off"></el-input>-->
-                <!--                        </el-table-column>-->
-                <!--                    </el-table>-->
-                <!--                </el-form-item>-->
 
                 <table>
                     <thead>{{$t('network_devices')}}</thead>
@@ -38,7 +27,10 @@
 
                     <tr v-for="d in payLoad.options.defaults.networkDevices">
                         <td>
-                            <el-input v-model="d.device"></el-input>
+                            <el-select v-model="d.device">
+                                <el-option :label="n.number + '(' + n.mac + ')'" :value="n.mac"
+                                           v-for="n in nics"></el-option>
+                            </el-select>
                         </td>
                         <td>
                             <el-input v-model="d.ipv4.ipAddr"></el-input>
@@ -60,9 +52,16 @@
     import HttpUtil from "../common/utils/HttpUtil";
 
     export default {
+        activated() {
+        },
+        created() {
+        },
+        deactivated() {
+
+        },
         data() {
             return {
-                payLoad: {
+                payLoad: this.$attrs.params ? JSON.parse(JSON.stringify(this.$attrs.params)) : {
                     "options": {
                         "defaults": {
                             "version": "7",
@@ -105,18 +104,38 @@
                         }
                     }
                 },
-                allImages: []
+                allImages: [],
+                cpus: [],
+                memories: [],
+                disks: [],
+                nics: [],
             };
         },
         mounted() {
             this.getAllImage();
+            this.getHardware();
         },
         methods: {
             getAllImage: function () {
                 HttpUtil.post("/image/list/" + 1 + "/" + 1000, {}, (res) => {
                     this.allImages = res.data.listObject;
+                    if (this.payLoad.options.defaults.repo == 'http://172.31.128.1:8080/centos/7/os/x86_64') {
+                        this.payLoad.options.defaults.repo = this.allImages[0].url;
+                    }
                 });
-            }
+            },
+            getHardware() {
+                HttpUtil.get("/bare-metal/hardwares/" + this.$attrs.bareMetalId, null, (res) => {
+                    this.cpus = res.data.cpus;
+                    this.memories = res.data.memories;
+                    this.disks = res.data.disks;
+                    this.nics = res.data.nics;
+
+                    if (this.payLoad.options.defaults.networkDevices[0].device == 'em1' && this.nics.length > 0) {
+                        this.payLoad.options.defaults.networkDevices[0].device = this.nics[0].mac;
+                    }
+                })
+            },
         }
     }
 </script>

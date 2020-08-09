@@ -8,7 +8,7 @@ import io.rackshift.strategy.statemachine.LifeStatus;
 @EventHandlerAnnotation(LifeEvent.POST_OTHER_WORKFLOW_END)
 public class WorkflowEndHandler extends AbstractHandler {
     @Override
-    public void handleMyself(LifeEvent event) {
+    public void handleYourself(LifeEvent event) {
         changeStatus(event, LifeStatus.allocated, false);
     }
 }

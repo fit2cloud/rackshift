@@ -65,9 +65,13 @@ public class WorkflowService {
             }
             LifeEvent event = LifeEvent.fromWorkflow(workflowName);
             event.setBareMetalId(bareMetalId);
-            event.withParams(requestDTO);
-            stateMachine.sendEvent(event);
+            event.setWorkflowRequestDTO(requestDTO);
+            stateMachine.sendEventAsyn(event);
         }
         return ResultHolder.success("");
+    }
+
+    public ResultHolder postParamsByName(WorkflowRequestDTO requestDTO) {
+        return ResultHolder.success(workflowManager.saveWorkflowParamTemplate(requestDTO));
     }
 }

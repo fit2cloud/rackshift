@@ -3,10 +3,7 @@ package io.rackshift.controller;
 import io.rackshift.model.ResultHolder;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.service.WorkflowService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -17,9 +14,14 @@ public class WorkflowController {
     @Resource
     private WorkflowService workflowService;
 
-    @RequestMapping("/params/{name}")
+    @GetMapping("/params/{name}")
     public ResultHolder getParamsByName(@PathVariable String name) {
         return workflowService.getParamsByName(name);
+    }
+
+    @PostMapping("/params")
+    public ResultHolder postParamsByName(@RequestBody WorkflowRequestDTO requestDTO) {
+        return workflowService.postParamsByName(requestDTO);
     }
 
     @RequestMapping("/run")

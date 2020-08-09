@@ -25,8 +25,8 @@ public class OBMHandler extends AbstractHandler {
     private BareMetalManager bareMetalManager;
 
     @Override
-    public void handleMyself(LifeEvent event) {
-        WorkflowRequestDTO requestDTO = event.getParams();
+    public void handleYourself(LifeEvent event) {
+        WorkflowRequestDTO requestDTO = event.getWorkflowRequestDTO();
         BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
         String curStatus = bareMetal.getStatus();
         OutBand o = requestDTO.getParams().getObject("outband", OutBand.class);

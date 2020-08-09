@@ -20,8 +20,6 @@ import java.util.List;
 
 @Service
 public class SyncRackJob {
-    @Value("rackhd.url:http://127.0.0.1:9090")
-    private String rackhdUrl;
     @Resource
     private RackHDService rackHDService;
     @Resource

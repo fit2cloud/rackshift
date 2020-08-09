@@ -26,9 +26,24 @@ public abstract class AbstractHandler implements IStateHandler {
         add(LifeStatus.deployed);
     }};
 
+    protected ThreadLocal<LifeStatus> lifeStatusBeforeChange = new ThreadLocal<>();
+
+    public ThreadLocal<LifeStatus> getLifeStatusBeforeChange() {
+        return lifeStatusBeforeChange;
+    }
+
+    public abstract void handleYourself(LifeEvent event);
+
     @Override
     public void handle(LifeEvent event) {
-        handleMyself(event);
+        BareMetal bareMetal = getBareMetalById(event.getWorkflowRequestDTO().getBareMetalId());
+        getLifeStatusBeforeChange().set(LifeStatus.valueOf(bareMetal.getStatus()));
+        handleYourself(event);
+    }
+
+    @Override
+    public void revert(LifeEvent event) {
+        changeStatus(event, getLifeStatusBeforeChange().get(), false);
     }
 
     protected void beforeChange(LifeStatus curStatus) {
@@ -36,7 +51,7 @@ public abstract class AbstractHandler implements IStateHandler {
     }
 
     protected void changeStatus(LifeEvent event, LifeStatus status, boolean needCheckStatus) {
-        WorkflowRequestDTO requestDTO = event.getParams();
+        WorkflowRequestDTO requestDTO = event.getWorkflowRequestDTO();
         BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
         if (needCheckStatus) {
             beforeChange(LifeStatus.valueOf(bareMetal.getStatus()));

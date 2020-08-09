@@ -1,6 +1,7 @@
 package io.rackshift.manager;
 
 import io.rackshift.model.BareMetalDTO;
+import io.rackshift.model.BareMetalQueryVO;
 import io.rackshift.model.MachineEntity;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.*;
@@ -164,7 +165,7 @@ public class BareMetalManager {
         }
     }
 
-    public List<BareMetalDTO> list(BareMetalDTO queryVO) {
+    public List<BareMetalDTO> list(BareMetalQueryVO queryVO) {
         BareMetalExample bareMetalExample = buildParams(queryVO);
         List<BareMetal> list = bareMetalMapper.selectByExample(bareMetalExample);
         List<BareMetalDTO> r = new LinkedList<>();
@@ -177,8 +178,17 @@ public class BareMetalManager {
         return r;
     }
 
-    private BareMetalExample buildParams(BareMetalDTO queryVO) {
-        return new BareMetalExample();
+    private BareMetalExample buildParams(BareMetalQueryVO queryVO) {
+        BareMetalExample example = new BareMetalExample();
+        if (StringUtils.isNotBlank(queryVO.getSort())) {
+            example.setOrderByClause(queryVO.getSort());
+        }
+        if (StringUtils.isNotBlank(queryVO.getSearchKey())) {
+            example.or(example.createCriteria().andMachineModelLike(queryVO.getSearchKey()));
+            example.or(example.createCriteria().andMachineSnLike(queryVO.getSearchKey()));
+            example.or(example.createCriteria().andManagementIpLike(queryVO.getSearchKey()));
+        }
+        return example;
     }
 
 }

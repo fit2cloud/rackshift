@@ -725,7 +725,7 @@ public class RackHDService {
 
     public boolean postWorkflow(String url, String nodeId, String workflow, JSONObject param) {
 
-        RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + RackHDConstants.WorkFlowEnum.findByWorkFlow(workflow).getWorkflowUrl(), nodeId), param == null ? "" : param.toJSONString());
+        RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + "/api/2.0/nodes/%s/workflows?name=" + workflow, nodeId), param == null ? "" : param.toJSONString());
         if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
             throw new RuntimeException("操作失败！" + response.getMessage());
         }

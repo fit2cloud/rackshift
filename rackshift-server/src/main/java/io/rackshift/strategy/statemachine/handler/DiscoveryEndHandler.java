@@ -8,7 +8,7 @@ import io.rackshift.strategy.statemachine.LifeStatus;
 @EventHandlerAnnotation(LifeEvent.POST_DISCOVERY_WORKFLOW_END)
 public class DiscoveryEndHandler extends AbstractHandler {
     @Override
-    public void handleMyself(LifeEvent event) {
+    public void handleYourself(LifeEvent event) {
         changeStatus(event, LifeStatus.ready, false);
     }
 }
