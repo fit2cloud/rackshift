@@ -30,6 +30,14 @@ public enum LifeEvent {
         this.workflowRequestDTO.setBareMetalId(id);
     }
 
+    public String getBareMetalId() {
+        return this.workflowRequestDTO.getBareMetalId();
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
     LifeEvent(String desc, List<String> workflows) {
         this.desc = desc;
         this.workflows = workflows;

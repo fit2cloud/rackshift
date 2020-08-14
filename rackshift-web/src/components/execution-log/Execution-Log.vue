@@ -2,10 +2,10 @@
     <div class="container">
 
         <div class="machine-title">
-            <i class="el-icon-user-solid">{{$t('Images')}}</i>
+            <i class="el-icon-user-solid">{{$t('ExecutionLog')}}</i>
             <div class="el-button-group batch-button">
-                <button type="button" class="el-button el-button--primary"><i
-                        class="el-icon-delete" @click="delAllSelection"></i>{{$t('batch_del')}}
+                <button type="button" class="el-button el-button--primary" @click="delAllSelection"><i
+                        class="el-icon-delete"></i>{{$t('batch_del')}}
                 </button>
                 <button type="button" class="el-button el-button--primary" @click="handleEdit({}, 'add')"><i
                         class="el-icon-document-add"></i>{{$t('add')}}
@@ -22,14 +22,13 @@
                 @selection-change="handleSelectionChange"
         >
             <el-table-column type="selection" align="center"></el-table-column>
-            <el-table-column :prop="c.prop" :label="c.label" align="center"
+            <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="center"
                              v-for="c in columns" sortable></el-table-column>
-            <el-table-column prop="updateTime" :label="$t('update_time')" align="center">
+            <el-table-column prop="createTime" :label="$t('create_time')" align="center">
                 <template slot-scope="scope">
-                    {{scope.row.updateTime | dateFormat}}
+                    {{scope.row.createTime | dateFormat}}
                 </template>
             </el-table-column>
-
             <el-table-column prop="" :label="$t('opt')" align="center">
                 <template slot-scope="scope">
                     <el-button
@@ -63,39 +62,24 @@
         </div>
 
         <el-drawer
-                :title="editType == 'edit' ? $t('edit_image') : $t('add_image')"
+                :title="editType == 'edit' ? $t('edit_outband') : $t('add_outband')"
                 :visible.sync="editDialogVisible"
                 direction="rtl"
                 :before-close="handleClose">
             <div class="demo-drawer__content">
                 <el-form :model="editObj">
-                    <el-form-item :label="$t('name')">
-                        <el-input v-model="editObj.name" autocomplete="off"></el-input>
+                    <el-form-item :label="$t('ip')">
+                        <el-input v-model="editObj.ip" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item :label="$t('url')">
-                        <el-input v-model="editObj.url" autocomplete="off"
-                                  :placeholder="$t('pls_input_url')"></el-input>
+                    <el-form-item :label="$t('user_name')">
+                        <el-input v-model="editObj.userName" autocomplete="off"
+                                  :placeholder="$t('pls_input_user_name')"></el-input>
                     </el-form-item>
-                    <el-form-item :label="$t('os')">
-                        <el-select v-model="editObj.os" :placeholder="$t('pls_select')" v-on:change="changeOsVersion">
-                            <el-option
-                                    v-for="(item, key) in allOs"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
-                            </el-option>
-                        </el-select>
+                    <el-form-item :label="$t('pwd')">
+                        <el-input v-model="editObj.pwd" autocomplete="off" type="password"
+                                  :placeholder="$t('pls_input_pwd')"></el-input>
                     </el-form-item>
-                    <el-form-item :label="$t('os_version')">
-                        <el-select v-model="editObj.osVersion" :placeholder="$t('pls_input_os_version')">
-                            <el-option
-                                    v-for="(item, key) in allOsVersion"
-                                    :key="item.name"
-                                    :label="item.name"
-                                    :value="item.name">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
+
                 </el-form>
                 <div class="demo-drawer__footer">
                     <el-button @click="editDialogVisible = false">{{$t('cancel')}}</el-button>
@@ -129,27 +113,21 @@
                 editVisible: false,
                 pageTotal: 0,
                 form: {},
-                idx: -1,
-                id: -1,
                 loading: false,
+                enables: [
+                    {"id": "enable", "name": this.$t("enable")},
+                    {"id": "disable", "name": this.$t("disable")},
+                ],
                 columns: [
                     {
-                        label: this.$t('name'),
-                        prop: "name",
+                        label: this.$t('user'),
+                        prop: "user",
                         sort: true
                     },
                     {
-                        label: this.$t('url'),
-                        prop: "url"
-                    },
-                    {
-                        label: this.$t('os'),
-                        prop: "os"
-                    },
-                    {
-                        label: this.$t('os_vesion'),
-                        prop: "osVersion"
-                    },
+                        label: this.$t('status'),
+                        prop: "status"
+                    }
                 ],
                 editDialogVisible: false,
                 editType: 'edit',
@@ -164,27 +142,25 @@
         },
         mounted() {
             this.getData();
-            this.getAllOsAndVersion();
         },
         methods: {
             // 获取 easy-mock 的模拟数据
+            getValidProText(row, column, cellValue, index) {
+                if (cellValue == true) {
+                    return this.$t("enabled");
+                } else if (cellValue && cellValue == false) {
+                    return this.$t("disabled");
+                }
+                return cellValue;
+            },
             getData() {
-                HttpUtil.post("/image/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
+                HttpUtil.post("/execution-log/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
                     this.tableData = res.data.listObject;
                     this.pageTotal = res.data.itemCount;
-                });
-
-            },
-            getAllOsAndVersion() {
-                HttpUtil.get("/rackhd/allOsAndVersion", {}, (res) => {
-                    this.allOs = res.data;
                 });
             },
             handleSizeChange(val) {
                 this.query.pageSize = val;
-            },
-            changeOsVersion() {
-                this.allOsVersion = _.find(this.allOs, {"id": this.editObj.os}).versions;
             },
             handleClose() {
                 this.editDialogVisible = false;
@@ -195,13 +171,13 @@
             },
             confirmEdit() {
                 if (this.editType == 'edit') {
-                    HttpUtil.post("/image/update", this.editObj, (res) => {
+                    HttpUtil.post("/execution-log/update", this.editObj, (res) => {
                         this.editDialogVisible = false;
                         this.$message.success('编辑成功');
                         this.getData();
                     })
                 } else {
-                    HttpUtil.post("/image/add", this.editObj, (res) => {
+                    HttpUtil.post("/execution-log/add", this.editObj, (res) => {
                         this.editDialogVisible = false;
                         this.$message.success('新增成功');
                         this.getData();
@@ -220,7 +196,7 @@
                     str += this.multipleSelection[i].name + ' ';
                 }
                 let ids = _.map(this.delList, (item) => item.id);
-                HttpUtil.post("/image/del", ids, (res) => {
+                HttpUtil.post("/execution-log/del", ids, (res) => {
                     this.$message.success(`删除成功！删除了${str}！`);
                     this.getData();
                 });
@@ -236,7 +212,7 @@
                     this.$confirm('确定要删除吗？', '提示', {
                         type: 'warning'
                     }).then(() => {
-                        HttpUtil.get("/image/del/" + row.id, {}, (res) => {
+                        HttpUtil.get("/execution-log/del/" + row.id, {}, (res) => {
                             this.getData();
                             this.$message.success('删除成功');
                         });

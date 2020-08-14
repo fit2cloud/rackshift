@@ -2,7 +2,7 @@
     <div class="container">
 
         <div class="machine-title">
-            <i class="el-icon-user-solid">{{$t('Images')}}</i>
+            <i class="el-icon-s-home">{{$t('SystemParameter')}}</i>
             <div class="el-button-group batch-button">
                 <button type="button" class="el-button el-button--primary"><i
                         class="el-icon-delete" @click="delAllSelection"></i>{{$t('batch_del')}}
@@ -24,11 +24,6 @@
             <el-table-column type="selection" align="center"></el-table-column>
             <el-table-column :prop="c.prop" :label="c.label" align="center"
                              v-for="c in columns" sortable></el-table-column>
-            <el-table-column prop="updateTime" :label="$t('update_time')" align="center">
-                <template slot-scope="scope">
-                    {{scope.row.updateTime | dateFormat}}
-                </template>
-            </el-table-column>
 
             <el-table-column prop="" :label="$t('opt')" align="center">
                 <template slot-scope="scope">
@@ -63,38 +58,18 @@
         </div>
 
         <el-drawer
-                :title="editType == 'edit' ? $t('edit_image') : $t('add_image')"
+                :title="editType == 'edit' ? $t('edit_system_parameter') : $t('add_system_parameter')"
                 :visible.sync="editDialogVisible"
                 direction="rtl"
                 :before-close="handleClose">
             <div class="demo-drawer__content">
                 <el-form :model="editObj">
-                    <el-form-item :label="$t('name')">
-                        <el-input v-model="editObj.name" autocomplete="off"></el-input>
+                    <el-form-item :label="$t('param_key')">
+                        <el-input v-model="editObj.paramKey" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item :label="$t('url')">
-                        <el-input v-model="editObj.url" autocomplete="off"
-                                  :placeholder="$t('pls_input_url')"></el-input>
-                    </el-form-item>
-                    <el-form-item :label="$t('os')">
-                        <el-select v-model="editObj.os" :placeholder="$t('pls_select')" v-on:change="changeOsVersion">
-                            <el-option
-                                    v-for="(item, key) in allOs"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item :label="$t('os_version')">
-                        <el-select v-model="editObj.osVersion" :placeholder="$t('pls_input_os_version')">
-                            <el-option
-                                    v-for="(item, key) in allOsVersion"
-                                    :key="item.name"
-                                    :label="item.name"
-                                    :value="item.name">
-                            </el-option>
-                        </el-select>
+                    <el-form-item :label="$t('param_value')">
+                        <el-input v-model="editObj.paramValue" autocomplete="off"
+                                  :placeholder="$t('pls_input_param_value')"></el-input>
                     </el-form-item>
                 </el-form>
                 <div class="demo-drawer__footer">
@@ -134,21 +109,13 @@
                 loading: false,
                 columns: [
                     {
-                        label: this.$t('name'),
-                        prop: "name",
+                        label: this.$t('param_key'),
+                        prop: "paramKey",
                         sort: true
                     },
                     {
-                        label: this.$t('url'),
-                        prop: "url"
-                    },
-                    {
-                        label: this.$t('os'),
-                        prop: "os"
-                    },
-                    {
-                        label: this.$t('os_vesion'),
-                        prop: "osVersion"
+                        label: this.$t('param_value'),
+                        prop: "paramValue"
                     },
                 ],
                 editDialogVisible: false,
@@ -169,7 +136,7 @@
         methods: {
             // 获取 easy-mock 的模拟数据
             getData() {
-                HttpUtil.post("/image/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
+                HttpUtil.post("/system_parameter/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
                     this.tableData = res.data.listObject;
                     this.pageTotal = res.data.itemCount;
                 });
@@ -195,13 +162,13 @@
             },
             confirmEdit() {
                 if (this.editType == 'edit') {
-                    HttpUtil.post("/image/update", this.editObj, (res) => {
+                    HttpUtil.post("/system_parameter/update", this.editObj, (res) => {
                         this.editDialogVisible = false;
                         this.$message.success('编辑成功');
                         this.getData();
                     })
                 } else {
-                    HttpUtil.post("/image/add", this.editObj, (res) => {
+                    HttpUtil.post("/system_parameter/add", this.editObj, (res) => {
                         this.editDialogVisible = false;
                         this.$message.success('新增成功');
                         this.getData();
@@ -219,8 +186,8 @@
                 for (let i = 0; i < length; i++) {
                     str += this.multipleSelection[i].name + ' ';
                 }
-                let ids = _.map(this.delList, (item) => item.id);
-                HttpUtil.post("/image/del", ids, (res) => {
+                let ids = _.map(this.delList, (item) => item.paramKey);
+                HttpUtil.post("/system_parameter/del", ids, (res) => {
                     this.$message.success(`删除成功！删除了${str}！`);
                     this.getData();
                 });
@@ -236,7 +203,7 @@
                     this.$confirm('确定要删除吗？', '提示', {
                         type: 'warning'
                     }).then(() => {
-                        HttpUtil.get("/image/del/" + row.id, {}, (res) => {
+                        HttpUtil.get("/system_parameter/del/" + row.paramKey, {}, (res) => {
                             this.getData();
                             this.$message.success('删除成功');
                         });

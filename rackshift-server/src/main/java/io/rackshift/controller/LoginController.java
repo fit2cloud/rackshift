@@ -3,6 +3,7 @@ package io.rackshift.controller;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.model.RSException;
 import io.rackshift.model.ResultHolder;
+import io.rackshift.utils.SessionUtil;
 import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -10,13 +11,15 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-@RestController
+@Controller
 public class LoginController {
 
+    @ResponseBody
     @RequestMapping("/signin")
     public ResultHolder login(@RequestBody JSONObject request) {
         String userName = request.getString("userName");
@@ -50,6 +53,7 @@ public class LoginController {
         return ResultHolder.error(msg);
     }
 
+    @ResponseBody
     @RequestMapping("/isLogin")
     public ResultHolder isLogin() {
         if (SecurityUtils.getSubject().isAuthenticated()) {
@@ -58,6 +62,15 @@ public class LoginController {
         return ResultHolder.error("");
     }
 
+    @RequestMapping("/")
+    public String login() {
+        if (SessionUtil.getUser() == null) {
+            return "login.html";
+        }
+        return "index.html";
+    }
+
+    @ResponseBody
     @RequestMapping("/logout")
     public ResultHolder logout() {
         SecurityUtils.getSubject().logout();

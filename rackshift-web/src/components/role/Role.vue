@@ -151,7 +151,7 @@
 
             },
             handleClose() {
-
+                this.editDialogVisible = false;
             },
             add() {
                 this.editDialogVisible = true;

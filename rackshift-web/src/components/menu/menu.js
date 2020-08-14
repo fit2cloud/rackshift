@@ -2,7 +2,7 @@ export default {
     menus: [
         {
             "name": "OverView",
-            "router": "/OverView",
+            "router": "/overview",
             "requireRole": "admin",
             "order" : "1",
             "icon" : "el-icon-view",
@@ -86,7 +86,7 @@ export default {
                 },
                 {
                     "name": "执行记录",
-                    "router": "/WorkFlowLog",
+                    "router": "/execution-log",
                     "requireRole": "admin",
                     "order" : "3",
                     "icon" : "el-icon-s-order",
@@ -121,13 +121,13 @@ export default {
                 },
                 {
                     "name": "执行记录",
-                    "router": "/WorkFlowLog",
+                    "router": "/execution-log",
                     "requireRole": "admin",
                     "order" : "4",
                     "icon" : "el-icon-more",
                 }, {
-                    "name": "Endpoint",
-                    "router": "/Endpoint",
+                    "name": "系统参数",
+                    "router": "/system-parameter",
                     "requireRole": "admin",
                     "order" : "5",
                     "icon" : "el-icon-s-home",

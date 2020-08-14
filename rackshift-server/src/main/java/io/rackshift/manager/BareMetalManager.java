@@ -57,8 +57,25 @@ public class BareMetalManager {
         return null;
     }
 
+    public BareMetal getBareMetalByIp(String ip) {
+        if (StringUtils.isBlank(ip)) {
+            RSException.throwExceptions("error！ cannt get sn!");
+        }
+        BareMetalExample example = new BareMetalExample();
+        example.createCriteria().andManagementIpEqualTo(ip);
+        List<BareMetal> bareMetalList = bareMetalMapper.selectByExample(example);
+        if (bareMetalList.size() > 0) {
+            return bareMetalList.get(0);
+        }
+        return null;
+    }
+
     public BareMetal getBareMetalById(String id) {
         return bareMetalMapper.selectByPrimaryKey(id);
+    }
+
+    public int delBareMetalById(String id) {
+        return bareMetalMapper.deleteByPrimaryKey(id);
     }
 
     public void update(BareMetal bareMetal, boolean changeStatus) {

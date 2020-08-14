@@ -7,6 +7,8 @@ import User from "../user/User.vue"
 import BareMetal from "../bare-metal/Bare-Metal"
 import Image from "../image/Image"
 import Network from "../network/Network"
+import SystemParameter from "../systemparameter/SystemParameter"
+import ExecutionLog from "../execution-log/Execution-Log"
 
 Vue.use(VueRouter);
 
@@ -19,6 +21,8 @@ const routes = [
     {path: '/bare-metal', component: BareMetal},
     {path: '/image', component: Image},
     {path: '/network', component: Network},
+    {path: '/system-parameter', component: SystemParameter},
+    {path: '/execution-log', component: ExecutionLog},
 ]
 const router = new VueRouter({
     routes: routes

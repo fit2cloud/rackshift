@@ -3,6 +3,16 @@
     <el-container style=" border: 1px solid #eee" v-if="login">
       <el-header id="main-header">
         <span id="main-title">RackShift</span>
+        <el-dropdown id="dropdown" @command="changeLaunguage">
+          <span class="el-dropdown-link">
+              语言<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="zh_CN">{{$t('chinese')}}</el-dropdown-item>
+            <el-dropdown-item command="zh_TW">{{$t('fanti')}}</el-dropdown-item>
+            <el-dropdown-item command="en_US">{{$t('english')}}</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
         <span class="user-name">{{user.name}}</span>
         <el-dropdown id="dropdown">
           <i class="el-icon-setting" style="margin-right: 15px;cursor: pointer;"></i>
@@ -16,9 +26,10 @@
       <el-container>
         <el-aside>
           <el-menu id="main-menu" :default-openeds="['2']" style="border-right: none;">
-            <el-submenu :index="m.order" v-for="m in menus" v-bind:key="m.order">
+            <el-submenu :index="m.order" v-for="m in menus" v-bind:index="m.order">
               <template slot="title"><i :class="m.icon"></i>{{m.name}}</template>
-              <el-menu-item :index="m.order + '' + c.order" v-for="c in m.childs" v-bind:key="c.order"
+              <el-menu-item :class="$route.path == c.router ? 'is-active' : ''"
+                            v-for="c in m.childs" v-bind:index="m.order + '-' + c.order"
                             v-on:click="$router.push(c.router)">
                 <i :class="c.icon"></i>
                 {{c.name}}
@@ -63,6 +74,9 @@
           window.location.href = "/";
           window.event.returnValue = false;
         })
+      },
+      changeLaunguage(l) {
+        this.$setLang(l);
       }
     }
   };
@@ -70,7 +84,7 @@
 
 <style>
   * {
-    font-size: 13px !important;
+    font-size: 11px !important;
   }
 
   body {
@@ -95,7 +109,7 @@
   .container {
     /*padding: 10px;*/
     background: #fff;
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     /*border-left: none;*/
     /*border-radius: 5px;*/
     width: 100%;
@@ -124,6 +138,7 @@
   #dropdown {
     color: #ffffff;
     cursor: pointer;
+    margin-right: 12px;
   }
 
   #main-title {
@@ -150,11 +165,15 @@
     margin-left: 15px;
   }
 
-  .demo-drawer__content{
+  .demo-drawer__content {
     padding: 20px;
   }
 
-  .pagination{
-    margin-top : 10px;
+  .pagination {
+    margin-top: 10px;
+  }
+
+  .el-drawer__body {
+    overflow: scroll;
   }
 </style>

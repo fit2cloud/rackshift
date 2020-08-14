@@ -1,6 +1,7 @@
 package io.rackshift.strategy.statemachine.handler;
 
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.constants.ExecutionLogConstants;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.service.RackHDService;
@@ -25,18 +26,16 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         //下发装机workflow
         WorkflowRequestDTO requestDTO = event.getWorkflowRequestDTO();
         JSONObject params = requestDTO.getParams();
+        BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
         if (params == null) {
-            revert(event);
+            revert(event, getExecutionId(), getUser());
         }
 
-        BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
         boolean result = rackHDService.postWorkflow(rackhdUrl, bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
         if (result) {
-            LifeEvent event1 = LifeEvent.POST_OS_WORKFLOW_END;
-            event1.setWorkflowRequestDTO(requestDTO);
-            stateMachine.sendEvent(event1);
-        }else{
-            revert(event);
+            changeStatus(event, LifeStatus.deployed, false);
+        } else {
+            revert(event, getExecutionId(), getUser());
         }
     }
 }

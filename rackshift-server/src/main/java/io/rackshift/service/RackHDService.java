@@ -187,7 +187,7 @@ public class RackHDService {
         IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(pm.getMachineBrand()));
         RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + iMetalProvider.getRaidWorkFlow(), pm.getServerId()), raidPayload);
         if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
-            throw new RuntimeException("做RAID失败!" + response.getMessage());
+            throw new RuntimeException("做RAID失败!" + response.getData());
         }
         try {
             //对应的执行任务的id
@@ -218,7 +218,7 @@ public class RackHDService {
             IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(physicalMachine.getMachineBrand()));
             RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + iMetalProvider.getRaidWorkFlow(), nodeId), raidPayload);
             if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
-                throw new RuntimeException("做RAID失败!" + response.getMessage());
+                throw new RuntimeException("做RAID失败!" + response.getData());
             }
             String workflowId = (JSONObject.parseObject(response.getData())).getString("instanceId");
             WorkflowResponse workflowResponse = getWorkflowResponse(url, workflowId);
@@ -245,7 +245,7 @@ public class RackHDService {
             IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(pm.getMachineBrand()));
             RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + iMetalProvider.getDeleteRaidWorkFlow(), pm.getServerId()), deleteRaidPayload);
             if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
-                throw new RuntimeException("RAID擦除失败!" + response.getMessage());
+                throw new RuntimeException("RAID擦除失败!" + response.getData());
             }
             String workflowId = (JSONObject.parseObject(response.getData())).getString("instanceId");
             WorkflowResponse workflowResponse = getWorkflowResponse(url, workflowId);
@@ -274,7 +274,7 @@ public class RackHDService {
             IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(brand));
             RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + iMetalProvider.getCatalogRaidWorkFlow(), nodeId), "");
             if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
-                throw new RuntimeException(String.format("同步时获取dell：「%s」磁盘信息失败！response「%s」", nodeId, response.getMessage()));
+                throw new RuntimeException(String.format("同步时获取dell：「%s」磁盘信息失败！response「%s」", nodeId, response.getData()));
             }
             //对应的执行任务的id
             String workflowId = (JSONObject.parseObject(response.getData())).getString("instanceId");
@@ -296,7 +296,7 @@ public class RackHDService {
     public boolean power(String url, String nodeId, String workflow) {
         RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + RackHDConstants.WorkFlowEnum.findByWorkFlow(workflow).getWorkflowUrl(), nodeId), "");
         if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
-            throw new RuntimeException("操作失败！" + response.getMessage());
+            throw new RuntimeException("操作失败！" + response.getData());
         }
         String workflowId = (JSONObject.parseObject(response.getData())).getString("instanceId");
         try {
@@ -727,7 +727,7 @@ public class RackHDService {
 
         RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + "/api/2.0/nodes/%s/workflows?name=" + workflow, nodeId), param == null ? "" : param.toJSONString());
         if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
-            throw new RuntimeException("操作失败！" + response.getMessage());
+            throw new RuntimeException("操作失败！" + response.getData());
         }
         String workflowId = (JSONObject.parseObject(response.getData())).getString("instanceId");
         try {
@@ -739,7 +739,7 @@ public class RackHDService {
     }
 
     public List<String> getActiveWorkflowNodeIds() {
-        String response = RackHDHttpClientUtil.get("http://192.168.43.14:9090/api/2.0/workflows?active=true", null);
+        String response = RackHDHttpClientUtil.get(rackhdUrl + "/api/2.0/workflows?active=true", null);
         if (StringUtils.isNotBlank(response)) {
             JSONArray workflowArr = JSONArray.parseArray(response);
             if (workflowArr.size() > 0) {
@@ -747,5 +747,10 @@ public class RackHDService {
             }
         }
         return new ArrayList<>();
+    }
+
+    public boolean deleteNode(String nodeId) {
+        RackHDResponse response = RackHDHttpClientUtil.delete(String.format(rackhdUrl + "/api/2.0/nodes/%s", nodeId));
+        return response.getReCode() <= RackHDConstants.ERROR_RE_CODE;
     }
 }

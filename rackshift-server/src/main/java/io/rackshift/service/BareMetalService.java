@@ -9,6 +9,7 @@ import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.*;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
 import io.rackshift.utils.IPMIUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -32,6 +33,8 @@ public class BareMetalService {
     private DiskMapper diskMapper;
     @Resource
     private NetworkCardMapper networkCardMapper;
+    @Resource
+    private RackHDService rackHDService;
 
     public List<BareMetalDTO> list(BareMetalQueryVO queryVO) {
         return bareMetalManager.list(queryVO);
@@ -72,7 +75,7 @@ public class BareMetalService {
         IPMIUtil.Account account = IPMIUtil.Account.build(outBands.get(0));
         ResultHolder resultHolder = null;
         if (!(resultHolder = ipmiHandlerDecorator.execute(opt, account, pm, outBands.get(0))).isSuccess()) {
-            RSException.throwExceptions(resultHolder.getMessage());
+            ResultHolder.error(resultHolder.getMessage());
         }
         return ResultHolder.success("");
     }
@@ -103,5 +106,19 @@ public class BareMetalService {
         r.put("nics", nics);
 
         return ResultHolder.success(r);
+    }
+
+    public boolean del(String[] ids) {
+        if (ids == null || ids.length == 0) {
+            return false;
+        }
+        for (String id : ids) {
+            BareMetal bareMetal = bareMetalManager.getBareMetalById(id);
+            if (StringUtils.isNotBlank(bareMetal.getServerId())) {
+                rackHDService.deleteNode(bareMetal.getServerId());
+            }
+            bareMetalManager.delBareMetalById(id);
+        }
+        return true;
     }
 }

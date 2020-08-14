@@ -24,7 +24,11 @@
             <el-table-column type="selection" align="center"></el-table-column>
             <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="center"
                              v-for="c in columns" sortable></el-table-column>
-
+            <el-table-column prop="createTime" :label="$t('create_time')" align="center">
+                <template slot-scope="scope">
+                    {{scope.row.createTime | dateFormat}}
+                </template>
+            </el-table-column>
             <el-table-column prop="" :label="$t('opt')" align="center">
                 <template slot-scope="scope">
                     <el-button
@@ -159,11 +163,7 @@
                     {
                         label: this.$t('pxe_enable'),
                         prop: "pxeEnable"
-                    },
-                    {
-                        label: this.$t('create_time'),
-                        prop: "createTime"
-                    },
+                    }
                 ],
                 editDialogVisible: false,
                 editType: 'edit',
@@ -178,14 +178,13 @@
         },
         mounted() {
             this.getData();
-            this.getAllOsAndVersion();
         },
         methods: {
             // 获取 easy-mock 的模拟数据
             getValidProText(row, column, cellValue, index) {
                 if (cellValue == true) {
                     return this.$t("enabled");
-                } else if (cellValue == false) {
+                } else if (cellValue && cellValue == false) {
                     return this.$t("disabled");
                 }
                 return cellValue;
@@ -195,21 +194,12 @@
                     this.tableData = res.data.listObject;
                     this.pageTotal = res.data.itemCount;
                 });
-
-            },
-            getAllOsAndVersion() {
-                HttpUtil.get("/rackhd/allOsAndVersion", {}, (res) => {
-                    this.allOs = res.data;
-                });
             },
             handleSizeChange(val) {
                 this.query.pageSize = val;
             },
-            changeOsVersion() {
-                this.allOsVersion = _.find(this.allOs, {"id": this.editObj.os}).versions;
-            },
             handleClose() {
-
+                this.editDialogVisible = false;
             },
             add() {
                 this.editDialogVisible = true;
@@ -253,7 +243,7 @@
                 if (type == 'edit') {
                     this.editDialogVisible = true;
                     this.editType = type;
-                    this.editObj = row;
+                    this.editObj = JSON.parse(JSON.stringify(row));
                 } else if (type == 'del') {
                     this.$confirm('确定要删除吗？', '提示', {
                         type: 'warning'

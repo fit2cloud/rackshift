@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -282,6 +283,52 @@ public class RackHDHttpClientUtil {
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpResponseEntity = httpResponse.getEntity();
+            String data = EntityUtils.toString(httpResponseEntity, CHARSET_UTF_8);
+            response.setData(data);
+            int reCode = httpResponse.getStatusLine().getStatusCode();
+            String responseMessage = getResponseMessage(reCode).equals("") ? httpResponse.getStatusLine().getReasonPhrase() : getResponseMessage(reCode);
+            response.setMessage(responseMessage);
+            response.setReCode(reCode);
+            return response;
+        } catch (Exception e) {
+            logger.error("HttpClient查询失败", e);
+            throw new RuntimeException("HttpClient查询失败");
+        } finally {
+            try {
+                httpClient.close();
+            } catch (Exception e) {
+                logger.error("HttpClient关闭连接失败", e);
+            }
+        }
+    }
+
+    public static RackHDResponse delete(String url) {
+        CloseableHttpClient httpClient = buildHttpClient(url);
+        HttpDelete httpDelete = new HttpDelete(url);
+
+
+        HttpClientConfig config = new HttpClientConfig();
+
+        RackHDResponse response = new RackHDResponse();
+        try {
+            httpDelete.setConfig(config.buildRequestConfig());
+
+            Map<String, String> header = config.getHeader();
+            for (String key : header.keySet()) {
+                httpDelete.addHeader(key, header.get(key));
+            }
+            httpDelete.addHeader(HTTP.CONTENT_TYPE, "application/json");
+            if (config.getCharset() != null) {
+                httpDelete.addHeader(HTTP.CONTENT_ENCODING, config.getCharset());
+            }
+
+            HttpResponse httpResponse = httpClient.execute(httpDelete);
+            HttpEntity httpResponseEntity = httpResponse.getEntity();
+            if (httpResponse.getStatusLine().getStatusCode() == 204) {
+                response.setReCode(204);
+                response.setMessage("ok");
+                return response;
+            }
             String data = EntityUtils.toString(httpResponseEntity, CHARSET_UTF_8);
             response.setData(data);
             int reCode = httpResponse.getStatusLine().getStatusCode();

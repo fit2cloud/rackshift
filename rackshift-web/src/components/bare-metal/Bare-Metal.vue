@@ -1,38 +1,21 @@
 <template>
     <el-tabs style="width:80vw" v-model="activeName">
-        <el-tab-pane label="物理机" name="bare-metal">
+        <el-tab-pane :label="$t('bare_metal')" name="bare-metal">
             <div>
-                <!--        <div class="handle-box">-->
-                <!--            <el-button-group>-->
-                <!--                <el-button-->
-                <!--                        type="primary"-->
-                <!--                        icon="el-icon-delete"-->
-                <!--                        class="handle-del mr10"-->
-                <!--                        @click="delAllSelection"-->
-                <!--                >{{$t('batch_del')}}-->
-                <!--                </el-button>-->
-                <!--                <el-button-->
-                <!--                        type="primary"-->
-                <!--                        icon="el-icon-delete"-->
-                <!--                        class="handle-del mr10"-->
-                <!--                        @click="handleEdit({}, 'add')"-->
-                <!--                >{{$t('add')}}-->
-                <!--                </el-button>-->
-                <!--            </el-button-group>-->
-                <!--        </div>-->
                 <div class="machine-title">
-                    <i class="el-icon-user-solid">Machines</i>
+                    <i class="el-icon-user-solid">{{$t('Machines')}}</i>
 
                     <el-button-group class="batch-button">
-                        <el-button type="primary" icon="el-icon-edit"></el-button>
-                        <el-button type="primary" icon="el-icon-share"></el-button>
-                        <el-button type="primary" icon="el-icon-delete"></el-button>
+                        <el-button type="primary" icon="el-icon-circle-plus-outline">{{$t('add')}}</el-button>
+                        <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{$t('del')}}
+                        </el-button>
+                        <el-button type="primary" icon="el-icon-refresh" @click="getData">{{$t('refresh')}}</el-button>
                     </el-button-group>
                 </div>
                 <div id="control" style="display: flex;">
                     <div id="run-workflow">
                         <div class="el-icon-caret-right h25"
-                             style="border-bottom: yellowgreen 1px solid;    width: 100%;">Run
+                             style="border-bottom: yellowgreen 1px solid;    width: 100%;">{{$t('Run')}}
                         </div>
                         <div class="run-splitter h25"></div>
                         <div>
@@ -60,31 +43,7 @@
                                        class="h50 ml10"><span
                                     class="el-icon-circle-plus"></span>{{$t('add_to_selected_wf_list')}}
                             </el-button>
-                            <!--                    <el-button class="el-icon-close h50"></el-button>-->
                         </div>
-                        <!--                        <div id="select-params">-->
-                        <!--                            <div class="el-icon-s-operation h25"-->
-                        <!--                                 style="border-bottom: yellowgreen 1px solid;    width: 100%;">-->
-                        <!--                                Params-->
-                        <!--                            </div>-->
-                        <!--                            <div class="run-splitter h25"></div>-->
-                        <!--                            <el-button class="h50 ml10" :disabled="!paramEditable">{{$t('Set')}}</el-button>-->
-                        <!--                            &lt;!&ndash;                    <el-button class="h50 ml10">{{$t('Set')}} <span class="el-icon-caret-bottom"></span></el-button>&ndash;&gt;-->
-
-                        <!--                        </div>-->
-
-                        <!--                        <div id="workflow-todo">-->
-                        <!--                            <div class="el-icon-s-operation h25"-->
-                        <!--                                 style="border-bottom: yellowgreen 1px solid;    width: 100%;">-->
-                        <!--                                Add to List-->
-                        <!--                            </div>-->
-                        <!--                            <div class="run-splitter h25"></div>-->
-                        <!--                            <el-button class="h50 ml10" @click="addToSelectedWorkflow"-->
-                        <!--                                       :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"><span-->
-                        <!--                                    class="el-icon-circle-plus"></span>{{$t('add_to_selected_wf_list')}}-->
-                        <!--                            </el-button>-->
-
-                        <!--                        </div>-->
                     </div>
 
                     <div id="action-list">
@@ -120,6 +79,7 @@
                         header-cell-class-name="table-header"
                         @sort-change="sortChange($event)"
                         style="width: 100%"
+                        @expand-change="expandChange"
                         @selection-change="handleSelectionChange"
                 >
                     <el-table-column type="selection" align="center"></el-table-column>
@@ -137,12 +97,39 @@
 
                     <el-table-column :prop="c.prop" :label="c.label" align="center"
                                      v-for="c in columns" sortable="custom"></el-table-column>
+
+                    <el-table-column prop="status" :label="$t('machine_status')" align="center"
+                                     sortable="custom">
+                        <template slot-scope="scope">
+                            <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
+                            <span style="margin-left: 10px">{{ scope.row.status }}</span>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column :label="$t('execution_log')" align="center" min-width="100px" type="expand">
+                        <template slot-scope="scope">
+                            <span style="display:block" v-for="l in scope.row.logs">{{l.outPut}}</span>
+                        </template>
+                        <!--                        <template slot-scope="scope" v-if="!scope.row.logs || scope.row.logs.length == 0">-->
+                        <!--                            <i class="el-icon-loading"></i>-->
+                        <!--                        </template>-->
+
+                    </el-table-column>
+
+                    <el-table-column prop="createTime" :label="$t('create_time')" align="center"
+                                     sortable="custom">
+                        <template slot-scope="scope">
+                            {{ scope.row.createTime | dateFormat }}
+                        </template>
+
+                    </el-table-column>
+
                     <el-table-column prop="" :label="$t('opt')" align="center">
                         <template slot="header" slot-scope="scope">
                             <el-input
                                     v-model="search"
                                     size="mini"
-                                    placeholder="输入关键字搜索" v-on:change="getData"/>
+                                    :placeholder="$t('input_key_search')" v-on:change="getData"/>
                         </template>
                         <template slot-scope="scope">
                             <el-dropdown>
@@ -150,12 +137,13 @@
                                     {{$t('opt')}}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item @click.native="power('on', scope.row)">poweron</el-dropdown-item>
-                                    <el-dropdown-item @click.native="power('off', scope.row)">poweroff
+                                    <el-dropdown-item @click.native="power('on', scope.row)">{{$t('poweron')}}
                                     </el-dropdown-item>
-                                    <el-dropdown-item @click.native="power('reset', scope.row)">powercycle
+                                    <el-dropdown-item @click.native="power('off', scope.row)">{{$t('poweroff')}}
                                     </el-dropdown-item>
-                                    <el-dropdown-item @click.native="power('pxe', scope.row)">pxeboot
+                                    <el-dropdown-item @click.native="power('reset', scope.row)">{{$t('powercycle')}}
+                                    </el-dropdown-item>
+                                    <el-dropdown-item @click.native="power('pxe', scope.row)">{{$t('pxeboot')}}
                                     </el-dropdown-item>
                                     <el-dropdown-item @click.native="fillOBM(scope.row)">OBM信息
                                     </el-dropdown-item>
@@ -220,7 +208,6 @@
                     <div class="demo-drawer__content">
                         <el-tabs v-model="detailShowName">
                             <el-tab-pane :label="$t('detail')" name="detail">
-                                <el-card class="box-card">
                                     <el-form ref="form" :model="machine">
                                         <el-form-item :label="$t('machine_model')">
                                             {{machine.machineModel}}
@@ -244,7 +231,6 @@
                                             {{machine.disk}}{{$t('GB')}}
                                         </el-form-item>
                                     </el-form>
-                                </el-card>
                             </el-tab-pane>
                             <el-tab-pane :label="$t('cpu_detail')" name="cpuDetail" class="detail-pane">
                                 <table class="detail-info">
@@ -262,7 +248,7 @@
                                         <td>{{c.procSpeed}}</td>
                                         <td>{{c.procNumCores}}</td>
                                         <td>{{c.procNumThreads}}</td>
-                                        <td>{{c.syncTime}}</td>
+                                        <td>{{c.syncTime | dateFormat}}</td>
                                     </tr>
                                 </table>
                             </el-tab-pane>
@@ -282,12 +268,13 @@
                                     <tr v-for="c in memories">
                                         <td>{{c.memCpuNum}}</td>
                                         <td>{{c.memModNum}}</td>
-                                        <td>{{c.memModSize}}</td>
+                                        <td>{{c.memModSize+ ' GB'}}</td>
                                         <td>{{c.memModType}}</td>
-                                        <td>{{c.memModFrequency}}</td>
+                                        <td>{{c.memModNum}}</td>
+                                        <td>{{c.memModFrequency + ' MHz'}}</td>
                                         <td>{{c.memModPartNum}}</td>
                                         <td>{{c.memModMinVolt}}</td>
-                                        <td>{{c.syncTime}}</td>
+                                        <td>{{c.syncTime | dateFormat}}</td>
                                     </tr>
                                 </table>
                             </el-tab-pane>
@@ -313,7 +300,22 @@
                                         <td>{{c.raid}}</td>
                                         <td>{{c.manufactor}}</td>
                                         <td>{{c.sn}}</td>
-                                        <td>{{c.syncTime}}</td>
+                                        <td>{{c.syncTime | dateFormat}}</td>
+                                    </tr>
+                                </table>
+                            </el-tab-pane>
+
+                            <el-tab-pane :label="$t('nic_detail')" name="nicDetail" class="detail-pane">
+                                <table class="detail-info">
+                                    <tr>
+                                        <td>{{$t('nic_number')}}</td>
+                                        <td>{{$t('mac')}}</td>
+                                        <td>{{$t('sync_time')}}</td>
+                                    </tr>
+                                    <tr v-for="c in nics">
+                                        <td>{{c.number}}</td>
+                                        <td>{{c.mac}}</td>
+                                        <td>{{c.syncTime | dateFormat}}</td>
                                     </tr>
                                 </table>
                             </el-tab-pane>
@@ -324,7 +326,9 @@
 
             </div>
         </el-tab-pane>
-        <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
+        <el-tab-pane :label="$t('obm')" name="second">
+            <OBM></OBM>
+        </el-tab-pane>
 
     </el-tabs>
 </template>
@@ -333,15 +337,16 @@
     import HttpUtil from "../../common/utils/HttpUtil";
     import {isAnyBlank, toLine} from "../../common/utils/CommonUtil";
     import Vue from 'vue';
+    import OBM from "../obm/Obm"
 
     let _ = require('lodash');
     export default {
         data() {
             return {
                 search: null,
-                payLoad: {},
                 fillWfParams: false,
                 activeName: 'bare-metal',
+                form: {},
                 query: {
                     address: '',
                     name: '',
@@ -354,10 +359,8 @@
                 editVisible: false,
                 formLabelWidth: '80px',
                 pageTotal: 0,
+                loading: false,
                 form: {},
-                loading:false,
-                idx: -1,
-                id: -1,
                 columns: [
                     {
                         label: this.$t('machine_sn'),
@@ -379,10 +382,10 @@
                         label: this.$t('disk'),
                         prop: "disk"
                     },
-                    {
-                        label: this.$t('status'),
-                        prop: "status"
-                    },
+                    // {
+                    //     label: this.$t('status'),
+                    //     prop: "status"
+                    // },
                 ],
                 detailDrawer: false,
                 editType: 'edit',
@@ -414,6 +417,7 @@
                 cpus: [],
                 memories: [],
                 disks: [],
+                nics: [],
                 paramComponent: {},
                 currentWfParamTemplate: {},
                 editWorkflowIndex: -1,
@@ -421,6 +425,9 @@
                     searchKey: this.search
                 }
             }
+        },
+        components: {
+            OBM
         },
         computed: {
             filterList: function () {
@@ -436,6 +443,20 @@
         }
         ,
         methods: {
+            load(tree, treeNode, resolve) {
+                HttpUtil.post("/execution-log/detaillist/" + 1 + "/" + 1000, {bareMetalId: tree.id}, (res) => {
+                    // that.$set(a, 'children', res.data.listObject);
+                    // that.$set(a, 'logs', res.data.listObject);
+                    resolve(res.data.listObject);
+                });
+            },
+            expandChange(a) {
+                let that = this;
+                HttpUtil.post("/execution-log/detaillist/" + 1 + "/" + 1000, {bareMetalId: a.id}, (res) => {
+                    // that.$set(a, 'children', res.data.listObject);
+                    that.$set(a, 'logs', res.data.listObject);
+                });
+            },
             buildRequest(workflow) {
                 let request = JSON.parse(JSON.stringify(workflow));
                 delete request.componentId;
@@ -458,6 +479,9 @@
                 this.editWorkflowIndex = index;
                 this.fillWfParams = true;
                 this.currentWfParamTemplate = this.selectedWorkflow[index].componentId;
+                if (this.workflowParamList.length) {
+                    this.workflowParam = this.selectedWorkflow[index].params;
+                }
             },
             power(opt, row) {
                 HttpUtil.get("/bare-metal/power/" + row.id + "/" + opt, null, (res) => {
@@ -469,6 +493,7 @@
                     this.cpus = res.data.cpus;
                     this.memories = res.data.memories;
                     this.disks = res.data.disks;
+                    this.nics = res.data.nics;
                 })
             },
             showDetail(machine) {
@@ -588,7 +613,6 @@
                     this.detailDrawer = true;
                     this.editType = type;
                     this.editObj = JSON.parse(JSON.stringify(row));
-                    ;
                     this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
 
                 } else if (type == 'del') {
@@ -614,7 +638,7 @@
             getAllGraphDefinitions(name) {
                 HttpUtil.get("/rackhd/graphdefinitions/1/1000", {name: name}, (res) => {
                     this.allGraphDefinitions = res.data.listObject;
-                })
+                });
             },
             runWorkflow() {
 
@@ -626,10 +650,14 @@
                 let reqList = _.map(this.copy(this.selectedWorkflow), (wf) => {
                     return that.buildRequest(wf);
                 });
+                if (reqList.length == 0) {
+                    this.$notify.error(this.$t('pls_select_node') + "!");
+                    return;
+                }
 
                 HttpUtil.post("/workflow/run", reqList, (res) => {
                     this.getData();
-                })
+                });
             }
             ,
             getParamsTemplate() {
@@ -654,7 +682,15 @@
             },
             addToSelectedWorkflow() {
                 if (this.wfRequest.workflow) {
-
+                    for (let i = 0; i < this.multipleSelection.length; i++) {
+                        let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[i].id;
+                        for (let j = 0; j < this.selectedWorkflow.length; j++) {
+                            if (this.selectedWorkflow[j].componentId == componentId) {
+                                this.$notify.error(this.$t('same_workflow_node'));
+                                return;
+                            }
+                        }
+                    }
                     for (let i = 0; i < this.multipleSelection.length; i++) {
                         this.selectedWorkflow.push(
                             {
@@ -673,9 +709,9 @@
                                 return p.bareMetalId == that.selectedWorkflow[that.selectedWorkflow.length - 1].bareMetalId;
                             });
                             if (paramTemplate == null)
-                                that.workflowParam = null;
+                                that.$set(that, 'workflowParam', null);
                             else
-                                that.workflowParam = JSON.parse(paramTemplate.paramsTemplate);
+                                that.$set(that, 'workflowParam', JSON.parse(paramTemplate.paramsTemplate));
 
                             that.selectedWorkflow[that.selectedWorkflow.length - 1].params = that.workflowParam;
                         }
@@ -767,13 +803,28 @@
     }
 
     .detail-pane {
-        overflow: scroll;
+        overflow-x: scroll;
         color: #303133;
     }
 
     .detail-info {
         border: 1px solid #EBEEF5;
         text-align: center;
+        border-spacing: 0px !important;
+    }
+
+    .detail-info td {
+        border: 1px solid #EBEEF5;
+        border-bottom: none;
+        border-right: none;
+        padding: 12px 0;
+        min-width: 0;
+        box-sizing: border-box;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        position: relative;
+        text-align: center;
+
     }
 
 </style>

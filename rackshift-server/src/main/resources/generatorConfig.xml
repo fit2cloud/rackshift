@@ -64,7 +64,8 @@
 <!--        <table tableName="cpu"/>-->
 <!--        <table tableName="disk"/>-->
 <!--        <table tableName="memory"/>-->
-        <table tableName="workflow_param_templates"/>
+        <table tableName="execution_log"/>
+        <table tableName="execution_log_details"/>
 <!--        <table tableName="ip"/>-->
 
     </context>

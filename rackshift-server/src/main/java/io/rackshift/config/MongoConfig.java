@@ -32,7 +32,7 @@ public class MongoConfig {
             return client;
         } else {
             SystemParameter endPoint = systemParameterMapper.selectByPrimaryKey(ServiceConstants.endPointParameterKey);
-            MongoClientSettings clientSettings = MongoClientSettings.builder().applyConnectionString(new ConnectionString("mongodb://" + endPoint.getParamValue() + ":27017")).build();
+            MongoClientSettings clientSettings = MongoClientSettings.builder().applyConnectionString(new ConnectionString("mongodb://" + (endPoint.getParamValue().contains(":") ? endPoint.getParamValue().substring(0, endPoint.getParamValue().indexOf(":")) + ":27017" : endPoint.getParamValue()))).build();
             MongoClient client = new MongoClientImpl(clientSettings, MongoDriverInformation.builder().build());
             MongoUtil.setMongoClient(client);
             return client;

@@ -10,39 +10,39 @@
                               type="password"></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('image')">
-                    <el-select v-model="payLoad.options.defaults.repo">
+                    <el-select v-model="payLoad.options.defaults.repo" style="float: left;">
                         <el-option v-for="g in allImages" :label="g.name"
                                    :value="g.url"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item :label="$t('network_devices')">
+                    <table class="detail-info" style="float: left;">
+                        <tr>
+                            <td>{{$t('network_card_mac')}}</td>
+                            <td>{{$t('ip_addr')}}</td>
+                            <td>{{$t('gateway')}}</td>
+                            <td>{{$t('netmask')}}</td>
+                        </tr>
 
-                <table>
-                    <thead>{{$t('network_devices')}}</thead>
-                    <tr>
-                        <td>{{$t('network_card_mac')}}</td>
-                        <td>{{$t('ip_addr')}}</td>
-                        <td>{{$t('gateway')}}</td>
-                        <td>{{$t('netmask')}}</td>
-                    </tr>
-
-                    <tr v-for="d in payLoad.options.defaults.networkDevices">
-                        <td>
-                            <el-select v-model="d.device">
-                                <el-option :label="n.number + '(' + n.mac + ')'" :value="n.mac"
-                                           v-for="n in nics"></el-option>
-                            </el-select>
-                        </td>
-                        <td>
-                            <el-input v-model="d.ipv4.ipAddr"></el-input>
-                        </td>
-                        <td>
-                            <el-input v-model="d.ipv4.gateway"></el-input>
-                        </td>
-                        <td>
-                            <el-input v-model="d.ipv4.netmask"></el-input>
-                        </td>
-                    </tr>
-                </table>
+                        <tr v-for="d in payLoad.options.defaults.networkDevices">
+                            <td>
+                                <el-select v-model="d.device">
+                                    <el-option :label="n.number + '(' + n.mac + ')'" :value="n.mac"
+                                               v-for="n in nics"></el-option>
+                                </el-select>
+                            </td>
+                            <td>
+                                <el-input v-model="d.ipv4.ipAddr"></el-input>
+                            </td>
+                            <td>
+                                <el-input v-model="d.ipv4.gateway"></el-input>
+                            </td>
+                            <td>
+                                <el-input v-model="d.ipv4.netmask"></el-input>
+                            </td>
+                        </tr>
+                    </table>
+                </el-form-item>
 
             </el-form>
         </el-card>
