@@ -31,7 +31,7 @@ public class StateMachine {
     public void sendEvent(LifeEvent event) {
         String executionLogId = executionLogService.saveLog(ExecutionLogConstants.SUBMIT).getId();
         executionLogService.saveLogDetail(executionLogId, SessionUtil.getUser().getId(), ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), null, String.format("执行event:%s:worflow:%s,参数:%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString()));
-        handlerMap.get(event).handle(event, executionLogId, SessionUtil.getUser().getId());
+        handlerMap.get(event.getEventType()).handle(event, executionLogId, SessionUtil.getUser().getId());
         executionLogService.saveLogDetail(executionLogId, SessionUtil.getUser().getId(), ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), null, String.format("执行event:%s:worflow:%s,参数:%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString()));
         executionLogService.finish(executionLogId);
     }
