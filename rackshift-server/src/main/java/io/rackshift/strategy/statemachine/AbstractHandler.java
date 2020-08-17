@@ -52,6 +52,14 @@ public abstract class AbstractHandler implements IStateHandler {
     public abstract void handleYourself(LifeEvent event) throws Exception;
 
     @Override
+    public void handleNoSession(LifeEvent event) {
+        try {
+            handleYourself(event);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
     public void handle(LifeEvent event, String executionId, String user) {
         BareMetal bareMetal = getBareMetalById(event.getWorkflowRequestDTO().getBareMetalId());
         Map<String, String> statusMap = new HashMap();
@@ -59,6 +67,7 @@ public abstract class AbstractHandler implements IStateHandler {
         statusMap.put("executionId", executionId);
         statusMap.put("user", user);
         getExecutionMap().set(statusMap);
+        System.out.println("handing" + bareMetal.getMachineModel());
         try {
             handleYourself(event);
         } catch (Exception e) {
@@ -70,7 +79,7 @@ public abstract class AbstractHandler implements IStateHandler {
 
     @Override
     public void revert(LifeEvent event, String executionId, String user) {
-        executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, String.format("错误：event:%s:worflow:%s,参数:%s,回滚状态至%s", event.getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString(), getExecutionMap().get().get("beforeChangeStatus")));
+        executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, String.format("错误：event:%s:worflow:%s,参数:%s,回滚状态至%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString(), getExecutionMap().get().get("beforeChangeStatus")));
         changeStatus(event, LifeStatus.valueOf(getExecutionMap().get().get("beforeChangeStatus")), false);
     }
 

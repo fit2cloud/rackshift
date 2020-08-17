@@ -2,6 +2,7 @@ package io.rackshift.config;
 
 import io.rackshift.utils.Translator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -20,7 +21,8 @@ public class InternationalConfig {
     }
 
     @Bean
-    public Translator getTranslator() {
+    @ConditionalOnMissingBean
+    public Translator translator() {
         return new Translator();
     }
 }

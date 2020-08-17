@@ -79,7 +79,6 @@
                         header-cell-class-name="table-header"
                         @sort-change="sortChange($event)"
                         style="width: 100%"
-                        @expand-change="expandChange"
                         @selection-change="handleSelectionChange"
                 >
                     <el-table-column type="selection" align="center"></el-table-column>
@@ -106,13 +105,15 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column :label="$t('execution_log')" align="center" min-width="100px" type="expand">
+
+                    <el-table-column :label="$t('execution_log')" align="center" min-width="100px">
                         <template slot-scope="scope">
-                            <span style="display:block" v-for="l in scope.row.logs">{{l.outPut}}</span>
+                            <a href="javascript:void(0)" @click="expandChange(scope.row)">查看<i
+                                    class="el-icon el-icon-arrow-down"
+                                    style="cursor:pointer;"></i></a>
+
+                            <!--                            <span style="display:block" v-for="l in scope.row.logs">{{l.outPut}}</span>-->
                         </template>
-                        <!--                        <template slot-scope="scope" v-if="!scope.row.logs || scope.row.logs.length == 0">-->
-                        <!--                            <i class="el-icon-loading"></i>-->
-                        <!--                        </template>-->
 
                     </el-table-column>
 
@@ -163,6 +164,37 @@
                             :total="pageTotal">
                     </el-pagination>
                 </div>
+
+                <el-drawer
+                        size="50%"
+                        v-loading="loadingLog"
+                        :title="logTitle"
+                        :visible.sync="executionLogDrawer"
+                        direction="ttb"
+                        min-height="40vh"
+                        :before-close="handleCloseExecutionLog">
+                    <div style="text-align: right">
+                        <el-button @click="loadLogs(currentMachine)"><i class="el-icon-refresh"></i>{{$t('refresh')}}
+                        </el-button>
+                    </div>
+                    <el-card>
+                        <table class="detail-info">
+                            <tr>
+                                <td>{{$t('time')}}</td>
+                                <td>{{$t('user')}}</td>
+                                <td>{{$t('operation')}}</td>
+                                <td>{{$t('output')}}</td>
+                            </tr>
+
+                            <tr v-for="l in logs">
+                                <td>{{l.createTime | dateFormat}}</td>
+                                <td>{{l.user}}</td>
+                                <td>{{l.operation}}</td>
+                                <td>{{l.outPut}}</td>
+                            </tr>
+                        </table>
+                    </el-card>
+                </el-drawer>
 
                 <!--obm-->
                 <el-dialog :title="$t('obms')" :visible.sync="fillOutObms">
@@ -345,8 +377,13 @@
             return {
                 search: null,
                 fillWfParams: false,
+                executionLogDrawer: false,
                 activeName: 'bare-metal',
+                logTitle: '',
+                loadingLog: false,
+                currentMachine: {},
                 form: {},
+                logs: [],
                 query: {
                     address: '',
                     name: '',
@@ -369,6 +406,10 @@
                     {
                         label: this.$t('management_ip'),
                         prop: "managementIp"
+                    },
+                    {
+                        label: this.$t('ip'),
+                        prop: "ipArray"
                     },
                     {
                         label: this.$t('cpu'),
@@ -443,18 +484,19 @@
         }
         ,
         methods: {
-            load(tree, treeNode, resolve) {
-                HttpUtil.post("/execution-log/detaillist/" + 1 + "/" + 1000, {bareMetalId: tree.id}, (res) => {
-                    // that.$set(a, 'children', res.data.listObject);
-                    // that.$set(a, 'logs', res.data.listObject);
-                    resolve(res.data.listObject);
-                });
-            },
             expandChange(a) {
-                let that = this;
-                HttpUtil.post("/execution-log/detaillist/" + 1 + "/" + 1000, {bareMetalId: a.id}, (res) => {
+                this.executionLogDrawer = true;
+                this.currentMachine = a;
+                this.logTitle = this.$t('execution_log') + ' ' + this.currentMachine.machineModel + ' ' + this.currentMachine.machineSn + ' ' + this.currentMachine.managementIp;
+
+                this.loadLogs(a);
+            },
+            loadLogs(machine) {
+                this.loadingLog = true;
+                HttpUtil.post("/execution-log/detaillist/" + 1 + "/" + 1000, {bareMetalId: machine.id}, (res) => {
                     // that.$set(a, 'children', res.data.listObject);
-                    that.$set(a, 'logs', res.data.listObject);
+                    this.$set(this, 'logs', res.data.listObject);
+                    this.loadingLog = false;
                 });
             },
             buildRequest(workflow) {
@@ -559,6 +601,9 @@
             handleClose() {
                 this.detailDrawer = false;
             },
+            handleCloseExecutionLog() {
+                this.executionLogDrawer = false;
+            },
             cancelForm() {
                 this.loading = false;
                 this.detailDrawer = false;
@@ -656,6 +701,7 @@
                 }
 
                 HttpUtil.post("/workflow/run", reqList, (res) => {
+                    this.selectedWorkflow = [];
                     this.getData();
                 });
             }
@@ -716,7 +762,7 @@
                             that.selectedWorkflow[that.selectedWorkflow.length - 1].params = that.workflowParam;
                         }
                     }
-                    this.$refs.multipleTable.clearSelection();
+                    // this.$refs.multipleTable.clearSelection();
                 }
             }
             ,

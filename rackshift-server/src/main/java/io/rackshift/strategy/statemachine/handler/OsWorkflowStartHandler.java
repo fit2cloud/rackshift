@@ -1,7 +1,7 @@
 package io.rackshift.strategy.statemachine.handler;
 
 import com.alibaba.fastjson.JSONObject;
-import io.rackshift.constants.ExecutionLogConstants;
+import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.service.RackHDService;
@@ -9,7 +9,7 @@ import io.rackshift.strategy.statemachine.*;
 
 import javax.annotation.Resource;
 
-@EventHandlerAnnotation(LifeEvent.POST_OS_WORKFLOW_START)
+@EventHandlerAnnotation(LifeEventType.POST_OS_WORKFLOW_START)
 public class OsWorkflowStartHandler extends AbstractHandler {
 
     @Resource
@@ -17,7 +17,7 @@ public class OsWorkflowStartHandler extends AbstractHandler {
     @Resource
     private String rackhdUrl;
     @Resource
-    private StateMachine stateMachine;
+    private BareMetalManager bareMetalManager;
 
     @Override
     public void handleYourself(LifeEvent event) {
@@ -34,8 +34,12 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         boolean result = rackHDService.postWorkflow(rackhdUrl, bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
         if (result) {
             changeStatus(event, LifeStatus.deployed, false);
+            bareMetal.setStatus(null);
+            bareMetal.setIpArray(params.getJSONObject("options").getJSONObject("defaults").getJSONArray("networkDevices").getJSONObject(0).getJSONObject("ipv4").getString("ipAddr"));
+            bareMetalManager.update(bareMetal, false);
         } else {
             revert(event, getExecutionId(), getUser());
         }
     }
+
 }

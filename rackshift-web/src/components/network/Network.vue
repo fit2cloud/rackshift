@@ -182,9 +182,9 @@
         methods: {
             // 获取 easy-mock 的模拟数据
             getValidProText(row, column, cellValue, index) {
-                if (cellValue == true) {
+                if (cellValue === true) {
                     return this.$t("enabled");
-                } else if (cellValue && cellValue == false) {
+                } else if (cellValue === false) {
                     return this.$t("disabled");
                 }
                 return cellValue;

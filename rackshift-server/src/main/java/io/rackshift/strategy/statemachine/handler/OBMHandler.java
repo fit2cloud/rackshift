@@ -7,15 +7,12 @@ import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.service.OutBandService;
 import io.rackshift.service.RackHDService;
-import io.rackshift.strategy.statemachine.AbstractHandler;
-import io.rackshift.strategy.statemachine.EventHandlerAnnotation;
-import io.rackshift.strategy.statemachine.LifeEvent;
-import io.rackshift.strategy.statemachine.LifeStatus;
+import io.rackshift.strategy.statemachine.*;
 import io.rackshift.utils.Translator;
 
 import javax.annotation.Resource;
 
-@EventHandlerAnnotation(LifeEvent.FILL_OBMS)
+@EventHandlerAnnotation(LifeEventType.FILL_OBMS)
 public class OBMHandler extends AbstractHandler {
     @Resource
     private RackHDService rackHDService;

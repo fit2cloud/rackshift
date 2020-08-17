@@ -38,6 +38,12 @@ public class ExecutionLogController {
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @RequestMapping("getDetailById/{id}")
+    public ResultHolder getDetailById(@PathVariable String id) {
+        return ResultHolder.success(executionLogService.listDetailsById(id));
+    }
+
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @RequestMapping("add")
     public ResultHolder add(@RequestBody ExecutionLogDTO queryVO) {
         return ResultHolder.success(executionLogService.add(queryVO));

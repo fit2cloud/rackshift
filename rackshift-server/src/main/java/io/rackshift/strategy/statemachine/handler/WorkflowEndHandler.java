@@ -1,11 +1,8 @@
 package io.rackshift.strategy.statemachine.handler;
 
-import io.rackshift.strategy.statemachine.AbstractHandler;
-import io.rackshift.strategy.statemachine.EventHandlerAnnotation;
-import io.rackshift.strategy.statemachine.LifeEvent;
-import io.rackshift.strategy.statemachine.LifeStatus;
+import io.rackshift.strategy.statemachine.*;
 
-@EventHandlerAnnotation(LifeEvent.POST_OTHER_WORKFLOW_END)
+@EventHandlerAnnotation(LifeEventType.POST_OTHER_WORKFLOW_END)
 public class WorkflowEndHandler extends AbstractHandler {
     @Override
     public void handleYourself(LifeEvent event) {

@@ -8,16 +8,13 @@ import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.service.ExecutionLogService;
 import io.rackshift.service.RackHDService;
-import io.rackshift.strategy.statemachine.AbstractHandler;
-import io.rackshift.strategy.statemachine.EventHandlerAnnotation;
-import io.rackshift.strategy.statemachine.LifeEvent;
-import io.rackshift.strategy.statemachine.LifeStatus;
+import io.rackshift.strategy.statemachine.*;
 import io.rackshift.utils.IPMIUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Resource;
 
-@EventHandlerAnnotation(LifeEvent.POST_DISCOVERY_WORKFLOW_START)
+@EventHandlerAnnotation(LifeEventType.POST_DISCOVERY_WORKFLOW_START)
 public class DiscoveryStartHandler extends AbstractHandler {
     @Resource
     private RackHDService rackHDService;

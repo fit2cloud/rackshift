@@ -3,12 +3,12 @@ package io.rackshift.service;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.OutBandDTO;
-import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.domain.OutBandExample;
 import io.rackshift.mybatis.mapper.OutBandMapper;
 import io.rackshift.strategy.statemachine.LifeEvent;
+import io.rackshift.strategy.statemachine.LifeEventType;
 import io.rackshift.strategy.statemachine.StateMachine;
 import io.rackshift.utils.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -47,11 +47,9 @@ public class OutBandService {
     }
 
     public void fillOBMS(String bareMetalId, OutBand outBand) {
-        LifeEvent input = LifeEvent.FILL_OBMS;
         JSONObject params = new JSONObject();
         params.put("outband", outBand);
-        WorkflowRequestDTO requestDTO = new WorkflowRequestDTO(bareMetalId, null, params);
-        input.setWorkflowRequestDTO(requestDTO);
+        LifeEvent input = LifeEvent.builder().withBareMetalId(bareMetalId).withEventType(LifeEventType.FILL_OBMS).withParams(params);
         stateMachine.sendEvent(input);
     }
 

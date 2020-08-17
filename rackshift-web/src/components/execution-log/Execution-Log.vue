@@ -7,9 +7,6 @@
                 <button type="button" class="el-button el-button--primary" @click="delAllSelection"><i
                         class="el-icon-delete"></i>{{$t('batch_del')}}
                 </button>
-                <button type="button" class="el-button el-button--primary" @click="handleEdit({}, 'add')"><i
-                        class="el-icon-document-add"></i>{{$t('add')}}
-                </button>
             </div>
         </div>
 
@@ -34,8 +31,8 @@
                     <el-button
                             type="button"
                             icon="el-icon-edit"
-                            @click="handleEdit(scope.row, 'edit')"
-                    >{{$t('edit')}}
+                            @click="viewDetail(scope.row)"
+                    >{{$t('view_detail')}}
                     </el-button>
 
                     <el-button
@@ -62,31 +59,30 @@
         </div>
 
         <el-drawer
-                :title="editType == 'edit' ? $t('edit_outband') : $t('add_outband')"
+                size="50%"
+                :title="editType == 'edit' ? $t('edit_execution_log') : $t('add_execution_log')"
                 :visible.sync="editDialogVisible"
-                direction="rtl"
+                direction="ttb"
                 :before-close="handleClose">
             <div class="demo-drawer__content">
-                <el-form :model="editObj">
-                    <el-form-item :label="$t('ip')">
-                        <el-input v-model="editObj.ip" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item :label="$t('user_name')">
-                        <el-input v-model="editObj.userName" autocomplete="off"
-                                  :placeholder="$t('pls_input_user_name')"></el-input>
-                    </el-form-item>
-                    <el-form-item :label="$t('pwd')">
-                        <el-input v-model="editObj.pwd" autocomplete="off" type="password"
-                                  :placeholder="$t('pls_input_pwd')"></el-input>
-                    </el-form-item>
-
-                </el-form>
-                <div class="demo-drawer__footer">
-                    <el-button @click="editDialogVisible = false">{{$t('cancel')}}</el-button>
-                    <el-button type="primary" @click="confirmEdit" :loading="loading">{{ loading ? $t('submitting') +
-                        '...' : $t('confirm')
-                        }}
-                    </el-button>
+                <el-card>
+                    <table class="detail-info">
+                        <tr>
+                            <td>{{$t('time')}}</td>
+                            <td>{{$t('user')}}</td>
+                            <td>{{$t('operation')}}</td>
+                            <td>{{$t('output')}}</td>
+                        </tr>
+                        <tr v-for="l in detailLogs">
+                            <td>{{l.createTime | dateFormat}}</td>
+                            <td>{{l.user}}</td>
+                            <td>{{l.operation}}</td>
+                            <td>{{l.outPut}}</td>
+                        </tr>
+                    </table>
+                </el-card>
+                <div class="demo-drawer__footer fr">
+                    <el-button @click="editDialogVisible = false">{{$t('close')}}</el-button>
                 </div>
             </div>
         </el-drawer>
@@ -137,6 +133,7 @@
                     type: null
                 },
                 allOs: [],
+                detailLogs: [],
                 allOsVersion: []
             };
         },
@@ -170,19 +167,7 @@
                 this.editType = 'add';
             },
             confirmEdit() {
-                if (this.editType == 'edit') {
-                    HttpUtil.post("/execution-log/update", this.editObj, (res) => {
-                        this.editDialogVisible = false;
-                        this.$message.success('编辑成功');
-                        this.getData();
-                    })
-                } else {
-                    HttpUtil.post("/execution-log/add", this.editObj, (res) => {
-                        this.editDialogVisible = false;
-                        this.$message.success('新增成功');
-                        this.getData();
-                    })
-                }
+                this.editDialogVisible = false;
             },
             // 多选操作
             handleSelectionChange(val) {
@@ -201,6 +186,12 @@
                     this.getData();
                 });
                 this.multipleSelection = [];
+            },
+            viewDetail(row) {
+                HttpUtil.get("/execution-log/getDetailById/" + row.id, {}, (res) => {
+                    this.detailLogs = res.data;
+                    this.editDialogVisible = true;
+                });
             },
             // 编辑操作
             handleEdit(row, type) {
@@ -246,4 +237,26 @@
         margin-right: 10px;
     }
 
+    .detail-info {
+        border: 1px solid #EBEEF5;
+        text-align: center;
+        border-spacing: 0px !important;
+    }
+
+    .detail-info td {
+        border: 1px solid #EBEEF5;
+        border-bottom: none;
+        border-right: none;
+        padding: 12px 0;
+        min-width: 0;
+        box-sizing: border-box;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        position: relative;
+        text-align: center;
+    }
+
+    .fr {
+        float: right;
+    }
 </style>

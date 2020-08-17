@@ -9,6 +9,7 @@ import io.rackshift.model.ResultHolder;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.strategy.statemachine.LifeEvent;
+import io.rackshift.strategy.statemachine.LifeEventType;
 import io.rackshift.strategy.statemachine.StateMachine;
 import io.rackshift.utils.MongoUtil;
 import io.rackshift.utils.Pager;
@@ -63,9 +64,7 @@ public class WorkflowService {
             if (bareMetal == null) {
                 RSException.throwExceptions(Translator.get("i18n_error"));
             }
-            LifeEvent event = LifeEvent.fromWorkflow(workflowName);
-            event.setBareMetalId(bareMetalId);
-            event.setWorkflowRequestDTO(requestDTO);
+            LifeEvent event = LifeEvent.builder().withWorkflowRequestDTO(requestDTO).withEventType(LifeEventType.fromWorkflow(workflowName));
             stateMachine.sendEventAsyn(event);
         }
         return ResultHolder.success("");

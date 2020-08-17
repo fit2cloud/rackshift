@@ -65,7 +65,7 @@ public class LoginController {
     @RequestMapping("/")
     public String login() {
         if (SessionUtil.getUser() == null) {
-            return "login.html";
+            return "index.html";
         }
         return "index.html";
     }

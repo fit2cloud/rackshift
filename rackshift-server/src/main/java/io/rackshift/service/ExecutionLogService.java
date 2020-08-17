@@ -74,6 +74,7 @@ public class ExecutionLogService {
 
     public List<ExecutionLog> list(ExecutionLogDTO queryVO) {
         ExecutionLogExample example = buildExample(queryVO);
+        example.setOrderByClause("create_time desc");
         return executionLogMapper.selectByExample(example);
     }
 
@@ -102,9 +103,17 @@ public class ExecutionLogService {
 
     public List<ExecutionLogDetails> listDetails(ExecutionLogDetailsDTO queryVO) {
         ExecutionLogDetailsExample e = new ExecutionLogDetailsExample();
-        if(StringUtils.isNotBlank(queryVO.getBareMetalId())){
+        if (StringUtils.isNotBlank(queryVO.getBareMetalId())) {
             e.createCriteria().andBareMetalIdEqualTo(queryVO.getBareMetalId());
         }
+        e.setOrderByClause("create_time desc");
+        return executionLogDetailsMapper.selectByExampleWithBLOBs(e);
+    }
+
+    public List<ExecutionLogDetails> listDetailsById(String id) {
+        ExecutionLogDetailsExample e = new ExecutionLogDetailsExample();
+        e.createCriteria().andLogIdEqualTo(id);
+        e.setOrderByClause("create_time desc");
         return executionLogDetailsMapper.selectByExampleWithBLOBs(e);
     }
 }
