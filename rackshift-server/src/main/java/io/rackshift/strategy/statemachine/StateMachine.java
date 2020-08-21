@@ -36,7 +36,4 @@ public class StateMachine {
         executionLogService.finish(executionLogId);
     }
 
-    public void sendEventNoSession(LifeEvent event) {
-        handlerMap.get(event.getEventType()).handleNoSession(event);
-    }
 }
