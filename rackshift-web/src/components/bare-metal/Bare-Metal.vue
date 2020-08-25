@@ -26,332 +26,339 @@
 
                     <div id="workflow-selector" style="display: flex;">
                         <div id="select-workflow">
-                            <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
-                                Workflow
-                            </div>
-                            <div class="run-splitter h25"></div>
-                            <!--                    <el-button class="h50">Workflow <span class="el-icon-caret-bottom"></span></el-button>-->
-                            <el-select v-model="wfRequest.workflow" @change="getParamsTemplate">
-                                <el-option
-                                        v-for="g in filterList"
-                                        :label="g.injectableName"
-                                        :value="g.injectableName"></el-option>
-                            </el-select>
+                          <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+                            Workflow
+                          </div>
+                          <div class="run-splitter h25"></div>
+                          <!--                    <el-button class="h50">Workflow <span class="el-icon-caret-bottom"></span></el-button>-->
+                          <el-select v-model="wfRequest.workflow" @change="getParamsTemplate">
+                            <el-option
+                                v-for="g in supportedWorkflow"
+                                :label="g.friendlyName"
+                                :value="g.injectableName"></el-option>
+                          </el-select>
 
-                            <el-button :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"
-                                       @click="addToSelectedWorkflow"
-                                       class="h50 ml10"><span
-                                    class="el-icon-circle-plus"></span>{{$t('add_to_selected_wf_list')}}
+                          <el-button :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"
+                                     @click="addToSelectedWorkflow"
+                                     class="h50 ml10"><span
+                              class="el-icon-circle-plus"></span>{{ $t('add_to_selected_wf_list') }}
+                          </el-button>
+                        </div>
+                    </div>
+
+                  <div id="action-list">
+                    <div class="el-icon-s-operation h25"
+                         style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+                      {{ $t('selected_workflows') }}
+                    </div>
+                    <div>
+                      <el-card v-for="(w, $index) in selectedWorkflow" style="height:100%;">
+                        <el-row>
+                          <el-col :span="6">
+                            <el-button @click="deleteSelectedWorkflow($index)" class="h50 ml10"><span
+                                class="el-icon-remove"></span>{{ $t('del') }}
                             </el-button>
-                        </div>
-                    </div>
+                          </el-col>
 
-                    <div id="action-list">
-                        <div class="el-icon-s-operation h25"
-                             style="border-bottom: yellowgreen 1px solid;    width: 100%;">
-                            {{$t('selected_workflows')}}
-                        </div>
-                        <div>
-                            <el-card v-for="(w, $index) in selectedWorkflow">
-                                <div style="display: flex">
-                                    <el-button @click="deleteSelectedWorkflow($index)" class="h50 ml10"><span
-                                            class="el-icon-remove"></span>{{$t('del')}}
-                                    </el-button>
-                                    <span style="display: block;padding: 12px 20px;">
-                                        {{w.machineModel + ' ' + w.machineSn}}
-                                    </span>
-                                    <span style="display: block;padding: 12px 20px;">
-                                        {{w.workflowName}}
-                                    </span>
-                                    <el-button @click="editWfParams($index)">
-                                        {{$t('set_workflow_param')}}
-                                    </el-button>
-                                </div>
-                            </el-card>
-                        </div>
+                          <el-col :span="10">
+                            {{ w.machineModel + ' ' + w.machineSn }}
+                            <br>
+                            {{ w.friendlyName }}
+                          </el-col>
+
+                          <el-col :span="8">
+                            <el-button @click="editWfParams($index)" v-if="w.settable">
+                              {{ $t('set_workflow_param') }}
+                            </el-button>
+                            <span v-if="!w.settable">
+                                {{ $t('no_nessary_to_set') }}
+                              </span>
+                          </el-col>
+                        </el-row>
+                      </el-card>
                     </div>
+                  </div>
                 </div>
 
-                <el-table
-                        :data="tableData"
-                        class="table"
-                        ref="multipleTable"
-                        header-cell-class-name="table-header"
-                        @sort-change="sortChange($event)"
-                        style="width: 100%"
-                        @selection-change="handleSelectionChange"
-                >
-                    <el-table-column type="selection" align="center"></el-table-column>
+              <el-table
+                  :data="tableData"
+                  class="table"
+                  ref="multipleTable"
+                  header-cell-class-name="table-header"
+                  @sort-change="sortChange($event)"
+                  style="width: 100%"
+                  @selection-change="handleSelectionChange"
+              >
+                <el-table-column type="selection" align="center"></el-table-column>
 
-                    <el-table-column prop="machineModel" :label="$t('machine_model')" align="center"
-                                     sortable="custom">
-                        <template slot-scope="scope">
-                            <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
-                                <el-link type="primary" @click="showDetail(scope.row)" target="_blank">
-                                    {{scope.row.machineModel}}
-                                </el-link>
-                            </el-tooltip>
-                        </template>
-                    </el-table-column>
+                <el-table-column prop="machineModel" :label="$t('machine_model')" align="center" width="150px"
+                                 sortable="custom">
+                  <template slot-scope="scope">
+                    <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
+                      <el-link type="primary" @click="showDetail(scope.row)" target="_blank">
+                        {{ scope.row.machineModel }}
+                      </el-link>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
 
-                    <el-table-column :prop="c.prop" :label="c.label" align="center"
-                                     v-for="c in columns" sortable="custom"></el-table-column>
+                <el-table-column :prop="c.prop" :label="c.label" align="center"
+                                 v-for="c in columns" sortable="custom"></el-table-column>
 
-                    <el-table-column prop="status" :label="$t('machine_status')" align="center"
-                                     sortable="custom">
-                        <template slot-scope="scope">
-                            <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
-                            <span style="margin-left: 10px">{{ scope.row.status }}</span>
-                        </template>
-                    </el-table-column>
+                <el-table-column prop="status" :label="$t('machine_status')" align="center"
+                                 sortable="custom">
+                  <template slot-scope="scope">
+                    <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
+                    <span style="margin-left: 10px">{{ scope.row.status }}</span>
+                  </template>
+                </el-table-column>
 
 
-                    <el-table-column :label="$t('execution_log')" align="center" min-width="100px">
-                        <template slot-scope="scope">
-                            <a href="javascript:void(0)" @click="expandChange(scope.row)">查看<i
-                                    class="el-icon el-icon-arrow-down"
-                                    style="cursor:pointer;"></i></a>
+                <el-table-column :label="$t('execution_log')" align="center" min-width="100px">
+                  <template slot-scope="scope">
+                    <a href="javascript:void(0)" @click="expandChange(scope.row)">{{ $t('view') }}
+                    </a>
+                  </template>
 
-                            <!--                            <span style="display:block" v-for="l in scope.row.logs">{{l.outPut}}</span>-->
-                        </template>
+                </el-table-column>
 
-                    </el-table-column>
+                <el-table-column prop="createTime" :label="$t('create_time')" align="center"
+                                 sortable="custom">
+                  <template slot-scope="scope">
+                    {{ scope.row.createTime | dateFormat }}
+                  </template>
 
-                    <el-table-column prop="createTime" :label="$t('create_time')" align="center"
-                                     sortable="custom">
-                        <template slot-scope="scope">
-                            {{ scope.row.createTime | dateFormat }}
-                        </template>
+                </el-table-column>
 
-                    </el-table-column>
+                <el-table-column prop="" :label="$t('opt')" align="center">
+                  <template slot="header" slot-scope="scope">
+                    <el-input
+                        v-model="search"
+                        size="mini"
+                        :placeholder="$t('input_key_search')" v-on:change="getData"/>
+                  </template>
+                  <template slot-scope="scope">
+                    <el-dropdown>
+                      <el-button type="primary">
+                        {{ $t('opt') }}<i class="el-icon-arrow-down el-icon--right"></i>
+                      </el-button>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="power('on', scope.row)">{{ $t('poweron') }}
+                        </el-dropdown-item>
+                        <el-dropdown-item @click.native="power('off', scope.row)">{{ $t('poweroff') }}
+                        </el-dropdown-item>
+                        <el-dropdown-item @click.native="power('reset', scope.row)">{{ $t('powercycle') }}
+                        </el-dropdown-item>
+                        <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
+                        </el-dropdown-item>
+                        <el-dropdown-item @click.native="fillOBM(scope.row)">OBM信息
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div class="pagination">
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handlePageChange"
+                    :current-page="query.pageIndex"
+                    :page-sizes="[10, 20, 50, 100]"
+                    :page-size="10"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="pageTotal">
+                </el-pagination>
+              </div>
 
-                    <el-table-column prop="" :label="$t('opt')" align="center">
-                        <template slot="header" slot-scope="scope">
-                            <el-input
-                                    v-model="search"
-                                    size="mini"
-                                    :placeholder="$t('input_key_search')" v-on:change="getData"/>
-                        </template>
-                        <template slot-scope="scope">
-                            <el-dropdown>
-                                <el-button type="primary">
-                                    {{$t('opt')}}<i class="el-icon-arrow-down el-icon--right"></i>
-                                </el-button>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item @click.native="power('on', scope.row)">{{$t('poweron')}}
-                                    </el-dropdown-item>
-                                    <el-dropdown-item @click.native="power('off', scope.row)">{{$t('poweroff')}}
-                                    </el-dropdown-item>
-                                    <el-dropdown-item @click.native="power('reset', scope.row)">{{$t('powercycle')}}
-                                    </el-dropdown-item>
-                                    <el-dropdown-item @click.native="power('pxe', scope.row)">{{$t('pxeboot')}}
-                                    </el-dropdown-item>
-                                    <el-dropdown-item @click.native="fillOBM(scope.row)">OBM信息
-                                    </el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <div class="pagination">
-                    <el-pagination
-                            @size-change="handleSizeChange"
-                            @current-change="handlePageChange"
-                            :current-page="query.pageIndex"
-                            :page-sizes="[10, 20, 50, 100]"
-                            :page-size="10"
-                            layout="total, sizes, prev, pager, next, jumper"
-                            :total="pageTotal">
-                    </el-pagination>
+              <el-drawer
+                  size="50%"
+                  :title="logTitle"
+                  :visible.sync="executionLogDrawer"
+                  direction="ttb"
+                  min-height="40vh"
+                  :wrapperClosable="false"
+                  :before-close="handleCloseExecutionLog">
+                <el-card>
+                  <table class="detail-info">
+                    <tr>
+                      <td>{{ $t('time') }}</td>
+                      <td>{{ $t('user') }}</td>
+                      <td>{{ $t('operation') }}</td>
+                      <td>{{ $t('output') }}</td>
+                    </tr>
+
+                    <tr v-for="l in logs">
+                      <td>{{ l.createTime | dateFormat }}</td>
+                      <td>{{ l.user }}</td>
+                      <td>{{ l.operation }}</td>
+                      <td>{{ l.outPut }}</td>
+                    </tr>
+                  </table>
+                </el-card>
+              </el-drawer>
+
+              <!--obm-->
+              <el-dialog :title="$t('obms')" :visible.sync="fillOutObms">
+                <el-form :model="form">
+                  <el-form-item :label="$t('ip')" :label-width="formLabelWidth">
+                    <el-input v-model="curObm.ip" autocomplete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item :label="$t('username')" :label-width="formLabelWidth">
+                    <el-input v-model="curObm.userName" autocomplete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item :label="$t('pwd')" :label-width="formLabelWidth">
+                    <el-input v-model="curObm.pwd" autocomplete="off" show-password></el-input>
+                  </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="fillOutObms = false">取 消</el-button>
+                  <el-button type="primary" @click="submitOBM" :loading="obmLoading">确 定</el-button>
                 </div>
+              </el-dialog>
 
-                <el-drawer
-                        size="50%"
-                        v-loading="loadingLog"
-                        :title="logTitle"
-                        :visible.sync="executionLogDrawer"
-                        direction="ttb"
-                        min-height="40vh"
-                        :before-close="handleCloseExecutionLog">
-                    <div style="text-align: right">
-                        <el-button @click="loadLogs(currentMachine)"><i class="el-icon-refresh"></i>{{$t('refresh')}}
-                        </el-button>
-                    </div>
-                    <el-card>
-                        <table class="detail-info">
-                            <tr>
-                                <td>{{$t('time')}}</td>
-                                <td>{{$t('user')}}</td>
-                                <td>{{$t('operation')}}</td>
-                                <td>{{$t('output')}}</td>
-                            </tr>
+              <!--参数配置-->
+              <el-dialog :title="$t('param_config')" :visible.sync="fillWfParams" ref="paramDialog">
+                <keep-alive>
+                  <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
+                             v-bind:is="currentWfParamTemplate"
+                             :params="workflowParam"
+                             :extraParams="extraParams"
+                             :currentWorkflowIndex="editWorkflowIndex"
+                             :bareMetalId="selectedWorkflow[editWorkflowIndex].bareMetalId"
+                             :workflow="selectedWorkflow[editWorkflowIndex]"
+                             ref="currentWfParamTemplate"></component>
+                </keep-alive>
+                <div class="dialog-footer" slot="footer">
+                  <el-button @click="restoreParams">
+                    <i class="el-icon-refresh"></i>
+                    {{ $t('reset') }}
+                  </el-button>
 
-                            <tr v-for="l in logs">
-                                <td>{{l.createTime | dateFormat}}</td>
-                                <td>{{l.user}}</td>
-                                <td>{{l.operation}}</td>
-                                <td>{{l.outPut}}</td>
-                            </tr>
-                        </table>
-                    </el-card>
-                </el-drawer>
+                  <el-button @click="saveParams" :loading="fillWfParamsLoading">{{ $t('confirm') }}</el-button>
+                </div>
+              </el-dialog>
 
-                <!--obm-->
-                <el-dialog :title="$t('obms')" :visible.sync="fillOutObms">
-                    <el-form :model="form">
-                        <el-form-item :label="$t('ip')" :label-width="formLabelWidth">
-                            <el-input v-model="curObm.ip" autocomplete="off"></el-input>
+              <!--详情页-->
+              <el-drawer
+                  :visible.sync="detailDrawer"
+                  direction="rtl"
+                  :with-header="false"
+                  :before-close="handleClose">
+                <div class="demo-drawer__content">
+                  <el-tabs v-model="detailShowName">
+                    <el-tab-pane :label="$t('detail')" name="detail">
+                      <el-form ref="form" :model="machine">
+                        <el-form-item :label="$t('machine_model')">
+                          {{ machine.machineModel }}
                         </el-form-item>
-                        <el-form-item :label="$t('username')" :label-width="formLabelWidth">
-                            <el-input v-model="curObm.userName" autocomplete="off"></el-input>
+                        <el-form-item :label="$t('machine_sn')">
+                          {{ machine.machineSn }}
                         </el-form-item>
-                        <el-form-item :label="$t('pwd')" :label-width="formLabelWidth">
-                            <el-input v-model="curObm.pwd" autocomplete="off" show-password></el-input>
+                        <el-form-item :label="$t('management_ip')">
+                          {{ machine.managementIp }}
                         </el-form-item>
-                    </el-form>
-                    <div slot="footer" class="dialog-footer">
-                        <el-button @click="fillOutObms = false">取 消</el-button>
-                        <el-button type="primary" @click="submitOBM" :loading="obmLoading">确 定</el-button>
-                    </div>
-                </el-dialog>
+                        <el-form-item :label="$t('bmc_mac')">
+                          {{ machine.bmcMac }}
+                        </el-form-item>
+                        <el-form-item :label="$t('cpu')">
+                          {{ machine.cpuType }} X {{ machine.cpu }}
+                        </el-form-item>
+                        <el-form-item :label="$t('memory')">
+                          {{ machine.memory }}{{ $t('GB') }}
+                        </el-form-item>
+                        <el-form-item :label="$t('disk')">
+                          {{ machine.disk }}{{ $t('GB') }}
+                        </el-form-item>
+                      </el-form>
+                    </el-tab-pane>
+                    <el-tab-pane :label="$t('cpu_detail')" name="cpuDetail" class="detail-pane">
+                      <table class="detail-info">
+                        <tr>
+                          <td>{{ $t('proc_name') }}</td>
+                          <td>{{ $t('proc_socket') }}</td>
+                          <td>{{ $t('proc_speed') }}</td>
+                          <td>{{ $t('proc_num_cores') }}</td>
+                          <td>{{ $t('proc_num_threads') }}</td>
+                          <td>{{ $t('sync_time') }}</td>
+                        </tr>
+                        <tr v-for="c in cpus">
+                          <td>{{ c.procName }}</td>
+                          <td>{{ c.procSocket }}</td>
+                          <td>{{ c.procSpeed }}</td>
+                          <td>{{ c.procNumCores }}</td>
+                          <td>{{ c.procNumThreads }}</td>
+                          <td>{{ c.syncTime | dateFormat }}</td>
+                        </tr>
+                      </table>
+                    </el-tab-pane>
+                    <el-tab-pane :label="$t('memory_detail')" name="memoryDetail" class="detail-pane">
+                      <table class="detail-info">
+                        <tr>
+                          <td>{{ $t('mem_cpu_num') }}</td>
+                          <td>{{ $t('mem_mod_num') }}</td>
+                          <td>{{ $t('mem_mod_size') }}</td>
+                          <td>{{ $t('mem_mod_type') }}</td>
+                          <td>{{ $t('mem_mod_num') }}</td>
+                          <td>{{ $t('mem_mod_frequency') }}</td>
+                          <td>{{ $t('mem_mod_part_num') }}</td>
+                          <td>{{ $t('mem_mod_min_volt') }}</td>
+                          <td>{{ $t('sync_time') }}</td>
+                        </tr>
+                        <tr v-for="c in memories">
+                          <td>{{ c.memCpuNum }}</td>
+                          <td>{{ c.memModNum }}</td>
+                          <td>{{ c.memModSize + ' GB' }}</td>
+                          <td>{{ c.memModType }}</td>
+                          <td>{{ c.memModNum }}</td>
+                          <td>{{ c.memModFrequency + ' MHz' }}</td>
+                          <td>{{ c.memModPartNum }}</td>
+                          <td>{{ c.memModMinVolt }}</td>
+                          <td>{{ c.syncTime | dateFormat }}</td>
+                        </tr>
+                      </table>
+                    </el-tab-pane>
+                    <el-tab-pane :label="$t('disk_detail')" name="diskDetail" class="detail-pane">
+                      <table class="detail-info">
+                        <tr>
+                          <td>{{ $t('enclosure_id') }}</td>
+                          <td>{{ $t('controller_id') }}</td>
+                          <td>{{ $t('drive') }}</td>
+                          <td>{{ $t('type') }}</td>
+                          <td>{{ $t('size') }}</td>
+                          <td>{{ $t('raid') }}</td>
+                          <td>{{ $t('manufactor') }}</td>
+                          <td>{{ $t('sn') }}</td>
+                          <td>{{ $t('sync_time') }}</td>
+                        </tr>
+                        <tr v-for="c in disks">
+                          <td>{{ c.enclosureId }}</td>
+                          <td>{{ c.controllerId }}</td>
+                          <td>{{ c.drive }}</td>
+                          <td>{{ c.type }}</td>
+                          <td>{{ c.size }}</td>
+                          <td>{{ c.raid }}</td>
+                          <td>{{ c.manufactor }}</td>
+                          <td>{{ c.sn }}</td>
+                          <td>{{ c.syncTime | dateFormat }}</td>
+                        </tr>
+                      </table>
+                    </el-tab-pane>
 
-                <!--参数配置-->
-                <el-dialog :title="$t('param_config')" :visible.sync="fillWfParams" ref="paramDialog">
-                    <keep-alive>
-                        <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
-                                   v-bind:is="currentWfParamTemplate"
-                                   :params="workflowParam"
-                                   :currentWorkflowIndex="editWorkflowIndex"
-                                   :bareMetalId="selectedWorkflow[editWorkflowIndex].bareMetalId"
-                                   :workflow="selectedWorkflow[editWorkflowIndex]"
-                                   ref="currentWfParamTemplate"></component>
-                    </keep-alive>
-                    <div class="dialog-footer" slot="footer">
-                        <el-button @click="saveParams" :loading="fillWfParamsLoading">确 定</el-button>
-                    </div>
-                </el-dialog>
-
-                <!--详情页-->
-                <el-drawer
-                        :visible.sync="detailDrawer"
-                        direction="rtl"
-                        :with-header="false"
-                        :before-close="handleClose">
-                    <div class="demo-drawer__content">
-                        <el-tabs v-model="detailShowName">
-                            <el-tab-pane :label="$t('detail')" name="detail">
-                                    <el-form ref="form" :model="machine">
-                                        <el-form-item :label="$t('machine_model')">
-                                            {{machine.machineModel}}
-                                        </el-form-item>
-                                        <el-form-item :label="$t('machine_sn')">
-                                            {{machine.machineSn}}
-                                        </el-form-item>
-                                        <el-form-item :label="$t('management_ip')">
-                                            {{machine.managementIp}}
-                                        </el-form-item>
-                                        <el-form-item :label="$t('bmc_mac')">
-                                            {{machine.bmcMac}}
-                                        </el-form-item>
-                                        <el-form-item :label="$t('cpu')">
-                                            {{machine.cpuType}} X {{machine.cpu}}
-                                        </el-form-item>
-                                        <el-form-item :label="$t('memory')">
-                                            {{machine.memory}}{{$t('GB')}}
-                                        </el-form-item>
-                                        <el-form-item :label="$t('disk')">
-                                            {{machine.disk}}{{$t('GB')}}
-                                        </el-form-item>
-                                    </el-form>
-                            </el-tab-pane>
-                            <el-tab-pane :label="$t('cpu_detail')" name="cpuDetail" class="detail-pane">
-                                <table class="detail-info">
-                                    <tr>
-                                        <td>{{$t('proc_name')}}</td>
-                                        <td>{{$t('proc_socket')}}</td>
-                                        <td>{{$t('proc_speed')}}</td>
-                                        <td>{{$t('proc_num_cores')}}</td>
-                                        <td>{{$t('proc_num_threads')}}</td>
-                                        <td>{{$t('sync_time')}}</td>
-                                    </tr>
-                                    <tr v-for="c in cpus">
-                                        <td>{{c.procName}}</td>
-                                        <td>{{c.procSocket}}</td>
-                                        <td>{{c.procSpeed}}</td>
-                                        <td>{{c.procNumCores}}</td>
-                                        <td>{{c.procNumThreads}}</td>
-                                        <td>{{c.syncTime | dateFormat}}</td>
-                                    </tr>
-                                </table>
-                            </el-tab-pane>
-                            <el-tab-pane :label="$t('memory_detail')" name="memoryDetail" class="detail-pane">
-                                <table class="detail-info">
-                                    <tr>
-                                        <td>{{$t('mem_cpu_num')}}</td>
-                                        <td>{{$t('mem_mod_num')}}</td>
-                                        <td>{{$t('mem_mod_size')}}</td>
-                                        <td>{{$t('mem_mod_type')}}</td>
-                                        <td>{{$t('mem_mod_num')}}</td>
-                                        <td>{{$t('mem_mod_frequency')}}</td>
-                                        <td>{{$t('mem_mod_part_num')}}</td>
-                                        <td>{{$t('mem_mod_min_volt')}}</td>
-                                        <td>{{$t('sync_time')}}</td>
-                                    </tr>
-                                    <tr v-for="c in memories">
-                                        <td>{{c.memCpuNum}}</td>
-                                        <td>{{c.memModNum}}</td>
-                                        <td>{{c.memModSize+ ' GB'}}</td>
-                                        <td>{{c.memModType}}</td>
-                                        <td>{{c.memModNum}}</td>
-                                        <td>{{c.memModFrequency + ' MHz'}}</td>
-                                        <td>{{c.memModPartNum}}</td>
-                                        <td>{{c.memModMinVolt}}</td>
-                                        <td>{{c.syncTime | dateFormat}}</td>
-                                    </tr>
-                                </table>
-                            </el-tab-pane>
-                            <el-tab-pane :label="$t('disk_detail')" name="diskDetail" class="detail-pane">
-                                <table class="detail-info">
-                                    <tr>
-                                        <td>{{$t('enclosure_id')}}</td>
-                                        <td>{{$t('controller_id')}}</td>
-                                        <td>{{$t('drive')}}</td>
-                                        <td>{{$t('type')}}</td>
-                                        <td>{{$t('size')}}</td>
-                                        <td>{{$t('raid')}}</td>
-                                        <td>{{$t('manufactor')}}</td>
-                                        <td>{{$t('sn')}}</td>
-                                        <td>{{$t('sync_time')}}</td>
-                                    </tr>
-                                    <tr v-for="c in disks">
-                                        <td>{{c.enclosureId}}</td>
-                                        <td>{{c.controllerId}}</td>
-                                        <td>{{c.drive}}</td>
-                                        <td>{{c.type}}</td>
-                                        <td>{{c.size}}</td>
-                                        <td>{{c.raid}}</td>
-                                        <td>{{c.manufactor}}</td>
-                                        <td>{{c.sn}}</td>
-                                        <td>{{c.syncTime | dateFormat}}</td>
-                                    </tr>
-                                </table>
-                            </el-tab-pane>
-
-                            <el-tab-pane :label="$t('nic_detail')" name="nicDetail" class="detail-pane">
-                                <table class="detail-info">
-                                    <tr>
-                                        <td>{{$t('nic_number')}}</td>
-                                        <td>{{$t('mac')}}</td>
-                                        <td>{{$t('sync_time')}}</td>
-                                    </tr>
-                                    <tr v-for="c in nics">
-                                        <td>{{c.number}}</td>
-                                        <td>{{c.mac}}</td>
-                                        <td>{{c.syncTime | dateFormat}}</td>
-                                    </tr>
-                                </table>
-                            </el-tab-pane>
-                        </el-tabs>
+                    <el-tab-pane :label="$t('nic_detail')" name="nicDetail" class="detail-pane">
+                      <table class="detail-info">
+                        <tr>
+                          <td>{{ $t('nic_number') }}</td>
+                          <td>{{ $t('mac') }}</td>
+                          <td>{{ $t('sync_time') }}</td>
+                        </tr>
+                        <tr v-for="c in nics">
+                          <td>{{ c.number }}</td>
+                          <td>{{ c.mac }}</td>
+                          <td>{{ c.syncTime | dateFormat }}</td>
+                        </tr>
+                      </table>
+                    </el-tab-pane>
+                  </el-tabs>
                     </div>
 
                 </el-drawer>
@@ -366,314 +373,318 @@
 </template>
 
 <script>
-    import HttpUtil from "../../common/utils/HttpUtil";
-    import {isAnyBlank, toLine} from "../../common/utils/CommonUtil";
-    import Vue from 'vue';
-    import OBM from "../obm/Obm"
+import HttpUtil from "../../common/utils/HttpUtil";
+import {isAnyBlank, toLine} from "../../common/utils/CommonUtil";
+import Vue from 'vue';
+import OBM from "../obm/Obm"
+import {supportedWorkflow} from "@/common/constants/SupportedWorkflow";
 
-    let _ = require('lodash');
-    export default {
-        data() {
-            return {
-                search: null,
-                fillWfParams: false,
-                executionLogDrawer: false,
-                activeName: 'bare-metal',
-                logTitle: '',
-                loadingLog: false,
-                currentMachine: {},
-                form: {},
-                logs: [],
-                query: {
-                    address: '',
-                    name: '',
-                    pageIndex: 1,
-                    pageSize: 10
-                },
-                tableData: [],
-                multipleSelection: [],
-                delList: [],
-                editVisible: false,
-                formLabelWidth: '80px',
-                pageTotal: 0,
-                loading: false,
-                form: {},
-                columns: [
-                    {
-                        label: this.$t('machine_sn'),
-                        prop: "machineSn"
-                    },
-                    {
-                        label: this.$t('management_ip'),
-                        prop: "managementIp"
-                    },
-                    {
-                        label: this.$t('ip'),
-                        prop: "ipArray"
-                    },
-                    {
-                        label: this.$t('cpu'),
-                        prop: "cpu"
-                    },
-                    {
-                        label: this.$t('memory'),
-                        prop: "memory"
-                    },
-                    {
-                        label: this.$t('disk'),
-                        prop: "disk"
-                    },
-                    // {
-                    //     label: this.$t('status'),
-                    //     prop: "status"
-                    // },
-                ],
-                detailDrawer: false,
-                editType: 'edit',
-                editObj: {
-                    name: null,
-                    id: null,
-                    email: null,
-                    phone: null,
-                    roles: [],
-                    rolesIds: []
-                },
-                allGraphDefinitions: [],
-                wfRequest: {},
-                workflowParamList: [],
-                workflowParam: {},
-                paramEditable: false,
-                selectedWorkflow: [],
-                fillOutObms: false,
-                curObm: {
-                    ip: null,
-                    userName: null,
-                    pwd: null
-                },
-                obmLoading: false,
-                fillWfParamsLoading: false,
-                machine: {},
-                detailShowName: 'detail',
-                cpuLoading: false,
-                cpus: [],
-                memories: [],
-                disks: [],
-                nics: [],
-                paramComponent: {},
-                currentWfParamTemplate: {},
-                editWorkflowIndex: -1,
-                queryVO: {
-                    searchKey: this.search
-                }
-            }
+let _ = require('lodash');
+export default {
+  data() {
+    return {
+      search: null,
+      fillWfParams: false,
+      executionLogDrawer: false,
+      activeName: 'bare-metal',
+      logTitle: '',
+      loadingLog: false,
+      currentMachine: {},
+      form: {},
+      logs: [],
+      query: {
+        address: '',
+        name: '',
+        pageIndex: 1,
+        pageSize: 10
+      },
+      tableData: [],
+      multipleSelection: [],
+      delList: [],
+      editVisible: false,
+      formLabelWidth: '80px',
+      pageTotal: 0,
+      loading: false,
+      columns: [
+        {
+          label: this.$t('machine_sn'),
+          prop: "machineSn"
         },
-        components: {
-            OBM
+        {
+          label: this.$t('management_ip'),
+          prop: "managementIp"
         },
-        computed: {
-            filterList: function () {
-                return this.allGraphDefinitions.filter(function (item) {
-                        return item.injectableName == 'Graph.InstallCentOS';
-                    }
-                )
-            },
+        {
+          label: this.$t('ip'),
+          prop: "ipArray"
         },
-        mounted() {
-            this.getData();
-            this.getAllGraphDefinitions();
+        {
+          label: this.$t('cpu'),
+          prop: "cpu"
+        },
+        {
+          label: this.$t('memory'),
+          prop: "memory"
+        },
+        {
+          label: this.$t('disk'),
+          prop: "disk"
+        },
+      ],
+      detailDrawer: false,
+      editType: 'edit',
+      editObj: {
+        name: null,
+        id: null,
+        email: null,
+        phone: null,
+        roles: [],
+        rolesIds: []
+      },
+      allGraphDefinitions: [],
+      supportedWorkflow: [],
+      wfRequest: {},
+      workflowParamList: [],
+      workflowParam: {},
+      extraParams: {},
+      paramEditable: false,
+      selectedWorkflow: [],
+      fillOutObms: false,
+      curObm: {
+        ip: null,
+        userName: null,
+        pwd: null
+      },
+      obmLoading: false,
+      fillWfParamsLoading: false,
+      machine: {},
+      detailShowName: 'detail',
+      cpuLoading: false,
+      cpus: [],
+      memories: [],
+      disks: [],
+      nics: [],
+      paramComponent: {},
+      currentWfParamTemplate: {},
+      editWorkflowIndex: -1,
+      queryVO: {
+        searchKey: this.search
+      },
+      logPoller: null
+    }
+  },
+  components: {
+    OBM
+  },
+  computed: {
+  },
+  mounted() {
+    this.getData();
+    this.getAllGraphDefinitions();
+  }
+  ,
+  methods: {
+    restoreParams() {
+      this.$refs.currentWfParamTemplate.restoreParams();
+    },
+    expandChange(a) {
+      this.executionLogDrawer = true;
+      this.currentMachine = a;
+      this.logTitle = this.$t('execution_log') + ' ' + this.currentMachine.machineModel + ' ' + this.currentMachine.machineSn + ' ' + this.currentMachine.managementIp;
+      this.logPoller = window.setInterval(this.loadLogs, 1000);
+    },
+    loadLogs() {
+      HttpUtil.post("/execution-log/detaillist/" + 1 + "/" + 1000, {bareMetalId: this.currentMachine.id}, (res) => {
+        this.$set(this, 'logs', res.data.listObject);
+      });
+    },
+    buildRequest(workflow) {
+      let request = JSON.parse(JSON.stringify(workflow));
+      delete request.componentId;
+      delete request.machineModel;
+      delete request.machineSn;
+      delete request.settable;
+      delete request.brands;
+      delete request.friendlyName;
+      return request;
+    },
+    saveParams() {
+      if (this.$refs.currentWfParamTemplate.valid()) {
+        this.selectedWorkflow[this.editWorkflowIndex].params = this.$refs.currentWfParamTemplate.payLoad;
+        this.selectedWorkflow[this.editWorkflowIndex].extraParams = this.$refs.currentWfParamTemplate.extraParams;
+        this.fillWfParamsLoading = true;
+        HttpUtil.post("/workflow/params", this.buildRequest(this.selectedWorkflow[this.editWorkflowIndex]), (res) => {
+          this.fillWfParamsLoading = false;
+          this.fillWfParams = false;
+        });
+      }
+    },
+    copy(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    },
+    editWfParams(index) {
+      this.editWorkflowIndex = index;
+      this.fillWfParams = true;
+      this.currentWfParamTemplate = this.selectedWorkflow[index].componentId;
+      if (this.workflowParamList.length) {
+        this.workflowParam = this.selectedWorkflow[index].params;
+        this.extraParams = this.selectedWorkflow[index].extraParams;
+      }
+    },
+    power(opt, row) {
+      HttpUtil.get("/bare-metal/power/" + row.id + "/" + opt, null, (res) => {
+        if (res.data.success) {
+          this.$message.success(this.$t('success'));
+        } else {
+          this.$message.error(this.$t('error'));
         }
-        ,
-        methods: {
-            expandChange(a) {
-                this.executionLogDrawer = true;
-                this.currentMachine = a;
-                this.logTitle = this.$t('execution_log') + ' ' + this.currentMachine.machineModel + ' ' + this.currentMachine.machineSn + ' ' + this.currentMachine.managementIp;
+      });
+    },
+    getHardware() {
+      HttpUtil.get("/bare-metal/hardwares/" + this.machine.id, null, (res) => {
+        this.cpus = res.data.cpus;
+        this.memories = res.data.memories;
+        this.disks = res.data.disks;
+        this.nics = res.data.nics;
+      })
+    },
+    showDetail(machine) {
+      this.machine = machine;
+      this.detailDrawer = true;
+      this.getHardware();
+    },
+    fillOBM(val) {
+      this.curObm.ip = val.managementIp;
+      this.curObm.userName = null;
+      this.curObm.pwd = null;
+      if (val.outBandList.length > 0) {
+        this.curObm.userName = val.outBandList[0].userName;
+        this.curObm.pwd = val.outBandList[0].pwd;
+      }
+      this.curObm.bareMetalId = val.id;
+      this.fillOutObms = true;
+    },
+    submitOBM() {
+      this.obmLoading = true;
+      if (isAnyBlank(this.curObm.ip, this.curObm.userName, this.curObm.pwd)) {
+        this.$notify.error(this.$t('pls_fill_in_blanks'));
+        this.obmLoading = false;
+        return;
+      }
+      HttpUtil.post("/outband/save?bareMetalId=" + this.curObm.bareMetalId, this.curObm, (res) => {
+        this.obmLoading = false;
+        this.curObm = {};
+        this.fillOutObms = false;
+        this.getData();
+      }, (res) => {
+        this.obmLoading = false;
+      });
+    },
+    sortChange(val) {
+      console.log(val);
+      console.log(val.order);
+      if (val.order) {
+        this.queryVO = {
+          searchKey: '%' + this.search + '%',
+          sort: toLine(val.prop) + " " + val.order.replace("ending", "")
+        }
+      } else {
+        delete this.queryVO.sort;
+      }
+      this.getData();
+    },
+    getData() {
+      if (this.search) {
+        this.queryVO.searchKey = '%' + this.search + '%';
+      } else {
+        this.queryVO.searchKey = null;
+      }
+      HttpUtil.post("/bare-metal/list/" + this.query.pageIndex + "/" + this.query.pageSize, this.queryVO, (res) => {
+        this.tableData = res.data.listObject;
+        this.pageTotal = res.data.itemCount;
+      });
+    },
+    handleSizeChange(val) {
+      this.query.pageSize = val;
+      this.handlePageChange(this.query.pageIndex);
+    },
+    handleClose() {
+      this.detailDrawer = false;
+    },
+    handleCloseExecutionLog() {
+      this.executionLogDrawer = false;
+      window.clearInterval(this.logPoller);
+    },
+    cancelForm() {
+      this.loading = false;
+      this.detailDrawer = false;
+    },
+    add() {
+      this.detailDrawer = true;
+      this.editType = 'add';
+    },
+    confirmEdit() {
+      this.loading = true;
+      if (this.editType == 'edit') {
+        HttpUtil.post("/bare-metal/update", this.editObj, (res) => {
+          this.detailDrawer = false;
+          this.$message.success('编辑成功');
+          this.cancelForm();
+          this.getData();
+        })
+      } else {
+        HttpUtil.post("/bare-metal/add", this.editObj, (res) => {
+          this.detailDrawer = false;
+          this.$message.success('新增成功');
+          this.cancelForm();
+          this.getData();
+        })
+      }
+    },
+    // 多选操作
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    getSelectedIds: function () {
+      this.delList = this.delList.concat(this.multipleSelection);
+      let ids = _.map(this.delList, (item) => item.id);
+      return ids;
+    },
+    delAllSelection() {
+      const length = this.multipleSelection.length;
+      let str = '';
+      for (let i = 0; i < length; i++) {
+        str += this.multipleSelection[i].name + ' ';
+      }
+      let ids = this.getSelectedIds();
+      HttpUtil.post("/bare-metal/del", ids, (res) => {
+        this.$message.success(`删除成功！删除了${str}！`);
+        this.getData();
+      });
+      this.multipleSelection = [];
+    },
+    // 编辑操作
+    handleEdit(row, type) {
+      if (type == 'edit') {
+        this.detailDrawer = true;
+        this.editType = type;
+        this.editObj = JSON.parse(JSON.stringify(row));
+        this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
 
-                this.loadLogs(a);
-            },
-            loadLogs(machine) {
-                this.loadingLog = true;
-                HttpUtil.post("/execution-log/detaillist/" + 1 + "/" + 1000, {bareMetalId: machine.id}, (res) => {
-                    // that.$set(a, 'children', res.data.listObject);
-                    this.$set(this, 'logs', res.data.listObject);
-                    this.loadingLog = false;
-                });
-            },
-            buildRequest(workflow) {
-                let request = JSON.parse(JSON.stringify(workflow));
-                delete request.componentId;
-                delete request.machineModel;
-                delete request.machineSn;
-                return request;
-            },
-            saveParams() {
-                this.selectedWorkflow[this.editWorkflowIndex].params = this.$refs.currentWfParamTemplate.payLoad;
-                this.fillWfParamsLoading = true;
-                HttpUtil.post("/workflow/params", this.buildRequest(this.selectedWorkflow[this.editWorkflowIndex]), (res) => {
-                    this.fillWfParamsLoading = false;
-                    this.fillWfParams = false;
-                });
-            },
-            copy(obj) {
-                return JSON.parse(JSON.stringify(obj));
-            },
-            editWfParams(index) {
-                this.editWorkflowIndex = index;
-                this.fillWfParams = true;
-                this.currentWfParamTemplate = this.selectedWorkflow[index].componentId;
-                if (this.workflowParamList.length) {
-                    this.workflowParam = this.selectedWorkflow[index].params;
-                }
-            },
-            power(opt, row) {
-                HttpUtil.get("/bare-metal/power/" + row.id + "/" + opt, null, (res) => {
-                    this.$message.success($t('success!'));
-                });
-            },
-            getHardware() {
-                HttpUtil.get("/bare-metal/hardwares/" + this.machine.id, null, (res) => {
-                    this.cpus = res.data.cpus;
-                    this.memories = res.data.memories;
-                    this.disks = res.data.disks;
-                    this.nics = res.data.nics;
-                })
-            },
-            showDetail(machine) {
-                this.machine = machine;
-                this.detailDrawer = true;
-                this.getHardware();
-            },
-            fillOBM(val) {
-                this.curObm.ip = val.managementIp;
-                this.curObm.userName = null;
-                this.curObm.pwd = null;
-                if (val.outBandList.length > 0) {
-                    this.curObm.userName = val.outBandList[0].userName;
-                    this.curObm.pwd = val.outBandList[0].pwd;
-                }
-                this.curObm.bareMetalId = val.id;
-                this.fillOutObms = true;
-            },
-            submitOBM() {
-                this.obmLoading = true;
-                if (isAnyBlank(this.curObm.ip, this.curObm.userName, this.curObm.pwd)) {
-                    this.$notify.error(this.$t('pls_fill_in_blanks'));
-                    this.obmLoading = false;
-                    return;
-                }
-                HttpUtil.post("/outband/save?bareMetalId=" + this.curObm.bareMetalId, this.curObm, (res) => {
-                    this.obmLoading = false;
-                    this.curObm = {};
-                    this.fillOutObms = false;
-                    this.getData();
-                }, (res) => {
-                    this.obmLoading = false;
-                });
-            },
-            sortChange(val) {
-                console.log(val);
-                console.log(val.order);
-                if (val.order) {
-                    this.queryVO = {
-                        searchKey: '%' + this.search + '%',
-                        sort: toLine(val.prop) + " " + val.order.replace("ending", "")
-                    }
-                } else {
-                    delete this.queryVO.sort;
-                }
-                this.getData();
-            },
-            getData() {
-                if (this.search) {
-                    this.queryVO.searchKey = '%' + this.search + '%';
-                } else {
-                    this.queryVO.searchKey = null;
-                }
-                HttpUtil.post("/bare-metal/list/" + this.query.pageIndex + "/" + this.query.pageSize, this.queryVO, (res) => {
-                    this.tableData = res.data.listObject;
-                    this.pageTotal = res.data.itemCount;
-                });
-            },
-            handleSizeChange(val) {
-                this.query.pageSize = val;
-                this.handlePageChange(this.query.pageIndex);
-            },
-            handleClose() {
-                this.detailDrawer = false;
-            },
-            handleCloseExecutionLog() {
-                this.executionLogDrawer = false;
-            },
-            cancelForm() {
-                this.loading = false;
-                this.detailDrawer = false;
-            },
-            add() {
-                this.detailDrawer = true;
-                this.editType = 'add';
-            },
-            confirmEdit() {
-                this.loading = true;
-                if (this.editType == 'edit') {
-                    HttpUtil.post("/bare-metal/update", this.editObj, (res) => {
-                        this.detailDrawer = false;
-                        this.$message.success('编辑成功');
-                        this.cancelForm();
-                        this.getData();
-                    })
-                } else {
-                    HttpUtil.post("/bare-metal/add", this.editObj, (res) => {
-                        this.detailDrawer = false;
-                        this.$message.success('新增成功');
-                        this.cancelForm();
-                        this.getData();
-                    })
-                }
-            },
-            // 多选操作
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
-            },
-            getSelectedIds: function () {
-                this.delList = this.delList.concat(this.multipleSelection);
-                let ids = _.map(this.delList, (item) => item.id);
-                return ids;
-            },
-            delAllSelection() {
-                const length = this.multipleSelection.length;
-                let str = '';
-                for (let i = 0; i < length; i++) {
-                    str += this.multipleSelection[i].name + ' ';
-                }
-                let ids = this.getSelectedIds();
-                HttpUtil.post("/bare-metal/del", ids, (res) => {
-                    this.$message.success(`删除成功！删除了${str}！`);
-                    this.getData();
-                });
-                this.multipleSelection = [];
-            },
-            // 编辑操作
-            handleEdit(row, type) {
-                if (type == 'edit') {
-                    this.detailDrawer = true;
-                    this.editType = type;
-                    this.editObj = JSON.parse(JSON.stringify(row));
-                    this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
-
-                } else if (type == 'del') {
-                    this.$confirm('确定要删除吗？', '提示', {
-                        type: 'warning'
-                    }).then(() => {
-                        HttpUtil.get("/bare-metal/del/" + row.id, {}, (res) => {
-                            this.getData();
-                            this.$message.success('删除成功');
-                        });
-                    })
-                } else {
-                    this.detailDrawer = true;
-                    this.editType = type;
-                    this.editObj = {};
-                }
+      } else if (type == 'del') {
+        this.$confirm('确定要删除吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          HttpUtil.get("/bare-metal/del/" + row.id, {}, (res) => {
+            this.getData();
+            this.$message.success('删除成功');
+          });
+        })
+      } else {
+        this.detailDrawer = true;
+        this.editType = type;
+        this.editObj = {};
+      }
             },
             // 分页导航
             handlePageChange(val) {
@@ -681,29 +692,37 @@
                 this.getData();
             },
             getAllGraphDefinitions(name) {
-                HttpUtil.get("/rackhd/graphdefinitions/1/1000", {name: name}, (res) => {
-                    this.allGraphDefinitions = res.data.listObject;
-                });
+              //从mongo读取所有
+              // HttpUtil.get("/rackhd/graphdefinitions/1/1000", {name: name}, (res) => {
+              //     this.allGraphDefinitions = res.data.listObject;
+              // });
+
+              HttpUtil.get("/workflow/listall", {name: name}, (res) => {
+                this.supportedWorkflow = res.data;
+              });
             },
             runWorkflow() {
 
-                if (!this.selectedWorkflow.length) {
-                    this.$notify.error(this.$t('pls_select_workflow') + "!");
-                    return;
-                }
-                let that = this;
-                let reqList = _.map(this.copy(this.selectedWorkflow), (wf) => {
-                    return that.buildRequest(wf);
-                });
-                if (reqList.length == 0) {
-                    this.$notify.error(this.$t('pls_select_node') + "!");
-                    return;
-                }
-
-                HttpUtil.post("/workflow/run", reqList, (res) => {
-                    this.selectedWorkflow = [];
-                    this.getData();
-                });
+              if (!this.selectedWorkflow.length) {
+                this.$notify.error(this.$t('pls_select_workflow') + "!");
+                return;
+              }
+              let that = this;
+              let reqList = _.map(this.copy(this.selectedWorkflow), (wf) => {
+                return that.buildRequest(wf);
+              });
+              if (reqList.length == 0) {
+                this.$notify.error(this.$t('pls_select_node') + "!");
+                return;
+              }
+              if (_.findIndex(reqList, r => !r.params) != -1) {
+                this.$notify.error(this.$t('pls_set_params') + "!");
+                return;
+              }
+              HttpUtil.post("/workflow/run", reqList, (res) => {
+                this.selectedWorkflow = [];
+                this.getData();
+              });
             }
             ,
             getParamsTemplate() {
@@ -728,40 +747,54 @@
             },
             addToSelectedWorkflow() {
                 if (this.wfRequest.workflow) {
-                    for (let i = 0; i < this.multipleSelection.length; i++) {
-                        let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[i].id;
-                        for (let j = 0; j < this.selectedWorkflow.length; j++) {
-                            if (this.selectedWorkflow[j].componentId == componentId) {
-                                this.$notify.error(this.$t('same_workflow_node'));
-                                return;
-                            }
-                        }
+                  for (let i = 0; i < this.multipleSelection.length; i++) {
+                    let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[i].id;
+                    for (let j = 0; j < this.selectedWorkflow.length; j++) {
+                      if (this.selectedWorkflow[j].componentId == componentId) {
+                        this.$notify.error(this.$t('same_workflow_node'));
+                        return;
+                      }
                     }
-                    for (let i = 0; i < this.multipleSelection.length; i++) {
-                        this.selectedWorkflow.push(
-                            {
-                                componentId: this.wfRequest.workflow + "-" + this.multipleSelection[i].id,
-                                bareMetalId: this.multipleSelection[i].id,
-                                machineModel: this.multipleSelection[i].machineModel,
-                                machineSn: this.multipleSelection[i].machineSn,
-                                workflowName: this.wfRequest.workflow,
-                            }
-                        );
+                  }
 
-                        this.createWorkflowParamComponent(this.selectedWorkflow[this.selectedWorkflow.length - 1]);
-                        if (this.workflowParamList.length) {
-                            let that = this;
-                            let paramTemplate = _.find(that.workflowParamList, function (p) {
-                                return p.bareMetalId == that.selectedWorkflow[that.selectedWorkflow.length - 1].bareMetalId;
-                            });
-                            if (paramTemplate == null)
-                                that.$set(that, 'workflowParam', null);
-                            else
-                                that.$set(that, 'workflowParam', JSON.parse(paramTemplate.paramsTemplate));
-
-                            that.selectedWorkflow[that.selectedWorkflow.length - 1].params = that.workflowParam;
-                        }
+                  let originWf = _.find(supportedWorkflow, s => s.injectableName == this.wfRequest.workflow);
+                  for (let k = 0; k < this.multipleSelection.length; k++) {
+                    if (_.findIndex(originWf.brands, w => w == this.multipleSelection[k].machineBrand) == -1) {
+                      this.$notify.error(this.$t('not_supported_brand!'));
+                      return;
                     }
+                    this.selectedWorkflow.push(
+                        {
+                          componentId: this.wfRequest.workflow + "-" + this.multipleSelection[k].id,
+                          bareMetalId: this.multipleSelection[k].id,
+                          machineModel: this.multipleSelection[k].machineModel,
+                          machineSn: this.multipleSelection[k].machineSn,
+                          workflowName: this.wfRequest.workflow,
+                          friendlyName: originWf.friendlyName,
+                          settable: originWf.settable,
+                        }
+                    );
+
+                    this.createWorkflowParamComponent(this.selectedWorkflow[this.selectedWorkflow.length - 1]);
+
+                    this.currentWfParamTemplate = this.selectedWorkflow[this.selectedWorkflow.length - 1].componentId;
+                    if (this.workflowParamList.length) {
+                      let that = this;
+                      let paramTemplate = _.find(that.workflowParamList, function (p) {
+                        return p.bareMetalId == that.selectedWorkflow[that.selectedWorkflow.length - 1].bareMetalId;
+                      });
+                      if (paramTemplate == null) {
+                        that.$set(that, 'workflowParam', null);
+                        that.$set(that, 'extraParams', null);
+                      } else {
+                        that.$set(that, 'workflowParam', JSON.parse(paramTemplate.paramsTemplate));
+                        that.$set(that, 'extraParams', JSON.parse(paramTemplate.extraParams));
+                      }
+
+                      that.selectedWorkflow[that.selectedWorkflow.length - 1].params = that.workflowParam;
+                      that.selectedWorkflow[that.selectedWorkflow.length - 1].extraParams = that.extraParams;
+                    }
+                  }
                     // this.$refs.multipleTable.clearSelection();
                 }
             }

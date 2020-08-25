@@ -39,13 +39,6 @@
                             @click="handleEdit(scope.row, 'edit')"
                     >{{$t('edit')}}
                     </el-button>
-                    <!--                    <el-button-->
-                    <!--                            type="text"-->
-                    <!--                            icon="el-icon-delete"-->
-                    <!--                            @click="handleEdit(scope.row, 'del')"-->
-                    <!--                    >删除-->
-                    <!--                    </el-button>-->
-
                     <el-button
                             type="button"
                             icon="el-icon-delete"
@@ -96,9 +89,9 @@
 
 <script>
 
-    import HttpUtil from "../../common/utils/HttpUtil"
+import HttpUtil from "../../common/utils/HttpUtil"
 
-    let _ = require('lodash');
+let _ = require('lodash');
     export default {
         data() {
             return {

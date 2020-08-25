@@ -11,7 +11,7 @@ import lombok.ToString;
 public class WorkflowParamTemplatesWithBLOBs extends WorkflowParamTemplates implements Serializable {
     private String paramsTemplate;
 
-    private String defaultParamsTemplate;
+    private String extraParams;
 
     private static final long serialVersionUID = 1L;
 }

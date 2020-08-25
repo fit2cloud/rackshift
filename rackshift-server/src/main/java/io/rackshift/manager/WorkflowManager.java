@@ -38,6 +38,7 @@ public class WorkflowManager {
             workflowParamTemplates.setWorkflowName(requestDTO.getWorkflowName());
             workflowParamTemplates.setBareMetalId(requestDTO.getBareMetalId());
             workflowParamTemplates.setParamsTemplate(requestDTO.getParams().toJSONString());
+            workflowParamTemplates.setExtraParams(requestDTO.getExtraParams().toJSONString());
             workflowParamTemplatesMapper.insertSelective(workflowParamTemplates);
         } else {
             workflowParamTemplates = templates.get(0);
@@ -45,6 +46,7 @@ public class WorkflowManager {
             workflowParamTemplates.setBareMetalId(requestDTO.getBareMetalId());
             workflowParamTemplates.setWorkflowName(requestDTO.getWorkflowName());
             workflowParamTemplates.setParamsTemplate(requestDTO.getParams().toJSONString());
+            workflowParamTemplates.setExtraParams(requestDTO.getExtraParams().toJSONString());
             workflowParamTemplatesMapper.updateByPrimaryKeyWithBLOBs(workflowParamTemplates);
         }
         return workflowParamTemplates;

@@ -14,19 +14,6 @@
                                    :value="g.url"></el-option>
                     </el-select>
                 </el-form-item>
-
-                <!--                <el-form-item :label="$t('network_devices')">-->
-                <!--                    <el-table>-->
-                <!--                        <el-table-column :label="$t('ip_addr')">-->
-                <!--                            {{$t('network_card')}}-->
-                <!--                        </el-table-column>-->
-
-                <!--                        <el-table-column :label="$t('ip_addr')">-->
-                <!--                            <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off"></el-input>-->
-                <!--                        </el-table-column>-->
-                <!--                    </el-table>-->
-                <!--                </el-form-item>-->
-
                 <table>
                     <thead>{{$t('network_devices')}}</thead>
                     <tr>

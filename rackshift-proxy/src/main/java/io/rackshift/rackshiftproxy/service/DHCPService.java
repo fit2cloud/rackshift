@@ -1,7 +1,7 @@
 package io.rackshift.rackshiftproxy.service;
 
-import io.rackshift.model.DHCPConfig;
-import io.rackshift.model.DHCPLease;
+import io.rackshift.rackshiftproxy.model.DHCPConfig;
+import io.rackshift.rackshiftproxy.model.DHCPLease;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;

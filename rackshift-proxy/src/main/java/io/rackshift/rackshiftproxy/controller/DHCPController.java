@@ -1,8 +1,8 @@
 package io.rackshift.rackshiftproxy.controller;
 
-import io.rackshift.model.DHCPConfig;
-import io.rackshift.model.R;
-import io.rackshift.service.DHCPService;
+import io.rackshift.rackshiftproxy.model.DHCPConfig;
+import io.rackshift.rackshiftproxy.model.R;
+import io.rackshift.rackshiftproxy.service.DHCPService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -39,13 +39,6 @@
                             @click="handleEdit(scope.row, 'edit')"
                     >{{$t('edit')}}
                     </el-button>
-                    <!--                    <el-button-->
-                    <!--                            type="text"-->
-                    <!--                            icon="el-icon-delete"-->
-                    <!--                            @click="handleEdit(scope.row, 'del')"-->
-                    <!--                    >{{$t('del')}}-->
-                    <!--                    </el-button>-->
-
                     <el-button
                             type="text"
                             icon="el-icon-delete"
@@ -113,9 +106,9 @@
 </template>
 
 <script>
-    import HttpUtil from "../../common/utils/HttpUtil";
+import HttpUtil from "../../common/utils/HttpUtil";
 
-    let _ = require('lodash');
+let _ = require('lodash');
     export default {
         data() {
             return {
@@ -171,9 +164,6 @@
             this.getAllRoles();
         },
         methods: {
-            c(e) {
-
-            },
             getData() {
                 HttpUtil.post("/user/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
                     this.tableData = res.data.listObject;
@@ -238,7 +228,6 @@
                     this.drawer = true;
                     this.editType = type;
                     this.editObj = JSON.parse(JSON.stringify(row));
-                    ;
                     this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
 
                 } else if (type == 'del') {

@@ -8,6 +8,8 @@ import io.rackshift.model.RSException;
 import io.rackshift.model.ResultHolder;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
+import io.rackshift.mybatis.domain.WorkflowExample;
+import io.rackshift.mybatis.mapper.WorkflowMapper;
 import io.rackshift.strategy.statemachine.LifeEvent;
 import io.rackshift.strategy.statemachine.LifeEventType;
 import io.rackshift.strategy.statemachine.StateMachine;
@@ -32,6 +34,8 @@ public class WorkflowService {
     private BareMetalManager bareMetalManager;
     @Resource
     private StateMachine stateMachine;
+    @Resource
+    private WorkflowMapper workflowMapper;
 
     public Pager<JSONArray> getGraphDefinitions(String name, int page, int pageSize) {
         String collections = "graphdefinitions";
@@ -72,5 +76,9 @@ public class WorkflowService {
 
     public ResultHolder postParamsByName(WorkflowRequestDTO requestDTO) {
         return ResultHolder.success(workflowManager.saveWorkflowParamTemplate(requestDTO));
+    }
+
+    public ResultHolder listall() {
+        return ResultHolder.success(workflowMapper.selectByExample(new WorkflowExample()));
     }
 }

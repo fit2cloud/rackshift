@@ -6,15 +6,31 @@ public class WorkflowRequestDTO {
     private String bareMetalId;
     private String workflowName;
     private JSONObject params;
+    private JSONObject extraParams;
 
     public WorkflowRequestDTO() {
 
+    }
+
+    public WorkflowRequestDTO(String bareMetalId, String workflowName, JSONObject params, JSONObject extraParams) {
+        this.bareMetalId = bareMetalId;
+        this.workflowName = workflowName;
+        this.params = params;
+        this.extraParams = extraParams;
     }
 
     public WorkflowRequestDTO(String bareMetalId, String workflowName, JSONObject params) {
         this.bareMetalId = bareMetalId;
         this.workflowName = workflowName;
         this.params = params;
+    }
+
+    public JSONObject getExtraParams() {
+        return extraParams;
+    }
+
+    public void setExtraParams(JSONObject extraParams) {
+        this.extraParams = extraParams;
     }
 
     public String getBareMetalId() {

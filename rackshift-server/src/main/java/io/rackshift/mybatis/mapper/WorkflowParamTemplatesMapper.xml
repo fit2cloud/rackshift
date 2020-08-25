@@ -9,7 +9,7 @@
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.WorkflowParamTemplatesWithBLOBs">
     <result column="params_template" jdbcType="LONGVARCHAR" property="paramsTemplate" />
-    <result column="default_params_template" jdbcType="LONGVARCHAR" property="defaultParamsTemplate" />
+    <result column="extra_params" jdbcType="LONGVARCHAR" property="extraParams" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -73,7 +73,7 @@
     id, user_id, bare_metal_id, workflow_name
   </sql>
   <sql id="Blob_Column_List">
-    params_template, default_params_template
+    params_template, extra_params
   </sql>
   <select id="selectByExampleWithBLOBs" parameterType="io.rackshift.mybatis.domain.WorkflowParamTemplatesExample" resultMap="ResultMapWithBLOBs">
     select
@@ -125,10 +125,10 @@
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.WorkflowParamTemplatesWithBLOBs">
     insert into workflow_param_templates (id, user_id, bare_metal_id, 
-      workflow_name, params_template, default_params_template
+      workflow_name, params_template, extra_params
       )
     values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{bareMetalId,jdbcType=VARCHAR}, 
-      #{workflowName,jdbcType=VARCHAR}, #{paramsTemplate,jdbcType=LONGVARCHAR}, #{defaultParamsTemplate,jdbcType=LONGVARCHAR}
+      #{workflowName,jdbcType=VARCHAR}, #{paramsTemplate,jdbcType=LONGVARCHAR}, #{extraParams,jdbcType=LONGVARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.WorkflowParamTemplatesWithBLOBs">
@@ -149,8 +149,8 @@
       <if test="paramsTemplate != null">
         params_template,
       </if>
-      <if test="defaultParamsTemplate != null">
-        default_params_template,
+      <if test="extraParams != null">
+        extra_params,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -169,8 +169,8 @@
       <if test="paramsTemplate != null">
         #{paramsTemplate,jdbcType=LONGVARCHAR},
       </if>
-      <if test="defaultParamsTemplate != null">
-        #{defaultParamsTemplate,jdbcType=LONGVARCHAR},
+      <if test="extraParams != null">
+        #{extraParams,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -198,8 +198,8 @@
       <if test="record.paramsTemplate != null">
         params_template = #{record.paramsTemplate,jdbcType=LONGVARCHAR},
       </if>
-      <if test="record.defaultParamsTemplate != null">
-        default_params_template = #{record.defaultParamsTemplate,jdbcType=LONGVARCHAR},
+      <if test="record.extraParams != null">
+        extra_params = #{record.extraParams,jdbcType=LONGVARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -213,7 +213,7 @@
       bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
       workflow_name = #{record.workflowName,jdbcType=VARCHAR},
       params_template = #{record.paramsTemplate,jdbcType=LONGVARCHAR},
-      default_params_template = #{record.defaultParamsTemplate,jdbcType=LONGVARCHAR}
+      extra_params = #{record.extraParams,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -243,8 +243,8 @@
       <if test="paramsTemplate != null">
         params_template = #{paramsTemplate,jdbcType=LONGVARCHAR},
       </if>
-      <if test="defaultParamsTemplate != null">
-        default_params_template = #{defaultParamsTemplate,jdbcType=LONGVARCHAR},
+      <if test="extraParams != null">
+        extra_params = #{extraParams,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
@@ -255,7 +255,7 @@
       bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
       workflow_name = #{workflowName,jdbcType=VARCHAR},
       params_template = #{paramsTemplate,jdbcType=LONGVARCHAR},
-      default_params_template = #{defaultParamsTemplate,jdbcType=LONGVARCHAR}
+      extra_params = #{extraParams,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.WorkflowParamTemplates">

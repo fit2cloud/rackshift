@@ -7,7 +7,6 @@
                 <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm"
                          class="form">
                     <div class="logo">
-                        <!--                        <img src="../../assets/logo-dark-MeterSphere.svg" style="width: 224px" alt="">-->
                     </div>
                     <div class="title">
                         <span id="s2">Rackshift</span>
@@ -24,7 +23,6 @@
 
                     <div class="btn">
                         <el-button type="primary" class="submit" @click="submitForm('ruleForm')">登录</el-button>
-                        <!--                        <el-button @click="resetForm('ruleForm')">重置</el-button>-->
                     </div>
                     <div class="msg">
                         {{msg}}

@@ -17,7 +17,7 @@ public class ApiGuard {
     private static final String APISECRET = "rackshift-proxy-20200820";
     private static final String SIGNATURE = "signature";
 
-    @Pointcut("execution(io.rackshift.rackshiftproxy.controller..*)")
+    @Pointcut("execution (io.rackshift.rackshiftproxy.controller..*(.*)")
     private void remoteCallCheck(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         if (StringUtils.isBlank(request.getHeader(SIGNATURE))) {
@@ -29,9 +29,7 @@ public class ApiGuard {
                 .setSigningKey(APISECRET)
                 //设置需要解析的jwt
                 .parseClaimsJws(request.getHeader(SIGNATURE)).getBody();
-
         String user = claims.getSubject();
-        //:todo
         joinPoint.proceed();
     }
 }

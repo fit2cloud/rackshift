@@ -29,4 +29,9 @@ public class WorkflowController {
         return workflowService.run(requestDTOs);
     }
 
+    @RequestMapping("listall")
+    public ResultHolder listall(){
+        return workflowService.listall();
+    }
+
 }

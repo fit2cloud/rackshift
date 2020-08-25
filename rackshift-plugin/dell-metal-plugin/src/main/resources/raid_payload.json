@@ -1,7 +1,7 @@
 {
   "options": {
     "bootstrap-rancher": {
-      "dockerFile": "dell.raid.docker.tar.xz"
+      "dockerFile": "secure.erase.docker.tar.xz"
     },
     "create-raid": {
       "createDefault": false,

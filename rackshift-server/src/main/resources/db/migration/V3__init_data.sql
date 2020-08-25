@@ -193,8 +193,8 @@ create table if not exists workflow_param_templates
     user_id                 varchar(50) default null,
     bare_metal_id           varchar(50) default null,
     workflow_name           varchar(250) not null comment 'workflow name',
-    params_template         longtext     not null comment '参数模板，html格式',
-    default_params_template longtext    default null comment '默认参数模板',
+    params_template         longtext     not null comment '参数模板',
+    extra_params longtext    default null comment '默认参数模板',
     primary key (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
@@ -265,3 +265,59 @@ CREATE TABLE if not exists `execution_log_details`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_bin COMMENT ='执行日志详情';
+
+  CREATE TABLE if not exists `workflow`
+(
+    `id`              varchar(50) CHARACTER SET utf8mb4 NOT NULL,
+    `injectable_name` varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT 'workflow注入名称',
+    `friendly_name`   varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT 'workflow友好名称',
+    `event_type`      varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '执行workflow触发事件',
+    `brands`          varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '支持的裸金属服务器品牌',
+    `settable`        varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '是否需要配置payload参数',
+    `status`          varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '状态, 1 可用，2 停用',
+    `create_time`     bigint(13)                        NOT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_bin COMMENT ='对RackHD的workflow的抽象';
+
+
+  insert into workflow
+values (1,
+        'Graph.InstallCentOS',
+        '安装Centos7 64位版',
+        'POST_OS_WORKFLOW_START',
+        '[\'DELL\', \'HP\', \'Inspur\']',
+        'true',
+        'enable',
+        now());
+
+insert into workflow
+values (2,
+        'Graph.Dell.perccli.Catalog',
+        '搜集Dell服务器磁盘Raid信息',
+        'POST_OTHER_WORKFLOW_START',
+        '[\'DELL\']',
+        'false',
+        'enable',
+        now());
+
+insert into workflow
+values (3,
+        'Graph.Raid.Delete.MegaRAID',
+        '清空Dell服务器磁盘和Raid信息',
+        'POST_OTHER_WORKFLOW_START',
+        '[\'DELL\']',
+        'false',
+        'enable',
+        now());
+
+insert into workflow
+values (4,
+        'Graph.Raid.Create.PercRAID',
+        '创建Dell服务器磁盘Raid虚拟磁盘',
+        'POST_OTHER_WORKFLOW_START',
+        '[\'DELL\']',
+        'true',
+        'enable',
+        now());
