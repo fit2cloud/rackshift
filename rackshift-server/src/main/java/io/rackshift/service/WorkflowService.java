@@ -21,8 +21,11 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkflowService {
@@ -58,19 +61,24 @@ public class WorkflowService {
         if (requestDTOs.size() == 0) {
             return ResultHolder.success("");
         }
-        for (WorkflowRequestDTO requestDTO : requestDTOs) {
-            String bareMetalId = requestDTO.getBareMetalId();
-            String workflowName = requestDTO.getWorkflowName();
-            if (StringUtils.isAnyBlank(bareMetalId, workflowName)) {
-                RSException.throwExceptions(Translator.get("i18n_error"));
+        Map<String, List<WorkflowRequestDTO>> machineWfMap = requestDTOs.stream().collect(Collectors.groupingBy(WorkflowRequestDTO::getBareMetalId));
+        machineWfMap.keySet().forEach(m -> {
+            List<LifeEvent> events = new LinkedList<>();
+            for (WorkflowRequestDTO requestDTO : machineWfMap.get(m)) {
+                String bareMetalId = requestDTO.getBareMetalId();
+                String workflowName = requestDTO.getWorkflowName();
+                if (StringUtils.isAnyBlank(bareMetalId, workflowName)) {
+                    RSException.throwExceptions(Translator.get("i18n_error"));
+                }
+                BareMetal bareMetal = bareMetalManager.getBareMetalById(bareMetalId);
+                if (bareMetal == null) {
+                    RSException.throwExceptions(Translator.get("i18n_error"));
+                }
+                events.add(LifeEvent.builder().withWorkflowRequestDTO(requestDTO).withEventType(LifeEventType.fromWorkflow(workflowName)));
             }
-            BareMetal bareMetal = bareMetalManager.getBareMetalById(bareMetalId);
-            if (bareMetal == null) {
-                RSException.throwExceptions(Translator.get("i18n_error"));
-            }
-            LifeEvent event = LifeEvent.builder().withWorkflowRequestDTO(requestDTO).withEventType(LifeEventType.fromWorkflow(workflowName));
-            stateMachine.sendEventAsyn(event);
-        }
+            stateMachine.sendEventListAsyn(events);
+        });
+
         return ResultHolder.success("");
     }
 

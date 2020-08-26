@@ -20,7 +20,7 @@
                         <div class="run-splitter h25"></div>
                         <div>
                             <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
-                            <el-button class="el-icon-close h50"></el-button>
+<!--                            <el-button class="el-icon-close h50"></el-button>-->
                         </div>
                     </div>
 
@@ -217,7 +217,7 @@
               </el-dialog>
 
               <!--参数配置-->
-              <el-dialog :title="$t('param_config')" :visible.sync="fillWfParams" ref="paramDialog">
+              <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="70vw">
                 <keep-alive>
                   <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
                              v-bind:is="currentWfParamTemplate"
@@ -470,7 +470,8 @@ export default {
       queryVO: {
         searchKey: this.search
       },
-      logPoller: null
+      logPoller: null,
+      currentParamConfig: '',
     }
   },
   components: {
@@ -526,6 +527,7 @@ export default {
       this.editWorkflowIndex = index;
       this.fillWfParams = true;
       this.currentWfParamTemplate = this.selectedWorkflow[index].componentId;
+      this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.selectedWorkflow[index].friendlyName + " " + this.$t('param_config');
       if (this.workflowParamList.length) {
         this.workflowParam = this.selectedWorkflow[index].params;
         this.extraParams = this.selectedWorkflow[index].extraParams;
@@ -715,7 +717,7 @@ export default {
                 this.$notify.error(this.$t('pls_select_node') + "!");
                 return;
               }
-              if (_.findIndex(reqList, r => !r.params) != -1) {
+              if (_.findIndex(reqList, r => r.settable && !r.params) != -1) {
                 this.$notify.error(this.$t('pls_set_params') + "!");
                 return;
               }
@@ -739,10 +741,15 @@ export default {
             createWorkflowParamComponent(workflowParam) {
                 //动态异步
                 if (!this.paramComponent[workflowParam.componentId]) {
-                    let comPointer = Vue.component(workflowParam.componentId, function (resolve) {
-                        require(["./../../rackparams/" + workflowParam.workflowName], resolve)
-                    });
-                    this.paramComponent[workflowParam.componentId] = comPointer;
+                  // let comPointer = Vue.component(workflowParam.componentId, function (resolve) {
+                  //     require(["./../../rackparams/" + workflowParam.workflowName], resolve)
+                  // });
+
+                  let comPointer = Vue.component(workflowParam.componentId,
+                      // 这个动态导入会返回一个 `Promise` 对象。
+                      () => import("./../../rackparams/" + workflowParam.workflowName)
+                  );
+                  this.paramComponent[workflowParam.componentId] = comPointer;
                 }
             },
             addToSelectedWorkflow() {
@@ -887,9 +894,10 @@ export default {
     }
 
     .detail-info {
-        border: 1px solid #EBEEF5;
-        text-align: center;
-        border-spacing: 0px !important;
+      border: 1px solid #EBEEF5;
+      text-align: center;
+      border-spacing: 0px !important;
+      width: 100%;
     }
 
     .detail-info td {

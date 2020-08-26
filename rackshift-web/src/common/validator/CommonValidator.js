@@ -11,6 +11,19 @@ function requiredValidator(rule, value, callback) {
     callback();
 }
 
+function requiredSelectValidator(rule, value, callback) {
+    if (value === '' || !value) {
+        if (rule.field == "userName") {
+            callback(new Error(rule.vue.$t('pls_select_username')));
+        }
+        if (rule.field == "password") {
+            callback(new Error(rule.vue.$t('pls_select_password')));
+        }
+        callback(new Error(rule.vue.$t('pls_select_device')));
+    }
+    callback();
+}
+
 function hostnameValidator(rule, value, callback) {
     if (value === '' || !value) {
         callback(new Error(rule.vue.$t('pls_input_hostname')));
@@ -21,6 +34,17 @@ function hostnameValidator(rule, value, callback) {
     callback();
 }
 
+function ipValidator(rule, value, callback) {
+    debugger
+    if (value === '' || !value) {
+        callback(new Error(rule.vue.$t('cannt_be_null')));
+    }
+    if (!/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value)) {
+        callback(new Error(rule.vue.$t('invalid_format')));
+    }
+    callback();
+}
+
 export {
-    requiredValidator, hostnameValidator
+    requiredValidator, hostnameValidator, ipValidator, requiredSelectValidator
 }

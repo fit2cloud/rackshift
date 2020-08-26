@@ -1,102 +1,119 @@
 <template>
   <div>
     <el-card>
-      <el-form label-width="101px" :rules="rules" :model="payLoad.options.defaults">
-        <el-form-item :label="$t('hostname')" prop="hostname">
-          <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"></el-input>
-        </el-form-item>
-        <el-form-item :label="$t('root_pwd')" prop="rootPassword">
-          <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
-                    show-password></el-input>
-        </el-form-item>
-        <el-form-item :label="$t('image')">
-          <el-select v-model="payLoad.options.defaults.repo">
-            <el-option v-for="g in allImages" :label="g.name"
-                       :value="g.url"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('network_devices')">
-          <table class="detail-info" style="float: left;">
-            <tr>
-              <td>{{ $t('network_card_mac') }}</td>
-              <td>{{ $t('ip_addr') }}</td>
-              <td>{{ $t('gateway') }}</td>
-              <td>{{ $t('netmask') }}</td>
-            </tr>
-            <tr v-for="d in payLoad.options.defaults.networkDevices">
-              <td>
-                <el-select v-model="d.device">
-                  <el-option :label="n.number + '(' + n.mac + ')'" :value="n.mac"
-                             v-for="n in nics"></el-option>
-                </el-select>
-              </td>
-              <td>
-                <el-input v-model="d.ipv4.ipAddr"></el-input>
-              </td>
-              <td>
-                <el-input v-model="d.ipv4.gateway"></el-input>
-              </td>
-              <td>
-                <el-input v-model="d.ipv4.netmask"></el-input>
-              </td>
-            </tr>
-          </table>
-        </el-form-item>
-        <el-form-item :label="$t('custom_partition')">
-          <el-switch
-              v-model="showPartition"
-              active-color="#13ce66"
-              inactive-color="#ff4949">
-          </el-switch>
-          <table class="detail-info" style="float: left;margin-top:20px;" v-show="showPartition">
-            <thead>
-            <tr>
-              <th>
-                <el-button type="primary" icon="el-icon-plus" circle
-                           @click="payLoad.options.defaults.installPartitions.push({})">
-                </el-button>
-              </th>
-              <th>{{ $t('mount_point') }}</th>
-              <th>
-                <el-row>
-                  <el-col :span="12">{{ $t('capacity') }}</el-col>
-                  <el-col :span="12">
-                    <el-select v-model="extraParams.unit">
-                      <el-option :value="unit" :key="unit" v-for="unit in  units"></el-option>
+      <el-form label-width="101px" :rules="rules" :model="payLoad.options.defaults" ref="form">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item :label="$t('hostname')" prop="hostname">
+              <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('root_pwd')" prop="rootPassword">
+              <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
+                        show-password></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('image')">
+              <el-select v-model="payLoad.options.defaults.repo">
+                <el-option v-for="g in allImages" :label="g.name"
+                           :value="g.url"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item :label="$t('custom_partition')">
+              <el-switch
+                  v-model="showPartition"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949">
+              </el-switch>
+              <table class="detail-info" style="float: left;margin-top:20px;" v-show="showPartition">
+                <thead>
+                <tr>
+                  <th>
+                    <el-button type="primary" icon="el-icon-plus" circle
+                               @click="payLoad.options.defaults.installPartitions.push({})">
+                    </el-button>
+                  </th>
+                  <th>{{ $t('mount_point') }}</th>
+                  <th>
+                    <el-row>
+                      <el-col :span="12">{{ $t('capacity') }}</el-col>
+                      <el-col :span="12">
+                        <el-select v-model="extraParams.unit">
+                          <el-option :value="unit" :key="unit" v-for="unit in  units"></el-option>
+                        </el-select>
+                      </el-col>
+                    </el-row>
+                  </th>
+                  <th>{{ $t('fs_type') }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(partition, index) in payLoad.options.defaults.installPartitions"
+                    v-show="partition.mountPoint != 'biosboot'">
+                  <td>
+                    <el-button type="primary" icon="el-icon-minus" circle
+                               @click="payLoad.options.defaults.installPartitions.splice(index, 1)">
+                    </el-button>
+                  </td>
+                  <td>
+                    <el-input v-model="partition.mountPoint"
+                              :disabled="partition.mountPoint == 'biosboot'"></el-input>
+                  </td>
+                  <td>
+                    <el-input v-model="partition.size" :disabled="partition.mountPoint == 'biosboot'"
+                              :title="partition.mountPoint == 'biosboot' ? 'MB' : extraParams.unit"></el-input>
+                  </td>
+                  <td>
+                    <el-select v-model="partition.fsType" :disabled="partition.mountPoint == 'biosboot'">
+                      <el-option v-for="x in fsType"
+                                 :value="x"><span>{{ x }}</span>
+                      </el-option>
                     </el-select>
-                  </el-col>
-                </el-row>
-              </th>
-              <th>{{ $t('fs_type') }}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(partition, index) in payLoad.options.defaults.installPartitions"
-                v-show="partition.mountPoint != 'biosboot'">
-              <td>
-                <el-button type="primary" icon="el-icon-minus" circle
-                           @click="payLoad.options.defaults.installPartitions.splice(index, 1)">
-                </el-button>
-              </td>
-              <td>
-                <el-input v-model="partition.mountPoint"
-                          :disabled="partition.mountPoint == 'biosboot'"></el-input>
-              </td>
-              <td>
-                <el-input v-model="partition.size" :disabled="partition.mountPoint == 'biosboot'"
-                          :title="partition.mountPoint == 'biosboot' ? 'MB' : extraParams.unit"></el-input>
-              </td>
-              <td>
-                <el-select v-model="partition.fsType" :disabled="partition.mountPoint == 'biosboot'">
-                  <el-option v-for="x in fsType"
-                             :value="x"><span>{{ x }}</span>
-                  </el-option>
-                </el-select>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </el-form-item>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+
+            <el-form-item>
+
+              <el-form v-for="d in payLoad.options.defaults.networkDevices" :model="d" :rules="nicRules"
+                       ref="nicForm">
+
+                <el-form-item prop="device" :label="$t('network_card_mac')">
+                  <el-select v-model="d.device">
+                    <el-option :label="n.number + '(' + n.mac + ')'" :value="n.mac"
+                               v-for="n in nics"></el-option>
+                  </el-select>
+                </el-form-item>
+
+                <el-form :model="d.ipv4" :rules="nicRules" ref="nic2Form">
+                  <el-form-item prop="ipAddr" :label="$t('ip_addr')">
+                    <el-input v-model="d.ipv4.ipAddr"></el-input>
+                  </el-form-item>
+
+                  <el-form-item prop="gateway" :label="$t('gateway')">
+                    <el-input v-model="d.ipv4.gateway"></el-input>
+                  </el-form-item>
+
+                  <el-form-item prop="netmask" :label="$t('netmask')">
+                    <el-input v-model="d.ipv4.netmask"></el-input>
+                  </el-form-item>
+                </el-form>
+              </el-form>
+
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+
+          </el-col>
+          <el-col :span="12"></el-col>
+        </el-row>
+
       </el-form>
     </el-card>
   </div>
@@ -104,13 +121,19 @@
 <script>
 import HttpUtil from "../common/utils/HttpUtil";
 import {isAnyBlank} from "@/common/utils/CommonUtil";
-import {hostnameValidator, requiredValidator} from "@/common/validator/CommonValidator";
+import {
+  hostnameValidator,
+  ipValidator,
+  requiredSelectValidator,
+  requiredValidator
+} from "@/common/validator/CommonValidator";
 
 let _ = require('lodash');
 export default {
   activated() {
   },
   created() {
+
   },
   deactivated() {
 
@@ -129,14 +152,17 @@ export default {
         ]
       },
       nicRules: {
+        device: [
+          {validator: requiredSelectValidator, trigger: 'blur', vue: this},
+        ],
         ipAddr: [
-          {validator: requiredValidator, trigger: 'blur', vue: this},
+          {validator: ipValidator, trigger: 'blur', vue: this},
         ],
         netmask: [
-          {validator: requiredValidator, trigger: 'blur', vue: this},
+          {validator: ipValidator, trigger: 'blur', vue: this},
         ],
         gateway: [
-          {validator: requiredValidator, trigger: 'blur', vue: this},
+          {validator: ipValidator, trigger: 'blur', vue: this},
         ]
       },
       defaultPayLoad: {
@@ -225,7 +251,7 @@ export default {
           }
         }
       },
-      extraParams: this.$attrs.extraParams.unit ? JSON.parse(JSON.stringify(this.$attrs.extraParams)) : {
+      extraParams: this.$attrs.extraParams ? JSON.parse(JSON.stringify(this.$attrs.extraParams)) : {
         unit: 'MB'
       },
       allImages: [],
@@ -270,6 +296,32 @@ export default {
     },
     valid: function () {
       this.validateResult = true;
+      let that = this;
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          that.$refs['nicForm'].forEach(f => {
+            f.validate((valid) => {
+              if (!valid) {
+                that.validateResult = false;
+              }
+            });
+          });
+
+          that.$refs['nic2Form'].forEach(f => {
+            f.validate((valid) => {
+              if (!valid) {
+                that.validateResult = false;
+              }
+            });
+          });
+        } else {
+          that.validateResult = false;
+        }
+      });
+      if (!that.validateResult) {
+        this.$notify.error(this.$t("param_check_error"));
+        return;
+      }
 
       let hostname = this.payLoad.options.defaults.hostname;
       let rootPassword = this.payLoad.options.defaults.rootPassword;
