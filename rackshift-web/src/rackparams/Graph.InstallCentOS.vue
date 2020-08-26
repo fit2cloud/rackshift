@@ -1,108 +1,110 @@
 <template>
-    <div>
-        <el-card>
-          <el-form label-width="101px">
-            <el-form-item :label="$t('hostname')">
-              <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('root_pwd')">
-              <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
-                        type="password"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('image')">
-              <el-select v-model="payLoad.options.defaults.repo">
-                <el-option v-for="g in allImages" :label="g.name"
-                           :value="g.url"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('network_devices')">
-              <table class="detail-info" style="float: left;">
-                <tr>
-                  <td>{{ $t('network_card_mac') }}</td>
-                  <td>{{ $t('ip_addr') }}</td>
-                  <td>{{ $t('gateway') }}</td>
-                  <td>{{ $t('netmask') }}</td>
-                </tr>
-                <tr v-for="d in payLoad.options.defaults.networkDevices">
-                  <td>
-                    <el-select v-model="d.device">
-                      <el-option :label="n.number + '(' + n.mac + ')'" :value="n.mac"
-                                 v-for="n in nics"></el-option>
+  <div>
+    <el-card>
+      <el-form label-width="101px" :rules="rules" :model="payLoad.options.defaults">
+        <el-form-item :label="$t('hostname')" prop="hostname">
+          <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('root_pwd')" prop="rootPassword">
+          <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
+                    show-password></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('image')">
+          <el-select v-model="payLoad.options.defaults.repo">
+            <el-option v-for="g in allImages" :label="g.name"
+                       :value="g.url"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('network_devices')">
+          <table class="detail-info" style="float: left;">
+            <tr>
+              <td>{{ $t('network_card_mac') }}</td>
+              <td>{{ $t('ip_addr') }}</td>
+              <td>{{ $t('gateway') }}</td>
+              <td>{{ $t('netmask') }}</td>
+            </tr>
+            <tr v-for="d in payLoad.options.defaults.networkDevices">
+              <td>
+                <el-select v-model="d.device">
+                  <el-option :label="n.number + '(' + n.mac + ')'" :value="n.mac"
+                             v-for="n in nics"></el-option>
+                </el-select>
+              </td>
+              <td>
+                <el-input v-model="d.ipv4.ipAddr"></el-input>
+              </td>
+              <td>
+                <el-input v-model="d.ipv4.gateway"></el-input>
+              </td>
+              <td>
+                <el-input v-model="d.ipv4.netmask"></el-input>
+              </td>
+            </tr>
+          </table>
+        </el-form-item>
+        <el-form-item :label="$t('custom_partition')">
+          <el-switch
+              v-model="showPartition"
+              active-color="#13ce66"
+              inactive-color="#ff4949">
+          </el-switch>
+          <table class="detail-info" style="float: left;margin-top:20px;" v-show="showPartition">
+            <thead>
+            <tr>
+              <th>
+                <el-button type="primary" icon="el-icon-plus" circle
+                           @click="payLoad.options.defaults.installPartitions.push({})">
+                </el-button>
+              </th>
+              <th>{{ $t('mount_point') }}</th>
+              <th>
+                <el-row>
+                  <el-col :span="12">{{ $t('capacity') }}</el-col>
+                  <el-col :span="12">
+                    <el-select v-model="extraParams.unit">
+                      <el-option :value="unit" :key="unit" v-for="unit in  units"></el-option>
                     </el-select>
-                  </td>
-                  <td>
-                    <el-input v-model="d.ipv4.ipAddr"></el-input>
-                  </td>
-                  <td>
-                    <el-input v-model="d.ipv4.gateway"></el-input>
-                  </td>
-                  <td>
-                    <el-input v-model="d.ipv4.netmask"></el-input>
-                  </td>
-                </tr>
-              </table>
-            </el-form-item>
-            <el-form-item :label="$t('custom_partition')">
-              <el-switch
-                  v-model="showPartition"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949">
-              </el-switch>
-              <table class="detail-info" style="float: left;margin-top:20px;" v-show="showPartition">
-                <thead>
-                <tr>
-                  <th>
-                    <el-button type="primary" icon="el-icon-plus" circle
-                               @click="payLoad.options.defaults.installPartitions.push({})">
-                    </el-button>
-                  </th>
-                  <th>{{ $t('mount_point') }}</th>
-                  <th>
-                    <el-row>
-                      <el-col :span="12">{{ $t('capacity') }}</el-col>
-                      <el-col :span="12">
-                        <el-select v-model="unit">
-                          <el-option :value="unit" :key="unit" v-for="unit in  units"></el-option>
-                        </el-select>
-                      </el-col>
-                    </el-row>
-                  </th>
-                  <th>{{ $t('fs_type') }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(partition, index) in payLoad.options.defaults.installPartitions"
-                    v-show="partition.mountPoint != 'biosboot'">
-                  <td>
-                    <el-button type="primary" icon="el-icon-minus" circle
-                               @click="payLoad.options.defaults.installPartitions.splice(index, 1)">
-                    </el-button>
-                  </td>
-                  <td>
-                    <el-input v-model="partition.mountPoint"
-                              :disabled="partition.mountPoint == 'biosboot'"></el-input>
-                  </td>
-                  <td>
-                    <el-input v-model="partition.size" :disabled="partition.mountPoint == 'biosboot'"
-                              :title="partition.mountPoint == 'biosboot' ? 'MB' : extraParams.unit"></el-input>
-                  </td>
-                  <td>
-                    <el-select v-model="partition.fsType" :disabled="partition.mountPoint == 'biosboot'">
-                      <el-option v-for="x in fsType"
-                                 :value="x"><span>{{ x }}</span>
-                      </el-option>
-                    </el-select>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </el-form-item>
-          </el-form>
-        </el-card>
-    </div>
+                  </el-col>
+                </el-row>
+              </th>
+              <th>{{ $t('fs_type') }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(partition, index) in payLoad.options.defaults.installPartitions"
+                v-show="partition.mountPoint != 'biosboot'">
+              <td>
+                <el-button type="primary" icon="el-icon-minus" circle
+                           @click="payLoad.options.defaults.installPartitions.splice(index, 1)">
+                </el-button>
+              </td>
+              <td>
+                <el-input v-model="partition.mountPoint"
+                          :disabled="partition.mountPoint == 'biosboot'"></el-input>
+              </td>
+              <td>
+                <el-input v-model="partition.size" :disabled="partition.mountPoint == 'biosboot'"
+                          :title="partition.mountPoint == 'biosboot' ? 'MB' : extraParams.unit"></el-input>
+              </td>
+              <td>
+                <el-select v-model="partition.fsType" :disabled="partition.mountPoint == 'biosboot'">
+                  <el-option v-for="x in fsType"
+                             :value="x"><span>{{ x }}</span>
+                  </el-option>
+                </el-select>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
 </template>
 <script>
 import HttpUtil from "../common/utils/HttpUtil";
+import {isAnyBlank} from "@/common/utils/CommonUtil";
+import {hostnameValidator, requiredValidator} from "@/common/validator/CommonValidator";
 
 let _ = require('lodash');
 export default {
@@ -115,6 +117,28 @@ export default {
   },
   data() {
     return {
+      rules: {
+        hostname: [
+          {validator: hostnameValidator, trigger: 'blur', vue: this},
+        ],
+        rootPassword: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        repo: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ]
+      },
+      nicRules: {
+        ipAddr: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        netmask: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        gateway: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ]
+      },
       defaultPayLoad: {
         "options": {
           "defaults": {
@@ -141,12 +165,12 @@ export default {
               },
               {
                 "mountPoint": "swap",
-                "size": "5000",
+                "size": "4096",
                 "fsType": "swap"
               },
               {
                 "mountPoint": "/boot",
-                "size": "5000",
+                "size": "4096",
                 "fsType": "ext3"
               },
               {
@@ -184,12 +208,12 @@ export default {
               },
               {
                 "mountPoint": "swap",
-                "size": "5000",
+                "size": "4096",
                 "fsType": "swap"
               },
               {
                 "mountPoint": "/boot",
-                "size": "5000",
+                "size": "4096",
                 "fsType": "ext3"
               },
               {
@@ -201,10 +225,9 @@ export default {
           }
         }
       },
-      extraParams: this.$attrs.extraParams ? JSON.parse(JSON.stringify(this.$attrs.extraParams)) : {
+      extraParams: this.$attrs.extraParams.unit ? JSON.parse(JSON.stringify(this.$attrs.extraParams)) : {
         unit: 'MB'
       },
-      unit: this.$attrs.extraParams ? JSON.parse(JSON.stringify(this.$attrs.extraParams)).unit : 'MB',
       allImages: [],
       cpus: [],
       memories: [],
@@ -218,8 +241,10 @@ export default {
       showPartition: false
     };
   },
-  watch: {
-    unit: function (newV, oldV) {
+  mounted() {
+    this.getAllImage();
+    this.getHardware();
+    this.$watch("extraParams.unit", function (newV, oldV) {
       if (oldV == 'GB' && newV == 'MB') {
         for (var i = 0; i < this.payLoad.options.defaults.installPartitions.length && this.payLoad.options.defaults.installPartitions[i].mountPoint != 'biosboot'; i++) {
           if (/\d+/.test(this.payLoad.options.defaults.installPartitions[i].size))
@@ -232,11 +257,7 @@ export default {
         }
       }
       this.extraParams.unit = newV;
-    }
-  },
-  mounted() {
-    this.getAllImage();
-    this.getHardware();
+    })
   }
   ,
   methods: {
@@ -249,6 +270,22 @@ export default {
     },
     valid: function () {
       this.validateResult = true;
+
+      let hostname = this.payLoad.options.defaults.hostname;
+      let rootPassword = this.payLoad.options.defaults.rootPassword;
+      let nic = this.payLoad.options.defaults.networkDevices[0].device;
+      let ip = this.payLoad.options.defaults.networkDevices[0].ipv4.ipAddr;
+      let gateway = this.payLoad.options.defaults.networkDevices[0].ipv4.gateway;
+      let netmask = this.payLoad.options.defaults.networkDevices[0].ipv4.netmask;
+      if (isAnyBlank(hostname, rootPassword, nic, ip, gateway, netmask)) {
+        this.$notify.error(this.$t("param_cannot_be_null!"));
+        return false;
+      }
+      if (/[^0-9a-zA-Z\-]+/.test(hostname)) {
+        this.$notify.error(this.$t("hostname_must_not_have_invalid_word!"));
+        return false;
+      }
+
       let exists = 0;
       for (let j = 0; j < this.payLoad.options.defaults.installPartitions.length; j++) {
         let p = this.payLoad.options.defaults.installPartitions[j];
