@@ -1,5 +1,6 @@
 package io.rackshift.strategy.statemachine.handler;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.WorkflowRequestDTO;
@@ -26,9 +27,15 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         //下发装机workflow
         WorkflowRequestDTO requestDTO = event.getWorkflowRequestDTO();
         JSONObject params = requestDTO.getParams();
+        JSONObject extraParams = requestDTO.getExtraParams();
         BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
         if (params == null) {
             revert(event, getExecutionId(), getUser());
+        }
+        if (extraParams != null) {
+            if (extraParams.containsKey("unit") && "GB".equalsIgnoreCase(extraParams.getString("unit"))) {
+                params = setPartitionSize(params);
+            }
         }
 
         boolean result = rackHDService.postWorkflow(rackhdUrl, bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
@@ -40,6 +47,23 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         } else {
             revert(event, getExecutionId(), getUser());
         }
+    }
+
+    private JSONObject setPartitionSize(JSONObject params) {
+        JSONObject options = params.getJSONObject("options");
+        JSONObject defaults = options.getJSONObject("defaults");
+        JSONArray partitions = defaults.getJSONArray("installPartitions");
+        for (int i = 0; i < partitions.size(); i++) {
+            JSONObject p = partitions.getJSONObject(i);
+            if (!p.getString("size").equalsIgnoreCase("auto") && !"biosboot".equalsIgnoreCase(p.getString("mountPoint"))) {
+                p.put("size", Integer.valueOf(((JSONObject) p).getString("size")) * 1024 + "");
+            }
+            partitions.set(i, p);
+        }
+        defaults.put("installPartitions", partitions);
+        options.put("defaults", defaults);
+        params.put("options", options);
+        return params;
     }
 
 }

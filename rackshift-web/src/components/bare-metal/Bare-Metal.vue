@@ -27,7 +27,7 @@
                     <div id="workflow-selector" style="display: flex;">
                         <div id="select-workflow">
                           <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
-                            Workflow
+                            {{$t('Workflow')}}
                           </div>
                           <div class="run-splitter h25"></div>
                           <!--                    <el-button class="h50">Workflow <span class="el-icon-caret-bottom"></span></el-button>-->
@@ -106,7 +106,7 @@
                                  v-for="c in columns" sortable="custom"></el-table-column>
 
                 <el-table-column prop="status" :label="$t('machine_status')" align="center"
-                                 sortable="custom">
+                                 sortable="custom" width="150px">
                   <template slot-scope="scope">
                     <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
                     <span style="margin-left: 10px">{{ scope.row.status }}</span>
@@ -377,7 +377,6 @@ import HttpUtil from "../../common/utils/HttpUtil";
 import {isAnyBlank, toLine} from "../../common/utils/CommonUtil";
 import Vue from 'vue';
 import OBM from "../obm/Obm"
-import {supportedWorkflow} from "@/common/constants/SupportedWorkflow";
 
 let _ = require('lodash');
 export default {
@@ -630,14 +629,14 @@ export default {
       if (this.editType == 'edit') {
         HttpUtil.post("/bare-metal/update", this.editObj, (res) => {
           this.detailDrawer = false;
-          this.$message.success('编辑成功');
+          this.$message.success(this.$t('edit_success'));
           this.cancelForm();
           this.getData();
         })
       } else {
         HttpUtil.post("/bare-metal/add", this.editObj, (res) => {
           this.detailDrawer = false;
-          this.$message.success('新增成功');
+          this.$message.success(this.$t('add_success'));
           this.cancelForm();
           this.getData();
         })
@@ -659,8 +658,12 @@ export default {
         str += this.multipleSelection[i].name + ' ';
       }
       let ids = this.getSelectedIds();
+      if (!this.ids || !this.ids.length == 0) {
+        this.$notify.error(this.$t('pls_select_bare_metal') + "!");
+        return;
+      }
       HttpUtil.post("/bare-metal/del", ids, (res) => {
-        this.$message.success(`删除成功！删除了${str}！`);
+        this.$message.success(this.$t('delete_success') + this.$t('deleted') + '${str}！');
         this.getData();
       });
       this.multipleSelection = [];
@@ -674,12 +677,16 @@ export default {
         this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
 
       } else if (type == 'del') {
-        this.$confirm('确定要删除吗？', '提示', {
+        if (!this.selectedWorkflow.length) {
+          this.$notify.error(this.$t('pls_select_workflow') + "!");
+          return;
+        }
+        this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
           HttpUtil.get("/bare-metal/del/" + row.id, {}, (res) => {
             this.getData();
-            this.$message.success('删除成功');
+            this.$message.success(this.$t('delete_success!'));
           });
         })
       } else {
@@ -687,45 +694,52 @@ export default {
         this.editType = type;
         this.editObj = {};
       }
-            },
-            // 分页导航
-            handlePageChange(val) {
-                this.$set(this.query, 'pageIndex', val);
-                this.getData();
-            },
-            getAllGraphDefinitions(name) {
-              //从mongo读取所有
-              // HttpUtil.get("/rackhd/graphdefinitions/1/1000", {name: name}, (res) => {
-              //     this.allGraphDefinitions = res.data.listObject;
-              // });
+    },
+    // 分页导航
+    handlePageChange(val) {
+      this.$set(this.query, 'pageIndex', val);
+      this.getData();
+    },
+    getAllGraphDefinitions(name) {
+      //从mongo读取所有
+      // HttpUtil.get("/rackhd/graphdefinitions/1/1000", {name: name}, (res) => {
+      //     this.allGraphDefinitions = res.data.listObject;
+      // });
 
-              HttpUtil.get("/workflow/listall", {name: name}, (res) => {
-                this.supportedWorkflow = res.data;
-              });
-            },
-            runWorkflow() {
+      HttpUtil.get("/workflow/listall", {name: name}, (res) => {
+        if (res.data && res.data.length > 0) {
+          res.data.forEach(w => {
+            w.brands = eval(w.brands);
+            w.settable = eval(w.settable);
+            if (w.defaultParams) w.defaultParams = JSON.parse(w.defaultParams);
+          });
+        }
+        this.supportedWorkflow = res.data;
+      });
+    },
+    runWorkflow() {
 
-              if (!this.selectedWorkflow.length) {
-                this.$notify.error(this.$t('pls_select_workflow') + "!");
-                return;
-              }
-              let that = this;
-              let reqList = _.map(this.copy(this.selectedWorkflow), (wf) => {
-                return that.buildRequest(wf);
-              });
-              if (reqList.length == 0) {
-                this.$notify.error(this.$t('pls_select_node') + "!");
-                return;
-              }
-              if (_.findIndex(reqList, r => r.settable && !r.params) != -1) {
-                this.$notify.error(this.$t('pls_set_params') + "!");
-                return;
-              }
-              HttpUtil.post("/workflow/run", reqList, (res) => {
-                this.selectedWorkflow = [];
-                this.getData();
-              });
-            }
+      if (!this.selectedWorkflow.length) {
+        this.$notify.error(this.$t('pls_select_workflow') + "!");
+        return;
+      }
+      let that = this;
+      let reqList = _.map(this.copy(this.selectedWorkflow), (wf) => {
+        return that.buildRequest(wf);
+      });
+      if (reqList.length == 0) {
+        this.$notify.error(this.$t('pls_select_node') + "!");
+        return;
+      }
+      if (_.findIndex(reqList, r => r.settable && !r.params) != -1) {
+        this.$notify.error(this.$t('pls_set_params') + "!");
+        return;
+      }
+      HttpUtil.post("/workflow/run", reqList, (res) => {
+        this.selectedWorkflow = [];
+        this.getData();
+      });
+    }
             ,
             getParamsTemplate() {
                 HttpUtil.get("/workflow/params/" + this.wfRequest.workflow, {}, (res) => {
@@ -741,35 +755,46 @@ export default {
             createWorkflowParamComponent(workflowParam) {
                 //动态异步
                 if (!this.paramComponent[workflowParam.componentId]) {
-                  // let comPointer = Vue.component(workflowParam.componentId, function (resolve) {
-                  //     require(["./../../rackparams/" + workflowParam.workflowName], resolve)
-                  // });
 
                   let comPointer = Vue.component(workflowParam.componentId,
                       // 这个动态导入会返回一个 `Promise` 对象。
                       () => import("./../../rackparams/" + workflowParam.workflowName)
-                  );
+                  )
+
                   this.paramComponent[workflowParam.componentId] = comPointer;
                 }
             },
             addToSelectedWorkflow() {
                 if (this.wfRequest.workflow) {
-                  for (let i = 0; i < this.multipleSelection.length; i++) {
-                    let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[i].id;
+
+
+                  // for (let i = 0; i < this.multipleSelection.length; i++) {
+                  //   let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[i].id;
+                  //   for (let j = 0; j < this.selectedWorkflow.length; j++) {
+                  //     if (this.selectedWorkflow[j].componentId == componentId) {
+                  //       // this.$notify.error(this.$t('same_workflow_node'));
+                  //     }
+                  //   }
+                  // }
+
+                  let originWf = _.find(this.supportedWorkflow, s => s.injectableName == this.wfRequest.workflow);
+                  for (let k = 0; k < this.multipleSelection.length; k++) {
+                    let duplicated = false;
+                    let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[k].id;
                     for (let j = 0; j < this.selectedWorkflow.length; j++) {
                       if (this.selectedWorkflow[j].componentId == componentId) {
-                        this.$notify.error(this.$t('same_workflow_node'));
-                        return;
+                        // this.$notify.error(this.$t('same_workflow_node'));
+                        duplicated = true;
                       }
                     }
-                  }
 
-                  let originWf = _.find(supportedWorkflow, s => s.injectableName == this.wfRequest.workflow);
-                  for (let k = 0; k < this.multipleSelection.length; k++) {
+                    if (duplicated) continue;
+
                     if (_.findIndex(originWf.brands, w => w == this.multipleSelection[k].machineBrand) == -1) {
-                      this.$notify.error(this.$t('not_supported_brand!'));
-                      return;
+                      this.$notify.error(originWf.friendlyName + this.$t('not_supported_brand!') + ' ' + this.multipleSelection[k].machineBrand);
+                      continue;
                     }
+
                     this.selectedWorkflow.push(
                         {
                           componentId: this.wfRequest.workflow + "-" + this.multipleSelection[k].id,
@@ -800,6 +825,8 @@ export default {
 
                       that.selectedWorkflow[that.selectedWorkflow.length - 1].params = that.workflowParam;
                       that.selectedWorkflow[that.selectedWorkflow.length - 1].extraParams = that.extraParams;
+                    } else {
+                      this.selectedWorkflow[this.selectedWorkflow.length - 1].params = originWf.defaultParams;
                     }
                   }
                     // this.$refs.multipleTable.clearSelection();

@@ -21,5 +21,7 @@ public class Workflow implements Serializable {
 
     private Long createTime;
 
+    private String defaultParams;
+
     private static final long serialVersionUID = 1L;
 }

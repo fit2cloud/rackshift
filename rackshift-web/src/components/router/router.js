@@ -9,6 +9,7 @@ import Image from "../image/Image"
 import Network from "../network/Network"
 import SystemParameter from "../systemparameter/SystemParameter"
 import ExecutionLog from "../execution-log/Execution-Log"
+import Workflow from "../workflow/Workflow"
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,7 @@ const routes = [
     {path: '/network', component: Network},
     {path: '/system-parameter', component: SystemParameter},
     {path: '/execution-log', component: ExecutionLog},
+    {path: '/workflow', component: Workflow},
 ]
 const router = new VueRouter({
     routes: routes

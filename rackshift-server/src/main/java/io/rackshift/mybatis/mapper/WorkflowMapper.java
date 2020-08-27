@@ -16,15 +16,21 @@ public interface WorkflowMapper {
 
     int insertSelective(Workflow record);
 
+    List<Workflow> selectByExampleWithBLOBs(WorkflowExample example);
+
     List<Workflow> selectByExample(WorkflowExample example);
 
     Workflow selectByPrimaryKey(String id);
 
     int updateByExampleSelective(@Param("record") Workflow record, @Param("example") WorkflowExample example);
 
+    int updateByExampleWithBLOBs(@Param("record") Workflow record, @Param("example") WorkflowExample example);
+
     int updateByExample(@Param("record") Workflow record, @Param("example") WorkflowExample example);
 
     int updateByPrimaryKeySelective(Workflow record);
+
+    int updateByPrimaryKeyWithBLOBs(Workflow record);
 
     int updateByPrimaryKey(Workflow record);
 }

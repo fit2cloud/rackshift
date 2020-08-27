@@ -6,13 +6,16 @@ import io.rackshift.manager.BareMetalManager;
 import io.rackshift.manager.WorkflowManager;
 import io.rackshift.model.RSException;
 import io.rackshift.model.ResultHolder;
+import io.rackshift.model.WorkflowDTO;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
+import io.rackshift.mybatis.domain.Workflow;
 import io.rackshift.mybatis.domain.WorkflowExample;
 import io.rackshift.mybatis.mapper.WorkflowMapper;
 import io.rackshift.strategy.statemachine.LifeEvent;
 import io.rackshift.strategy.statemachine.LifeEventType;
 import io.rackshift.strategy.statemachine.StateMachine;
+import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.MongoUtil;
 import io.rackshift.utils.Pager;
 import io.rackshift.utils.Translator;
@@ -74,6 +77,7 @@ public class WorkflowService {
                 if (bareMetal == null) {
                     RSException.throwExceptions(Translator.get("i18n_error"));
                 }
+
                 events.add(LifeEvent.builder().withWorkflowRequestDTO(requestDTO).withEventType(LifeEventType.fromWorkflow(workflowName)));
             }
             stateMachine.sendEventListAsyn(events);
@@ -87,6 +91,45 @@ public class WorkflowService {
     }
 
     public ResultHolder listall() {
-        return ResultHolder.success(workflowMapper.selectByExample(new WorkflowExample()));
+        return ResultHolder.success(workflowMapper.selectByExampleWithBLOBs(new WorkflowExample()));
+    }
+
+    public List<Workflow> list(WorkflowDTO queryVO) {
+        WorkflowExample workflowExample = buildExample(queryVO);
+        return workflowMapper.selectByExampleWithBLOBs(workflowExample);
+    }
+
+    private WorkflowExample buildExample(WorkflowDTO queryVO) {
+        WorkflowExample e = new WorkflowExample();
+
+        if (queryVO.getId() != null) {
+            e.or().andIdEqualTo(queryVO.getId());
+        }
+        return new WorkflowExample();
+    }
+
+    public boolean add(WorkflowDTO queryVO) {
+        Workflow workflow = new Workflow();
+        BeanUtils.copyBean(workflow, queryVO);
+        workflowMapper.insertSelective(workflow);
+        return true;
+    }
+
+    public boolean update(WorkflowDTO queryVO) {
+        WorkflowExample workflowExample = buildExample(queryVO);
+        workflowMapper.updateByExample(queryVO, new WorkflowExample());
+        return true;
+    }
+
+    public boolean del(String id) {
+        workflowMapper.deleteByPrimaryKey(id);
+        return true;
+    }
+
+    public boolean del(String[] ids) {
+        for (String id : ids) {
+            workflowMapper.deleteByPrimaryKey(id);
+        }
+        return true;
     }
 }

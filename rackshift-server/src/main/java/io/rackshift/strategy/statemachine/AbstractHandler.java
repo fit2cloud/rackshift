@@ -74,6 +74,7 @@ public abstract class AbstractHandler implements IStateHandler {
             executionLogService.error(executionId);
             executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, String.format("错误：%s", ExceptionUtils.getExceptionDetail(e)));
             revert(event, getExecutionId(), getUser());
+            throw new RuntimeException(e);
         }
     }
 

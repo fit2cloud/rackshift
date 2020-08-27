@@ -126,7 +126,8 @@
     text-align: right;
     font-size: 12px;
     height: 45px !important;
-    background: linear-gradient(to right, #00447C ,#409EFF 80%, #00447C );
+    background: linear-gradient(to right, #409EFF ,#409EFF 80%, #409EFF );
+    /*background: linear-gradient(to right, #00447C ,#409EFF 80%, #00447C );*/
     /*background: linear-gradient(to right, #000000 20%, #00447C 80%);*/
     color: #333;
     z-index: 2;

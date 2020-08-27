@@ -19,7 +19,7 @@ function requiredSelectValidator(rule, value, callback) {
         if (rule.field == "password") {
             callback(new Error(rule.vue.$t('pls_select_password')));
         }
-        callback(new Error(rule.vue.$t('pls_select_device')));
+        callback(new Error(rule.vue.$t('pls_select_' + rule.name)));
     }
     callback();
 }

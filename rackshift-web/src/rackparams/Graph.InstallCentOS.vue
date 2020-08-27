@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card>
+<!--    <el-card>-->
       <el-form label-width="101px" :rules="rules" :model="payLoad.options.defaults" ref="form">
         <el-row>
           <el-col :span="12">
@@ -11,7 +11,7 @@
               <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
                         show-password></el-input>
             </el-form-item>
-            <el-form-item :label="$t('image')">
+            <el-form-item :label="$t('image')" prop="repo">
               <el-select v-model="payLoad.options.defaults.repo">
                 <el-option v-for="g in allImages" :label="g.name"
                            :value="g.url"></el-option>
@@ -20,9 +20,7 @@
 
             <el-form-item :label="$t('custom_partition')">
               <el-switch
-                  v-model="showPartition"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949">
+                  v-model="showPartition">
               </el-switch>
               <table class="detail-info" style="float: left;margin-top:20px;" v-show="showPartition">
                 <thead>
@@ -115,7 +113,7 @@
         </el-row>
 
       </el-form>
-    </el-card>
+<!--    </el-card>-->
   </div>
 </template>
 <script>
@@ -148,12 +146,12 @@ export default {
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
         repo: [
-          {validator: requiredValidator, trigger: 'blur', vue: this},
+          {validator: requiredSelectValidator, trigger: 'blur', vue: this, name: 'image'},
         ]
       },
       nicRules: {
         device: [
-          {validator: requiredSelectValidator, trigger: 'blur', vue: this},
+          {validator: requiredSelectValidator, trigger: 'blur', vue: this, name: 'device'},
         ],
         ipAddr: [
           {validator: ipValidator, trigger: 'blur', vue: this},
@@ -274,12 +272,12 @@ export default {
       if (oldV == 'GB' && newV == 'MB') {
         for (var i = 0; i < this.payLoad.options.defaults.installPartitions.length && this.payLoad.options.defaults.installPartitions[i].mountPoint != 'biosboot'; i++) {
           if (/\d+/.test(this.payLoad.options.defaults.installPartitions[i].size))
-            this.payLoad.options.defaults.installPartitions[i].size = this.payLoad.options.defaults.installPartitions[i].size * 1024;
+            this.payLoad.options.defaults.installPartitions[i].size = this.payLoad.options.defaults.installPartitions[i].size * 1024 + "";
         }
       } else if (oldV == 'MB' && newV == 'GB') {
         for (var i = 0; i < this.payLoad.options.defaults.installPartitions.length && this.payLoad.options.defaults.installPartitions[i].mountPoint != 'biosboot'; i++) {
           if (/\d+/.test(this.payLoad.options.defaults.installPartitions[i].size))
-            this.payLoad.options.defaults.installPartitions[i].size = parseInt((this.payLoad.options.defaults.installPartitions[i].size / 1024));
+            this.payLoad.options.defaults.installPartitions[i].size = parseInt((this.payLoad.options.defaults.installPartitions[i].size / 1024)) + "";
         }
       }
       this.extraParams.unit = newV;
