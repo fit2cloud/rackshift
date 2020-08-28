@@ -18,4 +18,16 @@ function dateFormat(dataStr) {
     return y + '-' + timeAdd0(m) + '-' + timeAdd0(d) + ' ' + timeAdd0(h) + ':' + timeAdd0(mm) + ':' + timeAdd0(s);
 }
 
-export {dateFormat}
+function brandsFormat(brands) {
+    if (brands && brands.lenghth != 0) {
+        let brandList = eval(brands);
+        let r = "";
+        brandList.forEach(b => r += b + ",");
+        return r.substr(0, r.length - 1);
+    }
+
+    return "";
+
+}
+
+export {dateFormat, brandsFormat}

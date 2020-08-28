@@ -3,6 +3,7 @@
 <mapper namespace="io.rackshift.mybatis.mapper.WorkflowMapper">
   <resultMap id="BaseResultMap" type="io.rackshift.mybatis.domain.Workflow">
     <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="injectable_name" jdbcType="VARCHAR" property="injectableName" />
     <result column="friendly_name" jdbcType="VARCHAR" property="friendlyName" />
     <result column="event_type" jdbcType="VARCHAR" property="eventType" />
@@ -73,7 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, injectable_name, friendly_name, event_type, brands, settable, status, create_time
+    id, type, injectable_name, friendly_name, event_type, brands, settable, status, create_time
   </sql>
   <sql id="Blob_Column_List">
     default_params
@@ -127,20 +128,23 @@
     </if>
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.Workflow">
-    insert into workflow (id, injectable_name, friendly_name, 
-      event_type, brands, settable, 
-      status, create_time, default_params
-      )
-    values (#{id,jdbcType=VARCHAR}, #{injectableName,jdbcType=VARCHAR}, #{friendlyName,jdbcType=VARCHAR}, 
-      #{eventType,jdbcType=VARCHAR}, #{brands,jdbcType=VARCHAR}, #{settable,jdbcType=VARCHAR}, 
-      #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{defaultParams,jdbcType=LONGVARCHAR}
-      )
+    insert into workflow (id, type, injectable_name, 
+      friendly_name, event_type, brands, 
+      settable, status, create_time, 
+      default_params)
+    values (#{id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{injectableName,jdbcType=VARCHAR}, 
+      #{friendlyName,jdbcType=VARCHAR}, #{eventType,jdbcType=VARCHAR}, #{brands,jdbcType=VARCHAR}, 
+      #{settable,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, 
+      #{defaultParams,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.Workflow">
     insert into workflow
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="type != null">
+        type,
       </if>
       <if test="injectableName != null">
         injectable_name,
@@ -170,6 +174,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
       </if>
       <if test="injectableName != null">
         #{injectableName,jdbcType=VARCHAR},
@@ -209,6 +216,9 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=VARCHAR},
       </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
       <if test="record.injectableName != null">
         injectable_name = #{record.injectableName,jdbcType=VARCHAR},
       </if>
@@ -241,6 +251,7 @@
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update workflow
     set id = #{record.id,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=VARCHAR},
       injectable_name = #{record.injectableName,jdbcType=VARCHAR},
       friendly_name = #{record.friendlyName,jdbcType=VARCHAR},
       event_type = #{record.eventType,jdbcType=VARCHAR},
@@ -256,6 +267,7 @@
   <update id="updateByExample" parameterType="map">
     update workflow
     set id = #{record.id,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=VARCHAR},
       injectable_name = #{record.injectableName,jdbcType=VARCHAR},
       friendly_name = #{record.friendlyName,jdbcType=VARCHAR},
       event_type = #{record.eventType,jdbcType=VARCHAR},
@@ -270,6 +282,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="io.rackshift.mybatis.domain.Workflow">
     update workflow
     <set>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
       <if test="injectableName != null">
         injectable_name = #{injectableName,jdbcType=VARCHAR},
       </if>
@@ -299,7 +314,8 @@
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="io.rackshift.mybatis.domain.Workflow">
     update workflow
-    set injectable_name = #{injectableName,jdbcType=VARCHAR},
+    set type = #{type,jdbcType=VARCHAR},
+      injectable_name = #{injectableName,jdbcType=VARCHAR},
       friendly_name = #{friendlyName,jdbcType=VARCHAR},
       event_type = #{eventType,jdbcType=VARCHAR},
       brands = #{brands,jdbcType=VARCHAR},
@@ -311,7 +327,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.Workflow">
     update workflow
-    set injectable_name = #{injectableName,jdbcType=VARCHAR},
+    set type = #{type,jdbcType=VARCHAR},
+      injectable_name = #{injectableName,jdbcType=VARCHAR},
       friendly_name = #{friendlyName,jdbcType=VARCHAR},
       event_type = #{eventType,jdbcType=VARCHAR},
       brands = #{brands,jdbcType=VARCHAR},

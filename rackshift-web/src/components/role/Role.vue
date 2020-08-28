@@ -20,34 +20,38 @@
             </div>
         </div>
         <el-table
-                :data="tableData"
-                class="table"
-                ref="multipleTable"
-                header-cell-class-name="table-header"
-                style="width: 100%"
-                @selection-change="handleSelectionChange"
+            :data="tableData"
+            class="table"
+            ref="multipleTable"
+            header-cell-class-name="table-header"
+            style="width: 100%"
+            @selection-change="handleSelectionChange"
         >
-            <el-table-column type="selection" align="center"></el-table-column>
-            <el-table-column :prop="c.prop" :label="c.label" align="center"
-                             v-for="c in columns"></el-table-column>
-
-            <el-table-column prop="" :label="$t('opt')" align="center">
-                <template slot-scope="scope">
-                    <el-button
-                            type="button"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.row, 'edit')"
-                    >{{$t('edit')}}
-                    </el-button>
-                    <el-button
-                            type="button"
-                            icon="el-icon-delete"
-                            class="red"
-                            @click="handleEdit(scope.row, 'del')"
-                    >{{$t('del')}}
-                    </el-button>
-                </template>
-            </el-table-column>
+          <el-table-column type="selection" align="center"></el-table-column>
+          <el-table-column :prop="c.prop" :label="c.label" align="center"
+                           v-for="c in columns"></el-table-column>
+          <el-table-column prop="updateTime" :label="$t('update_time')" align="center">
+            <template slot-scope="scope">
+              {{ scope.row.updateTime | dateFormat }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="" :label="$t('opt')" align="center">
+            <template slot-scope="scope">
+              <el-button
+                  type="button"
+                  icon="el-icon-edit"
+                  @click="handleEdit(scope.row, 'edit')"
+              >{{ $t('edit') }}
+              </el-button>
+              <el-button
+                  type="button"
+                  icon="el-icon-delete"
+                  class="red"
+                  @click="handleEdit(scope.row, 'del')"
+              >{{ $t('del') }}
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <div class="pagination">
             <el-pagination
@@ -116,10 +120,6 @@ let _ = require('lodash');
                     {
                         label: this.$t('desc'),
                         prop: "description"
-                    },
-                    {
-                        label: this.$t('update_time'),
-                        prop: "updateTime"
                     },
                 ],
                 editDialogVisible: false,

@@ -2,6 +2,7 @@ package io.rackshift.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.mongodb.BasicDBObject;
+import io.rackshift.constants.ServiceConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.manager.WorkflowManager;
 import io.rackshift.model.RSException;
@@ -122,13 +123,17 @@ public class WorkflowService {
     }
 
     public boolean del(String id) {
+        Workflow w = workflowMapper.selectByPrimaryKey(id);
+        if (w != null && ServiceConstants.SYSTEM.equalsIgnoreCase(w.getType())) {
+            return false;
+        }
         workflowMapper.deleteByPrimaryKey(id);
         return true;
     }
 
     public boolean del(String[] ids) {
         for (String id : ids) {
-            workflowMapper.deleteByPrimaryKey(id);
+            del(id);
         }
         return true;
     }

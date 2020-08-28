@@ -7,6 +7,8 @@ import lombok.Data;
 public class Workflow implements Serializable {
     private String id;
 
+    private String type;
+
     private String injectableName;
 
     private String friendlyName;

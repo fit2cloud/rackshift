@@ -26,7 +26,9 @@ public class Application {
 
     @Bean
     public String rackhdUrl() {
-        SystemParameter systemParameter = systemParameterMapper.selectByPrimaryKey(ServiceConstants.endPointParameterKey);
-        return "http://" + systemParameter.getParamValue() + ":9090";
+        SystemParameter systemParameter = systemParameterMapper.selectByPrimaryKey(ServiceConstants.ENDPOINT_KEY);
+        if (systemParameter != null && !systemParameter.getParamValue().contains(":"))
+            return "http://" + systemParameter.getParamValue() + ":9090";
+        return "http://" + systemParameter.getParamValue();
     }
 }

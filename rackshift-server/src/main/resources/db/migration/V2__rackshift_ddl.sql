@@ -344,6 +344,7 @@ CREATE TABLE if not exists `execution_log_details`
 CREATE TABLE if not exists `workflow`
 (
     `id`              varchar(50) CHARACTER SET utf8mb4 NOT NULL,
+    `type`            varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'user' COMMENT '类型，system，user',
     `injectable_name` varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT 'workflow注入名称',
     `friendly_name`   varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT 'workflow友好名称',
     `event_type`      varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '执行workflow触发事件',

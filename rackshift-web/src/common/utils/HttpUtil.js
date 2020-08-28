@@ -28,7 +28,7 @@ axios.interceptors.response.use(function (response) {
 // axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const HttpUtil = {
-    get: function (url, params, resolve, reject) {
+    get: async function (url, params, resolve, reject) {
         axios.get(url, params).then((res) => {
             if (res.data.success) {
                 resolve(res.data);

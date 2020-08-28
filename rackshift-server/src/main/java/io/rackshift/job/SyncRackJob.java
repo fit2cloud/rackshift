@@ -29,12 +29,12 @@ public class SyncRackJob {
     @Resource
     private SystemParameterMapper systemParameterMapper;
 
-    //    @Scheduled(fixedDelay = 1000)
+//        @Scheduled(fixedDelay = 1000)
     @Scheduled(fixedDelay = 60000)
     public void run() {
         List<MachineEntity> entities = new LinkedList<>();
         JSONArray nodesArr = null;
-        SystemParameter systemParameter = systemParameterMapper.selectByPrimaryKey(ServiceConstants.endPointParameterKey);
+        SystemParameter systemParameter = systemParameterMapper.selectByPrimaryKey(ServiceConstants.ENDPOINT_KEY);
         if ("release".equalsIgnoreCase(runModel)) {
             nodesArr = JSONArray.parseArray(RackHDHttpClientUtil.get("http://" + systemParameter.getParamValue() + ":9090" + RackHDConstants.NODES_URL, null));
         } else {

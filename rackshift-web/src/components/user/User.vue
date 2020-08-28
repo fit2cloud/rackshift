@@ -20,27 +20,31 @@
             </div>
         </div>
         <el-table
-                :data="tableData"
-                class="table"
-                ref="multipleTable"
-                header-cell-class-name="table-header"
-                style="width: 100%"
-                @selection-change="handleSelectionChange"
+            :data="tableData"
+            class="table"
+            ref="multipleTable"
+            header-cell-class-name="table-header"
+            style="width: 100%"
+            @selection-change="handleSelectionChange"
         >
-            <el-table-column type="selection" align="center"></el-table-column>
-            <el-table-column :prop="c.prop" :label="c.label" align="center"
-                             v-for="c in columns"></el-table-column>
-
-            <el-table-column prop="" :label="$t('opt')" align="center">
-                <template slot-scope="scope">
-                    <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.row, 'edit')"
-                    >{{$t('edit')}}
-                    </el-button>
-                    <el-button
-                            type="text"
+          <el-table-column type="selection" align="center"></el-table-column>
+          <el-table-column :prop="c.prop" :label="c.label" align="center"
+                           v-for="c in columns"></el-table-column>
+          <el-table-column prop="updateTime" :label="$t('update_time')" align="center">
+            <template slot-scope="scope">
+              {{ scope.row.updateTime | dateFormat }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="" :label="$t('opt')" align="center">
+            <template slot-scope="scope">
+              <el-button
+                  type="text"
+                  icon="el-icon-edit"
+                  @click="handleEdit(scope.row, 'edit')"
+              >{{ $t('edit') }}
+              </el-button>
+              <el-button
+                  type="text"
                             icon="el-icon-delete"
                             class="red"
                             @click="handleEdit(scope.row, 'del')"

@@ -220,7 +220,7 @@
               <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="70vw">
                 <keep-alive>
                   <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
-                             v-bind:is="currentWfParamTemplate"
+                             :is="currentWfParamTemplate"
                              :params="workflowParam"
                              :extraParams="extraParams"
                              :currentWorkflowIndex="editWorkflowIndex"
@@ -620,10 +620,6 @@ export default {
       this.loading = false;
       this.detailDrawer = false;
     },
-    add() {
-      this.detailDrawer = true;
-      this.editType = 'add';
-    },
     confirmEdit() {
       this.loading = true;
       if (this.editType == 'edit') {
@@ -647,7 +643,7 @@ export default {
       this.multipleSelection = val;
     },
     getSelectedIds: function () {
-      this.delList = this.delList.concat(this.multipleSelection);
+      this.delList = [].concat(this.multipleSelection);
       let ids = _.map(this.delList, (item) => item.id);
       return ids;
     },
@@ -655,15 +651,15 @@ export default {
       const length = this.multipleSelection.length;
       let str = '';
       for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].name + ' ';
+        str += this.multipleSelection[i].injectableName + ' ';
       }
       let ids = this.getSelectedIds();
-      if (!this.ids || !this.ids.length == 0) {
+      if (!ids || ids.length == 0) {
         this.$notify.error(this.$t('pls_select_bare_metal') + "!");
         return;
       }
       HttpUtil.post("/bare-metal/del", ids, (res) => {
-        this.$message.success(this.$t('delete_success') + this.$t('deleted') + '${str}！');
+        this.$message.success(this.$t('delete_success') + this.$t('deleted') + `${str}！`);
         this.getData();
       });
       this.multipleSelection = [];

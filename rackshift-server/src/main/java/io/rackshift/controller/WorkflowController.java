@@ -1,10 +1,11 @@
 package io.rackshift.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.rackshift.constants.AuthorizationConstants;
-import io.rackshift.model.WorkflowDTO;
 import io.rackshift.model.ResultHolder;
+import io.rackshift.model.WorkflowDTO;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.service.WorkflowService;
 import io.rackshift.utils.PageUtils;
@@ -19,6 +20,10 @@ import java.util.List;
 public class WorkflowController {
     @Resource
     private WorkflowService workflowService;
+    @Resource
+    private JSONArray allWorkflow;
+    @Resource
+    private JSONArray allTask;
 
     @GetMapping("/params/{name}")
     public ResultHolder getParamsByName(@PathVariable String name) {
@@ -31,15 +36,25 @@ public class WorkflowController {
     }
 
     @RequestMapping("/run")
-    public ResultHolder run(@RequestBody List<WorkflowRequestDTO> requestDTOs){
+    public ResultHolder run(@RequestBody List<WorkflowRequestDTO> requestDTOs) {
         return workflowService.run(requestDTOs);
     }
 
     @RequestMapping("listall")
-    public ResultHolder listall(){
+    public ResultHolder listall() {
         return workflowService.listall();
     }
-    
+
+    @RequestMapping("listallRackHDWorkflows")
+    public ResultHolder listallRackHDWorkflows() {
+        return ResultHolder.success(allWorkflow);
+    }
+
+    @RequestMapping("listallRackHDTasks")
+    public ResultHolder listallRackHDTasks() {
+        return ResultHolder.success(allTask);
+    }
+
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @RequestMapping("list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody WorkflowDTO queryVO) {

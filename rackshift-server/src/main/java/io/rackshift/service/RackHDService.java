@@ -90,7 +90,7 @@ public class RackHDService {
      */
     public boolean createOrUpdateObm(OutBand o, BareMetal machine, String nodeId) {
         if (StringUtils.isNotBlank(machine.getRuleId())) {
-            SystemParameter endPoint = systemParameterMapper.selectByPrimaryKey(ServiceConstants.endPointParameterKey);
+            SystemParameter endPoint = systemParameterMapper.selectByPrimaryKey(ServiceConstants.ENDPOINT_KEY);
             try {
                 JSONObject obmObj = new JSONObject();
                 JSONObject obmConfigObj = new JSONObject();

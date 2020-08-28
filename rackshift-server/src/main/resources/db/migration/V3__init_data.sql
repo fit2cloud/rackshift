@@ -1,5 +1,6 @@
 insert into workflow
 values (1,
+        'system',
         'Graph.InstallCentOS',
         '安装Centos7 64位版',
         'POST_OS_WORKFLOW_START',
@@ -11,6 +12,7 @@ values (1,
 
 insert into workflow
 values (2,
+        'system',
         'Graph.Dell.perccli.Catalog',
         '搜集Dell服务器磁盘Raid信息',
         'POST_OTHER_WORKFLOW_START',
@@ -26,6 +28,7 @@ values (2,
 
 insert into workflow
 values (3,
+        'system',
         'Graph.Raid.Delete.MegaRAID',
         '清空Dell服务器磁盘和Raid信息',
         'POST_OTHER_WORKFLOW_START',
@@ -41,6 +44,7 @@ values (3,
 
 insert into workflow
 values (4,
+        'system',
         'Graph.Raid.Create.PercRAID',
         '创建Dell服务器磁盘Raid虚拟磁盘',
         'POST_OTHER_WORKFLOW_START',
