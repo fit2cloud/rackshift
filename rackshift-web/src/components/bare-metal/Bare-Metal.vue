@@ -1,382 +1,382 @@
 <template>
-    <el-tabs style="width:80vw" v-model="activeName">
-        <el-tab-pane :label="$t('bare_metal')" name="bare-metal">
+  <el-tabs style="width:80vw" v-model="activeName">
+    <el-tab-pane :label="$t('bare_metal')" name="bare-metal">
+      <div>
+        <div class="machine-title">
+          <i class="el-icon-user-solid">{{ $t('Machines') }}</i>
+
+          <el-button-group class="batch-button">
+            <el-button type="primary" icon="el-icon-circle-plus-outline">{{ $t('add') }}</el-button>
+            <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
+            </el-button>
+            <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
+          </el-button-group>
+        </div>
+        <div id="control" style="display: flex;">
+          <div id="run-workflow">
+            <div class="el-icon-caret-right h25"
+                 style="border-bottom: yellowgreen 1px solid;    width: 100%;">{{ $t('Run') }}
+            </div>
+            <div class="run-splitter h25"></div>
             <div>
-                <div class="machine-title">
-                    <i class="el-icon-user-solid">{{$t('Machines')}}</i>
+              <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
+              <!--                            <el-button class="el-icon-close h50"></el-button>-->
+            </div>
+          </div>
 
-                    <el-button-group class="batch-button">
-                        <el-button type="primary" icon="el-icon-circle-plus-outline">{{$t('add')}}</el-button>
-                        <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{$t('del')}}
-                        </el-button>
-                        <el-button type="primary" icon="el-icon-refresh" @click="getData">{{$t('refresh')}}</el-button>
-                    </el-button-group>
-                </div>
-                <div id="control" style="display: flex;">
-                    <div id="run-workflow">
-                        <div class="el-icon-caret-right h25"
-                             style="border-bottom: yellowgreen 1px solid;    width: 100%;">{{$t('Run')}}
-                        </div>
-                        <div class="run-splitter h25"></div>
-                        <div>
-                            <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
-<!--                            <el-button class="el-icon-close h50"></el-button>-->
-                        </div>
-                    </div>
+          <div id="workflow-selector" style="display: flex;">
+            <div id="select-workflow">
+              <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+                {{ $t('Workflow') }}
+              </div>
+              <div class="run-splitter h25"></div>
+              <!--                    <el-button class="h50">Workflow <span class="el-icon-caret-bottom"></span></el-button>-->
+              <el-select v-model="wfRequest.workflow" @change="getParamsTemplate">
+                <el-option
+                    v-for="g in supportedWorkflow"
+                    :label="g.friendlyName"
+                    :value="g.injectableName"></el-option>
+              </el-select>
 
-                    <div id="workflow-selector" style="display: flex;">
-                        <div id="select-workflow">
-                          <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
-                            {{$t('Workflow')}}
-                          </div>
-                          <div class="run-splitter h25"></div>
-                          <!--                    <el-button class="h50">Workflow <span class="el-icon-caret-bottom"></span></el-button>-->
-                          <el-select v-model="wfRequest.workflow" @change="getParamsTemplate">
-                            <el-option
-                                v-for="g in supportedWorkflow"
-                                :label="g.friendlyName"
-                                :value="g.injectableName"></el-option>
-                          </el-select>
+              <el-button :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"
+                         @click="addToSelectedWorkflow"
+                         class="h50 ml10"><span
+                  class="el-icon-circle-plus"></span>{{ $t('add_to_selected_wf_list') }}
+              </el-button>
+            </div>
+          </div>
 
-                          <el-button :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"
-                                     @click="addToSelectedWorkflow"
-                                     class="h50 ml10"><span
-                              class="el-icon-circle-plus"></span>{{ $t('add_to_selected_wf_list') }}
-                          </el-button>
-                        </div>
-                    </div>
+          <div id="action-list">
+            <div class="el-icon-s-operation h25"
+                 style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+              {{ $t('selected_workflows') }}
+            </div>
+            <div>
+              <el-card v-for="(w, $index) in selectedWorkflow" style="height:100%;">
+                <el-row>
+                  <el-col :span="6">
+                    <el-button @click="deleteSelectedWorkflow($index)" class="h50 ml10"><span
+                        class="el-icon-remove"></span>{{ $t('del') }}
+                    </el-button>
+                  </el-col>
 
-                  <div id="action-list">
-                    <div class="el-icon-s-operation h25"
-                         style="border-bottom: yellowgreen 1px solid;    width: 100%;">
-                      {{ $t('selected_workflows') }}
-                    </div>
-                    <div>
-                      <el-card v-for="(w, $index) in selectedWorkflow" style="height:100%;">
-                        <el-row>
-                          <el-col :span="6">
-                            <el-button @click="deleteSelectedWorkflow($index)" class="h50 ml10"><span
-                                class="el-icon-remove"></span>{{ $t('del') }}
-                            </el-button>
-                          </el-col>
+                  <el-col :span="10">
+                    {{ w.machineModel + ' ' + w.machineSn }}
+                    <br>
+                    {{ w.friendlyName }}
+                  </el-col>
 
-                          <el-col :span="10">
-                            {{ w.machineModel + ' ' + w.machineSn }}
-                            <br>
-                            {{ w.friendlyName }}
-                          </el-col>
-
-                          <el-col :span="8">
-                            <el-button @click="editWfParams($index)" v-if="w.settable">
-                              {{ $t('set_workflow_param') }}
-                            </el-button>
-                            <span v-if="!w.settable">
+                  <el-col :span="8">
+                    <el-button @click="editWfParams($index)" v-if="w.settable">
+                      {{ $t('set_workflow_param') }}
+                    </el-button>
+                    <span v-if="!w.settable">
                                 {{ $t('no_nessary_to_set') }}
                               </span>
-                          </el-col>
-                        </el-row>
-                      </el-card>
-                    </div>
-                  </div>
-                </div>
+                  </el-col>
+                </el-row>
+              </el-card>
+            </div>
+          </div>
+        </div>
 
-              <el-table
-                  :data="tableData"
-                  class="table"
-                  ref="multipleTable"
-                  header-cell-class-name="table-header"
-                  @sort-change="sortChange($event)"
-                  style="width: 100%"
-                  @selection-change="handleSelectionChange"
-              >
-                <el-table-column type="selection" align="center"></el-table-column>
+        <el-table
+            :data="tableData"
+            class="table"
+            ref="multipleTable"
+            header-cell-class-name="table-header"
+            @sort-change="sortChange($event)"
+            style="width: 100%"
+            @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="selection" align="center"></el-table-column>
 
-                <el-table-column prop="machineModel" :label="$t('machine_model')" align="center" width="150px"
-                                 sortable="custom">
-                  <template slot-scope="scope">
-                    <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
-                      <el-link type="primary" @click="showDetail(scope.row)" target="_blank">
-                        {{ scope.row.machineModel }}
-                      </el-link>
-                    </el-tooltip>
-                  </template>
-                </el-table-column>
+          <el-table-column prop="machineModel" :label="$t('machine_model')" align="center" width="150px"
+                           sortable="custom">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
+                <el-link type="primary" @click="showDetail(scope.row)" target="_blank">
+                  {{ scope.row.machineModel }}
+                </el-link>
+              </el-tooltip>
+            </template>
+          </el-table-column>
 
-                <el-table-column :prop="c.prop" :label="c.label" align="center"
-                                 v-for="c in columns" sortable="custom"></el-table-column>
+          <el-table-column :prop="c.prop" :label="c.label" align="center"
+                           v-for="c in columns" sortable="custom"></el-table-column>
 
-                <el-table-column prop="status" :label="$t('machine_status')" align="center"
-                                 sortable="custom" width="150px">
-                  <template slot-scope="scope">
-                    <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
-                    <span style="margin-left: 10px">{{ scope.row.status }}</span>
-                  </template>
-                </el-table-column>
+          <el-table-column prop="status" :label="$t('machine_status')" align="center"
+                           sortable="custom" width="150px">
+            <template slot-scope="scope">
+              <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
+              <span style="margin-left: 10px">{{ scope.row.status }}</span>
+            </template>
+          </el-table-column>
 
 
-                <el-table-column :label="$t('execution_log')" align="center" min-width="100px">
-                  <template slot-scope="scope">
-                    <a href="javascript:void(0)" @click="expandChange(scope.row)">{{ $t('view') }}
-                    </a>
-                  </template>
+          <el-table-column :label="$t('execution_log')" align="center" min-width="100px">
+            <template slot-scope="scope">
+              <a href="javascript:void(0)" @click="expandChange(scope.row)">{{ $t('view') }}
+              </a>
+            </template>
 
-                </el-table-column>
+          </el-table-column>
 
-                <el-table-column prop="createTime" :label="$t('create_time')" align="center"
-                                 sortable="custom">
-                  <template slot-scope="scope">
-                    {{ scope.row.createTime | dateFormat }}
-                  </template>
+          <el-table-column prop="createTime" :label="$t('create_time')" align="center"
+                           sortable="custom">
+            <template slot-scope="scope">
+              {{ scope.row.createTime | dateFormat }}
+            </template>
 
-                </el-table-column>
+          </el-table-column>
 
-                <el-table-column prop="" :label="$t('opt')" align="center">
-                  <template slot="header" slot-scope="scope">
-                    <el-input
-                        v-model="search"
-                        size="mini"
-                        :placeholder="$t('input_key_search')" v-on:change="getData"/>
-                  </template>
-                  <template slot-scope="scope">
-                    <el-dropdown>
-                      <el-button type="primary">
-                        {{ $t('opt') }}<i class="el-icon-arrow-down el-icon--right"></i>
-                      </el-button>
-                      <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="power('on', scope.row)">{{ $t('poweron') }}
-                        </el-dropdown-item>
-                        <el-dropdown-item @click.native="power('off', scope.row)">{{ $t('poweroff') }}
-                        </el-dropdown-item>
-                        <el-dropdown-item @click.native="power('reset', scope.row)">{{ $t('powercycle') }}
-                        </el-dropdown-item>
-                        <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
-                        </el-dropdown-item>
-                        <el-dropdown-item @click.native="fillOBM(scope.row)">OBM信息
-                        </el-dropdown-item>
-                      </el-dropdown-menu>
-                    </el-dropdown>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <div class="pagination">
-                <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handlePageChange"
-                    :current-page="query.pageIndex"
-                    :page-sizes="[10, 20, 50, 100]"
-                    :page-size="10"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="pageTotal">
-                </el-pagination>
-              </div>
+          <el-table-column prop="" :label="$t('opt')" align="center">
+            <template slot="header" slot-scope="scope">
+              <el-input
+                  v-model="search"
+                  size="mini"
+                  :placeholder="$t('input_key_search')" v-on:change="getData"/>
+            </template>
+            <template slot-scope="scope">
+              <el-dropdown>
+                <el-button type="primary">
+                  {{ $t('opt') }}<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item @click.native="power('on', scope.row)">{{ $t('poweron') }}
+                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="power('off', scope.row)">{{ $t('poweroff') }}
+                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="power('reset', scope.row)">{{ $t('powercycle') }}
+                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
+                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="fillOBM(scope.row)">OBM信息
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="pagination">
+          <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handlePageChange"
+              :current-page="query.pageIndex"
+              :page-sizes="[10, 20, 50, 100]"
+              :page-size="10"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="pageTotal">
+          </el-pagination>
+        </div>
 
-              <el-drawer
-                  size="50%"
-                  :title="logTitle"
-                  :visible.sync="executionLogDrawer"
-                  direction="ttb"
-                  min-height="40vh"
-                  :wrapperClosable="false"
-                  :before-close="handleCloseExecutionLog">
-                <el-card>
-                  <table class="detail-info">
-                    <tr>
-                      <td>{{ $t('time') }}</td>
-                      <td>{{ $t('user') }}</td>
-                      <td>{{ $t('operation') }}</td>
-                      <td>{{ $t('output') }}</td>
-                    </tr>
+        <el-drawer
+            size="50%"
+            :title="logTitle"
+            :visible.sync="executionLogDrawer"
+            direction="ttb"
+            min-height="40vh"
+            :wrapperClosable="false"
+            :before-close="handleCloseExecutionLog">
+          <el-card>
+            <table class="detail-info">
+              <tr>
+                <td>{{ $t('time') }}</td>
+                <td>{{ $t('user') }}</td>
+                <td>{{ $t('operation') }}</td>
+                <td>{{ $t('output') }}</td>
+              </tr>
 
-                    <tr v-for="l in logs">
-                      <td>{{ l.createTime | dateFormat }}</td>
-                      <td>{{ l.user }}</td>
-                      <td>{{ l.operation }}</td>
-                      <td>{{ l.outPut }}</td>
-                    </tr>
-                  </table>
-                </el-card>
-              </el-drawer>
+              <tr v-for="l in logs">
+                <td>{{ l.createTime | dateFormat }}</td>
+                <td>{{ l.user }}</td>
+                <td>{{ l.operation }}</td>
+                <td>{{ l.outPut }}</td>
+              </tr>
+            </table>
+          </el-card>
+        </el-drawer>
 
-              <!--obm-->
-              <el-dialog :title="$t('obms')" :visible.sync="fillOutObms">
-                <el-form :model="form">
-                  <el-form-item :label="$t('ip')" :label-width="formLabelWidth">
-                    <el-input v-model="curObm.ip" autocomplete="off"></el-input>
+        <!--obm-->
+        <el-dialog :title="$t('obms')" :visible.sync="fillOutObms">
+          <el-form :model="form">
+            <el-form-item :label="$t('ip')" :label-width="formLabelWidth">
+              <el-input v-model="curObm.ip" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('username')" :label-width="formLabelWidth">
+              <el-input v-model="curObm.userName" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('pwd')" :label-width="formLabelWidth">
+              <el-input v-model="curObm.pwd" autocomplete="off" show-password></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="fillOutObms = false">取 消</el-button>
+            <el-button type="primary" @click="submitOBM" :loading="obmLoading">确 定</el-button>
+          </div>
+        </el-dialog>
+
+        <!--参数配置-->
+        <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="70vw">
+          <keep-alive>
+            <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
+                       :is="currentWfParamTemplate"
+                       :params="workflowParam"
+                       :extraParams="extraParams"
+                       :currentWorkflowIndex="editWorkflowIndex"
+                       :bareMetalId="selectedWorkflow[editWorkflowIndex].bareMetalId"
+                       :workflow="selectedWorkflow[editWorkflowIndex]"
+                       ref="currentWfParamTemplate"></component>
+          </keep-alive>
+          <div class="dialog-footer" slot="footer">
+            <el-button @click="restoreParams">
+              <i class="el-icon-refresh"></i>
+              {{ $t('reset') }}
+            </el-button>
+
+            <el-button @click="saveParams" :loading="fillWfParamsLoading">{{ $t('confirm') }}</el-button>
+          </div>
+        </el-dialog>
+
+        <!--详情页-->
+        <el-drawer
+            :visible.sync="detailDrawer"
+            direction="rtl"
+            :with-header="false"
+            :before-close="handleClose">
+          <div class="demo-drawer__content">
+            <el-tabs v-model="detailShowName">
+              <el-tab-pane :label="$t('detail')" name="detail">
+                <el-form ref="form" :model="machine">
+                  <el-form-item :label="$t('machine_model')">
+                    {{ machine.machineModel }}
                   </el-form-item>
-                  <el-form-item :label="$t('username')" :label-width="formLabelWidth">
-                    <el-input v-model="curObm.userName" autocomplete="off"></el-input>
+                  <el-form-item :label="$t('machine_sn')">
+                    {{ machine.machineSn }}
                   </el-form-item>
-                  <el-form-item :label="$t('pwd')" :label-width="formLabelWidth">
-                    <el-input v-model="curObm.pwd" autocomplete="off" show-password></el-input>
+                  <el-form-item :label="$t('management_ip')">
+                    {{ machine.managementIp }}
+                  </el-form-item>
+                  <el-form-item :label="$t('bmc_mac')">
+                    {{ machine.bmcMac }}
+                  </el-form-item>
+                  <el-form-item :label="$t('cpu')">
+                    {{ machine.cpuType }} X {{ machine.cpu }}
+                  </el-form-item>
+                  <el-form-item :label="$t('memory')">
+                    {{ machine.memory }}{{ $t('GB') }}
+                  </el-form-item>
+                  <el-form-item :label="$t('disk')">
+                    {{ machine.disk }}{{ $t('GB') }}
                   </el-form-item>
                 </el-form>
-                <div slot="footer" class="dialog-footer">
-                  <el-button @click="fillOutObms = false">取 消</el-button>
-                  <el-button type="primary" @click="submitOBM" :loading="obmLoading">确 定</el-button>
-                </div>
-              </el-dialog>
+              </el-tab-pane>
+              <el-tab-pane :label="$t('cpu_detail')" name="cpuDetail" class="detail-pane">
+                <table class="detail-info">
+                  <tr>
+                    <td>{{ $t('proc_name') }}</td>
+                    <td>{{ $t('proc_socket') }}</td>
+                    <td>{{ $t('proc_speed') }}</td>
+                    <td>{{ $t('proc_num_cores') }}</td>
+                    <td>{{ $t('proc_num_threads') }}</td>
+                    <td>{{ $t('sync_time') }}</td>
+                  </tr>
+                  <tr v-for="c in cpus">
+                    <td>{{ c.procName }}</td>
+                    <td>{{ c.procSocket }}</td>
+                    <td>{{ c.procSpeed }}</td>
+                    <td>{{ c.procNumCores }}</td>
+                    <td>{{ c.procNumThreads }}</td>
+                    <td>{{ c.syncTime | dateFormat }}</td>
+                  </tr>
+                </table>
+              </el-tab-pane>
+              <el-tab-pane :label="$t('memory_detail')" name="memoryDetail" class="detail-pane">
+                <table class="detail-info">
+                  <tr>
+                    <td>{{ $t('mem_cpu_num') }}</td>
+                    <td>{{ $t('mem_mod_num') }}</td>
+                    <td>{{ $t('mem_mod_size') }}</td>
+                    <td>{{ $t('mem_mod_type') }}</td>
+                    <td>{{ $t('mem_mod_num') }}</td>
+                    <td>{{ $t('mem_mod_frequency') }}</td>
+                    <td>{{ $t('mem_mod_part_num') }}</td>
+                    <td>{{ $t('mem_mod_min_volt') }}</td>
+                    <td>{{ $t('sync_time') }}</td>
+                  </tr>
+                  <tr v-for="c in memories">
+                    <td>{{ c.memCpuNum }}</td>
+                    <td>{{ c.memModNum }}</td>
+                    <td>{{ c.memModSize + ' GB' }}</td>
+                    <td>{{ c.memModType }}</td>
+                    <td>{{ c.memModNum }}</td>
+                    <td>{{ c.memModFrequency + ' MHz' }}</td>
+                    <td>{{ c.memModPartNum }}</td>
+                    <td>{{ c.memModMinVolt }}</td>
+                    <td>{{ c.syncTime | dateFormat }}</td>
+                  </tr>
+                </table>
+              </el-tab-pane>
+              <el-tab-pane :label="$t('disk_detail')" name="diskDetail" class="detail-pane">
+                <table class="detail-info">
+                  <tr>
+                    <td>{{ $t('enclosure_id') }}</td>
+                    <td>{{ $t('controller_id') }}</td>
+                    <td>{{ $t('drive') }}</td>
+                    <td>{{ $t('type') }}</td>
+                    <td>{{ $t('size') }}</td>
+                    <td>{{ $t('raid') }}</td>
+                    <td>{{ $t('manufactor') }}</td>
+                    <td>{{ $t('sn') }}</td>
+                    <td>{{ $t('sync_time') }}</td>
+                  </tr>
+                  <tr v-for="c in disks">
+                    <td>{{ c.enclosureId }}</td>
+                    <td>{{ c.controllerId }}</td>
+                    <td>{{ c.drive }}</td>
+                    <td>{{ c.type }}</td>
+                    <td>{{ c.size }}</td>
+                    <td>{{ c.raid }}</td>
+                    <td>{{ c.manufactor }}</td>
+                    <td>{{ c.sn }}</td>
+                    <td>{{ c.syncTime | dateFormat }}</td>
+                  </tr>
+                </table>
+              </el-tab-pane>
 
-              <!--参数配置-->
-              <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="70vw">
-                <keep-alive>
-                  <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
-                             :is="currentWfParamTemplate"
-                             :params="workflowParam"
-                             :extraParams="extraParams"
-                             :currentWorkflowIndex="editWorkflowIndex"
-                             :bareMetalId="selectedWorkflow[editWorkflowIndex].bareMetalId"
-                             :workflow="selectedWorkflow[editWorkflowIndex]"
-                             ref="currentWfParamTemplate"></component>
-                </keep-alive>
-                <div class="dialog-footer" slot="footer">
-                  <el-button @click="restoreParams">
-                    <i class="el-icon-refresh"></i>
-                    {{ $t('reset') }}
-                  </el-button>
+              <el-tab-pane :label="$t('nic_detail')" name="nicDetail" class="detail-pane">
+                <table class="detail-info">
+                  <tr>
+                    <td>{{ $t('nic_number') }}</td>
+                    <td>{{ $t('mac') }}</td>
+                    <td>{{ $t('sync_time') }}</td>
+                  </tr>
+                  <tr v-for="c in nics">
+                    <td>{{ c.number }}</td>
+                    <td>{{ c.mac }}</td>
+                    <td>{{ c.syncTime | dateFormat }}</td>
+                  </tr>
+                </table>
+              </el-tab-pane>
+            </el-tabs>
+          </div>
 
-                  <el-button @click="saveParams" :loading="fillWfParamsLoading">{{ $t('confirm') }}</el-button>
-                </div>
-              </el-dialog>
+        </el-drawer>
 
-              <!--详情页-->
-              <el-drawer
-                  :visible.sync="detailDrawer"
-                  direction="rtl"
-                  :with-header="false"
-                  :before-close="handleClose">
-                <div class="demo-drawer__content">
-                  <el-tabs v-model="detailShowName">
-                    <el-tab-pane :label="$t('detail')" name="detail">
-                      <el-form ref="form" :model="machine">
-                        <el-form-item :label="$t('machine_model')">
-                          {{ machine.machineModel }}
-                        </el-form-item>
-                        <el-form-item :label="$t('machine_sn')">
-                          {{ machine.machineSn }}
-                        </el-form-item>
-                        <el-form-item :label="$t('management_ip')">
-                          {{ machine.managementIp }}
-                        </el-form-item>
-                        <el-form-item :label="$t('bmc_mac')">
-                          {{ machine.bmcMac }}
-                        </el-form-item>
-                        <el-form-item :label="$t('cpu')">
-                          {{ machine.cpuType }} X {{ machine.cpu }}
-                        </el-form-item>
-                        <el-form-item :label="$t('memory')">
-                          {{ machine.memory }}{{ $t('GB') }}
-                        </el-form-item>
-                        <el-form-item :label="$t('disk')">
-                          {{ machine.disk }}{{ $t('GB') }}
-                        </el-form-item>
-                      </el-form>
-                    </el-tab-pane>
-                    <el-tab-pane :label="$t('cpu_detail')" name="cpuDetail" class="detail-pane">
-                      <table class="detail-info">
-                        <tr>
-                          <td>{{ $t('proc_name') }}</td>
-                          <td>{{ $t('proc_socket') }}</td>
-                          <td>{{ $t('proc_speed') }}</td>
-                          <td>{{ $t('proc_num_cores') }}</td>
-                          <td>{{ $t('proc_num_threads') }}</td>
-                          <td>{{ $t('sync_time') }}</td>
-                        </tr>
-                        <tr v-for="c in cpus">
-                          <td>{{ c.procName }}</td>
-                          <td>{{ c.procSocket }}</td>
-                          <td>{{ c.procSpeed }}</td>
-                          <td>{{ c.procNumCores }}</td>
-                          <td>{{ c.procNumThreads }}</td>
-                          <td>{{ c.syncTime | dateFormat }}</td>
-                        </tr>
-                      </table>
-                    </el-tab-pane>
-                    <el-tab-pane :label="$t('memory_detail')" name="memoryDetail" class="detail-pane">
-                      <table class="detail-info">
-                        <tr>
-                          <td>{{ $t('mem_cpu_num') }}</td>
-                          <td>{{ $t('mem_mod_num') }}</td>
-                          <td>{{ $t('mem_mod_size') }}</td>
-                          <td>{{ $t('mem_mod_type') }}</td>
-                          <td>{{ $t('mem_mod_num') }}</td>
-                          <td>{{ $t('mem_mod_frequency') }}</td>
-                          <td>{{ $t('mem_mod_part_num') }}</td>
-                          <td>{{ $t('mem_mod_min_volt') }}</td>
-                          <td>{{ $t('sync_time') }}</td>
-                        </tr>
-                        <tr v-for="c in memories">
-                          <td>{{ c.memCpuNum }}</td>
-                          <td>{{ c.memModNum }}</td>
-                          <td>{{ c.memModSize + ' GB' }}</td>
-                          <td>{{ c.memModType }}</td>
-                          <td>{{ c.memModNum }}</td>
-                          <td>{{ c.memModFrequency + ' MHz' }}</td>
-                          <td>{{ c.memModPartNum }}</td>
-                          <td>{{ c.memModMinVolt }}</td>
-                          <td>{{ c.syncTime | dateFormat }}</td>
-                        </tr>
-                      </table>
-                    </el-tab-pane>
-                    <el-tab-pane :label="$t('disk_detail')" name="diskDetail" class="detail-pane">
-                      <table class="detail-info">
-                        <tr>
-                          <td>{{ $t('enclosure_id') }}</td>
-                          <td>{{ $t('controller_id') }}</td>
-                          <td>{{ $t('drive') }}</td>
-                          <td>{{ $t('type') }}</td>
-                          <td>{{ $t('size') }}</td>
-                          <td>{{ $t('raid') }}</td>
-                          <td>{{ $t('manufactor') }}</td>
-                          <td>{{ $t('sn') }}</td>
-                          <td>{{ $t('sync_time') }}</td>
-                        </tr>
-                        <tr v-for="c in disks">
-                          <td>{{ c.enclosureId }}</td>
-                          <td>{{ c.controllerId }}</td>
-                          <td>{{ c.drive }}</td>
-                          <td>{{ c.type }}</td>
-                          <td>{{ c.size }}</td>
-                          <td>{{ c.raid }}</td>
-                          <td>{{ c.manufactor }}</td>
-                          <td>{{ c.sn }}</td>
-                          <td>{{ c.syncTime | dateFormat }}</td>
-                        </tr>
-                      </table>
-                    </el-tab-pane>
+      </div>
+    </el-tab-pane>
+    <el-tab-pane :label="$t('obm')" name="second">
+      <OBM></OBM>
+    </el-tab-pane>
 
-                    <el-tab-pane :label="$t('nic_detail')" name="nicDetail" class="detail-pane">
-                      <table class="detail-info">
-                        <tr>
-                          <td>{{ $t('nic_number') }}</td>
-                          <td>{{ $t('mac') }}</td>
-                          <td>{{ $t('sync_time') }}</td>
-                        </tr>
-                        <tr v-for="c in nics">
-                          <td>{{ c.number }}</td>
-                          <td>{{ c.mac }}</td>
-                          <td>{{ c.syncTime | dateFormat }}</td>
-                        </tr>
-                      </table>
-                    </el-tab-pane>
-                  </el-tabs>
-                    </div>
-
-                </el-drawer>
-
-            </div>
-        </el-tab-pane>
-        <el-tab-pane :label="$t('obm')" name="second">
-            <OBM></OBM>
-        </el-tab-pane>
-
-    </el-tabs>
+  </el-tabs>
 </template>
 
 <script>
 import HttpUtil from "../../common/utils/HttpUtil";
 import {isAnyBlank, toLine} from "../../common/utils/CommonUtil";
-import Vue from 'vue';
 import OBM from "../obm/Obm"
+import Vue from "vue"
 
 let _ = require('lodash');
 export default {
@@ -659,7 +659,7 @@ export default {
         return;
       }
       HttpUtil.post("/bare-metal/del", ids, (res) => {
-        this.$message.success(this.$t('delete_success') + this.$t('deleted') + `${str}！`);
+        this.$message.success(this.$t('delete_success'));
         this.getData();
       });
       this.multipleSelection = [];
@@ -673,10 +673,6 @@ export default {
         this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
 
       } else if (type == 'del') {
-        if (!this.selectedWorkflow.length) {
-          this.$notify.error(this.$t('pls_select_workflow') + "!");
-          return;
-        }
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
@@ -736,205 +732,207 @@ export default {
         this.getData();
       });
     }
-            ,
-            getParamsTemplate() {
-                HttpUtil.get("/workflow/params/" + this.wfRequest.workflow, {}, (res) => {
-                    if (res.data[0]) {
-                        this.workflowParamList = res.data;
-                    } else {
-                        this.workflowParamList = [];
-                        this.workflowParam = null;
-                    }
-                })
-            }
-            ,
-            createWorkflowParamComponent(workflowParam) {
-                //动态异步
-                if (!this.paramComponent[workflowParam.componentId]) {
-
-                  let comPointer = Vue.component(workflowParam.componentId,
-                      // 这个动态导入会返回一个 `Promise` 对象。
-                      () => import("./../../rackparams/" + workflowParam.workflowName)
-                  )
-
-                  this.paramComponent[workflowParam.componentId] = comPointer;
-                }
-            },
-            addToSelectedWorkflow() {
-                if (this.wfRequest.workflow) {
-
-
-                  // for (let i = 0; i < this.multipleSelection.length; i++) {
-                  //   let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[i].id;
-                  //   for (let j = 0; j < this.selectedWorkflow.length; j++) {
-                  //     if (this.selectedWorkflow[j].componentId == componentId) {
-                  //       // this.$notify.error(this.$t('same_workflow_node'));
-                  //     }
-                  //   }
-                  // }
-
-                  let originWf = _.find(this.supportedWorkflow, s => s.injectableName == this.wfRequest.workflow);
-                  for (let k = 0; k < this.multipleSelection.length; k++) {
-                    let duplicated = false;
-                    let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[k].id;
-                    for (let j = 0; j < this.selectedWorkflow.length; j++) {
-                      if (this.selectedWorkflow[j].componentId == componentId) {
-                        // this.$notify.error(this.$t('same_workflow_node'));
-                        duplicated = true;
-                      }
-                    }
-
-                    if (duplicated) continue;
-
-                    if (_.findIndex(originWf.brands, w => w == this.multipleSelection[k].machineBrand) == -1) {
-                      this.$notify.error(originWf.friendlyName + this.$t('not_supported_brand!') + ' ' + this.multipleSelection[k].machineBrand);
-                      continue;
-                    }
-
-                    this.selectedWorkflow.push(
-                        {
-                          componentId: this.wfRequest.workflow + "-" + this.multipleSelection[k].id,
-                          bareMetalId: this.multipleSelection[k].id,
-                          machineModel: this.multipleSelection[k].machineModel,
-                          machineSn: this.multipleSelection[k].machineSn,
-                          workflowName: this.wfRequest.workflow,
-                          friendlyName: originWf.friendlyName,
-                          settable: originWf.settable,
-                        }
-                    );
-
-                    this.createWorkflowParamComponent(this.selectedWorkflow[this.selectedWorkflow.length - 1]);
-
-                    this.currentWfParamTemplate = this.selectedWorkflow[this.selectedWorkflow.length - 1].componentId;
-                    if (this.workflowParamList.length) {
-                      let that = this;
-                      let paramTemplate = _.find(that.workflowParamList, function (p) {
-                        return p.bareMetalId == that.selectedWorkflow[that.selectedWorkflow.length - 1].bareMetalId;
-                      });
-                      if (paramTemplate == null) {
-                        that.$set(that, 'workflowParam', null);
-                        that.$set(that, 'extraParams', null);
-                      } else {
-                        that.$set(that, 'workflowParam', JSON.parse(paramTemplate.paramsTemplate));
-                        that.$set(that, 'extraParams', JSON.parse(paramTemplate.extraParams));
-                      }
-
-                      that.selectedWorkflow[that.selectedWorkflow.length - 1].params = that.workflowParam;
-                      that.selectedWorkflow[that.selectedWorkflow.length - 1].extraParams = that.extraParams;
-                    } else {
-                      this.selectedWorkflow[this.selectedWorkflow.length - 1].params = originWf.defaultParams;
-                    }
-                  }
-                    // this.$refs.multipleTable.clearSelection();
-                }
-            }
-            ,
-            deleteSelectedWorkflow(index) {
-                if (this.$refs.currentWfParamTemplate)
-                    this.$refs.currentWfParamTemplate.$destroy(true);
-                this.selectedWorkflow.splice(index, 1);
-            }
+    ,
+    getParamsTemplate() {
+      HttpUtil.get("/workflow/params/" + this.wfRequest.workflow, {}, (res) => {
+        if (res.data[0]) {
+          this.workflowParamList = res.data;
+        } else {
+          this.workflowParamList = [];
+          this.workflowParam = null;
         }
+      })
     }
+    ,
+    createWorkflowParamComponent(workflowParam) {
+      //动态异步
+      if (!this.paramComponent[workflowParam.componentId]) {
+
+        let comPointer = Vue.component(workflowParam.componentId,
+            // 这个动态导入会返回一个 `Promise` 对象。
+            () => import("./../../rackparams/" + workflowParam.workflowName)
+        )
+
+        this.paramComponent[workflowParam.componentId] = comPointer;
+      }
+    },
+    addToSelectedWorkflow() {
+      if (this.wfRequest.workflow) {
+
+
+        // for (let i = 0; i < this.multipleSelection.length; i++) {
+        //   let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[i].id;
+        //   for (let j = 0; j < this.selectedWorkflow.length; j++) {
+        //     if (this.selectedWorkflow[j].componentId == componentId) {
+        //       // this.$notify.error(this.$t('same_workflow_node'));
+        //     }
+        //   }
+        // }
+
+        let originWf = _.find(this.supportedWorkflow, s => s.injectableName == this.wfRequest.workflow);
+        for (let k = 0; k < this.multipleSelection.length; k++) {
+          let duplicated = false;
+          let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[k].id;
+          for (let j = 0; j < this.selectedWorkflow.length; j++) {
+            if (this.selectedWorkflow[j].componentId == componentId) {
+              // this.$notify.error(this.$t('same_workflow_node'));
+              duplicated = true;
+            }
+          }
+
+          if (duplicated) continue;
+
+          if (_.findIndex(originWf.brands, w => w == this.multipleSelection[k].machineBrand) == -1) {
+            this.$notify.error(originWf.friendlyName + this.$t('not_supported_brand!') + ' ' + this.multipleSelection[k].machineBrand);
+            continue;
+          }
+
+          this.selectedWorkflow.push(
+              {
+                componentId: this.wfRequest.workflow + "-" + this.multipleSelection[k].id,
+                bareMetalId: this.multipleSelection[k].id,
+                machineModel: this.multipleSelection[k].machineModel,
+                machineSn: this.multipleSelection[k].machineSn,
+                workflowName: this.wfRequest.workflow,
+                friendlyName: originWf.friendlyName,
+                settable: originWf.settable,
+              }
+          );
+
+          this.createWorkflowParamComponent(this.selectedWorkflow[this.selectedWorkflow.length - 1]);
+
+          this.currentWfParamTemplate = this.selectedWorkflow[this.selectedWorkflow.length - 1].componentId;
+          if (this.workflowParamList.length) {
+            let that = this;
+            let paramTemplate = _.find(that.workflowParamList, function (p) {
+              return p.bareMetalId == that.selectedWorkflow[that.selectedWorkflow.length - 1].bareMetalId;
+            });
+            if (paramTemplate == null) {
+              that.$set(that, 'workflowParam', null);
+              that.$set(that, 'extraParams', null);
+            } else {
+              that.$set(that, 'workflowParam', JSON.parse(paramTemplate.paramsTemplate));
+              that.$set(that, 'extraParams', JSON.parse(paramTemplate.extraParams));
+            }
+
+            that.selectedWorkflow[that.selectedWorkflow.length - 1].params = that.workflowParam;
+            that.selectedWorkflow[that.selectedWorkflow.length - 1].extraParams = that.extraParams;
+          } else {
+            this.selectedWorkflow[this.selectedWorkflow.length - 1].params = originWf.defaultParams;
+            this.$set(this, 'workflowParam', originWf.defaultParams);
+            this.$set(this, 'extraParams', null);
+          }
+        }
+        // this.$refs.multipleTable.clearSelection();
+      }
+    }
+    ,
+    deleteSelectedWorkflow(index) {
+      if (this.$refs.currentWfParamTemplate)
+        this.$refs.currentWfParamTemplate.$destroy(true);
+      this.selectedWorkflow.splice(index, 1);
+    }
+  }
+}
 </script>
 
 <style scoped>
-    .handle-box {
-        margin-bottom: 20px;
-    }
+.handle-box {
+  margin-bottom: 20px;
+}
 
-    .table {
-        width: 100%;
-        font-size: 14px;
-    }
+.table {
+  width: 100%;
+  font-size: 14px;
+}
 
-    .mr10 {
-        margin-right: 10px;
-    }
+.mr10 {
+  margin-right: 10px;
+}
 
-    #run-workflow {
-        border: solid #d7d2d2 1px;
-        height: 120px;
-        padding: 10px 10px 15px 10px;
-        border-radius: 5px;
-        min-width: 120px;
-    }
+#run-workflow {
+  border: solid #d7d2d2 1px;
+  height: 120px;
+  padding: 10px 10px 15px 10px;
+  border-radius: 5px;
+  min-width: 120px;
+}
 
-    #workflow-selector {
-        border: solid #d7d2d2 1px;
-        min-width: 420px;
-        height: 120px;
-        padding: 10px 10px 15px 10px;
-        border-radius: 5px;
-        margin-left: 10px;
-    }
+#workflow-selector {
+  border: solid #d7d2d2 1px;
+  min-width: 420px;
+  height: 120px;
+  padding: 10px 10px 15px 10px;
+  border-radius: 5px;
+  margin-left: 10px;
+}
 
-    #action-list {
-        border: solid #d7d2d2 1px;
-        width: 100%;
-        height: 120px;
-        padding: 10px 10px 15px 10px;
-        border-radius: 5px;
-        margin-left: 10px;
-        overflow: auto;
-    }
+#action-list {
+  border: solid #d7d2d2 1px;
+  width: 100%;
+  height: 120px;
+  padding: 10px 10px 15px 10px;
+  border-radius: 5px;
+  margin-left: 10px;
+  overflow: auto;
+}
 
-    .h25 {
-        height: 25%;
-    }
+.h25 {
+  height: 25%;
+}
 
-    #control {
-        display: flex;
-        padding-top: 10px;
-        padding-bottom: 20px;
-        /*border: solid #d7d2d2 1px;*/
-        padding-left: 10px;
-        border-left: none;
-    }
+#control {
+  display: flex;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  /*border: solid #d7d2d2 1px;*/
+  padding-left: 10px;
+  border-left: none;
+}
 
-    .ml10 {
-        margin-left: 10px;
-    }
+.ml10 {
+  margin-left: 10px;
+}
 
-    .demo-table-expand {
-        font-size: 0;
-    }
+.demo-table-expand {
+  font-size: 0;
+}
 
-    .demo-table-expand label {
-        width: 90px;
-        color: #99a9bf;
-    }
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
 
-    .demo-table-expand .el-form-item {
-        margin-right: 0;
-        margin-bottom: 0;
-        width: 50%;
-    }
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
 
-    .detail-pane {
-        overflow-x: scroll;
-        color: #303133;
-    }
+.detail-pane {
+  overflow-x: scroll;
+  color: #303133;
+}
 
-    .detail-info {
-      border: 1px solid #EBEEF5;
-      text-align: center;
-      border-spacing: 0px !important;
-      width: 100%;
-    }
+.detail-info {
+  border: 1px solid #EBEEF5;
+  text-align: center;
+  border-spacing: 0px !important;
+  width: 100%;
+}
 
-    .detail-info td {
-        border: 1px solid #EBEEF5;
-        border-bottom: none;
-        border-right: none;
-        padding: 12px 0;
-        min-width: 0;
-        box-sizing: border-box;
-        text-overflow: ellipsis;
-        vertical-align: middle;
-        position: relative;
-        text-align: center;
+.detail-info td {
+  border: 1px solid #EBEEF5;
+  border-bottom: none;
+  border-right: none;
+  padding: 12px 0;
+  min-width: 0;
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  position: relative;
+  text-align: center;
 
-    }
+}
 
 </style>

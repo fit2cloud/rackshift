@@ -45,6 +45,11 @@ public class WorkflowController {
         return workflowService.listall();
     }
 
+    @RequestMapping("listallEventType")
+    public ResultHolder listallEventType() {
+        return workflowService.listallEventType();
+    }
+
     @RequestMapping("listallRackHDWorkflows")
     public ResultHolder listallRackHDWorkflows() {
         return ResultHolder.success(allWorkflow);

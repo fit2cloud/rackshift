@@ -92,7 +92,9 @@ public class WorkflowService {
     }
 
     public ResultHolder listall() {
-        return ResultHolder.success(workflowMapper.selectByExampleWithBLOBs(new WorkflowExample()));
+        WorkflowExample e = new WorkflowExample();
+        e.createCriteria().andStatusEqualTo(ServiceConstants.ENABLE);
+        return ResultHolder.success(workflowMapper.selectByExampleWithBLOBs(e));
     }
 
     public List<Workflow> list(WorkflowDTO queryVO) {
@@ -106,7 +108,7 @@ public class WorkflowService {
         if (queryVO.getId() != null) {
             e.or().andIdEqualTo(queryVO.getId());
         }
-        return new WorkflowExample();
+        return e;
     }
 
     public boolean add(WorkflowDTO queryVO) {
@@ -118,7 +120,7 @@ public class WorkflowService {
 
     public boolean update(WorkflowDTO queryVO) {
         WorkflowExample workflowExample = buildExample(queryVO);
-        workflowMapper.updateByExample(queryVO, new WorkflowExample());
+        workflowMapper.updateByExampleWithBLOBs(queryVO, workflowExample);
         return true;
     }
 
@@ -136,5 +138,10 @@ public class WorkflowService {
             del(id);
         }
         return true;
+    }
+
+    public ResultHolder listallEventType() {
+
+        return ResultHolder.success(LifeEventType.getVisableTypes());
     }
 }

@@ -34,6 +34,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column prop="settable" :label="$t('event_type')" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.eventType | eventFormat }}
+        </template>
+      </el-table-column>
+
       <el-table-column prop="brands" :label="$t('brands')" align="center">
         <template slot-scope="scope">
           {{ scope.row.brands | brandsFormat }}
@@ -92,27 +98,29 @@
         :before-close="handleClose">
       <div class="demo-drawer__content">
         <el-form :model="editObj">
-          <el-form-item :label="$t('friendly_name')">
-            <el-input v-model="editObj.friendlyName" autocomplete="off" :disabled="editObj.type == 'system'"></el-input>
-          </el-form-item>
 
           <el-form-item :label="$t('injectable_mame')">
             <el-select v-model="editObj.injectableName" :placeholder="$t('pls_select')"
                        :disabled="editObj.type == 'system'" v-on:change="changeFriendlyName">
               <el-option
                   v-for="item in allRackHDWorkflows"
-                  :key="item.injectableName"
+                  :label="item.injectableName"
                   :value="item.injectableName">
               </el-option>
             </el-select>
+          </el-form-item>
+
+          <el-form-item :label="$t('friendly_name')">
+            <el-input v-model="editObj.friendlyName"></el-input>
+            <!--            <el-input v-model="editObj.friendlyName" autocomplete="off" :disabled="editObj.type == 'system'"></el-input>-->
           </el-form-item>
 
           <el-form-item :label="$t('event_type')">
             <el-select v-model="editObj.eventType" :placeholder="$t('pls_select')" :disabled="editObj.type == 'system'">
               <el-option
                   v-for="(item, key) in allEventType"
-                  :key="item.id"
-                  :value="item.name">
+                  :label="item.name"
+                  :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
@@ -120,7 +128,7 @@
             <el-select v-model="editObj.brands" :placeholder="$t('pls_select')" multiple>
               <el-option
                   v-for="(item, key) in allBrands"
-                  :key="item"
+                  :label="item"
                   :value="item">
               </el-option>
             </el-select>
@@ -131,7 +139,12 @@
           </el-form-item>
 
           <el-form-item :label="$t('default_params')" :disabled="editObj.type == 'system'">
-            <el-input v-model="editObj.defaultParams"></el-input>
+            <el-input type="textarea" v-model="editObj.defaultParams" :rows="5"></el-input>
+          </el-form-item>
+
+          <el-form-item :label="$t('status')" :disabled="editObj.type == 'system'">
+            <el-switch v-model="editObj.status" active-value="enable"
+                       inactive-value="disable"></el-switch>
           </el-form-item>
 
         </el-form>
@@ -152,6 +165,20 @@
 <script>
 
 import HttpUtil from "../../common/utils/HttpUtil"
+import Vue from "vue"
+
+Vue.filter('eventFormat', function (name) {
+  let allEventType = [];
+  if (!localStorage.getItem("allEventType")) {
+    HttpUtil.get("workflow/listallEventType", null, (res) => {
+      localStorage.setItem('allEventType', JSON.stringify(res.data));
+      allEventType = res.data;
+    });
+  } else {
+    allEventType = JSON.parse(localStorage.getItem("allEventType"));
+  }
+  return _.find(allEventType, (t) => t.value == name).name;
+});
 
 let _ = require('lodash');
 export default {
@@ -187,17 +214,15 @@ export default {
           prop: "injectableName",
           sort: true
         },
-        {
-          label: this.$t('event_type'),
-          prop: "eventType"
-        },
       ],
       editDialogVisible: false,
       editType: 'edit',
       editObj: {
-        name: null,
-        description: null,
-        type: null
+        injectableName: null,
+        friendlyName: null,
+        settable: false,
+        brands: [],
+        defaultParams: null
       },
       allEventType: [],
       allBrands: [
@@ -212,6 +237,7 @@ export default {
   mounted() {
     this.getData();
     this.getAllRackHDWorkflows();
+    this.getAllEventType();
   },
   methods: {
     getAllRackHDWorkflows: function () {
@@ -224,11 +250,21 @@ export default {
         }
       });
     },
-
+    getAllEventType: function () {
+      if (!localStorage.getItem("allEventType")) {
+        HttpUtil.get("workflow/listallEventType", null, (res) => {
+          localStorage.setItem('allEventType', JSON.stringify(res.data));
+          this.allEventType = res.data;
+        });
+      } else {
+        this.allEventType = JSON.parse(localStorage.getItem("allEventType"));
+      }
+    },
     changeFriendlyName: function () {
-      this.editObj.friendlyName = this.workflowMap[this.editObj.injectableName].friendlyName;
-      this.editObj.settable = this.workflowMap[this.editObj.injectableName].options ? true : false;
-      this.editObj.defaultParams = JSON.stringify(this.workflowMap[this.editObj.injectableName].options);
+      let copyObj = JSON.parse(JSON.stringify(this.workflowMap[this.editObj.injectableName]));
+      this.editObj.friendlyName = copyObj.friendlyName;
+      this.editObj.settable = copyObj.options ? true : false;
+      this.editObj.defaultParams = JSON.stringify(copyObj.options);
     },
     getSelectedIds: function () {
       this.delList = [].concat(this.multipleSelection);
@@ -255,14 +291,17 @@ export default {
       if (this.editType == 'edit') {
         HttpUtil.post("/workflow/update", this.editObj, (res) => {
           this.editDialogVisible = false;
+          this.editObj.defaultParams = JSON.stringify(this.editObj.defaultParams);
           this.$message.success(this.$t('edit_success'));
           this.getData();
+          this.loading = false;
         })
       } else {
         HttpUtil.post("/workflow/add", this.editObj, (res) => {
           this.editDialogVisible = false;
           this.$message.success(this.$t('add_success'));
           this.getData();
+          this.loading = false;
         })
       }
     },
@@ -278,11 +317,11 @@ export default {
       }
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
-        this.$notify.error(this.$t('pls_select_bare_metal') + "!");
+        this.$notify.error(this.$t('pls_select_workflow') + "!");
         return;
       }
       HttpUtil.post("/workflow/del", ids, (res) => {
-        this.$message.success(this.$t('delete_success') + this.$t('deleted') + `${str}！`);
+        this.$message.success(this.$t('delete_success'));
         this.getData();
       });
       this.multipleSelection = [];
@@ -295,13 +334,10 @@ export default {
         this.editObj = JSON.parse(JSON.stringify(row));
         this.editObj.brands = eval(this.editObj.brands);
         this.editObj.settable = eval(this.editObj.settable);
+        // this.editObj.status = eval(this.editObj.status);
         this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
 
       } else if (type == 'del') {
-        if (!this.selectedWorkflow.length) {
-          this.$notify.error(this.$t('pls_select_workflow') + "!");
-          return;
-        }
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
@@ -313,7 +349,14 @@ export default {
       } else {
         this.editDialogVisible = true;
         this.editType = type;
-        this.editObj = {};
+        this.editObj = {
+          injectableName: null,
+          friendlyName: null,
+          settable: false,
+          status: false,
+          brands: [],
+          defaultParams: null
+        };
       }
     },
     // 分页导航
@@ -339,4 +382,7 @@ export default {
   margin-right: 10px;
 }
 
+.el-button + .el-button {
+  margin-left: 0px;
+}
 </style>

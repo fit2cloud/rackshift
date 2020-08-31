@@ -54,3 +54,70 @@ values (4,
         'enable',
         now());
 
+
+update workflow set default_params = '{
+        "options": {
+          "defaults": {
+            "version": "7",
+            "repo": null,
+            "rootPassword": "RackShift",
+            "hostname": "rackshift-node",
+            "networkDevices": [
+              {
+                "device": null,
+                "ipv4": {
+                  "ipAddr": "192.168.1.10",
+                  "gateway": "192.168.1.1",
+                  "netmask": "255.255.255.0"
+                }
+              }
+            ],
+            "installDisk": "/dev/sda",
+            "installPartitions": [
+              {
+                "mountPoint": "/",
+                "size": "auto",
+                "fsType": "ext3"
+              },
+              {
+                "mountPoint": "swap",
+                "size": "4096",
+                "fsType": "swap"
+              },
+              {
+                "mountPoint": "/boot",
+                "size": "4096",
+                "fsType": "ext3"
+              },
+              {
+                "mountPoint": "biosboot",
+                "size": "1",
+                "fsType": "biosboot"
+              }
+            ]
+          }
+        }
+      }' where injectable_name = 'Graph.InstallCentOS';
+
+
+update workflow set default_params = '{
+        "options": {
+          "bootstrap-rancher": {
+            "dockerFile": "secure.erase.docker.tar.xz"
+          },
+          "create-raid": {
+            "createDefault": false,
+            "controller": 0,
+            "path": "/opt/MegaRAID/perccli/perccli64",
+            "raidList": [
+              {
+                "enclosure": 32,
+                "type": null,
+                "drives": [],
+                "name": "VD0"
+              }
+            ]
+          }
+        }
+      }' where injectable_name = 'Graph.Raid.Create.PercRAID';
+

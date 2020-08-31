@@ -399,7 +399,7 @@ export default {
           return;
         }
         if (!this.payLoad.options.defaults.repo) {
-          let centosImage = _.find(this.allImages, i => i.os == 'centos');
+          let centosImage = _.find(this.allImages, i => i.os == 'redhat');
           if (centosImage) {
             this.payLoad.options.defaults.repo = centosImage.url;
           } else {
