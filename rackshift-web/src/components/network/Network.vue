@@ -74,12 +74,12 @@
               <el-input v-model="editObj.name" autocomplete="off"></el-input>
             </el-form-item>
 
-            <el-form-item :label="$t('end_point')">
+            <el-form-item :label="$t('endpoint')">
               <el-select v-model="editObj.endpointId" :placeholder="$t('pls_select')">
                 <el-option
-                    v-for="(item, key) in allEndPointType"
+                    v-for="(item, key) in allEndPoints"
                     :label="item.name"
-                    :value="item.value">
+                    :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -108,7 +108,9 @@
               <el-switch
                   v-model="editObj.dhcpEnable"
                   active-color="#13ce66"
-                  inactive-color="#ff4949">
+                  inactive-color="#ff4949"
+                  @change="changePXE"
+              >
               </el-switch>
             </el-form-item>
 
@@ -191,17 +193,22 @@ let _ = require('lodash');
               },
               allOs: [],
               allOsVersion: [],
-              allEndPointType: [],
+              allEndPoints: [],
             };
         },
         mounted() {
           this.getData();
-          this.getAllEndPointType();
+          this.getAllEndPoints();
         },
         methods: {
-          getAllEndPointType() {
-            HttpUtil.get("/system_parameter/getAllEndPointType", {}, (res) => {
-              this.allEndPointType = res.data;
+          changePXE(e) {
+            if(!e) {
+              this.editObj.pxeEnable = false;
+            }
+          },
+          getAllEndPoints() {
+            HttpUtil.get("/endpoint/getAllEndPoints", {}, (res) => {
+              this.allEndPoints = res.data;
             });
           },
           // 获取 easy-mock 的模拟数据

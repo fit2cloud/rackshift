@@ -75,10 +75,10 @@
                   <el-input v-model="editObj.name" autocomplete="off"></el-input>
                 </el-form-item>
 
-                <el-form-item :label="$t('end_point')">
+                <el-form-item :label="$t('endpoint')">
                   <el-select v-model="editObj.endpointId" :placeholder="$t('pls_select')">
                     <el-option
-                        v-for="(item, key) in allEndPointType"
+                        v-for="(item, key) in allEndPoints"
                         :label="item.name"
                         :value="item.value">
                     </el-option>
@@ -152,7 +152,7 @@ let _ = require('lodash');
                     sort: true
                   },
                   {
-                    label: this.$t('end_point'),
+                    label: this.$t('endpoint'),
                     prop: "endpointId",
                     sort: true
                   },
@@ -178,18 +178,18 @@ let _ = require('lodash');
               },
               allOs: [],
               allOsVersion: [],
-              allEndPointType: [],
+              allEndPoints: [],
             };
         },
         mounted() {
           this.getData();
           this.getAllOsAndVersion();
-          this.getAllEndPointType();
+          this.getAllEndPoints();
         },
         methods: {
-          getAllEndPointType() {
-            HttpUtil.get("/system_parameter/getAllEndPointType", {}, (res) => {
-              this.allEndPointType = res.data;
+          getAllEndPoints() {
+            HttpUtil.get("/endpoint/getAllEndPoints", {}, (res) => {
+              this.allEndPoints = res.data;
             });
           },
           // 获取 easy-mock 的模拟数据

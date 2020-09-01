@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.mybatis.mapper.ext.ExtNetworkMapper">
+    <select id="getByType" parameterType="io.rackshift.mybatis.domain.Network" resultType="io.rackshift.mybatis.domain.Network">
+        select *
+        from network
+        where start_ip = #{startIp}
+          and end_ip = #{endIp}
+          and netmask = #{netmask}
+          and endpoint_id = #{endpointId}
+    </select>
+
+</mapper>

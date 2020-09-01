@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Service
-public class SyncRackJob {
+public class SyncImageJob {
     @Resource
     private RackHDService rackHDService;
     @Resource

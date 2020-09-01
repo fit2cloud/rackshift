@@ -85,4 +85,8 @@ public class EndpointService {
     public Object getAllEndPointType() {
         return Arrays.asList(ServiceConstants.EndPointType.values()).stream().map(s -> JSONObject.parse(s.toString())).collect(Collectors.toList());
     }
+
+    public List<Endpoint> getAllEndPoints() {
+        return endpointMapper.selectByExample(new EndpointExample());
+    }
 }

@@ -7,7 +7,6 @@ import User from "../user/User.vue"
 import BareMetal from "../bare-metal/Bare-Metal"
 import Image from "../image/Image"
 import Network from "../network/Network"
-import SystemParameter from "../systemparameter/SystemParameter"
 import ExecutionLog from "../execution-log/Execution-Log"
 import Workflow from "../workflow/Workflow"
 import Endpoint from "../endpoint/Endpoint"
@@ -23,7 +22,7 @@ const routes = [
     {path: '/bare-metal', component: BareMetal},
     {path: '/image', component: Image},
     {path: '/network', component: Network},
-    {path: '/system-parameter', component: SystemParameter},
+    // {path: '/system-parameter', component: SystemParameter},
     {path: '/execution-log', component: ExecutionLog},
     {path: '/workflow', component: Workflow},
     {path: '/endpoint', component: Endpoint},

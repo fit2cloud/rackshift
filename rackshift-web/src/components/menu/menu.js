@@ -119,13 +119,13 @@ export default {
                     "order": "3",
                     "icon" : "el-icon-user",
                 },
-                {
-                    "name": "系统参数",
-                    "router": "/system-parameter",
-                    "requireRole": "admin",
-                    "order" : "5",
-                    "icon" : "el-icon-s-home",
-                },
+                // {
+                //     "name": "系统参数",
+                //     "router": "/system-parameter",
+                //     "requireRole": "admin",
+                //     "order" : "5",
+                //     "icon" : "el-icon-s-home",
+                // },
                 {
                     "name": "插件",
                     "router": "/Plugin",
