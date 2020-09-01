@@ -7,6 +7,10 @@ import lombok.Data;
 public class OutBand implements Serializable {
     private String id;
 
+    private String bareMetalId;
+
+    private String endpointId;
+
     private String mac;
 
     private String ip;

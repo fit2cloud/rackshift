@@ -7,6 +7,8 @@ import lombok.Data;
 public class Network implements Serializable {
     private String id;
 
+    private String endpointId;
+
     private String name;
 
     private String vlanId;

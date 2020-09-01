@@ -115,7 +115,7 @@ public class BareMetalService {
         for (String id : ids) {
             BareMetal bareMetal = bareMetalManager.getBareMetalById(id);
             if (StringUtils.isNotBlank(bareMetal.getServerId())) {
-                rackHDService.deleteNode(bareMetal.getServerId());
+                rackHDService.deleteNode(bareMetal);
             }
             bareMetalManager.delBareMetalById(id);
         }

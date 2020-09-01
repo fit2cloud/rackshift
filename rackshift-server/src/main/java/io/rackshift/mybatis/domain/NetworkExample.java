@@ -174,6 +174,76 @@ public class NetworkExample {
             return (Criteria) this;
         }
 
+        public Criteria andEndpointIdIsNull() {
+            addCriterion("endpoint_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdIsNotNull() {
+            addCriterion("endpoint_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdEqualTo(String value) {
+            addCriterion("endpoint_id =", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdNotEqualTo(String value) {
+            addCriterion("endpoint_id <>", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdGreaterThan(String value) {
+            addCriterion("endpoint_id >", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdGreaterThanOrEqualTo(String value) {
+            addCriterion("endpoint_id >=", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdLessThan(String value) {
+            addCriterion("endpoint_id <", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdLessThanOrEqualTo(String value) {
+            addCriterion("endpoint_id <=", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdLike(String value) {
+            addCriterion("endpoint_id like", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdNotLike(String value) {
+            addCriterion("endpoint_id not like", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdIn(List<String> values) {
+            addCriterion("endpoint_id in", values, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdNotIn(List<String> values) {
+            addCriterion("endpoint_id not in", values, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdBetween(String value1, String value2) {
+            addCriterion("endpoint_id between", value1, value2, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdNotBetween(String value1, String value2) {
+            addCriterion("endpoint_id not between", value1, value2, "endpointId");
+            return (Criteria) this;
+        }
+
         public Criteria andNameIsNull() {
             addCriterion("name is null");
             return (Criteria) this;

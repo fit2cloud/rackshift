@@ -3,6 +3,7 @@
 <mapper namespace="io.rackshift.mybatis.mapper.BareMetalMapper">
   <resultMap id="BaseResultMap" type="io.rackshift.mybatis.domain.BareMetal">
     <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="endpoint_id" jdbcType="VARCHAR" property="endpointId" />
     <result column="hostname" jdbcType="VARCHAR" property="hostname" />
     <result column="machine_type" jdbcType="VARCHAR" property="machineType" />
     <result column="cpu" jdbcType="INTEGER" property="cpu" />
@@ -95,10 +96,11 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, hostname, machine_type, cpu, cpu_type, cpu_fre, core, thread, memory, memory_type, 
-    disk_type, disk, management_ip, bmc_mac, ip_array, os_type, os_version, machine_brand, 
-    machine_model, server_id, machine_sn, status, power, workspace_id, recycled_time, 
-    ssh_user, ssh_pwd, ssh_port, provider_id, rule_id, apply_user, create_time, update_time
+    id, endpoint_id, hostname, machine_type, cpu, cpu_type, cpu_fre, core, thread, memory, 
+    memory_type, disk_type, disk, management_ip, bmc_mac, ip_array, os_type, os_version, 
+    machine_brand, machine_model, server_id, machine_sn, status, power, workspace_id, 
+    recycled_time, ssh_user, ssh_pwd, ssh_port, provider_id, rule_id, apply_user, create_time, 
+    update_time
   </sql>
   <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.BareMetalExample" resultMap="BaseResultMap">
     select
@@ -131,36 +133,39 @@
     </if>
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.BareMetal">
-    insert into bare_metal (id, hostname, machine_type, 
-      cpu, cpu_type, cpu_fre, 
-      core, thread, memory, 
-      memory_type, disk_type, disk, 
-      management_ip, bmc_mac, ip_array, 
-      os_type, os_version, machine_brand, 
-      machine_model, server_id, machine_sn, 
-      status, power, workspace_id, 
-      recycled_time, ssh_user, ssh_pwd, 
-      ssh_port, provider_id, rule_id, 
-      apply_user, create_time, update_time
-      )
-    values (#{id,jdbcType=VARCHAR}, #{hostname,jdbcType=VARCHAR}, #{machineType,jdbcType=VARCHAR}, 
-      #{cpu,jdbcType=INTEGER}, #{cpuType,jdbcType=VARCHAR}, #{cpuFre,jdbcType=VARCHAR}, 
-      #{core,jdbcType=INTEGER}, #{thread,jdbcType=INTEGER}, #{memory,jdbcType=INTEGER}, 
-      #{memoryType,jdbcType=VARCHAR}, #{diskType,jdbcType=VARCHAR}, #{disk,jdbcType=INTEGER}, 
-      #{managementIp,jdbcType=VARCHAR}, #{bmcMac,jdbcType=VARCHAR}, #{ipArray,jdbcType=VARCHAR}, 
-      #{osType,jdbcType=VARCHAR}, #{osVersion,jdbcType=VARCHAR}, #{machineBrand,jdbcType=VARCHAR}, 
-      #{machineModel,jdbcType=VARCHAR}, #{serverId,jdbcType=VARCHAR}, #{machineSn,jdbcType=VARCHAR}, 
-      #{status,jdbcType=VARCHAR}, #{power,jdbcType=VARCHAR}, #{workspaceId,jdbcType=VARCHAR}, 
-      #{recycledTime,jdbcType=BIGINT}, #{sshUser,jdbcType=VARCHAR}, #{sshPwd,jdbcType=VARCHAR}, 
-      #{sshPort,jdbcType=INTEGER}, #{providerId,jdbcType=VARCHAR}, #{ruleId,jdbcType=VARCHAR}, 
-      #{applyUser,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{updateTime,jdbcType=BIGINT}
-      )
+    insert into bare_metal (id, endpoint_id, hostname, 
+      machine_type, cpu, cpu_type, 
+      cpu_fre, core, thread, 
+      memory, memory_type, disk_type, 
+      disk, management_ip, bmc_mac, 
+      ip_array, os_type, os_version, 
+      machine_brand, machine_model, server_id, 
+      machine_sn, status, power, 
+      workspace_id, recycled_time, ssh_user, 
+      ssh_pwd, ssh_port, provider_id, 
+      rule_id, apply_user, create_time, 
+      update_time)
+    values (#{id,jdbcType=VARCHAR}, #{endpointId,jdbcType=VARCHAR}, #{hostname,jdbcType=VARCHAR}, 
+      #{machineType,jdbcType=VARCHAR}, #{cpu,jdbcType=INTEGER}, #{cpuType,jdbcType=VARCHAR}, 
+      #{cpuFre,jdbcType=VARCHAR}, #{core,jdbcType=INTEGER}, #{thread,jdbcType=INTEGER}, 
+      #{memory,jdbcType=INTEGER}, #{memoryType,jdbcType=VARCHAR}, #{diskType,jdbcType=VARCHAR}, 
+      #{disk,jdbcType=INTEGER}, #{managementIp,jdbcType=VARCHAR}, #{bmcMac,jdbcType=VARCHAR}, 
+      #{ipArray,jdbcType=VARCHAR}, #{osType,jdbcType=VARCHAR}, #{osVersion,jdbcType=VARCHAR}, 
+      #{machineBrand,jdbcType=VARCHAR}, #{machineModel,jdbcType=VARCHAR}, #{serverId,jdbcType=VARCHAR}, 
+      #{machineSn,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{power,jdbcType=VARCHAR}, 
+      #{workspaceId,jdbcType=VARCHAR}, #{recycledTime,jdbcType=BIGINT}, #{sshUser,jdbcType=VARCHAR}, 
+      #{sshPwd,jdbcType=VARCHAR}, #{sshPort,jdbcType=INTEGER}, #{providerId,jdbcType=VARCHAR}, 
+      #{ruleId,jdbcType=VARCHAR}, #{applyUser,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.BareMetal">
     insert into bare_metal
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="endpointId != null">
+        endpoint_id,
       </if>
       <if test="hostname != null">
         hostname,
@@ -262,6 +267,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="endpointId != null">
+        #{endpointId,jdbcType=VARCHAR},
       </if>
       <if test="hostname != null">
         #{hostname,jdbcType=VARCHAR},
@@ -373,6 +381,9 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=VARCHAR},
       </if>
+      <if test="record.endpointId != null">
+        endpoint_id = #{record.endpointId,jdbcType=VARCHAR},
+      </if>
       <if test="record.hostname != null">
         hostname = #{record.hostname,jdbcType=VARCHAR},
       </if>
@@ -477,6 +488,7 @@
   <update id="updateByExample" parameterType="map">
     update bare_metal
     set id = #{record.id,jdbcType=VARCHAR},
+      endpoint_id = #{record.endpointId,jdbcType=VARCHAR},
       hostname = #{record.hostname,jdbcType=VARCHAR},
       machine_type = #{record.machineType,jdbcType=VARCHAR},
       cpu = #{record.cpu,jdbcType=INTEGER},
@@ -516,6 +528,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="io.rackshift.mybatis.domain.BareMetal">
     update bare_metal
     <set>
+      <if test="endpointId != null">
+        endpoint_id = #{endpointId,jdbcType=VARCHAR},
+      </if>
       <if test="hostname != null">
         hostname = #{hostname,jdbcType=VARCHAR},
       </if>
@@ -617,7 +632,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.BareMetal">
     update bare_metal
-    set hostname = #{hostname,jdbcType=VARCHAR},
+    set endpoint_id = #{endpointId,jdbcType=VARCHAR},
+      hostname = #{hostname,jdbcType=VARCHAR},
       machine_type = #{machineType,jdbcType=VARCHAR},
       cpu = #{cpu,jdbcType=INTEGER},
       cpu_type = #{cpuType,jdbcType=VARCHAR},

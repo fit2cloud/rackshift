@@ -9,6 +9,7 @@ import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.service.ExecutionLogService;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.Translator;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -67,7 +68,13 @@ public abstract class AbstractHandler implements IStateHandler {
         statusMap.put("executionId", executionId);
         statusMap.put("user", user);
         getExecutionMap().set(statusMap);
-        System.out.println("handing" + bareMetal.getMachineModel());
+
+        if (StringUtils.isAnyBlank(bareMetal.getEndpointId(), bareMetal.getServerId())) {
+            executionLogService.error(executionId);
+            executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, "该裸金属未执行discovery流程,无法进行部署");
+            revert(event, executionId, user);
+        }
+
         try {
             handleYourself(event);
         } catch (Exception e) {

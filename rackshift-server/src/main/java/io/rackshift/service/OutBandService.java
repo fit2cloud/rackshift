@@ -61,7 +61,7 @@ public class OutBandService {
             return null;
         }
         outBandMapper.insertSelective(image);
-        rackHDService.createOrUpdateObm(queryVO, bareMetal, bareMetal.getServerId());
+        rackHDService.createOrUpdateObm(queryVO, bareMetal);
         return true;
     }
 
@@ -74,7 +74,7 @@ public class OutBandService {
         if (bareMetal == null) {
             return null;
         }
-        rackHDService.createOrUpdateObm(queryVO, bareMetal, bareMetal.getServerId());
+        rackHDService.createOrUpdateObm(queryVO, bareMetal);
         return true;
     }
 

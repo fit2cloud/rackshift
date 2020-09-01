@@ -2,6 +2,7 @@ package io.rackshift.strategy.statemachine.handler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.config.WorkflowConfig;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
@@ -15,8 +16,6 @@ public class OsWorkflowStartHandler extends AbstractHandler {
 
     @Resource
     private RackHDService rackHDService;
-    @Resource
-    private String rackhdUrl;
     @Resource
     private BareMetalManager bareMetalManager;
 
@@ -38,7 +37,7 @@ public class OsWorkflowStartHandler extends AbstractHandler {
             }
         }
 
-        boolean result = rackHDService.postWorkflow(rackhdUrl, bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
+        boolean result = rackHDService.postWorkflow(WorkflowConfig.geRrackhdUrl(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
         if (result) {
             changeStatus(event, LifeStatus.deployed, false);
             bareMetal.setStatus(null);

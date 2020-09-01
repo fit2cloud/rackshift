@@ -59,12 +59,14 @@
 
         <!--要生成的数据库表 -->
 
-<!--        <table tableName="out_band"/>-->
-<!--        <table tableName="bare_metal_rule"/>-->
+        <table tableName="endpoint"/>
+<!--        <table tableName="bare_metal"/>-->
+<!--        <table tableName="network"/>-->
+<!--        <table tableName="image"/>-->
 <!--        <table tableName="cpu"/>-->
 <!--        <table tableName="disk"/>-->
 <!--        <table tableName="memory"/>-->
-        <table tableName="workflow"/>
+<!--        <table tableName="workflow"/>-->
 <!--        <table tableName="execution_log_details"/>-->
 <!--        <table tableName="ip"/>-->
 

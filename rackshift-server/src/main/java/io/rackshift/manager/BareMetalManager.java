@@ -195,7 +195,7 @@ public class BareMetalManager {
         list.forEach(b -> {
             BareMetalDTO bareMetalDTO = new BareMetalDTO();
             BeanUtils.copyBean(bareMetalDTO, b);
-            bareMetalDTO.setOutBandList(outBandManager.getByIp(b.getManagementIp()));
+            bareMetalDTO.setOutBandList(outBandManager.getByBareMetalId(b.getId()));
             r.add(bareMetalDTO);
         });
         return r;

@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class MachineEntity {
     private String ip;
+    private String endPoint;
     private String bmcIp;
     private String bmcMac;
     private String instanceUuid;
@@ -287,6 +288,14 @@ public class MachineEntity {
 
     public void setMemories(List<Memory> memories) {
         this.memories = memories;
+    }
+
+    public String getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
     }
 
     @Override

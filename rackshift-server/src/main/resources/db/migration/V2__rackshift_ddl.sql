@@ -53,6 +53,8 @@ CREATE TABLE IF NOT EXISTS `user_role`
 CREATE TABLE if not exists `out_band`
 (
     `id`                      varchar(200) NOT NULL,
+    `bare_metal_id`           varchar(50)  NOT NULL DEFAULT '' COMMENT '物理机id',
+    `endpoint_id`             varchar(50)  NOT NULL DEFAULT '' COMMENT 'enpoint id',
     `mac`                     varchar(200) NOT NULL DEFAULT '',
     `ip`                      varchar(35)  NOT NULL DEFAULT '',
     `user_name`               varchar(100) NOT NULL DEFAULT '' COMMENT '带外管理用户名',
@@ -75,6 +77,7 @@ CREATE TABLE if not exists `out_band`
 CREATE TABLE if not exists `bare_metal`
 (
     `id`            varchar(64) NOT NULL,
+    `endpoint_id`   varchar(50) NOT NULL DEFAULT '' COMMENT 'enpoint id',
     `hostname`      varchar(50) NOT NULL DEFAULT '' COMMENT '物理机hostname',
     `machine_type`  varchar(64)          DEFAULT NULL comment '裸金属种类，compute，pdu...',
     `cpu`           int(8)               DEFAULT NULL comment '几颗cpu',
@@ -113,6 +116,40 @@ CREATE TABLE if not exists `bare_metal`
     KEY `bare_metal_rule_id_index` (`rule_id`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
+
+
+CREATE TABLE if not exists `network`
+(
+    `id`          varchar(50) CHARACTER SET utf8mb4 NOT NULL,
+    `endpoint_id` varchar(50)                       NOT NULL DEFAULT '' COMMENT 'enpoint id',
+    `name`        varchar(45) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '名称',
+    `vlan_id`     varchar(50) CHARACTER SET utf8mb4          DEFAULT NULL COMMENT 'VLANID',
+    `start_ip`    varchar(50) CHARACTER SET utf8mb4          DEFAULT NULL COMMENT 'start_ip',
+    `end_ip`      varchar(50) CHARACTER SET utf8mb4          DEFAULT NULL COMMENT 'end_ip',
+    `netmask`     varchar(50) CHARACTER SET utf8mb4          DEFAULT NULL COMMENT 'netmask',
+    `dhcp_enable` bit COLLATE utf8mb4_bin                    default 0 COMMENT '是否开启DHCP',
+    `pxe_enable`  bit COLLATE utf8mb4_bin                    default 0 COMMENT '是否开启PXE',
+    `create_time` bigint(13)                        NOT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_bin COMMENT ='IP池管理';
+
+
+CREATE TABLE if not exists `image`
+(
+    `id`             varchar(50) NOT NULL,
+    `endpoint_id`    varchar(50) NOT NULL DEFAULT '' COMMENT 'enpoint id',
+    `name`           varchar(50) NOT NULL DEFAULT '' COMMENT '镜像名称',
+    `os`             varchar(50)          DEFAULT NULL COMMENT '操作系统',
+    `os_version`     varchar(50)          DEFAULT NULL COMMENT '操作系统版本',
+    `url`            varchar(250)         DEFAULT NULL COMMENT 'url',
+    `ext_properties` longtext COMMENT '其他属性',
+    `update_time`    bigint(20)  NOT NULL DEFAULT '0' COMMENT '同步时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `IDX_OS_VERSION` (`os`, `os_version`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE if not exists `bare_metal_rule`
 (
@@ -245,22 +282,8 @@ CREATE TABLE if not exists `operation_log`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE if not exists `image`
-(
-    `id`             varchar(50) NOT NULL,
-    `name`           varchar(50) NOT NULL DEFAULT '' COMMENT '镜像名称',
-    `os`             varchar(50)          DEFAULT NULL COMMENT '操作系统',
-    `os_version`     varchar(50)          DEFAULT NULL COMMENT '操作系统版本',
-    `url`            varchar(250)         DEFAULT NULL COMMENT 'url',
-    `ext_properties` longtext COMMENT '其他属性',
-    `update_time`    bigint(20)  NOT NULL DEFAULT '0' COMMENT '同步时间',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `IDX_OS_VERSION` (`os`, `os_version`) USING BTREE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
-
 insert into system_parameter
-values ('main-endpoint', '192.168.43.14', 'text', null);
+values ('main_endpoint', '192.168.43.14', 'endpoint', null);
 
 create table if not exists workflow_param_templates
 (
@@ -273,22 +296,6 @@ create table if not exists workflow_param_templates
     primary key (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
-
-CREATE TABLE if not exists `network`
-(
-    `id`          varchar(50) CHARACTER SET utf8mb4 NOT NULL,
-    `name`        varchar(45) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '名称',
-    `vlan_id`     varchar(50) CHARACTER SET utf8mb4          DEFAULT NULL COMMENT 'VLANID',
-    `start_ip`    varchar(50) CHARACTER SET utf8mb4          DEFAULT NULL COMMENT 'start_ip',
-    `end_ip`      varchar(50) CHARACTER SET utf8mb4          DEFAULT NULL COMMENT 'end_ip',
-    `netmask`     varchar(50) CHARACTER SET utf8mb4          DEFAULT NULL COMMENT 'netmask',
-    `dhcp_enable` bit COLLATE utf8mb4_bin                    default 0 COMMENT '是否开启DHCP',
-    `pxe_enable`  bit COLLATE utf8mb4_bin                    default 0 COMMENT '是否开启PXE',
-    `create_time` bigint(13)                        NOT NULL COMMENT '创建时间',
-    PRIMARY KEY (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin COMMENT ='IP池管理';
 
 CREATE TABLE if not exists `ip`
 (
@@ -357,3 +364,16 @@ CREATE TABLE if not exists `workflow`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_bin COMMENT ='对RackHD的workflow的抽象';
+
+CREATE TABLE if not exists `endpoint`
+(
+    `id`          varchar(50) CHARACTER SET utf8mb4 NOT NULL,
+    `name`        varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '名称',
+    `type`        varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '类型main_endpoint,slave_endpoint',
+    `ip`          varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT 'ip地址',
+    `status`      varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '状态, 1 在线，2 离线',
+    `create_time` bigint(13)                        NOT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_bin COMMENT ='rackshift端点';

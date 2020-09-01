@@ -10,6 +10,7 @@ import Network from "../network/Network"
 import SystemParameter from "../systemparameter/SystemParameter"
 import ExecutionLog from "../execution-log/Execution-Log"
 import Workflow from "../workflow/Workflow"
+import Endpoint from "../endpoint/Endpoint"
 
 Vue.use(VueRouter);
 
@@ -25,6 +26,7 @@ const routes = [
     {path: '/system-parameter', component: SystemParameter},
     {path: '/execution-log', component: ExecutionLog},
     {path: '/workflow', component: Workflow},
+    {path: '/endpoint', component: Endpoint},
 ]
 const router = new VueRouter({
     routes: routes

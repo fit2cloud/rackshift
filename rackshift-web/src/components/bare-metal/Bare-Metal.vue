@@ -775,7 +775,6 @@ export default {
           let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[k].id;
           for (let j = 0; j < this.selectedWorkflow.length; j++) {
             if (this.selectedWorkflow[j].componentId == componentId) {
-              // this.$notify.error(this.$t('same_workflow_node'));
               duplicated = true;
             }
           }

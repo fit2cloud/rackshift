@@ -3,6 +3,7 @@
 <mapper namespace="io.rackshift.mybatis.mapper.ImageMapper">
   <resultMap id="BaseResultMap" type="io.rackshift.mybatis.domain.Image">
     <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="endpoint_id" jdbcType="VARCHAR" property="endpointId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="os" jdbcType="VARCHAR" property="os" />
     <result column="os_version" jdbcType="VARCHAR" property="osVersion" />
@@ -71,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, os, os_version, url, update_time
+    id, endpoint_id, name, os, os_version, url, update_time
   </sql>
   <sql id="Blob_Column_List">
     ext_properties
@@ -125,18 +126,21 @@
     </if>
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.Image">
-    insert into image (id, name, os, 
-      os_version, url, update_time, 
-      ext_properties)
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{os,jdbcType=VARCHAR}, 
-      #{osVersion,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{updateTime,jdbcType=BIGINT}, 
-      #{extProperties,jdbcType=LONGVARCHAR})
+    insert into image (id, endpoint_id, name, 
+      os, os_version, url, 
+      update_time, ext_properties)
+    values (#{id,jdbcType=VARCHAR}, #{endpointId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{os,jdbcType=VARCHAR}, #{osVersion,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=BIGINT}, #{extProperties,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.Image">
     insert into image
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="endpointId != null">
+        endpoint_id,
       </if>
       <if test="name != null">
         name,
@@ -160,6 +164,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="endpointId != null">
+        #{endpointId,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -193,6 +200,9 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=VARCHAR},
       </if>
+      <if test="record.endpointId != null">
+        endpoint_id = #{record.endpointId,jdbcType=VARCHAR},
+      </if>
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
       </if>
@@ -219,6 +229,7 @@
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update image
     set id = #{record.id,jdbcType=VARCHAR},
+      endpoint_id = #{record.endpointId,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       os = #{record.os,jdbcType=VARCHAR},
       os_version = #{record.osVersion,jdbcType=VARCHAR},
@@ -232,6 +243,7 @@
   <update id="updateByExample" parameterType="map">
     update image
     set id = #{record.id,jdbcType=VARCHAR},
+      endpoint_id = #{record.endpointId,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       os = #{record.os,jdbcType=VARCHAR},
       os_version = #{record.osVersion,jdbcType=VARCHAR},
@@ -244,6 +256,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="io.rackshift.mybatis.domain.Image">
     update image
     <set>
+      <if test="endpointId != null">
+        endpoint_id = #{endpointId,jdbcType=VARCHAR},
+      </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
@@ -267,7 +282,8 @@
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="io.rackshift.mybatis.domain.Image">
     update image
-    set name = #{name,jdbcType=VARCHAR},
+    set endpoint_id = #{endpointId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
       os = #{os,jdbcType=VARCHAR},
       os_version = #{osVersion,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
@@ -277,7 +293,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.Image">
     update image
-    set name = #{name,jdbcType=VARCHAR},
+    set endpoint_id = #{endpointId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
       os = #{os,jdbcType=VARCHAR},
       os_version = #{osVersion,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},

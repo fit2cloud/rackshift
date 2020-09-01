@@ -7,6 +7,8 @@ import lombok.Data;
 public class BareMetal implements Serializable {
     private String id;
 
+    private String endpointId;
+
     private String hostname;
 
     private String machineType;

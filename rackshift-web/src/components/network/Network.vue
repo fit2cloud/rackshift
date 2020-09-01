@@ -1,112 +1,125 @@
 <template>
     <div class="container">
 
-        <div class="machine-title">
-            <i class="el-icon-user-solid">{{$t('Networks')}}</i>
-            <div class="el-button-group batch-button">
-                <button type="button" class="el-button el-button--primary" @click="delAllSelection"><i
-                        class="el-icon-delete"></i>{{$t('batch_del')}}
-                </button>
-                <button type="button" class="el-button el-button--primary" @click="handleEdit({}, 'add')"><i
-                        class="el-icon-document-add"></i>{{$t('add')}}
-                </button>
-            </div>
-        </div>
+      <div class="machine-title">
+        <i class="el-icon-user-solid">{{ $t('Networks') }}</i>
 
-        <el-table
-                :data="tableData"
-                class="table"
-                ref="multipleTable"
-                header-cell-class-name="table-header"
-                style="width: 100%"
-                @selection-change="handleSelectionChange"
-        >
-            <el-table-column type="selection" align="center"></el-table-column>
-            <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="center"
-                             v-for="c in columns" sortable></el-table-column>
-            <el-table-column prop="createTime" :label="$t('create_time')" align="center">
-                <template slot-scope="scope">
-                    {{scope.row.createTime | dateFormat}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="" :label="$t('opt')" align="center">
-                <template slot-scope="scope">
-                    <el-button
-                            type="button"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.row, 'edit')"
-                    >{{$t('edit')}}
-                    </el-button>
+        <el-button-group class="batch-button">
+          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
+              $t('add')
+            }}
+          </el-button>
+          <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
+          </el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
+        </el-button-group>
+      </div>
 
-                    <el-button
-                            type="button"
-                            icon="el-icon-delete"
-                            class="red"
-                            @click="handleEdit(scope.row, 'del')"
-                    >{{$t('del')}}
-                    </el-button>
-                </template>
-            </el-table-column>
+      <el-table
+          :data="tableData"
+          class="table"
+          ref="multipleTable"
+          header-cell-class-name="table-header"
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" align="center"></el-table-column>
+        <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="center"
+                         v-for="c in columns" sortable></el-table-column>
+        <el-table-column prop="createTime" :label="$t('create_time')" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.createTime | dateFormat }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="" :label="$t('opt')" align="center">
+          <template slot-scope="scope">
+            <el-button
+                type="button"
+                icon="el-icon-edit"
+                @click="handleEdit(scope.row, 'edit')"
+            >{{ $t('edit') }}
+            </el-button>
+
+            <el-button
+                type="button"
+                icon="el-icon-delete"
+                class="red"
+                @click="handleEdit(scope.row, 'del')"
+            >{{ $t('del') }}
+            </el-button>
+          </template>
+        </el-table-column>
         </el-table>
 
         <div class="pagination">
             <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handlePageChange"
-                    :current-page="query.pageIndex"
-                    :page-sizes="[10, 20, 50, 100]"
-                    :page-size="10"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="pageTotal">
+                @size-change="handleSizeChange"
+                @current-change="handlePageChange"
+                :current-page="query.pageIndex"
+                :page-sizes="[10, 20, 50, 100]"
+                :page-size="10"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="pageTotal">
             </el-pagination>
         </div>
 
-        <el-drawer
-                :title="editType == 'edit' ? $t('edit_network') : $t('add_network')"
-                :visible.sync="editDialogVisible"
-                direction="rtl"
-                :before-close="handleClose">
-            <div class="demo-drawer__content">
-                <el-form :model="editObj">
-                    <el-form-item :label="$t('name')">
-                        <el-input v-model="editObj.name" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item :label="$t('vlanId')">
-                        <el-input v-model="editObj.vlanId" autocomplete="off" type="number"
-                                  :placeholder="$t('pls_input_vlan_id')"></el-input>
-                    </el-form-item>
+      <el-drawer
+          :title="editType == 'edit' ? $t('edit_network') : $t('add_network')"
+          :visible.sync="editDialogVisible"
+          direction="rtl"
+          :before-close="handleClose">
+        <div class="demo-drawer__content">
+          <el-form :model="editObj">
+            <el-form-item :label="$t('name')">
+              <el-input v-model="editObj.name" autocomplete="off"></el-input>
+            </el-form-item>
 
-                    <el-form-item :label="$t('startIp')">
-                        <el-input v-model="editObj.startIp" autocomplete="off"
-                                  :placeholder="$t('pls_input_start_ip')"></el-input>
-                    </el-form-item>
+            <el-form-item :label="$t('end_point')">
+              <el-select v-model="editObj.endpointId" :placeholder="$t('pls_select')">
+                <el-option
+                    v-for="(item, key) in allEndPointType"
+                    :label="item.name"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
 
-                    <el-form-item :label="$t('endIp')">
-                        <el-input v-model="editObj.endIp" autocomplete="off"
-                                  :placeholder="$t('pls_input_end_ip')"></el-input>
-                    </el-form-item>
+            <el-form-item :label="$t('vlanId')">
+              <el-input v-model="editObj.vlanId" autocomplete="off" type="number"
+                        :placeholder="$t('pls_input_vlan_id')"></el-input>
+            </el-form-item>
 
-                    <el-form-item :label="$t('netmask')">
-                        <el-input v-model="editObj.netmask" autocomplete="off"
-                                  :placeholder="$t('pls_input_netmask')"></el-input>
-                    </el-form-item>
+            <el-form-item :label="$t('startIp')">
+              <el-input v-model="editObj.startIp" autocomplete="off"
+                        :placeholder="$t('pls_input_start_ip')"></el-input>
+            </el-form-item>
 
-                    <el-form-item :label="$t('dhcp_enable')">
-                        <el-switch
-                                v-model="editObj.dhcpEnable"
-                                active-color="#13ce66"
-                                inactive-color="#ff4949">
-                        </el-switch>
-                    </el-form-item>
+            <el-form-item :label="$t('endIp')">
+              <el-input v-model="editObj.endIp" autocomplete="off"
+                        :placeholder="$t('pls_input_end_ip')"></el-input>
+            </el-form-item>
 
-                    <el-form-item :label="$t('pxe_enable')">
-                        <el-switch
-                                v-model="editObj.pxeEnable"
-                                active-color="#13ce66"
-                                inactive-color="#ff4949">
-                        </el-switch>
-                    </el-form-item>
-                </el-form>
+            <el-form-item :label="$t('netmask')">
+              <el-input v-model="editObj.netmask" autocomplete="off"
+                        :placeholder="$t('pls_input_netmask')"></el-input>
+            </el-form-item>
+
+            <el-form-item :label="$t('dhcp_enable')">
+              <el-switch
+                  v-model="editObj.dhcpEnable"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949">
+              </el-switch>
+            </el-form-item>
+
+            <el-form-item :label="$t('pxe_enable')">
+              <el-switch
+                  v-model="editObj.pxeEnable"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949">
+              </el-switch>
+            </el-form-item>
+          </el-form>
                 <div class="demo-drawer__footer">
                     <el-button @click="editDialogVisible = false">{{$t('cancel')}}</el-button>
                     <el-button type="primary" @click="confirmEdit" :loading="loading">{{ loading ? $t('submitting') +
@@ -122,9 +135,9 @@
 
 <script>
 
-    import HttpUtil from "../../common/utils/HttpUtil"
+import HttpUtil from "../../common/utils/HttpUtil"
 
-    let _ = require('lodash');
+let _ = require('lodash');
     export default {
         data() {
             return {
@@ -147,59 +160,70 @@
                     {"id": "disable", "name": this.$t("disable")},
                 ],
                 columns: [
-                    {
-                        label: this.$t('name'),
-                        prop: "name",
-                        sort: true
-                    },
-                    {
-                        label: this.$t('vlan_id'),
-                        prop: "vlanId"
-                    },
-                    {
-                        label: this.$t('dhcp_enable'),
-                        prop: "dhcpEnable"
-                    },
-                    {
-                        label: this.$t('pxe_enable'),
-                        prop: "pxeEnable"
-                    }
+                  {
+                    label: this.$t('name'),
+                    prop: "name",
+                    sort: true
+                  }, {
+                    label: this.$t('endpoint'),
+                    prop: "endpointId",
+                    sort: true
+                  },
+                  {
+                    label: this.$t('vlan_id'),
+                    prop: "vlanId"
+                  },
+                  {
+                    label: this.$t('dhcp_enable'),
+                    prop: "dhcpEnable"
+                  },
+                  {
+                    label: this.$t('pxe_enable'),
+                    prop: "pxeEnable"
+                  }
                 ],
-                editDialogVisible: false,
-                editType: 'edit',
-                editObj: {
-                    name: null,
-                    description: null,
-                    type: null
-                },
-                allOs: [],
-                allOsVersion: []
+              editDialogVisible: false,
+              editType: 'edit',
+              editObj: {
+                name: null,
+                description: null,
+                type: null
+              },
+              allOs: [],
+              allOsVersion: [],
+              allEndPointType: [],
             };
         },
         mounted() {
-            this.getData();
+          this.getData();
+          this.getAllEndPointType();
         },
         methods: {
-            // 获取 easy-mock 的模拟数据
-            getValidProText(row, column, cellValue, index) {
-                if (cellValue === true) {
-                    return this.$t("enabled");
-                } else if (cellValue === false) {
-                    return this.$t("disabled");
-                }
-                return cellValue;
-            },
-            getData() {
-                HttpUtil.post("/network/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
-                    this.tableData = res.data.listObject;
-                    this.pageTotal = res.data.itemCount;
-                });
-            },
-            handleSizeChange(val) {
-                this.query.pageSize = val;
-            },
-            handleClose() {
-                this.editDialogVisible = false;
+          getAllEndPointType() {
+            HttpUtil.get("/system_parameter/getAllEndPointType", {}, (res) => {
+              this.allEndPointType = res.data;
+            });
+          },
+          // 获取 easy-mock 的模拟数据
+          getValidProText(row, column, cellValue, index) {
+            if (cellValue === true) {
+              return this.$t("enabled");
+            } else if (cellValue === false) {
+              return this.$t("disabled");
+            }
+            return cellValue;
+          },
+          getData() {
+            HttpUtil.post("/network/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
+              this.tableData = res.data.listObject;
+              this.pageTotal = res.data.itemCount;
+            });
+          },
+          handleSizeChange(val) {
+            this.query.pageSize = val;
+          },
+          handleClose() {
+            this.editDialogVisible = false;
             },
             add() {
                 this.editDialogVisible = true;

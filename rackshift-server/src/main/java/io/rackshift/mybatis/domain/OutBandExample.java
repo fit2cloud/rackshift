@@ -174,6 +174,146 @@ public class OutBandExample {
             return (Criteria) this;
         }
 
+        public Criteria andBareMetalIdIsNull() {
+            addCriterion("bare_metal_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdIsNotNull() {
+            addCriterion("bare_metal_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdEqualTo(String value) {
+            addCriterion("bare_metal_id =", value, "bareMetalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdNotEqualTo(String value) {
+            addCriterion("bare_metal_id <>", value, "bareMetalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdGreaterThan(String value) {
+            addCriterion("bare_metal_id >", value, "bareMetalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdGreaterThanOrEqualTo(String value) {
+            addCriterion("bare_metal_id >=", value, "bareMetalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdLessThan(String value) {
+            addCriterion("bare_metal_id <", value, "bareMetalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdLessThanOrEqualTo(String value) {
+            addCriterion("bare_metal_id <=", value, "bareMetalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdLike(String value) {
+            addCriterion("bare_metal_id like", value, "bareMetalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdNotLike(String value) {
+            addCriterion("bare_metal_id not like", value, "bareMetalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdIn(List<String> values) {
+            addCriterion("bare_metal_id in", values, "bareMetalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdNotIn(List<String> values) {
+            addCriterion("bare_metal_id not in", values, "bareMetalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdBetween(String value1, String value2) {
+            addCriterion("bare_metal_id between", value1, value2, "bareMetalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBareMetalIdNotBetween(String value1, String value2) {
+            addCriterion("bare_metal_id not between", value1, value2, "bareMetalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdIsNull() {
+            addCriterion("endpoint_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdIsNotNull() {
+            addCriterion("endpoint_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdEqualTo(String value) {
+            addCriterion("endpoint_id =", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdNotEqualTo(String value) {
+            addCriterion("endpoint_id <>", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdGreaterThan(String value) {
+            addCriterion("endpoint_id >", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdGreaterThanOrEqualTo(String value) {
+            addCriterion("endpoint_id >=", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdLessThan(String value) {
+            addCriterion("endpoint_id <", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdLessThanOrEqualTo(String value) {
+            addCriterion("endpoint_id <=", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdLike(String value) {
+            addCriterion("endpoint_id like", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdNotLike(String value) {
+            addCriterion("endpoint_id not like", value, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdIn(List<String> values) {
+            addCriterion("endpoint_id in", values, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdNotIn(List<String> values) {
+            addCriterion("endpoint_id not in", values, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdBetween(String value1, String value2) {
+            addCriterion("endpoint_id between", value1, value2, "endpointId");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndpointIdNotBetween(String value1, String value2) {
+            addCriterion("endpoint_id not between", value1, value2, "endpointId");
+            return (Criteria) this;
+        }
+
         public Criteria andMacIsNull() {
             addCriterion("mac is null");
             return (Criteria) this;

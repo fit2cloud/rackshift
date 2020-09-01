@@ -177,4 +177,8 @@
   .el-drawer__body {
     overflow: scroll;
   }
+
+  .el-button + .el-button {
+    margin-left: 0px;
+  }
 </style>

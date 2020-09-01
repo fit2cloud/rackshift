@@ -2,10 +2,14 @@ package io.rackshift.config;
 
 import com.alibaba.fastjson.JSONArray;
 import io.rackshift.constants.RackHDConstants;
+import io.rackshift.constants.ServiceConstants;
 import io.rackshift.metal.sdk.util.HttpFutureUtils;
 import io.rackshift.metal.sdk.util.LogUtil;
+import io.rackshift.mybatis.domain.Endpoint;
+import io.rackshift.mybatis.domain.EndpointExample;
 import io.rackshift.mybatis.domain.Workflow;
 import io.rackshift.mybatis.domain.WorkflowExample;
+import io.rackshift.mybatis.mapper.EndpointMapper;
 import io.rackshift.mybatis.mapper.WorkflowMapper;
 import io.rackshift.strategy.statemachine.LifeEventType;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +27,15 @@ public class WorkflowConfig {
     @Resource
     private WorkflowMapper workflowMapper;
     @Resource
+    private EndpointMapper endpointMapper;
+    @Resource
     private String rackhdUrl;
+    static EndpointMapper staticEndpointMapper;
+
+    @Resource
+    private void setEndpointMapper(EndpointMapper endpointMapper) {
+        staticEndpointMapper = endpointMapper;
+    }
 
     @PostConstruct
     public void initWorkflow() {
@@ -36,13 +48,40 @@ public class WorkflowConfig {
         }
     }
 
+    public static String geRrackhdUrl(String id) {
+        Endpoint endpoint = staticEndpointMapper.selectByPrimaryKey(id);
+        if (endpoint != null && !endpoint.getIp().contains(":"))
+            return "http://" + endpoint.getIp() + ":9090";
+        if (endpoint == null)
+            return null;
+        return "http://" + endpoint.getIp();
+    }
+
+    @Bean
+    public String rackhdUrl() {
+        List<Endpoint> endPoints = null;
+        EndpointExample e = new EndpointExample();
+        e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.name());
+        endPoints = endpointMapper.selectByExample(e);
+        if (endPoints.size() > 0 && !endPoints.get(0).getIp().contains(":"))
+            return "http://" + endPoints.get(0).getIp() + ":9090";
+        if (endPoints.size() == 0)
+            return "";
+        return "http://" + endPoints.get(0).getIp();
+    }
+
+    @Bean
+    public List<Endpoint> endPoints() {
+        return endpointMapper.selectByExample(new EndpointExample());
+    }
+
     @Bean
     public JSONArray allWorkflow() {
         String res = HttpFutureUtils.getHttp(rackhdUrl + RackHDConstants.WORKFLOWS, null);
         if (StringUtils.isNotBlank(res)) {
-            LogUtil.info("无法获取endpoint的WORKFLOWS");
             return JSONArray.parseArray(res);
         }
+        LogUtil.info("无法获取endpoint的WORKFLOWS");
         return new JSONArray();
     }
 
@@ -50,9 +89,9 @@ public class WorkflowConfig {
     public JSONArray allTask() {
         String res = HttpFutureUtils.getHttp(rackhdUrl + RackHDConstants.TASKS, null);
         if (StringUtils.isNotBlank(res)) {
-            LogUtil.info("无法获取endpoint的TASKS");
             return JSONArray.parseArray(res);
         }
+        LogUtil.info("无法获取endpoint的TASKS");
         return new JSONArray();
     }
 }

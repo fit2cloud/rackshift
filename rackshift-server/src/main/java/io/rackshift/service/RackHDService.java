@@ -5,9 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonArray;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
+import io.rackshift.config.WorkflowConfig;
 import io.rackshift.constants.PluginConstants;
 import io.rackshift.constants.RackHDConstants;
-import io.rackshift.constants.ServiceConstants;
 import io.rackshift.metal.sdk.IMetalProvider;
 import io.rackshift.metal.sdk.util.CloudProviderManager;
 import io.rackshift.metal.sdk.util.DiskUtils;
@@ -15,8 +15,7 @@ import io.rackshift.model.MachineEntity;
 import io.rackshift.model.RackHDResponse;
 import io.rackshift.model.WorkflowResponse;
 import io.rackshift.mybatis.domain.*;
-import io.rackshift.mybatis.mapper.BareMetalRuleMapper;
-import io.rackshift.mybatis.mapper.SystemParameterMapper;
+import io.rackshift.mybatis.mapper.EndpointMapper;
 import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.*;
 import org.apache.commons.beanutils.BeanUtils;
@@ -35,15 +34,11 @@ import java.util.stream.Collectors;
 @Service
 public class RackHDService {
     @Resource
-    private BareMetalRuleMapper bareMetalRuleMapper;
-    @Resource
     private CloudProviderManager metalProviderManager;
-    @Resource
-    private SystemParameterMapper systemParameterMapper;
     @Value("${run.mode:local}")
     private String runMode;
     @Resource
-    private String rackhdUrl;
+    private EndpointMapper endpointMapper;
 
     private JSONArray getCatalogs(String nodeId) {
         JSONArray arr = new JSONArray();
@@ -84,13 +79,11 @@ public class RackHDService {
      * 更新IPMI账号密码 ip
      *
      * @param o
-     * @param machine
-     * @param nodeId
+     * @param bareMetal
      * @return
      */
-    public boolean createOrUpdateObm(OutBand o, BareMetal machine, String nodeId) {
-        if (StringUtils.isNotBlank(machine.getRuleId())) {
-            SystemParameter endPoint = systemParameterMapper.selectByPrimaryKey(ServiceConstants.ENDPOINT_KEY);
+    public boolean createOrUpdateObm(OutBand o, BareMetal bareMetal) {
+        if (!StringUtils.isAnyBlank(bareMetal.getEndpointId(), bareMetal.getServerId())) {
             try {
                 JSONObject obmObj = new JSONObject();
                 JSONObject obmConfigObj = new JSONObject();
@@ -100,9 +93,9 @@ public class RackHDService {
 
                 obmObj.put("config", obmConfigObj);
                 obmObj.put("service", "ipmi-obm-service");
-                obmObj.put("nodeId", nodeId);
+                obmObj.put("nodeId", bareMetal.getServerId());
 
-                String url = endPoint.getParamValue() != null ? rackhdUrl : null;
+                String url = WorkflowConfig.geRrackhdUrl(bareMetal.getEndpointId());
                 if (url == null) {
                     return true;
                 }
@@ -110,7 +103,7 @@ public class RackHDService {
                     url = url.substring(0, url.length() - 1);
                 }
 
-                RackHDHttpClientUtil.put(String.format(url + RackHDConstants.NODES_OBM_URL, nodeId), obmObj.toJSONString(), null);
+                RackHDHttpClientUtil.put(String.format(url + RackHDConstants.NODES_OBM_URL, bareMetal.getServerId()), obmObj.toJSONString(), null);
                 return true;
             } catch (Exception e) {
                 return false;
@@ -123,29 +116,30 @@ public class RackHDService {
     /**
      * 清除所有正在跑的workflow
      *
-     * @param nodeId
+     * @param bareMetal
      * @return
      */
-    public boolean clearActiveWorkflow(String nodeId) {
-        if (StringUtils.isNotBlank(nodeId)) {
+    public boolean clearActiveWorkflow(BareMetal bareMetal) {
+        if (!StringUtils.isAnyBlank(bareMetal.getEndpointId(), bareMetal.getServerId())) {
             try {
                 JSONObject param = new JSONObject();
                 param.put("command", "cancel");
                 param.put("options", JSONObject.parse("{}"));
 
-                String url = rackhdUrl;
+                String url = WorkflowConfig.geRrackhdUrl(bareMetal.getEndpointId());
                 if (url == null) {
                     return false;
                 }
                 if (url.endsWith("/")) {
                     url = url.substring(0, url.length() - 1);
                 }
-                RackHDHttpClientUtil.put(String.format(url + RackHDConstants.CANCEL_WORKFLOW_URL, nodeId), param.toJSONString(), null);
+                RackHDHttpClientUtil.put(String.format(url + RackHDConstants.CANCEL_WORKFLOW_URL, bareMetal.getServerId()), param.toJSONString(), null);
+                return true;
             } catch (Exception e) {
                 // 同步至RackHD失败！
             }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -401,7 +395,6 @@ public class RackHDService {
             catalogsObj = JSONArray.parseArray(RackHDHttpClientUtil.get(ip + String.format(RackHDConstants.CATALOG_URL, nodeId), null));
         } else {
             catalogsObj = getCatalogs(nodeId);
-
         }
         for (int j = 0; j < catalogsObj.size(); j++) {
             JSONObject catalogObj = catalogsObj.getJSONObject(j);
@@ -691,6 +684,7 @@ public class RackHDService {
         //nodeId 存到serverId字段
         physicalMachine.setServerId(machineEntity.getNodeId());
 
+        physicalMachine.setEndpointId(machineEntity.getEndPoint());
         physicalMachine.setProviderId("rackhd");
         physicalMachine.setRuleId("rackhd");
         physicalMachine.setMachineBrand(machineEntity.getBrand());
@@ -738,8 +732,11 @@ public class RackHDService {
         }
     }
 
-    public List<String> getActiveWorkflowNodeIds() {
-        String response = RackHDHttpClientUtil.get(rackhdUrl + "/api/2.0/workflows?active=true", null);
+    public List<String> getActiveWorkflowNodeIds(String endPointId) {
+        Endpoint endpoint = endpointMapper.selectByPrimaryKey(endPointId);
+        if (endpoint == null) return new ArrayList<>();
+
+        String response = RackHDHttpClientUtil.get(WorkflowConfig.geRrackhdUrl(endPointId) + "/api/2.0/workflows?active=true", null);
         if (StringUtils.isNotBlank(response)) {
             JSONArray workflowArr = JSONArray.parseArray(response);
             if (workflowArr.size() > 0) {
@@ -749,8 +746,8 @@ public class RackHDService {
         return new ArrayList<>();
     }
 
-    public boolean deleteNode(String nodeId) {
-        RackHDResponse response = RackHDHttpClientUtil.delete(String.format(rackhdUrl + "/api/2.0/nodes/%s", nodeId));
+    public boolean deleteNode(BareMetal bareMetal) {
+        RackHDResponse response = RackHDHttpClientUtil.delete(String.format(WorkflowConfig.geRrackhdUrl(bareMetal.getEndpointId()) + "/api/2.0/nodes/%s", bareMetal.getServerId()));
         return response.getReCode() <= RackHDConstants.ERROR_RE_CODE;
     }
 }

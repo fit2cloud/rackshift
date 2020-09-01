@@ -1,5 +1,6 @@
 package io.rackshift.strategy.statemachine.handler;
 
+import io.rackshift.config.WorkflowConfig;
 import io.rackshift.job.SyncRackJob;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.manager.OutBandManager;
@@ -43,7 +44,7 @@ public class DiscoveryStartHandler extends AbstractHandler {
 
         WorkflowRequestDTO requestDTO = event.getWorkflowRequestDTO();
         BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
-        OutBand o = outBandManager.getByIp(bareMetal.getManagementIp()).get(0);
+        OutBand o = outBandManager.getByBareMetalId(bareMetal.getManagementIp()).get(0);
         String originStatus = bareMetal.getStatus();
         beforeChange(LifeStatus.valueOf(originStatus));
         if (StringUtils.isBlank(bareMetal.getServerId())) {
@@ -55,18 +56,18 @@ public class DiscoveryStartHandler extends AbstractHandler {
             bareMetalManager.update(bareMetal, true);
         } else {
                 //清空之前所有正在运行的任务
-                rackHDService.clearActiveWorkflow(bareMetal.getServerId());
-                boolean result = rackHDService.postWorkflow(rackhdUrl, bareMetal.getServerId(), "Graph.BootstrapRancher", null);
+            rackHDService.clearActiveWorkflow(bareMetal);
+            boolean result = rackHDService.postWorkflow(WorkflowConfig.geRrackhdUrl(bareMetal.getEndpointId()), bareMetal.getServerId(), "Graph.BootstrapRancher", null);
+            if (result) {
+                result = rackHDService.postWorkflow(WorkflowConfig.geRrackhdUrl(bareMetal.getEndpointId()), bareMetal.getServerId(), "Graph.Discovery", null);
+                //同步执行一次最新的发现
                 if (result) {
-                    result = rackHDService.postWorkflow(rackhdUrl, bareMetal.getServerId(), "Graph.Discovery", null);
-                    //同步执行一次最新的发现
-                    if (result) {
-                        syncRackJob.run();
-                    }
-                    changeStatus(event, LifeStatus.ready, false);
-                } else {
-                    revert(event, getExecutionId(), getUser());
+                    syncRackJob.run();
                 }
+                changeStatus(event, LifeStatus.ready, false);
+            } else {
+                revert(event, getExecutionId(), getUser());
+            }
         }
     }
 }

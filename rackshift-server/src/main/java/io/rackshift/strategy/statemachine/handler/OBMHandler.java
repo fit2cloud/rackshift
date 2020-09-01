@@ -30,7 +30,8 @@ public class OBMHandler extends AbstractHandler {
         if (o == null) {
             RSException.throwExceptions(Translator.get("i18n_param_error"));
         }
-        boolean result = rackHDService.createOrUpdateObm(o, bareMetal, bareMetal.getServerId());
+        o.setBareMetalId(requestDTO.getBareMetalId());
+        boolean result = rackHDService.createOrUpdateObm(o, bareMetal);
         if (result) {
             outBandService.saveOrUpdate(o);
         } else {

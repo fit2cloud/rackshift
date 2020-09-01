@@ -100,11 +100,11 @@ export default {
             "icon" : "el-icon-s-tools",
             childs: [
                 {
-                    "name": "License",
-                    "router": "/License",
+                    "name": "Endpoint",
+                    "router": "/endpoint",
                     "requireRole": "admin",
-                    "order" : "1",
-                    "icon" : "el-icon-s-goods",
+                    "order" : "5",
+                    "icon" : "el-icon-s-promotion",
                 },
                 {
                     "name": "用户",
@@ -120,12 +120,6 @@ export default {
                     "icon" : "el-icon-user",
                 },
                 {
-                    "name": "执行记录",
-                    "router": "/execution-log",
-                    "requireRole": "admin",
-                    "order" : "4",
-                    "icon" : "el-icon-more",
-                }, {
                     "name": "系统参数",
                     "router": "/system-parameter",
                     "requireRole": "admin",

@@ -3,6 +3,8 @@
 <mapper namespace="io.rackshift.mybatis.mapper.OutBandMapper">
   <resultMap id="BaseResultMap" type="io.rackshift.mybatis.domain.OutBand">
     <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="bare_metal_id" jdbcType="VARCHAR" property="bareMetalId" />
+    <result column="endpoint_id" jdbcType="VARCHAR" property="endpointId" />
     <result column="mac" jdbcType="VARCHAR" property="mac" />
     <result column="ip" jdbcType="VARCHAR" property="ip" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
@@ -77,8 +79,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, mac, ip, user_name, pwd, status, update_time, origin, asset_id, machine_room, 
-    machine_rack, u_number, remark, apply_user, optimistic_lock_version
+    id, bare_metal_id, endpoint_id, mac, ip, user_name, pwd, status, update_time, origin, 
+    asset_id, machine_room, machine_rack, u_number, remark, apply_user, optimistic_lock_version
   </sql>
   <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.OutBandExample" resultMap="BaseResultMap">
     select
@@ -111,24 +113,30 @@
     </if>
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.OutBand">
-    insert into out_band (id, mac, ip, 
-      user_name, pwd, status, 
-      update_time, origin, asset_id, 
-      machine_room, machine_rack, u_number, 
-      remark, apply_user, optimistic_lock_version
-      )
-    values (#{id,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
-      #{userName,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=BIGINT}, #{origin,jdbcType=TINYINT}, #{assetId,jdbcType=VARCHAR}, 
-      #{machineRoom,jdbcType=VARCHAR}, #{machineRack,jdbcType=VARCHAR}, #{uNumber,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{applyUser,jdbcType=VARCHAR}, #{optimisticLockVersion,jdbcType=INTEGER}
-      )
+    insert into out_band (id, bare_metal_id, endpoint_id, 
+      mac, ip, user_name, 
+      pwd, status, update_time, 
+      origin, asset_id, machine_room, 
+      machine_rack, u_number, remark, 
+      apply_user, optimistic_lock_version)
+    values (#{id,jdbcType=VARCHAR}, #{bareMetalId,jdbcType=VARCHAR}, #{endpointId,jdbcType=VARCHAR}, 
+      #{mac,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{pwd,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{updateTime,jdbcType=BIGINT}, 
+      #{origin,jdbcType=TINYINT}, #{assetId,jdbcType=VARCHAR}, #{machineRoom,jdbcType=VARCHAR}, 
+      #{machineRack,jdbcType=VARCHAR}, #{uNumber,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{applyUser,jdbcType=VARCHAR}, #{optimisticLockVersion,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.OutBand">
     insert into out_band
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="bareMetalId != null">
+        bare_metal_id,
+      </if>
+      <if test="endpointId != null">
+        endpoint_id,
       </if>
       <if test="mac != null">
         mac,
@@ -176,6 +184,12 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="bareMetalId != null">
+        #{bareMetalId,jdbcType=VARCHAR},
+      </if>
+      <if test="endpointId != null">
+        #{endpointId,jdbcType=VARCHAR},
       </if>
       <if test="mac != null">
         #{mac,jdbcType=VARCHAR},
@@ -233,6 +247,12 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=VARCHAR},
       </if>
+      <if test="record.bareMetalId != null">
+        bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.endpointId != null">
+        endpoint_id = #{record.endpointId,jdbcType=VARCHAR},
+      </if>
       <if test="record.mac != null">
         mac = #{record.mac,jdbcType=VARCHAR},
       </if>
@@ -283,6 +303,8 @@
   <update id="updateByExample" parameterType="map">
     update out_band
     set id = #{record.id,jdbcType=VARCHAR},
+      bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
+      endpoint_id = #{record.endpointId,jdbcType=VARCHAR},
       mac = #{record.mac,jdbcType=VARCHAR},
       ip = #{record.ip,jdbcType=VARCHAR},
       user_name = #{record.userName,jdbcType=VARCHAR},
@@ -304,6 +326,12 @@
   <update id="updateByPrimaryKeySelective" parameterType="io.rackshift.mybatis.domain.OutBand">
     update out_band
     <set>
+      <if test="bareMetalId != null">
+        bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
+      </if>
+      <if test="endpointId != null">
+        endpoint_id = #{endpointId,jdbcType=VARCHAR},
+      </if>
       <if test="mac != null">
         mac = #{mac,jdbcType=VARCHAR},
       </if>
@@ -351,7 +379,9 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.OutBand">
     update out_band
-    set mac = #{mac,jdbcType=VARCHAR},
+    set bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
+      endpoint_id = #{endpointId,jdbcType=VARCHAR},
+      mac = #{mac,jdbcType=VARCHAR},
       ip = #{ip,jdbcType=VARCHAR},
       user_name = #{userName,jdbcType=VARCHAR},
       pwd = #{pwd,jdbcType=VARCHAR},

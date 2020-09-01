@@ -13,9 +13,9 @@ public class OutBandManager {
     @Resource
     private OutBandMapper outBandMapper;
 
-    public List<OutBand> getByIp(String ip){
+    public List<OutBand> getByBareMetalId(String id){
         OutBandExample example = new OutBandExample();
-        example.createCriteria().andIpEqualTo(ip);
+        example.createCriteria().andBareMetalIdEqualTo(id);
         return outBandMapper.selectByExample(example);
     }
 }
