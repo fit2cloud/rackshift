@@ -39,7 +39,7 @@ public class DHCPController {
     }
 
     @RequestMapping("delDHCPConfig")
-    public R delDHCPConfig(@RequestBody DHCPConfig config) throws IOException {
-        return R.successWithData(dhcpService.delDHCPConfig(config));
+    public R delDHCPConfig(@RequestBody List<DHCPConfig> configs) throws IOException {
+        return R.successWithData(dhcpService.delDHCPConfig(configs.get(0)));
     }
 }
