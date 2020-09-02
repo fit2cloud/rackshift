@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("dhcp")
@@ -30,6 +31,11 @@ public class DHCPController {
     @RequestMapping("addDHCPConfig")
     public R addDHCPConfig(@RequestBody DHCPConfig config) throws IOException {
         return R.successWithData(dhcpService.addDHCPConfig(config));
+    }
+
+    @RequestMapping("saveDHCPConfig")
+    public R addDHCPConfig(@RequestBody List<DHCPConfig> configs) throws IOException {
+        return R.successWithData(dhcpService.saveDHCPConfig(configs));
     }
 
     @RequestMapping("delDHCPConfig")

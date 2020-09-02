@@ -11,6 +11,7 @@
     <modules>
         <module>rackshift-server</module>
         <module>rackshift-web</module>
+        <module>rackshift-proxy</module>
         <module>rackshift-plugin</module>
     </modules>
 

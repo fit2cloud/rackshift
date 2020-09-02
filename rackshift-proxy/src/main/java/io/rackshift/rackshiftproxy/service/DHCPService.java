@@ -67,7 +67,7 @@ public class DHCPService {
     }
 
     public List<DHCPConfig> readDHCPConfigFile() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("E:\\opt\\fit2cloud\\rackhd\\dhcp\\config\\dhcpd.conf")));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\opt\\fit2cloud\\rackhd\\dhcp\\config\\dhcpd.conf")));
         String line = null;
 
         boolean start = false;
@@ -112,7 +112,7 @@ public class DHCPService {
         }
         List<DHCPConfig> configs = readDHCPConfigFile();
         configs.add(config);
-        configs = configs.stream().distinct().collect(Collectors.toList());
+        configs = configs.size() > 1 ? configs.stream().distinct().collect(Collectors.toList()) : configs;
         return updateDHCPConfig(configs);
     }
 
@@ -139,4 +139,17 @@ public class DHCPService {
         configs = configs.stream().distinct().collect(Collectors.toList());
         return updateDHCPConfig(configs);
     }
+
+    public boolean saveDHCPConfig(List<DHCPConfig> addConfigs) throws IOException {
+        List<DHCPConfig> configs = readDHCPConfigFile();
+        if (configs.size() > 0) {
+            configs.remove(addConfigs.get(0));
+            configs.add(addConfigs.get(1));
+        } else {
+            configs = addConfigs;
+        }
+        return updateDHCPConfig(configs);
+    }
+
+
 }

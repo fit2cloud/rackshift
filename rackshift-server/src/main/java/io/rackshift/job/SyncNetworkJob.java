@@ -12,9 +12,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.net.Inet4Address;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class SyncNetworkJob {
@@ -23,7 +26,7 @@ public class SyncNetworkJob {
     @Resource
     private List<Endpoint> endPoints;
 
-    @Scheduled(fixedDelay = 3000)
+    //    @Scheduled(fixedDelay = 3000)
 //    @Scheduled(fixedDelay = 60000)
     public void run() {
         List<Network> networks = new LinkedList<>();
@@ -38,10 +41,12 @@ public class SyncNetworkJob {
                 }
             }
         }
-
-        networks.forEach(n -> {
-            networkService.saveOrUpdate(n);
+        Map<String, List<Network>> endpointNetwork = networks.stream().collect(Collectors.groupingBy(Network::getEndpointId));
+        endpointNetwork.keySet().forEach(endpointId -> {
+            networkService.saveOrUpdate(endpointNetwork.get(endpointId));
         });
+
+
     }
 
     private Collection<? extends Network> convert(JSONArray dhcpconfigs, Endpoint endPoint) {

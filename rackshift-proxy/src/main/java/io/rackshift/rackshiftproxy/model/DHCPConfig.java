@@ -1,8 +1,11 @@
 package io.rackshift.rackshiftproxy.model;
 
+import io.rackshift.metal.sdk.util.IpUtil;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class DHCPConfig {
     private String startIp;
@@ -67,16 +70,21 @@ public class DHCPConfig {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DHCPConfig config = (DHCPConfig) o;
-        return pxeEnabled == config.pxeEnabled &&
-                Objects.equals(startIp, config.startIp) &&
-                Objects.equals(endIp, config.endIp) &&
-                Objects.equals(netmask, config.netmask) &&
-                Objects.equals(gateway, config.gateway);
+        DHCPConfig n = (DHCPConfig) o;
+        List<String> ipRanges = IpUtil.getIpRange(n.getStartIp(), n.getEndIp(), n.getStartIp(), n.getNetmask());
+        List<String> ipRanges2 = IpUtil.getIpRange(this.getStartIp(), this.getEndIp(), this.getStartIp(), this.getNetmask());
+        int total = ipRanges.size() + ipRanges2.size();
+        Set ipSet = new HashSet<String>();
+        ipSet.addAll(ipRanges);
+        ipSet.addAll(ipRanges2);
+        if (total != ipSet.size()) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startIp, endIp, netmask, gateway, pxeEnabled);
+        return Integer.valueOf(this.getNetSegment().split("\\.")[0]);
     }
 }

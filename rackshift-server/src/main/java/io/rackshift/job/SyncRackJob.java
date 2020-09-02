@@ -24,8 +24,8 @@ public class SyncRackJob {
     @Resource
     private List<Endpoint> endPoints;
 
-//    @Scheduled(fixedDelay = 1000)
-//    @Scheduled(fixedDelay = 60000)
+    //    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 30000)
     public void run() {
         List<MachineEntity> entities = new LinkedList<>();
         JSONArray nodesArr = null;

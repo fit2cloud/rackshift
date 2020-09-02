@@ -476,8 +476,7 @@ export default {
   components: {
     OBM
   },
-  computed: {
-  },
+  computed: {},
   mounted() {
     this.getData();
     this.getAllGraphDefinitions();

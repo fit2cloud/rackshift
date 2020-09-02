@@ -3,3 +3,6 @@
 target
 /rackshift-web/*.iml
 /rackshift.iml
+/rackshift-plugin/dell-metal-plugin/dell-metal-plugin.iml
+/rackshift-plugin/metal-plugin-sdk/metal-plugin-sdk.iml
+/rackshift-plugin/rackshift-plugin.iml

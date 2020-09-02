@@ -26,7 +26,7 @@ public class NetworkController {
     @RequestMapping("list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody NetworkDTO queryVO) {
         Page<Object> page1 = PageHelper.startPage(page, pageSize, true);
-        return ResultHolder.success(PageUtils.setPageInfo(page1, networkService.list(queryVO)));
+        return ResultHolder.success(PageUtils.setPageInfo(page1, networkService.list(queryVO, page, pageSize)));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
