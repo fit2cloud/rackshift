@@ -2,6 +2,7 @@ package io.rackshift.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.rackshift.job.SyncNetworkJob;
 import io.rackshift.job.model.DHCPConfig;
@@ -151,11 +152,14 @@ public class NetworkService {
         return null;
     }
 
-    public List<Network> list(NetworkDTO queryVO, int page, int pageSize) {
+    public Map list(NetworkDTO queryVO, int page, int pageSize) {
+        Map r= new HashMap();
         syncNetworkJob.run();
-        PageHelper.startPage(page, pageSize, true);
+        Page<Object> page1 = PageHelper.startPage(page, pageSize, true);
         NetworkExample example = buildExample(queryVO);
-        return networkMapper.selectByExample(example);
+        r.put("list",networkMapper.selectByExample(example));
+        r.put("page", page1);
+        return r;
     }
 
     private NetworkExample buildExample(NetworkDTO queryVO) {

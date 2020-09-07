@@ -23,7 +23,7 @@ export default {
   "add_system_parameter": "添加系统参数",
   "size": "容量",
   "phone": "手机号",
-  "pls_input_url": "请输入url",
+  "pls_input_url": "请输入url或直接上传iso文件",
   "detail": "详情",
   "pwd": "密码",
   "drive": "插槽号",

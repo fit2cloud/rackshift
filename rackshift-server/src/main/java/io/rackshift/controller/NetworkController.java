@@ -1,7 +1,6 @@
 package io.rackshift.controller;
 
 import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import io.rackshift.constants.AuthorizationConstants;
 import io.rackshift.model.NetworkDTO;
 import io.rackshift.model.ResultHolder;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 @RestController
 @RequestMapping("network")
@@ -25,8 +25,8 @@ public class NetworkController {
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @RequestMapping("list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody NetworkDTO queryVO) {
-        Page<Object> page1 = PageHelper.startPage(page, pageSize, true);
-        return ResultHolder.success(PageUtils.setPageInfo(page1, networkService.list(queryVO, page, pageSize)));
+        Map r = networkService.list(queryVO, page, pageSize);
+        return ResultHolder.success(PageUtils.setPageInfo((Page) r.get("page"), r.get("list")));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)

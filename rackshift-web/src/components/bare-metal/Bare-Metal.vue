@@ -35,7 +35,7 @@
                 <el-option
                     v-for="g in supportedWorkflow"
                     :label="g.friendlyName"
-                    :value="g.injectableName"></el-option>
+                    :value="g.id"></el-option>
               </el-select>
 
               <el-button :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"
@@ -49,7 +49,12 @@
           <div id="action-list">
             <div class="el-icon-s-operation h25"
                  style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+              <el-badge :value="selectedWorkflow.length" class="item" type="primary" v-show="selectedWorkflow.length">
+                {{ $t('selected_workflows') }}
+              </el-badge>
+              <span v-show="selectedWorkflow.length == 0">
               {{ $t('selected_workflows') }}
+              </span>
             </div>
             <div>
               <el-card v-for="(w, $index) in selectedWorkflow" style="height:100%;">
@@ -84,6 +89,7 @@
             :data="tableData"
             class="table"
             ref="multipleTable"
+            v-loading="loadingList"
             header-cell-class-name="table-header"
             @sort-change="sortChange($event)"
             style="width: 100%"
@@ -211,8 +217,8 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="fillOutObms = false">取 消</el-button>
-            <el-button type="primary" @click="submitOBM" :loading="obmLoading">确 定</el-button>
+            <el-button @click="fillOutObms = false">${{ $t('cancel') }}</el-button>
+            <el-button type="primary" @click="submitOBM" :loading="obmLoading">{{ $t('confirm') }}</el-button>
           </div>
         </el-dialog>
 
@@ -377,6 +383,7 @@ import HttpUtil from "../../common/utils/HttpUtil";
 import {isAnyBlank, toLine} from "../../common/utils/CommonUtil";
 import OBM from "../obm/Obm"
 import Vue from "vue"
+import {WebSocketUtil} from "@/common/utils/WebSocket";
 
 let _ = require('lodash');
 export default {
@@ -471,6 +478,8 @@ export default {
       },
       logPoller: null,
       currentParamConfig: '',
+      loadingList: false,
+      webSocket: null
     }
   },
   components: {
@@ -594,6 +603,7 @@ export default {
       this.getData();
     },
     getData() {
+      this.loadingList = true;
       if (this.search) {
         this.queryVO.searchKey = '%' + this.search + '%';
       } else {
@@ -602,6 +612,8 @@ export default {
       HttpUtil.post("/bare-metal/list/" + this.query.pageIndex + "/" + this.query.pageSize, this.queryVO, (res) => {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
+        this.checkDoingThings(res.data.listObject);
+        this.loadingList = false;
       });
     },
     handleSizeChange(val) {
@@ -709,7 +721,6 @@ export default {
       });
     },
     runWorkflow() {
-
       if (!this.selectedWorkflow.length) {
         this.$notify.error(this.$t('pls_select_workflow') + "!");
         return;
@@ -730,10 +741,13 @@ export default {
         this.selectedWorkflow = [];
         this.getData();
       });
+    },
+    getWorkflowById() {
+      return _.find(this.supportedWorkflow, (o) => o.id == this.wfRequest.workflow);
     }
     ,
     getParamsTemplate() {
-      HttpUtil.get("/workflow/params/" + this.wfRequest.workflow, {}, (res) => {
+      HttpUtil.get("/workflow/params/" + this.getWorkflowById().injectableName, {}, (res) => {
         if (res.data[0]) {
           this.workflowParamList = res.data;
         } else {
@@ -756,11 +770,11 @@ export default {
       }
     },
     addToSelectedWorkflow() {
-      if (this.wfRequest.workflow) {
+      if (this.getWorkflowById().injectableName) {
 
 
         // for (let i = 0; i < this.multipleSelection.length; i++) {
-        //   let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[i].id;
+        //   let componentId = this.getWorkflowById().injectableName + "-" + this.multipleSelection[i].id;
         //   for (let j = 0; j < this.selectedWorkflow.length; j++) {
         //     if (this.selectedWorkflow[j].componentId == componentId) {
         //       // this.$notify.error(this.$t('same_workflow_node'));
@@ -768,10 +782,10 @@ export default {
         //   }
         // }
 
-        let originWf = _.find(this.supportedWorkflow, s => s.injectableName == this.wfRequest.workflow);
+        let originWf = _.find(this.supportedWorkflow, s => s.injectableName == this.getWorkflowById().injectableName);
         for (let k = 0; k < this.multipleSelection.length; k++) {
           let duplicated = false;
-          let componentId = this.wfRequest.workflow + "-" + this.multipleSelection[k].id;
+          let componentId = this.getWorkflowById().injectableName + "-" + this.multipleSelection[k].id;
           for (let j = 0; j < this.selectedWorkflow.length; j++) {
             if (this.selectedWorkflow[j].componentId == componentId) {
               duplicated = true;
@@ -787,11 +801,11 @@ export default {
 
           this.selectedWorkflow.push(
               {
-                componentId: this.wfRequest.workflow + "-" + this.multipleSelection[k].id,
+                componentId: this.getWorkflowById().injectableName + "-" + this.multipleSelection[k].id,
                 bareMetalId: this.multipleSelection[k].id,
                 machineModel: this.multipleSelection[k].machineModel,
                 machineSn: this.multipleSelection[k].machineSn,
-                workflowName: this.wfRequest.workflow,
+                workflowName: this.getWorkflowById().injectableName,
                 friendlyName: originWf.friendlyName,
                 settable: originWf.settable,
               }
@@ -829,7 +843,28 @@ export default {
       if (this.$refs.currentWfParamTemplate)
         this.$refs.currentWfParamTemplate.$destroy(true);
       this.selectedWorkflow.splice(index, 1);
-    }
+    },
+    checkDoingThings(list) {
+      let exists = false;
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].status && list[i].status.indexOf("ing") != -1) {
+          exists = true;
+          break;
+        }
+      }
+      if (exists) {
+        if (!this.webSocket) {
+          this.webSocket = WebSocketUtil.openSocket(this);
+        }
+      } else {
+        if (this.webSocket) {
+          this.webSocket.close();
+        }
+      }
+    },
+    onmessage(msg) {
+      this.getData();
+    },
   }
 }
 </script>

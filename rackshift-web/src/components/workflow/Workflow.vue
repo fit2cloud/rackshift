@@ -19,6 +19,7 @@
         :data="tableData"
         class="table"
         ref="multipleTable"
+        v-loading="loadingList"
         header-cell-class-name="table-header"
         style="width: 100%"
         @selection-change="handleSelectionChange"
@@ -193,6 +194,7 @@ export default {
       multipleSelection: [],
       delList: [],
       editVisible: false,
+      loadingList: false,
       pageTotal: 0,
       form: {},
       idx: -1,
@@ -273,9 +275,11 @@ export default {
     },
     // 获取 easy-mock 的模拟数据
     getData() {
+      this.loadingList = true;
       HttpUtil.post("/workflow/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
+        this.loadingList = false;
       });
 
     },

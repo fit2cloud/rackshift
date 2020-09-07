@@ -10,6 +10,7 @@ import Network from "../network/Network"
 import ExecutionLog from "../execution-log/Execution-Log"
 import Workflow from "../workflow/Workflow"
 import Endpoint from "../endpoint/Endpoint"
+import Info from "../info/Info"
 
 Vue.use(VueRouter);
 
@@ -26,6 +27,7 @@ const routes = [
     {path: '/execution-log', component: ExecutionLog},
     {path: '/workflow', component: Workflow},
     {path: '/endpoint', component: Endpoint},
+    {path: '/info', component: Info},
 ]
 const router = new VueRouter({
     routes: routes

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--    <el-card>-->
-    <el-form label-width="101px" :rules="rules" :model="payLoad.options.defaults" ref="form">
+    <el-form label-width="110px" :rules="rules" :model="payLoad.options.defaults" ref="form">
       <el-row>
         <el-col :span="12">
           <el-form-item :label="$t('hostname')" prop="hostname">

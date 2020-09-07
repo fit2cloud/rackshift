@@ -31,9 +31,11 @@ public class EndpointService {
             return false;
         }
         e.clear();
-        e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.name());
-        if (endpointMapper.selectByExample(e).stream().count() > 0) {
-            return false;
+        if (ServiceConstants.EndPointType.main_endpoint.name().equals(queryVO.getType())) {
+            e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.name());
+            if (endpointMapper.selectByExample(e).stream().count() > 0) {
+                return false;
+            }
         }
         Endpoint image = new Endpoint();
         BeanUtils.copyBean(image, queryVO);

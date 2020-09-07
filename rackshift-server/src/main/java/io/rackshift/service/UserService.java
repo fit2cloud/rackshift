@@ -1,5 +1,6 @@
 package io.rackshift.service;
 
+import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.UserStatus;
 import io.rackshift.model.RSException;
 import io.rackshift.model.UserDTO;
@@ -9,6 +10,7 @@ import io.rackshift.mybatis.mapper.UserMapper;
 import io.rackshift.mybatis.mapper.UserRoleMapper;
 import io.rackshift.mybatis.mapper.ext.ExtUserMapper;
 import io.rackshift.utils.CodingUtil;
+import io.rackshift.utils.SessionUtil;
 import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -134,5 +136,25 @@ public class UserService {
         User user = new User();
         user.setStatus(UserStatus.DISABLED);
         return userMapper.updateByExampleSelective(user, userExample) > 0;
+    }
+
+    public boolean change(JSONObject editObj) {
+        String originPwd = editObj.getString("originPwd");
+        String newPwd = editObj.getString("newPwd");
+        String confirmPwd = editObj.getString("confirmPwd");
+        if (StringUtils.isAnyBlank(originPwd, newPwd, confirmPwd)) {
+            return false;
+        }
+        User user = userMapper.selectByPrimaryKey(SessionUtil.getUser().getId());
+
+        if (CodingUtil.md5(originPwd).equalsIgnoreCase(user.getPassword())) {
+            if (newPwd.equals(confirmPwd)) {
+
+                user.setPassword(CodingUtil.md5(newPwd));
+                userMapper.updateByPrimaryKey(user);
+                return true;
+            }
+        }
+        return false;
     }
 }

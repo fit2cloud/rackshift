@@ -19,6 +19,7 @@
         :data="tableData"
         class="table"
         ref="multipleTable"
+        v-loading="loadingList"
         header-cell-class-name="table-header"
         style="width: 100%"
         @selection-change="handleSelectionChange"
@@ -176,6 +177,7 @@ export default {
       allOs: [],
       allOsVersion: [],
       allEndPointType: [],
+      loadingList: [],
     };
   },
   mounted() {
@@ -185,9 +187,11 @@ export default {
   methods: {
     // 获取 easy-mock 的模拟数据
     getData() {
+      this.loadingList = true;
       HttpUtil.post("/endpoint/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
+        this.loadingList = false;
       });
 
     },
@@ -252,7 +256,11 @@ export default {
         return;
       }
       HttpUtil.post("/endpoint/del", ids, (res) => {
-        this.$message.success(this.$t('delete_success'));
+        if (res.data) {
+          this.$message.success(this.$t('delete_success'));
+        } else {
+          this.$message.success(this.$t('delete_fail'));
+        }
         this.getData();
       });
       this.multipleSelection = [];
@@ -273,8 +281,12 @@ export default {
           type: 'warning'
         }).then(() => {
           HttpUtil.get("/endpoint/del/" + row.id, {}, (res) => {
+            if (res.data) {
+              this.$message.success(this.$t('delete_success'));
+            } else {
+              this.$message.success(this.$t('delete_fail'));
+            }
             this.getData();
-            this.$message.success(this.$t('delete_success!'));
           });
         })
       } else {

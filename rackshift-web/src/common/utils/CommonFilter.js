@@ -1,4 +1,8 @@
 // 将时间戳转日期格式的过滤器
+import HttpUtil from "@/common/utils/HttpUtil";
+
+let _ = require('lodash');
+
 function dateFormat(dataStr) {
     var time = new Date(dataStr);
 
@@ -30,4 +34,8 @@ function brandsFormat(brands) {
 
 }
 
-export {dateFormat, brandsFormat}
+function endpointFormat(endpointId) {
+    return _.find(JSON.parse(localStorage.getItem("allEndPoints", (o) => o.id == endpointId))).name;
+}
+
+export {dateFormat, brandsFormat, endpointFormat}

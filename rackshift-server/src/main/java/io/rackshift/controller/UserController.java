@@ -1,5 +1,6 @@
 package io.rackshift.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.rackshift.constants.AuthorizationConstants;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 @RestController
 @RequestMapping("user")
@@ -50,4 +52,10 @@ public class UserController {
 //    public ResultHolder del(@RequestBody String[] ids) {
 //        return ResultHolder.success(userService.del(ids));
 //    }
+
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @RequestMapping("change")
+    public ResultHolder change(@RequestBody JSONObject editObj) {
+        return ResultHolder.success(userService.change(editObj));
+    }
 }
