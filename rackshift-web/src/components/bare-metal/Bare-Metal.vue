@@ -854,11 +854,7 @@ export default {
       }
       if (exists) {
         if (!this.webSocket) {
-          this.webSocket = WebSocketUtil.openSocket(this);
-        }
-      } else {
-        if (this.webSocket) {
-          this.webSocket.close();
+          this.webSocket = WebSocketUtil.openSocket('lifecycle', this.getData);
         }
       }
     },

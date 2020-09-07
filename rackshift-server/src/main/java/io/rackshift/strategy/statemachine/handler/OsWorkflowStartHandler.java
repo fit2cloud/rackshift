@@ -8,12 +8,16 @@ import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.service.RackHDService;
 import io.rackshift.strategy.statemachine.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import javax.annotation.Resource;
 
 @EventHandlerAnnotation(LifeEventType.POST_OS_WORKFLOW_START)
 public class OsWorkflowStartHandler extends AbstractHandler {
 
+    @Autowired
+    private SimpMessagingTemplate template;
     @Resource
     private RackHDService rackHDService;
     @Resource
@@ -46,6 +50,7 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         } else {
             revert(event, getExecutionId(), getUser());
         }
+        template.convertAndSend("/topic/lifecycle", "");
     }
 
     private JSONObject setPartitionSize(JSONObject params) {
