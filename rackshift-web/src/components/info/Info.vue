@@ -11,14 +11,14 @@
       <el-col :span="8">
         <div><h1>{{ $t('change_pwd') }}</h1></div>
         <el-form :model="editObj">
-          <el-form-item label="origin-password">
+          <el-form-item :label="$t('origin-password')">
             <el-input v-model="editObj.originPwd" show-password></el-input>
           </el-form-item>
-          <el-form-item label="new-password">
+          <el-form-item :label="$t('new-password')">
             <el-input v-model="editObj.newPwd" show-password></el-input>
           </el-form-item>
 
-          <el-form-item label="confirm-password">
+          <el-form-item :label="$t('confirm-password')">
             <el-input v-model="editObj.confirmPwd" show-password></el-input>
           </el-form-item>
 

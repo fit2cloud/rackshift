@@ -5,7 +5,7 @@
         <span id="main-title">RackShift</span>
         <el-dropdown id="dropdown" @command="changeLaunguage">
           <span class="el-dropdown-link">
-              {{$t('Languages')}}<i class="el-icon-arrow-down el-icon--right"></i>
+              {{ $t('Languages') }}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="zh_CN">{{ $t('chinese') }}</el-dropdown-item>
@@ -77,6 +77,7 @@ export default {
     },
     changeLaunguage(l) {
       this.$setLang(l);
+      window.location.reload();
     },
     action(command) {
       if ('logout' == command) {

@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class I18NTest {
 
     public static void main(String[] args) throws IOException {
-        File file = new File("D:\\rackshift\\rackshift-web\\src\\components");
+        File file = new File("D:\\rackshift\\rackshift-web\\src\\App.vue");
 //        File file = new File("D:\\rackshift\\rackshift-web\\src\\rackparams");
         File file2 = new File("D:\\rackshift\\rackshift-web\\src\\i18n\\zh-CN.json");
         BufferedReader reader = new BufferedReader(new FileReader(file2));
@@ -32,6 +32,8 @@ public class I18NTest {
                     extract(listFile, i18n);
                 }
             }
+        }else{
+            extract(file, i18n);
         }
 
         for (Map.Entry o : i18n.entrySet()) {
@@ -51,7 +53,7 @@ public class I18NTest {
                 sb.append(line + "\n");
             }
 
-            Pattern p = Pattern.compile("\\$t\\('([\\w][\\W]+)'\\)");
+            Pattern p = Pattern.compile("\\$t\\('([a-zA-Z]+)'\\)");
 //                            Pattern p = Pattern.compile("^\\w+'(i18n_[\\w]+)' | translator :'([\\u4e00-\\u9fa5]+)'");
             Matcher m = p.matcher(sb.toString());
             while (m.find()) {

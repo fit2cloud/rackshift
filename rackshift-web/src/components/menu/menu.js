@@ -3,7 +3,7 @@ import i18n from "@/i18n/i18n";
 export default {
     menus: [
         {
-            "name": "OverView",
+            "name": i18n.t('OverView'),
             "router": "/overview",
             "requireRole": "admin",
             "order": "1",
