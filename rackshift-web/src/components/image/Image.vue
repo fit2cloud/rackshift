@@ -208,7 +208,7 @@ export default {
   methods: {
     getAllEndPoints() {
       HttpUtil.get("/endpoint/getAllEndPoints", {}, (res) => {
-        this.allEndPoints = _.find(res.data, (e) => e.type == 'main_endpoint');
+        this.allEndPoints = [].concat(_.find(res.data, (e) => e.type == 'main_endpoint'));
 
         localStorage.setItem("allEndPoints", JSON.stringify(this.allEndPoints));
       });
