@@ -121,3 +121,44 @@ update workflow set default_params = '{
         }
       }' where injectable_name = 'Graph.Raid.Create.PercRAID';
 
+
+
+INSERT INTO USER
+VALUES
+
+(
+	'admin',
+	'admin',
+	'admin@test.com',
+	'e10adc3949ba59abbe56e057f20f883e',
+	1,
+	1599554996261,
+	1599554996261,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+);
+
+INSERT INTO user_role
+VALUES
+	(
+		1,
+		'admin',
+		1,
+		NULL,
+		1599554996261,
+		1599554996261
+	);
+
+INSERT INTO role
+VALUES
+	(
+		1,
+		'admin',
+		NULL,
+		'admin',
+		1599554996261,
+		1599554996261
+	);
+
