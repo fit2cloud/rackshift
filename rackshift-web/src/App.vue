@@ -5,7 +5,7 @@
         <span id="main-title">RackShift</span>
         <el-dropdown id="dropdown" @command="changeLaunguage">
           <span class="el-dropdown-link">
-              语言<i class="el-icon-arrow-down el-icon--right"></i>
+              {{$t('Languages')}}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="zh_CN">{{ $t('chinese') }}</el-dropdown-item>

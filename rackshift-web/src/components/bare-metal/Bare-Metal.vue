@@ -31,7 +31,7 @@
               </div>
               <div class="run-splitter h25"></div>
               <!--                    <el-button class="h50">Workflow <span class="el-icon-caret-bottom"></span></el-button>-->
-              <el-select v-model="wfRequest.workflow" @change="getParamsTemplate">
+              <el-select v-model="wfRequest.workflow" :placeholder="$t('please_select')" @change="getParamsTemplate">
                 <el-option
                     v-for="g in supportedWorkflow"
                     :label="g.friendlyName"
@@ -136,7 +136,7 @@
 
           </el-table-column>
 
-          <el-table-column prop="" :label="$t('opt')" align="center">
+          <el-table-column prop="" :label="$t('opt')" align="center" width="130px">
             <template slot="header" slot-scope="scope">
               <el-input
                   v-model="search"
@@ -157,7 +157,7 @@
                   </el-dropdown-item>
                   <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
                   </el-dropdown-item>
-                  <el-dropdown-item @click.native="fillOBM(scope.row)">OBM信息
+                  <el-dropdown-item @click.native="fillOBM(scope.row)">OBM{{ $t('info') }}
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>

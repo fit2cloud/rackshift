@@ -60,6 +60,7 @@ public class OutBandService {
         if (bareMetal == null) {
             return null;
         }
+        image.setBareMetalId(bareMetal.getId());
         outBandMapper.insertSelective(image);
         rackHDService.createOrUpdateObm(queryVO, bareMetal);
         return true;

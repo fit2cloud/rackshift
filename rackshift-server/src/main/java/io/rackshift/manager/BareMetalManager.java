@@ -58,7 +58,7 @@ public class BareMetalManager {
 
     public BareMetal getBareMetalByIp(String ip) {
         if (StringUtils.isBlank(ip)) {
-            RSException.throwExceptions("error！ cannt get sn!");
+            RSException.throwExceptions("error！ cannt get ip!");
         }
         BareMetalExample example = new BareMetalExample();
         example.createCriteria().andManagementIpEqualTo(ip);

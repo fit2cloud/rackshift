@@ -1,123 +1,118 @@
+import i18n from "@/i18n/i18n";
+
 export default {
     menus: [
         {
             "name": "OverView",
             "router": "/overview",
             "requireRole": "admin",
-            "order" : "1",
-            "icon" : "el-icon-view",
+            "order": "1",
+            "icon": "el-icon-view",
             childs: [
                 {
-                    "name": "使用向导",
+                    "name": i18n.t('Wizard'),
                     "router": "/Wizard",
                     "requireRole": "user,admin",
-                    "order" : "1",
-                    "icon" : "el-icon-question"
+                    "order": "1",
+                    "icon": "el-icon-question"
                 }
             ]
         },
         {
-            "name": "资源",
+            "name": i18n.t('Resource'),
             "router": "/Resource",
             "requireRole": "admin,user",
-            "order" : "2",
-            "icon" : "el-icon-folder-opened",
+            "order": "2",
+            "icon": "el-icon-folder-opened",
             childs: [
                 {
-                    "name": "裸金属",
+                    "name": i18n.t('Bare Metal Server'),
                     "router": "/bare-metal",
                     "requireRole": "user,admin",
                     "order": "1",
-                    "icon" : "el-icon-monitor"
+                    "icon": "el-icon-monitor"
                 },
 
                 {
-                    "name": "镜像",
+                    "name": i18n.t('Image'),
                     "router": "/image",
                     "requireRole": "user,admin",
-                    "order" : "3",
-                    "icon" : "el-icon-view"
+                    "order": "3",
+                    "icon": "el-icon-view"
                 },
             ]
         },
         {
-            "name": "网络",
+            "name": i18n.t('Network'),
             "router": "/network",
             "requireRole": "admin",
-            "order" : "3",
-            "icon" : "el-icon-s-grid",
+            "order": "3",
+            "icon": "el-icon-s-grid",
             childs: [
                 {
-                    "name": "子网",
+                    "name": i18n.t('Subnet'),
                     "router": "/network",
                     "requireRole": "admin",
-                    "order" : "1",
-                    "icon" : "el-icon-menu"
+                    "order": "1",
+                    "icon": "el-icon-menu"
                 },
                 {
-                    "name": "发现",
+                    "name": i18n.t('Discovery'),
                     "router": "/Discovery",
                     "requireRole": "admin",
-                    "order" : "2",
-                    "icon" : "el-icon-s-promotion"
+                    "order": "2",
+                    "icon": "el-icon-s-promotion"
                 },
             ]
         },
         {
-            "name": "控制",
+            "name": i18n.t('Control'),
             "router": "/Control",
             "requireRole": "admin",
-            "order" : "4",
-            "icon" : "el-icon-unlock",
+            "order": "4",
+            "icon": "el-icon-unlock",
             childs: [
                 {
-                    "name": "工作流",
+                    "name": i18n.t('Workflow'),
                     "router": "/WorkFlow",
                     "requireRole": "admin",
-                    "order" : "1",
-                    "icon" : "el-icon-s-unfold",
+                    "order": "1",
+                    "icon": "el-icon-s-unfold",
                 },
                 {
-                    "name": "任务",
-                    "router": "/Task",
-                    "requireRole": "admin",
-                    "order" : "2",
-                    "icon" : "el-icon-s-operation",
-                },
-                {
-                    "name": "执行记录",
+                    "name": i18n.t('Execution Log'),
                     "router": "/execution-log",
                     "requireRole": "admin",
-                    "order" : "3",
-                    "icon" : "el-icon-s-order",
+                    "order": "3",
+                    "icon": "el-icon-s-order",
                 },
             ]
         }, {
-            "name": "系统设置",
+            "name": i18n.t('Configuration'),
             "router": "/Setting",
             "requireRole": "admin",
-            "order" : "5",
-            "icon" : "el-icon-s-tools",
+            "order": "5",
+            "icon": "el-icon-s-tools",
             childs: [
                 {
                     "name": "Endpoint",
                     "router": "/endpoint",
                     "requireRole": "admin",
-                    "order" : "5",
-                    "icon" : "el-icon-s-promotion",
+                    "order": "5",
+                    "icon": "el-icon-s-promotion",
                 },
                 {
-                    "name": "用户",
+                    "name": i18n.t('User'),
                     "router": "/user",
                     "requireRole": "admin",
                     "order": "2",
-                    "icon" : "el-icon-user-solid",
+                    "icon": "el-icon-user-solid",
                 }, {
-                    "name": "角色",
+                    "name": i18n.t('Role'),
                     "router": "/role",
                     "requireRole": "admin",
                     "order": "3",
-                    "icon" : "el-icon-user",
+                    "icon": "el-icon-user",
                 },
                 // {
                 //     "name": "系统参数",
@@ -127,11 +122,11 @@ export default {
                 //     "icon" : "el-icon-s-home",
                 // },
                 {
-                    "name": "插件",
+                    "name": i18n.t('Plugin'),
                     "router": "/Plugin",
                     "requireRole": "user,admin",
-                    "order" : "6",
-                    "icon" : "el-icon-s-shop",
+                    "order": "6",
+                    "icon": "el-icon-s-shop",
                 },
             ]
         }

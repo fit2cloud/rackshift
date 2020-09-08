@@ -175,16 +175,17 @@ export default {
       this.editType = 'add';
     },
     confirmEdit() {
+      this.loading = true;
       if (this.editType == 'edit') {
         HttpUtil.post("/outband/update", this.editObj, (res) => {
           this.editDialogVisible = false;
-          this.$message.success('编辑成功');
+          this.$message.success(this.$t('edit_success'));
           this.getData();
         })
       } else {
         HttpUtil.post("/outband/add", this.editObj, (res) => {
           this.editDialogVisible = false;
-          this.$message.success('新增成功');
+          this.$message.success(this.$t('add_success'));
           this.getData();
         })
       }
@@ -193,16 +194,24 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
+    getSelectedIds: function () {
+      this.delList = [].concat(this.multipleSelection);
+      let ids = _.map(this.delList, (item) => item.id);
+      return ids;
+    },
     delAllSelection() {
       const length = this.multipleSelection.length;
       let str = '';
-      this.delList = this.delList.concat(this.multipleSelection);
       for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].name + ' ';
+        str += this.multipleSelection[i].injectableName + ' ';
       }
-      let ids = _.map(this.delList, (item) => item.id);
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$notify.error(this.$t('pls_select_obm') + "!");
+        return;
+      }
       HttpUtil.post("/outband/del", ids, (res) => {
-        this.$message.success(`删除成功！删除了${str}！`);
+        this.$message.success(this.$t('delete_success'));
         this.getData();
       });
       this.multipleSelection = [];
@@ -214,12 +223,12 @@ export default {
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
       } else if (type == 'del') {
-        this.$confirm('确定要删除吗？', '提示', {
+        this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
           HttpUtil.get("/outband/del/" + row.id, {}, (res) => {
             this.getData();
-            this.$message.success('删除成功');
+            this.$message.success(this.$t('delete_success!'));
           });
         })
       } else {
