@@ -1,7 +1,5 @@
-import ca from "element-ui/src/locale/lang/ca";
-
 let SockJS = require('sockjs-client');
-let Stomp = require('_stompjs@2.3.3@stompjs');
+let Stomp = require('stompjs');
 let WebSocketUtil = {
     stompClient: null,
     openSocket: function (topic, callback) {
