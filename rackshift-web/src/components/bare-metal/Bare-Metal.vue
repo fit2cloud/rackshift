@@ -157,7 +157,7 @@
                   </el-dropdown-item>
                   <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
                   </el-dropdown-item>
-                  <el-dropdown-item @click.native="fillOBM(scope.row)">OBM{{ $t('info') }}
+                  <el-dropdown-item @click.native="fillOBM(scope.row)">OBM {{ $t('info') }}
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -217,7 +217,7 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="fillOutObms = false">${{ $t('cancel') }}</el-button>
+            <el-button @click="fillOutObms = false">{{ $t('cancel') }}</el-button>
             <el-button type="primary" @click="submitOBM" :loading="obmLoading">{{ $t('confirm') }}</el-button>
           </div>
         </el-dialog>

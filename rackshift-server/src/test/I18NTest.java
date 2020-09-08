@@ -11,8 +11,9 @@ import java.util.regex.Pattern;
 public class I18NTest {
 
     public static void main(String[] args) throws IOException {
-        File file = new File("E:\\rackshift\\rackshift-web\\src\\rackparams");
-        File file2 = new File("E:\\rackshift\\rackshift-web\\src\\i18n\\zh-CN.json");
+        File file = new File("D:\\rackshift\\rackshift-web\\src\\components");
+//        File file = new File("D:\\rackshift\\rackshift-web\\src\\rackparams");
+        File file2 = new File("D:\\rackshift\\rackshift-web\\src\\i18n\\zh-CN.json");
         BufferedReader reader = new BufferedReader(new FileReader(file2));
         String line = null;
         StringBuffer sb = new StringBuffer();
@@ -21,7 +22,6 @@ public class I18NTest {
         }
 
         JSONObject i18n = JSONObject.parseObject(sb.toString());
-        i18n = new JSONObject();
         sb.setLength(0);
         if (file.isDirectory()) {
             for (File listFile : file.listFiles()) {
@@ -51,7 +51,7 @@ public class I18NTest {
                 sb.append(line + "\n");
             }
 
-            Pattern p = Pattern.compile("\\$t\\('([\\w]+)'\\)");
+            Pattern p = Pattern.compile("\\$t\\('([\\w][\\W]+)'\\)");
 //                            Pattern p = Pattern.compile("^\\w+'(i18n_[\\w]+)' | translator :'([\\u4e00-\\u9fa5]+)'");
             Matcher m = p.matcher(sb.toString());
             while (m.find()) {

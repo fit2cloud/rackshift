@@ -3,14 +3,11 @@
 
     <div class="machine-title">
       <i class="el-icon-user-solid">{{ $t('OBM') }}</i>
-      <div class="el-button-group batch-button">
-        <button type="button" class="el-button el-button--primary" @click="delAllSelection"><i
-            class="el-icon-delete"></i>{{ $t('batch_del') }}
-        </button>
-        <button type="button" class="el-button el-button--primary" @click="handleEdit({}, 'add')"><i
-            class="el-icon-document-add"></i>{{ $t('add') }}
-        </button>
-      </div>
+      <el-button-group class="batch-button">
+        <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
+        </el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
+      </el-button-group>
     </div>
 
     <el-table
@@ -180,12 +177,14 @@ export default {
         HttpUtil.post("/outband/update", this.editObj, (res) => {
           this.editDialogVisible = false;
           this.$message.success(this.$t('edit_success'));
+          this.loadingList = false;
           this.getData();
         })
       } else {
         HttpUtil.post("/outband/add", this.editObj, (res) => {
           this.editDialogVisible = false;
           this.$message.success(this.$t('add_success'));
+          this.loadingList = false;
           this.getData();
         })
       }

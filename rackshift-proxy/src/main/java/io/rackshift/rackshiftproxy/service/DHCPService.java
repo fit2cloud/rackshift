@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class DHCPService {
-    @Value("${dhcpd.leases.pos:/opt/fit2cloud/rackhd/dhcp/config/dhcpd.leases}")
+    @Value("${dhcpd.leases.pos:/opt/rackshift/rackhd/dhcp/config/dhcpd.leases}")
     private String leasPpos;
-    @Value("${dhcpd.leases.pos:/opt/fit2cloud/rackhd/dhcp/config/dhcpd.conf}")
+    @Value("${dhcpd.leases.pos:/opt/rackshift/rackhd/dhcp/config/dhcpd.conf}")
     private String configPos;
 
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");

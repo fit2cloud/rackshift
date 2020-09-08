@@ -208,8 +208,9 @@ export default {
   methods: {
     getAllEndPoints() {
       HttpUtil.get("/endpoint/getAllEndPoints", {}, (res) => {
-        this.allEndPoints = res.data;
-        localStorage.setItem("allEndPoints", JSON.stringify(res.data));
+        this.allEndPoints = _.find(res.data, (e) => e.type == 'main_endpoint');
+
+        localStorage.setItem("allEndPoints", JSON.stringify(this.allEndPoints));
       });
     },
     // 获取 easy-mock 的模拟数据

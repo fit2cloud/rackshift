@@ -15,10 +15,7 @@ import io.rackshift.mybatis.domain.NetworkExample;
 import io.rackshift.mybatis.mapper.EndpointMapper;
 import io.rackshift.mybatis.mapper.NetworkMapper;
 import io.rackshift.mybatis.mapper.ext.ExtNetworkMapper;
-import io.rackshift.utils.BeanUtils;
-import io.rackshift.utils.IpUtil;
-import io.rackshift.utils.LogUtil;
-import io.rackshift.utils.Translator;
+import io.rackshift.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -75,9 +72,9 @@ public class NetworkService {
 
         String res = null;
         if (StringUtils.isBlank(queryVO.getId()))
-            res = HttpFutureUtils.postHttps("http://localhost:8083/dhcp/addDHCPConfig", requesetStr, contentTypeJSON);
+            res = HttpFutureUtils.postHttps("http://"+endpoint.getIp()+":8083/dhcp/addDHCPConfig", requesetStr, contentTypeJSON, ProxyUtil.getHeaders());
         else
-            res = HttpFutureUtils.postHttps("http://localhost:8083/dhcp/saveDHCPConfig", requesetStr, contentTypeJSON);
+            res = HttpFutureUtils.postHttps("http://"+endpoint.getIp()+":8083/dhcp/saveDHCPConfig", requesetStr, contentTypeJSON, ProxyUtil.getHeaders());
 //        String res = HttpFutureUtils.postHttps("http://" + endpoint.getIp() + ":8083/dhcp/addDHCPConfig", requesetStr, contentTypeJSON);
         if (StringUtils.isNotBlank(res)) {
             JSONObject resObj = JSONObject.parseObject(res);
@@ -103,7 +100,7 @@ public class NetworkService {
         if (endpoint == null) return false;
         String requesetStr = buildRequestStr(network);
 
-        String res = HttpFutureUtils.postHttps("http://localhost" + ":8083/dhcp/delDHCPConfig", requesetStr, contentTypeJSON);
+        String res = HttpFutureUtils.postHttps("http://"+ endpoint.getIp()+":8083/dhcp/delDHCPConfig", requesetStr, contentTypeJSON, ProxyUtil.getHeaders());
         if (StringUtils.isNotBlank(res)) {
             JSONObject resObj = JSONObject.parseObject(res);
             if (resObj.containsKey("success") && resObj.getBoolean("success")) {
@@ -153,11 +150,11 @@ public class NetworkService {
     }
 
     public Map list(NetworkDTO queryVO, int page, int pageSize) {
-        Map r= new HashMap();
+        Map r = new HashMap();
         syncNetworkJob.run();
         Page<Object> page1 = PageHelper.startPage(page, pageSize, true);
         NetworkExample example = buildExample(queryVO);
-        r.put("list",networkMapper.selectByExample(example));
+        r.put("list", networkMapper.selectByExample(example));
         r.put("page", page1);
         return r;
     }
