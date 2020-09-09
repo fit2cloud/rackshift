@@ -33,7 +33,7 @@
 
         <!-- jdbc连接信息 --> <!-- EduLoanManage EduTestDataBase -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:3306/rackshift"
-                        userId="root" password="admin"/>
+                        userId="${spring.datasource.username}" password="${spring.datasource.password}"/>
         <!--        <jdbcConnection driverClass="com.mysql.jdbc.Driver"-->
         <!--                        connectionURL="${spring.datasource.url}"-->
         <!--                        userId="${spring.datasource.username}" password="${spring.datasource.password}"/>-->
