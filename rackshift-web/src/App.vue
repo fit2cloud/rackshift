@@ -25,11 +25,11 @@
       </el-header>
       <el-container>
         <el-aside>
-          <el-menu id="main-menu" :default-openeds="['2']" style="border-right: none;">
-            <el-submenu :index="m.order" v-for="m in menus" v-bind:index="m.order">
+          <el-menu id="main-menu" :unique-opened=false style="border-right: none;">
+            <el-submenu :index="m.order" v-for="m in menus">
               <template slot="title"><i :class="m.icon"></i>{{ m.name }}</template>
               <el-menu-item :class="$route.path == c.router ? 'is-active' : ''"
-                            v-for="c in m.childs" v-bind:index="m.order + '-' + c.order"
+                            v-for="c in m.childs" :index="m.order + '-' + c.order"
                             v-on:click="$router.push(c.router)">
                 <i :class="c.icon"></i>
                 {{ c.name }}

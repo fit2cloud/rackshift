@@ -13,7 +13,7 @@ axios.interceptors.response.use(function (response) {
     }
     return response;
 }, function (error) {
-    if (error.response.data.message == 'Authentication Status Invalid') {
+    if (JSON.stringify(response.data).indexOf('Authentication Status Invalid') != -1) {
         MessageBox.alert('登录已失效', '提示', {
             confirmButtonText: '确定',
             callback: action => {

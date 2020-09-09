@@ -256,7 +256,7 @@ export default {
         return;
       }
       HttpUtil.post("/endpoint/del", ids, (res) => {
-        if (res.data) {
+        if (res.data.success) {
           this.$message.success(this.$t('delete_success'));
         } else {
           this.$message.success(this.$t('delete_fail'));

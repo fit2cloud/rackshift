@@ -10,6 +10,8 @@ import io.rackshift.service.ExecutionLogService;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,6 +23,8 @@ public abstract class AbstractHandler implements IStateHandler {
     private BareMetalManager bareMetalManager;
     @Resource
     protected ExecutionLogService executionLogService;
+    @Autowired
+    private SimpMessagingTemplate template;
 
     protected BareMetal getBareMetalById(String id) {
         return bareMetalManager.getBareMetalById(id);
@@ -89,6 +93,7 @@ public abstract class AbstractHandler implements IStateHandler {
     public void revert(LifeEvent event, String executionId, String user) {
         executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, String.format("错误：event:%s:worflow:%s,参数:%s,回滚状态至%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString(), getExecutionMap().get().get("beforeChangeStatus")));
         changeStatus(event, LifeStatus.valueOf(getExecutionMap().get().get("beforeChangeStatus")), false);
+        template.convertAndSend("/topic/lifecycle", "");
     }
 
     protected void beforeChange(LifeStatus curStatus) {

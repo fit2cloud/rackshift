@@ -13,7 +13,7 @@ export default {
                     "name": i18n.t('Wizard'),
                     "router": "/Wizard",
                     "requireRole": "user,admin",
-                    "order": "1",
+                    "order": "2",
                     "icon": "el-icon-question"
                 }
             ]
@@ -22,14 +22,14 @@ export default {
             "name": i18n.t('Resource'),
             "router": "/Resource",
             "requireRole": "admin,user",
-            "order": "2",
+            "order": "3",
             "icon": "el-icon-folder-opened",
             childs: [
                 {
                     "name": i18n.t('Bare Metal Server'),
                     "router": "/bare-metal",
                     "requireRole": "user,admin",
-                    "order": "1",
+                    "order": "4",
                     "icon": "el-icon-monitor"
                 },
 
@@ -37,7 +37,7 @@ export default {
                     "name": i18n.t('Image'),
                     "router": "/image",
                     "requireRole": "user,admin",
-                    "order": "3",
+                    "order": "5",
                     "icon": "el-icon-view"
                 },
             ]
@@ -46,44 +46,44 @@ export default {
             "name": i18n.t('Network'),
             "router": "/network",
             "requireRole": "admin",
-            "order": "3",
+            "order": "6",
             "icon": "el-icon-s-grid",
             childs: [
                 {
                     "name": i18n.t('Subnet'),
                     "router": "/network",
                     "requireRole": "admin",
-                    "order": "1",
+                    "order": "7",
                     "icon": "el-icon-menu"
                 },
-                {
-                    "name": i18n.t('Discovery'),
-                    "router": "/Discovery",
-                    "requireRole": "admin",
-                    "order": "2",
-                    "icon": "el-icon-s-promotion"
-                },
+                // {
+                //     "name": i18n.t('Discovery'),
+                //     "router": "/Discovery",
+                //     "requireRole": "admin",
+                //     "order": "2",
+                //     "icon": "el-icon-s-promotion"
+                // },
             ]
         },
         {
             "name": i18n.t('Control'),
             "router": "/Control",
             "requireRole": "admin",
-            "order": "4",
+            "order": "9",
             "icon": "el-icon-unlock",
             childs: [
                 {
                     "name": i18n.t('Workflow'),
                     "router": "/WorkFlow",
                     "requireRole": "admin",
-                    "order": "1",
+                    "order": "10",
                     "icon": "el-icon-s-unfold",
                 },
                 {
                     "name": i18n.t('Execution Log'),
                     "router": "/execution-log",
                     "requireRole": "admin",
-                    "order": "3",
+                    "order": "11",
                     "icon": "el-icon-s-order",
                 },
             ]
@@ -91,27 +91,27 @@ export default {
             "name": i18n.t('Configuration'),
             "router": "/Setting",
             "requireRole": "admin",
-            "order": "5",
+            "order": "12",
             "icon": "el-icon-s-tools",
             childs: [
                 {
                     "name": "Endpoint",
                     "router": "/endpoint",
                     "requireRole": "admin",
-                    "order": "5",
+                    "order": "13",
                     "icon": "el-icon-s-promotion",
                 },
                 {
                     "name": i18n.t('User'),
                     "router": "/user",
                     "requireRole": "admin",
-                    "order": "2",
+                    "order": "14",
                     "icon": "el-icon-user-solid",
                 }, {
                     "name": i18n.t('Role'),
                     "router": "/role",
                     "requireRole": "admin",
-                    "order": "3",
+                    "order": "15",
                     "icon": "el-icon-user",
                 },
                 // {
@@ -121,13 +121,13 @@ export default {
                 //     "order" : "5",
                 //     "icon" : "el-icon-s-home",
                 // },
-                {
-                    "name": i18n.t('Plugin'),
-                    "router": "/Plugin",
-                    "requireRole": "user,admin",
-                    "order": "6",
-                    "icon": "el-icon-s-shop",
-                },
+                // {
+                //     "name": i18n.t('Plugin'),
+                //     "router": "/Plugin",
+                //     "requireRole": "user,admin",
+                //     "order": "6",
+                //     "icon": "el-icon-s-shop",
+                // },
             ]
         }
     ]

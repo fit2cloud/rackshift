@@ -15,7 +15,7 @@ import Info from "../info/Info"
 Vue.use(VueRouter);
 
 const routes = [
-    {path: '/', redirect: '/index'},
+    {path: '/', redirect: '/bare-metal'},
     {path: '/login', component: Login},
     {path: '/index', component: Index},
     {path: '/role', component: Role},
