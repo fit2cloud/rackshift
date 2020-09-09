@@ -7,7 +7,6 @@ import io.rackshift.manager.OutBandManager;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.OutBand;
-import io.rackshift.service.ExecutionLogService;
 import io.rackshift.service.RackHDService;
 import io.rackshift.strategy.statemachine.*;
 import io.rackshift.utils.IPMIUtil;
@@ -25,10 +24,6 @@ public class DiscoveryStartHandler extends AbstractHandler {
     private BareMetalManager bareMetalManager;
     @Resource
     private SyncRackJob syncRackJob;
-    @Resource
-    private String rackhdUrl;
-    @Resource
-    private ExecutionLogService executionLogService;
 
     /**
      * 执行发现分为两种情况

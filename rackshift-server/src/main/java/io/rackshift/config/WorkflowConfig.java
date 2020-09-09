@@ -28,8 +28,6 @@ public class WorkflowConfig {
     private WorkflowMapper workflowMapper;
     @Resource
     private EndpointMapper endpointMapper;
-    @Resource
-    private String rackhdUrl;
     static EndpointMapper staticEndpointMapper;
 
     @Resource
@@ -77,7 +75,7 @@ public class WorkflowConfig {
 
     @Bean
     public JSONArray allWorkflow() {
-        String res = HttpFutureUtils.getHttp(rackhdUrl + RackHDConstants.WORKFLOWS, null);
+        String res = HttpFutureUtils.getHttp(rackhdUrl() + RackHDConstants.WORKFLOWS, null);
         if (StringUtils.isNotBlank(res)) {
             return JSONArray.parseArray(res);
         }
@@ -87,7 +85,7 @@ public class WorkflowConfig {
 
     @Bean
     public JSONArray allTask() {
-        String res = HttpFutureUtils.getHttp(rackhdUrl + RackHDConstants.TASKS, null);
+        String res = HttpFutureUtils.getHttp(rackhdUrl() + RackHDConstants.TASKS, null);
         if (StringUtils.isNotBlank(res)) {
             return JSONArray.parseArray(res);
         }

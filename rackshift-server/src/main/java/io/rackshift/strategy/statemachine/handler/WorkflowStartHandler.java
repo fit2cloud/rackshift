@@ -1,7 +1,6 @@
 package io.rackshift.strategy.statemachine.handler;
 
 import com.alibaba.fastjson.JSONObject;
-import io.rackshift.Application;
 import io.rackshift.config.WorkflowConfig;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
@@ -14,8 +13,6 @@ import javax.annotation.Resource;
 public class WorkflowStartHandler extends AbstractHandler {
     @Resource
     private RackHDService rackHDService;
-    @Resource
-    private String rackhdUrl;
 
     @Override
     public void handleYourself(LifeEvent event) {
