@@ -6,6 +6,8 @@ ADD ./target/rackshift-server-1.0.0.jar /opt
 
 ADD entrypoint.sh /
 
+RUN chmod +x /entrypoint.sh
+
 VOLUME /opt/rackshift
 
 EXPOSE 5005
