@@ -8,6 +8,6 @@ ADD entrypoint.sh /
 
 VOLUME /opt/rackshift
 
-EXPOSE "5005"
+EXPOSE 5005
 
-ENTRYPOINT ['/entrypoint.sh']
+ENTRYPOINT ["/entrypoint.sh"]
