@@ -4,8 +4,10 @@ RUN mkdir -p /opt/rackshift
 
 ADD ./target/rackshift-server-1.0.0.jar /opt
 
+ADD entrypoint.sh /
+
 VOLUME /opt/rackshift
 
 EXPOSE "5005"
 
-CMD ["java", "-jar", "-Xdebug -Xrunjdwp:transport=dt_socket,address=5005,server=y,suspend=y", "/opt/rackshift-server-1.0.0.jar"]
+ENTRYPOINT ['/entrypoint.sh']
