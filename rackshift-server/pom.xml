@@ -18,7 +18,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <shiro.version>1.5.1</shiro.version>
         <java.version>1.8</java.version>
-        <jmeter.version>5.2.1</jmeter.version>
     </properties>
 
     <dependencies>
