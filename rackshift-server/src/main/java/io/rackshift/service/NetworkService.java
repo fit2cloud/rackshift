@@ -72,9 +72,9 @@ public class NetworkService {
 
         String res = null;
         if (StringUtils.isBlank(queryVO.getId()))
-            res = HttpFutureUtils.postHttps("http://"+endpoint.getIp()+":8083/dhcp/addDHCPConfig", requesetStr, contentTypeJSON, ProxyUtil.getHeaders());
+            res = HttpFutureUtils.postHttps("http://" + endpoint.getIp() + ":8083/dhcp/addDHCPConfig", requesetStr, contentTypeJSON, ProxyUtil.getHeaders());
         else
-            res = HttpFutureUtils.postHttps("http://"+endpoint.getIp()+":8083/dhcp/saveDHCPConfig", requesetStr, contentTypeJSON, ProxyUtil.getHeaders());
+            res = HttpFutureUtils.postHttps("http://" + endpoint.getIp() + ":8083/dhcp/saveDHCPConfig", requesetStr, contentTypeJSON, ProxyUtil.getHeaders());
 //        String res = HttpFutureUtils.postHttps("http://" + endpoint.getIp() + ":8083/dhcp/addDHCPConfig", requesetStr, contentTypeJSON);
         if (StringUtils.isNotBlank(res)) {
             JSONObject resObj = JSONObject.parseObject(res);
@@ -100,7 +100,7 @@ public class NetworkService {
         if (endpoint == null) return false;
         String requesetStr = buildRequestStr(network);
 
-        String res = HttpFutureUtils.postHttps("http://"+ endpoint.getIp()+":8083/dhcp/delDHCPConfig", requesetStr, contentTypeJSON, ProxyUtil.getHeaders());
+        String res = HttpFutureUtils.postHttps("http://" + endpoint.getIp() + ":8083/dhcp/delDHCPConfig", requesetStr, contentTypeJSON, ProxyUtil.getHeaders());
         if (StringUtils.isNotBlank(res)) {
             JSONObject resObj = JSONObject.parseObject(res);
             if (resObj.containsKey("success") && resObj.getBoolean("success")) {
@@ -134,7 +134,7 @@ public class NetworkService {
         config.setStartIp(network.getStartIp());
         config.setEndIp(network.getEndIp());
         config.setNetmask(network.getNetmask());
-        config.setPxeEnabled(network.getPxeEnable());
+        config.setPxeEnabled(Optional.ofNullable(network.getPxeEnable()).orElse(Boolean.FALSE));
         return config;
     }
 
