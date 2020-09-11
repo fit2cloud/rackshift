@@ -35,11 +35,8 @@ public class ApiGuard {
         if (StringUtils.isBlank(request.getHeader(SIGNATURE))) {
             throw new RuntimeException("ilegal call with no apikey");
         }
-        String timeStr = JWT.decode(request.getHeader(SIGNATURE)).getClaims().get("time").asString();
-        if (StringUtils.isBlank(timeStr)) {
-            throw new RuntimeException("ilegal call with no apikey");
-        }
-        long time = Long.valueOf(timeStr);
+        long time  = JWT.decode(request.getHeader(SIGNATURE)).getClaims().get("time").asLong();
+
         if (System.currentTimeMillis() - time > 5 * 60 * 1000) {
             throw new RuntimeException("signature timeout!");
         }
