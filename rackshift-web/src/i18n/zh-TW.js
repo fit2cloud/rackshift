@@ -148,7 +148,7 @@ export default {
     "error": "錯誤",
     "mem_mod_type": "內存類型",
     "cpu_detail": "cpu詳情",
-    "pls_select": "請輸入",
+    "pls_select": "請選擇",
     "settable": "是否可設置",
     "mem_cpu_num": "內存cpu編號",
     "add_image": "添加鏡像",

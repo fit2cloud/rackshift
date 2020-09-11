@@ -77,27 +77,27 @@
         direction="rtl"
         :before-close="handleClose">
       <div class="demo-drawer__content">
-        <el-form :model="editObj">
-          <el-form-item :label="$t('name')">
+        <el-form :model="editObj" :rules="rules" ref="form">
+          <el-form-item :label="$t('name')" prop="name">
             <el-input v-model="editObj.name" autocomplete="off"></el-input>
           </el-form-item>
 
-          <el-form-item :label="$t('endpoint')">
-            <el-select v-model="editObj.endpointId" :placeholder="$t('pls_select')">
-              <el-option
-                  v-for="(item, key) in allEndPoints"
-                  :label="item.name"
-                  :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
+          <!--          <el-form-item :label="$t('endpoint')">-->
+          <!--            <el-select v-model="editObj.endpointId" :placeholder="$t('pls_select')">-->
+          <!--              <el-option-->
+          <!--                  v-for="(item, key) in allEndPoints"-->
+          <!--                  :label="item.name"-->
+          <!--                  :value="item.id">-->
+          <!--              </el-option>-->
+          <!--            </el-select>-->
+          <!--          </el-form-item>-->
 
-          <el-form-item :label="$t('url')">
+          <el-form-item :label="$t('url')" prop="url">
             <el-input v-model="editObj.url" autocomplete="off"
                       :placeholder="$t('pls_input_url')"></el-input>
           </el-form-item>
 
-          <el-form-item :label="$t('os')">
+          <el-form-item :label="$t('os')" prop="os">
             <el-select v-model="editObj.os" :placeholder="$t('pls_select')" v-on:change="changeOsVersion">
               <el-option
                   v-for="(item, key) in allOs"
@@ -107,7 +107,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('os_version')">
+          <el-form-item :label="$t('os_version')" prop="osVersion">
             <el-select v-model="editObj.osVersion" :placeholder="$t('pls_input_os_version')">
               <el-option
                   v-for="(item, key) in allOsVersion"
@@ -149,11 +149,26 @@
 <script>
 
 import HttpUtil from "../../common/utils/HttpUtil"
+import {requiredValidator, requiredSelectValidator} from "@/common/validator/CommonValidator";
 
 let _ = require('lodash');
 export default {
   data() {
     return {
+      rules: {
+        name: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        os: [
+          {validator: requiredSelectValidator, trigger: 'blur', vue: this},
+        ],
+        osVersion: [
+          {validator: requiredSelectValidator, trigger: 'blur', vue: this},
+        ],
+        url: [
+          {validator: requiredValidator, trigger: 'blur', vue: this, msg: this.$t('please_input_mounted_or_upload')},
+        ],
+      },
       query: {
         name: '',
         pageIndex: 1,
@@ -165,7 +180,6 @@ export default {
       delList: [],
       editVisible: false,
       pageTotal: 0,
-      form: {},
       idx: -1,
       id: -1,
       loading: false,
@@ -192,8 +206,6 @@ export default {
       editType: 'edit',
       editObj: {
         name: null,
-        description: null,
-        type: null
       },
       allOs: [],
       allOsVersion: [],
@@ -242,6 +254,16 @@ export default {
       this.editType = 'add';
     },
     confirmEdit() {
+      this.validateResult = true;
+      this.$refs.form.validate(f => {
+        if (!f) {
+          this.validateResult = false;
+        }
+      });
+      if (!this.validateResult) {
+        this.$notify.error("validate_error");
+        return;
+      }
       this.loading = true;
       this.editObj.brands = JSON.stringify(this.editObj.brands);
       if (this.editType == 'edit') {
@@ -307,7 +329,8 @@ export default {
         this.editDialogVisible = true;
         this.editType = type;
         this.editObj = {
-          endpointId: _.find(this.allEndPoints, e => e.type == 'main_endpoint').id
+          endpointId: _.find(this.allEndPoints, e => e.type == 'main_endpoint').id,
+          url: null
         };
       }
     },

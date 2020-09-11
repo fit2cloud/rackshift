@@ -148,7 +148,7 @@ export default {
     "error": "Error",
     "mem_mod_type": "Memory Type",
     "cpu_detail": "cpu details",
-    "pls_select": "Please enter",
+    "pls_select": "Please select",
     "settable": "Is it settable",
     "mem_cpu_num": "Memory cpu number",
     "add_image": "Add image",

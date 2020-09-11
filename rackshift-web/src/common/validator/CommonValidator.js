@@ -6,7 +6,11 @@ function requiredValidator(rule, value, callback) {
         if (rule.field == "password") {
             callback(new Error(rule.vue.$t('pls_input_password')));
         }
-        callback(new Error(rule.vue.$t('pls_input_params')));
+        if (rule.msg) {
+            callback(new Error(rule.msg));
+        } else {
+            callback(new Error(rule.vue.$t('pls_input_params')));
+        }
     }
     callback();
 }
@@ -19,7 +23,11 @@ function requiredSelectValidator(rule, value, callback) {
         if (rule.field == "password") {
             callback(new Error(rule.vue.$t('pls_select_password')));
         }
-        callback(new Error(rule.vue.$t('pls_select_' + rule.name)));
+        if (rule.name) {
+            callback(new Error(rule.vue.$t('pls_select_' + rule.name)));
+        } else {
+            callback(new Error(rule.vue.$t('pls_select')));
+        }
     }
     callback();
 }

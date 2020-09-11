@@ -71,14 +71,17 @@ public class ImageService {
                 String mountFullPath = fileUploadBase + File.separator + mountPath;
                 if (!new File(mountFullPath).exists()) {
                     new File(mountFullPath).mkdirs();
-                    Runtime.getRuntime().exec(String.format("mount %s %s", fileUploadBase + originalName, path));
+                    Runtime.getRuntime().exec(String.format("mount %s %s", path, mountFullPath));
                 }
-                return "http://" + getEndpointUrl(endpointId) + "common/" + mountPath;
+                return "http://" + getEndpointUrl(endpointId) + ":9090/common/" + mountPath;
             }
             return path;
         } catch (Exception e) {
-            return path;
+            if (new File(path).exists())
+                new File(path).delete();
+            RSException.throwExceptions("i18n_file_upload_fail");
         }
+        return null;
     }
 
     private String getEndpointUrl(String endpointId) {

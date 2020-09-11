@@ -110,8 +110,10 @@ public class NetworkService {
                 LogUtil.error(Translator.get("delete_dhcp_config_fail"));
                 return false;
             }
+        } else {
+            networkMapper.deleteByPrimaryKey(id);
+            return true;
         }
-        return false;
     }
 
     private String buildRequestStr(Network network) {

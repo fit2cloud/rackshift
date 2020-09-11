@@ -4,7 +4,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.core.DockerClientBuilder;
 import io.rackshift.metal.sdk.util.LogUtil;
-import org.jvnet.hk2.annotations.Service;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;

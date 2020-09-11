@@ -76,9 +76,9 @@
         direction="rtl"
         :before-close="handleClose">
       <div class="demo-drawer__content">
-        <el-form :model="editObj">
+        <el-form :model="editObj" :rules="rules" ref="form">
 
-          <el-form-item :label="$t('endpoint')">
+          <el-form-item :label="$t('endpoint')" prop="endpointId">
             <el-select v-model="editObj.endpointId" :placeholder="$t('pls_select')">
               <el-option
                   v-for="(item, key) in allEndPoints"
@@ -88,40 +88,41 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item :label="$t('vlanId')">
+          <el-form-item :label="$t('vlanId')" prop="vlanId">
             <el-input v-model="editObj.vlanId" autocomplete="off" type="number"
                       :placeholder="$t('pls_input_vlan_id')"></el-input>
           </el-form-item>
 
-          <el-form-item :label="$t('startIp')">
+          <el-form-item :label="$t('startIp')" prop="startIp">
             <el-input v-model="editObj.startIp" autocomplete="off"
                       :placeholder="$t('pls_input_start_ip')"></el-input>
           </el-form-item>
 
-          <el-form-item :label="$t('endIp')">
+          <el-form-item :label="$t('endIp')" prop="endIp">
             <el-input v-model="editObj.endIp" autocomplete="off"
                       :placeholder="$t('pls_input_end_ip')"></el-input>
           </el-form-item>
 
-          <el-form-item :label="$t('netmask')">
+          <el-form-item :label="$t('netmask')" prop="netmask">
             <el-input v-model="editObj.netmask" autocomplete="off"
                       :placeholder="$t('pls_input_netmask')"></el-input>
           </el-form-item>
 
-          <el-form-item :label="$t('dhcp_enable')">
+          <el-form-item :label="$t('dhcp_enable')" prop="dhcpEnable">
             <el-switch
                 v-model="editObj.dhcpEnable"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
-                @change="changePXE"
+                @change="changeDHCP"
             >
             </el-switch>
           </el-form-item>
 
-          <el-form-item :label="$t('pxe_enable')">
+          <el-form-item :label="$t('pxe_enable')" prop="pxeEnable">
             <el-switch
                 v-model="editObj.pxeEnable"
                 active-color="#13ce66"
+                @change="changePXE"
                 inactive-color="#ff4949">
             </el-switch>
           </el-form-item>
@@ -143,11 +144,26 @@
 <script>
 
 import HttpUtil from "../../common/utils/HttpUtil"
+import {ipValidator, requiredSelectValidator} from "@/common/validator/CommonValidator";
 
 let _ = require('lodash');
 export default {
   data() {
     return {
+      rules: {
+        endpointId: [
+          {validator: requiredSelectValidator, trigger: 'blur', vue: this},
+        ],
+        startIp: [
+          {validator: ipValidator, trigger: 'blur', vue: this},
+        ],
+        endIp: [
+          {validator: ipValidator, trigger: 'blur', vue: this},
+        ],
+        netmask: [
+          {validator: ipValidator, trigger: 'blur', vue: this},
+        ],
+      },
       query: {
         name: '',
         pageIndex: 1,
@@ -158,7 +174,6 @@ export default {
       delList: [],
       editVisible: false,
       pageTotal: 0,
-      form: {},
       idx: -1,
       id: -1,
       loading: false,
@@ -204,7 +219,12 @@ export default {
   },
   methods: {
     changePXE(e) {
-      if (!e) {
+      if (this.editObj.pxeEnable) {
+        this.editObj.dhcpEnable = true;
+      }
+    },
+    changeDHCP(e) {
+      if (!this.editObj.dhcpEnable) {
         this.editObj.pxeEnable = false;
       }
     },
@@ -242,17 +262,31 @@ export default {
       this.editType = 'add';
     },
     confirmEdit() {
+
+      this.validateResult = true;
+      this.$refs['form'].validate((valid) => {
+        if (!valid) {
+          this.validateResult = false;
+        }
+      });
+      if (!this.validateResult) {
+        this.$message.error(this.$t('validate_error'));
+        return;
+      }
+      this.loading = true;
       if (this.editType == 'edit') {
         HttpUtil.post("/network/update", this.editObj, (res) => {
           this.editDialogVisible = false;
-          this.$message.success('编辑成功');
+          this.$message.success(this.$t('edit_success'));
           this.getData();
+          this.loading = false;
         })
       } else {
         HttpUtil.post("/network/add", this.editObj, (res) => {
           this.editDialogVisible = false;
-          this.$message.success('新增成功');
+          this.$message.success(this.$t('add_success'));
           this.getData();
+          this.loading = false;
         })
       }
     },
@@ -263,13 +297,16 @@ export default {
     delAllSelection() {
       const length = this.multipleSelection.length;
       let str = '';
-      this.delList = this.delList.concat(this.multipleSelection);
       for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].name + ' ';
+        str += this.multipleSelection[i].machineModel + ' ';
       }
-      let ids = _.map(this.delList, (item) => item.id);
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$notify.error(this.$t('pls_select_network') + "!");
+        return;
+      }
       HttpUtil.post("/network/del", ids, (res) => {
-        this.$message.success(`删除成功！删除了${str}！`);
+        this.$message.success(this.$t('delete_success'));
         this.getData();
       });
       this.multipleSelection = [];
@@ -281,24 +318,33 @@ export default {
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
       } else if (type == 'del') {
-        this.$confirm('确定要删除吗？', '提示', {
+        this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
           HttpUtil.get("/network/del/" + row.id, {}, (res) => {
             this.getData();
-            this.$message.success('删除成功');
+            this.$message.success(this.$t('delete_success!'));
           });
         })
       } else {
         this.editDialogVisible = true;
         this.editType = type;
-        this.editObj = {};
+        this.editObj = {
+          pxeEnable: false,
+          dhcpEnable: false,
+          netmask: '255.255.255.0'
+        };
       }
     },
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
       this.getData();
+    },
+    getSelectedIds: function () {
+      this.delList = [].concat(this.multipleSelection);
+      let ids = _.map(this.delList, (item) => item.id);
+      return ids;
     }
   }
 }

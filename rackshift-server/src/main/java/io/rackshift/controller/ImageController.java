@@ -61,7 +61,7 @@ public class ImageController {
 
     @ResponseBody
     @RequestMapping(value = "/upload", method = {RequestMethod.POST})
-    public String upload(@RequestParam("file") MultipartFile file, @RequestParam(required = false) String endpointId) throws IOException {
+    public String upload(@RequestParam("file") MultipartFile file, @RequestParam(required = false) String endpointId) {
         String originalName = file.getOriginalFilename();
         String path = fileUploadBase + File.separator + originalName;
         try {
