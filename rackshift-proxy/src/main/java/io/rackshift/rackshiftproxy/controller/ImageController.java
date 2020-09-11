@@ -42,7 +42,7 @@ public class ImageController {
 
     @RequestMapping(value = "/test")
     @ResponseBody
-    public String test() throws IOException {
+    public String test() {
         DockerClient client = DockerClientBuilder.getInstance().build();
         return JSONObject.toJSONString(client.listImagesCmd().exec());
     }

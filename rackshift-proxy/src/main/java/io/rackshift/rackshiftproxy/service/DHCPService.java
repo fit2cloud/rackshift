@@ -9,6 +9,7 @@ import org.apache.velocity.app.Velocity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,7 +27,8 @@ public class DHCPService {
     private String leasPpos;
     @Value("${dhcpd.leases.pos:/opt/rackshift/rackhd/dhcp/config/dhcpd.conf}")
     private String configPos;
-
+    @Resource
+    private DockerClientService dockerClientService;
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
     public List<DHCPLease> queryIpByMac(String mac) throws IOException {
@@ -127,7 +129,10 @@ public class DHCPService {
         fw.write(sw.toString());
         fw.close();
         sw.close();
-        return true;
+        if (dockerClientService.restartContainer("rackhd/isc-dhcp-server")) {
+            return true;
+        }
+        return false;
     }
 
     public boolean delDHCPConfig(DHCPConfig config) throws IOException {
