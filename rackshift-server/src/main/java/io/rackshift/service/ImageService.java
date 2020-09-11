@@ -62,7 +62,7 @@ public class ImageService {
 
     public String mount(String path, String originalName, String endpointId) {
         try {
-            if (System.getProperty("os").indexOf("linux") != -1) {
+            if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
                 String mountPath = originalName.substring(0, originalName.indexOf(".")) + Math.random() * 1000;
                 String mountFullPath = fileUploadBase + File.separator + mountPath;
                 if (!new File(mountFullPath).exists()) {
