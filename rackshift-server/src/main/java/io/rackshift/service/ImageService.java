@@ -1,6 +1,7 @@
 package io.rackshift.service;
 
 import io.rackshift.model.ImageDTO;
+import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.EndpointExample;
 import io.rackshift.mybatis.domain.Image;
 import io.rackshift.mybatis.domain.ImageExample;
@@ -62,12 +63,15 @@ public class ImageService {
 
     public String mount(String path, String originalName, String endpointId) {
         try {
+            if (!originalName.endsWith("iso")) {
+                RSException.throwExceptions("i18n_file_must_be_iso");
+            }
             if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
                 String mountPath = originalName.substring(0, originalName.indexOf(".")) + Math.random() * 1000;
                 String mountFullPath = fileUploadBase + File.separator + mountPath;
                 if (!new File(mountFullPath).exists()) {
                     new File(mountFullPath).mkdirs();
-                    Runtime.getRuntime().exec(String.format("mount %s %s", originalName, path));
+                    Runtime.getRuntime().exec(String.format("mount %s %s", fileUploadBase + originalName, path));
                 }
                 return "http://" + getEndpointUrl(endpointId) + "common/" + mountPath;
             }
