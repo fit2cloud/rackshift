@@ -1,5 +1,8 @@
 package io.rackshift.rackshiftproxy.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.core.DockerClientBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,5 +38,12 @@ public class ImageController {
 
         System.out.println(request);
 
+    }
+
+    @RequestMapping(value = "/test")
+    @ResponseBody
+    public String test() throws IOException {
+        DockerClient client = DockerClientBuilder.getInstance().build();
+        return JSONObject.toJSONString(client.listImagesCmd().exec());
     }
 }
