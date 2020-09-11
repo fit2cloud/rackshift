@@ -67,7 +67,7 @@ public class DHCPService {
     }
 
     public List<DHCPConfig> readDHCPConfigFile() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\opt\\fit2cloud\\rackhd\\dhcp\\config\\dhcpd.conf")));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configPos)));
         String line = null;
 
         boolean start = false;
