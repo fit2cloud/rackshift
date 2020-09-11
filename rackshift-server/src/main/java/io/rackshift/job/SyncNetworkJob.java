@@ -31,7 +31,7 @@ public class SyncNetworkJob {
         List<Network> networks = new LinkedList<>();
         for (Endpoint endPoint : endPoints) {
 //            String res = HttpFutureUtils.getHttp("http://localhost" + ":8083/dhcp/configFile", ProxyUtil.getHeaders());
-            String res = HttpFutureUtils.getHttp(endPoint.getIp() + ":8083/dhcp/configFile", ProxyUtil.getHeaders());
+            String res = HttpFutureUtils.getHttp("http://" + endPoint.getIp() + ":8083/dhcp/configFile", ProxyUtil.getHeaders());
             if (StringUtils.isNotBlank(res)) {
                 JSONObject obj = JSONObject.parseObject(res);
                 if (obj.containsKey("data")) {
