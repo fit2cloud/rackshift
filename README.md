@@ -1,4 +1,7 @@
 # RackShift
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2d7d7a82829e4e4e80c0f2a9aa2397ca)](https://app.codacy.com/manual/rackshift/rackshift?utm_source=github.com&utm_medium=referral&utm_content=rackshift/rackshift&utm_campaign=Badge_Grade_Dashboard)
+
 ## 基于RackHD的一款开源物理机装机方案
 ### 功能特性
 【√】RBAC权限管理  
