@@ -124,6 +124,7 @@
               :on-success="afterUploadSuccess"
               action="/image/upload"
               accept="application/x-iso9660-image"
+              :multiple=false
               style="margin-bottom: 20px;"
           >
             <i class="el-icon-upload"></i>
@@ -210,7 +211,13 @@ export default {
       allOs: [],
       allOsVersion: [],
       allEndPoints: [],
+      fileName: null,
     };
+  },
+  computed: {
+    action: function () {
+      return '/image/upload?fileName=' + this.fileName;
+    }
   },
   mounted() {
     this.getData();
@@ -339,9 +346,9 @@ export default {
       this.$set(this.query, 'pageIndex', val);
       this.getData();
     },
-    afterUploadSuccess(response, file, fileList) {
+    afterUploadSuccess(response) {
       this.editObj.url = response;
-    }
+    },
   }
 }
 </script>

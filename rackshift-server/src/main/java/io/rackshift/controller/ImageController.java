@@ -4,9 +4,11 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.rackshift.constants.AuthorizationConstants;
 import io.rackshift.model.ImageDTO;
+import io.rackshift.model.RSException;
 import io.rackshift.model.ResultHolder;
 import io.rackshift.service.ImageService;
 import io.rackshift.utils.PageUtils;
+import io.rackshift.utils.Translator;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -93,32 +95,23 @@ public class ImageController {
     public String upload(@RequestParam(required = false) String endpointId, HttpServletRequest request) {
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         if (!isMultipart) {
-            // Inform user about invalid request
-            return "error";
+            RSException.throwExceptions(Translator.get("file-content error!"));
         }
-        String originalName = request.getParameter("name");
-        String path = fileUploadBase + File.separator + request.getParameter("name");
+        String originalName = null;
+        String path = null;
 
-        //String filename = request.getParameter("name");
-
-        // Create a new file upload handler
         ServletFileUpload upload = new ServletFileUpload();
-
-        // Parse the request
         try {
             FileItemIterator iter = upload.getItemIterator(request);
             while (iter.hasNext()) {
                 FileItemStream item = iter.next();
-                String name = item.getFieldName();
                 InputStream stream = item.openStream();
+                originalName = item.getName();
+                path = fileUploadBase + File.separator + originalName;
                 if (item.isFormField()) {
-                    System.out.println("Form field " + name + " with value " + Streams.asString(stream) + " detected.");
                 } else {
-                    System.out.println("File field " + name + " with file name " + item.getName() + " detected.");
-                    // Process the input stream
-                    OutputStream out = new FileOutputStream("D:\\incoming.gz");
+                    OutputStream out = new FileOutputStream(path);
                     IOUtils.copy(stream, out);
-                    stream.close();
                     out.close();
                 }
             }
