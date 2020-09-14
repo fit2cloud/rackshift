@@ -4,7 +4,7 @@ RUN mkdir -p /opt/rackshift
 
 ADD ./target/rackshift-server-1.0.0.jar /opt
 
-RUN mkdir -p /bin/mount
+RUN rm -rf /bin/mount
 
 VOLUME /opt/rackshift
 
