@@ -4,8 +4,6 @@ RUN mkdir -p /opt/rackshift
 
 ADD ./target/rackshift-server-1.0.0.jar /opt
 
-RUN rm -rf /bin/mount
-
 VOLUME /opt/rackshift
 
 EXPOSE 5005
