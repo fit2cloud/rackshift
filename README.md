@@ -18,7 +18,7 @@ RackShift 是一款基于 RackHD 的裸金属服务器全生命周期的开源�
 
 ## UI
  
-![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackHD%E4%B8%80%E9%94%AE%E5%8C%85/3.0/rs.png)
+![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackHD%E4%B8%80%E9%94%AE%E5%8C%85/3.0/rs1.png)
 
 ## 技术优势
   
