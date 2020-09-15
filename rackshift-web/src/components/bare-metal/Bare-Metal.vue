@@ -109,7 +109,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="machineSn" :label="$t('machine_sn')" align="center" width="188px"
+          <el-table-column prop="machineSn" :label="$t('machine_sn')" align="center"
                            sortable="custom">
             <template slot-scope="scope">
               {{ scope.row.machineSn }}
@@ -120,6 +120,13 @@
                            sortable="custom">
             <template slot-scope="scope">
               {{ scope.row.managementIp }}
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="ip" :label="$t('IP')" align="center" width="140px"
+                           sortable="custom">
+            <template slot-scope="scope">
+              {{ scope.row.ipArray }}
             </template>
           </el-table-column>
 
@@ -419,10 +426,6 @@ export default {
       pageTotal: 0,
       loading: false,
       columns: [
-        {
-          label: this.$t('IP'),
-          prop: "ipArray"
-        },
         {
           label: this.$t('CPU'),
           prop: "cpu"

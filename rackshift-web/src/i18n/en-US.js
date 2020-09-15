@@ -84,7 +84,7 @@ export default {
     "execution_log": "Execution Log",
     "machine_model": "Machine Model",
     "refresh": "Refresh",
-    "machine_sn": "Machine Serial Number",
+    "machine_sn": "Machine SN",
     "Run": "Execute",
     "url": "url",
     "confirm": "Confirm",
