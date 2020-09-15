@@ -2,7 +2,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2d7d7a82829e4e4e80c0f2a9aa2397ca)](https://app.codacy.com/manual/rackshift/rackshift?utm_source=github.com&utm_medium=referral&utm_content=rackshift/rackshift&utm_campaign=Badge_Grade_Dashboard)
 
-> [English](README_EN.md) | 中文
+> English | [中文](README.md) 
 
 RackShift is a RackHD-based open source management platform for the full life cycle of bare metal servers, including bare metal shelves, RAID configuration, firmware upgrades, OS installation, deployment middleware, WEB Kvm and other bare metal server operation and maintenance personnel. Features. Provides a visual and convenient operation interface, and is fully compatible with mainstream server manufacturers in the world, such as DELL, HP, Inspur, Huawei, Lenovo, IBM, etc.
 
