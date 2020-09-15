@@ -28,6 +28,8 @@ public class WorkflowConfig {
     private WorkflowMapper workflowMapper;
     @Resource
     private EndpointMapper endpointMapper;
+    private String rackhdUrl;
+    private List<Endpoint> endPoints;
     static EndpointMapper staticEndpointMapper;
 
     @Resource
@@ -44,6 +46,18 @@ public class WorkflowConfig {
                 LifeEventType.valueOf(wfEntry.getKey()).addWorkflow(wfEntry.getValue().stream().map(Workflow::getInjectableName).collect(Collectors.toList()));
             }
         }
+
+        EndpointExample e = new EndpointExample();
+        e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.name());
+        endPoints = endpointMapper.selectByExample(e);
+        if (endPoints.size() > 0 && !endPoints.get(0).getIp().contains(":"))
+            rackhdUrl = "http://" + endPoints.get(0).getIp() + ":9090";
+        if (endPoints.size() == 0)
+            rackhdUrl = "";
+        rackhdUrl = "http://" + endPoints.get(0).getIp();
+
+        e.clear();
+        endPoints = endpointMapper.selectByExample(e);
     }
 
     public static String geRrackhdUrl(String id) {
@@ -55,27 +69,17 @@ public class WorkflowConfig {
         return "http://" + endpoint.getIp();
     }
 
-    @Bean
-    public String rackhdUrl() {
-        List<Endpoint> endPoints = null;
-        EndpointExample e = new EndpointExample();
-        e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.name());
-        endPoints = endpointMapper.selectByExample(e);
-        if (endPoints.size() > 0 && !endPoints.get(0).getIp().contains(":"))
-            return "http://" + endPoints.get(0).getIp() + ":9090";
-        if (endPoints.size() == 0)
-            return "";
-        return "http://" + endPoints.get(0).getIp();
+    public String getRackhdUrl() {
+        return rackhdUrl;
     }
 
-    @Bean
-    public List<Endpoint> endPoints() {
-        return endpointMapper.selectByExample(new EndpointExample());
+    public List<Endpoint> getEndPoints() {
+        return endPoints;
     }
 
     @Bean
     public JSONArray allWorkflow() {
-        String res = HttpFutureUtils.getHttp(rackhdUrl() + RackHDConstants.WORKFLOWS, null);
+        String res = HttpFutureUtils.getHttp(getRackhdUrl() + RackHDConstants.WORKFLOWS, null);
         if (StringUtils.isNotBlank(res)) {
             return JSONArray.parseArray(res);
         }
@@ -85,7 +89,7 @@ public class WorkflowConfig {
 
     @Bean
     public JSONArray allTask() {
-        String res = HttpFutureUtils.getHttp(rackhdUrl() + RackHDConstants.TASKS, null);
+        String res = HttpFutureUtils.getHttp(getRackhdUrl() + RackHDConstants.TASKS, null);
         if (StringUtils.isNotBlank(res)) {
             return JSONArray.parseArray(res);
         }

@@ -2,6 +2,7 @@ package io.rackshift.job;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.config.WorkflowConfig;
 import io.rackshift.constants.RackHDConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.MachineEntity;
@@ -22,7 +23,7 @@ public class SyncRackJob {
     @Resource
     private BareMetalManager bareMetalManager;
     @Resource
-    private List<Endpoint> endPoints;
+    private WorkflowConfig workflowConfig;
 
     //    @Scheduled(fixedDelay = 1000)
     @Scheduled(fixedDelay = 30000)
@@ -30,7 +31,7 @@ public class SyncRackJob {
         List<MachineEntity> entities = new LinkedList<>();
         JSONArray nodesArr = null;
 
-        for (Endpoint endPoint : endPoints) {
+        for (Endpoint endPoint : workflowConfig.getEndPoints()) {
 
             nodesArr = JSONArray.parseArray(RackHDHttpClientUtil.get("http://" + endPoint.getIp() + ":9090" + RackHDConstants.NODES_URL, null));
 

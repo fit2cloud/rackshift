@@ -6,7 +6,7 @@
           <i class="el-icon-user-solid">{{ $t('Machines') }}</i>
 
           <el-button-group class="batch-button">
-            <el-button type="primary" icon="el-icon-circle-plus-outline">{{ $t('add') }}</el-button>
+            <!--            <el-button type="primary" icon="el-icon-circle-plus-outline">{{ $t('add') }}</el-button>-->
             <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
             </el-button>
             <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
@@ -98,43 +98,48 @@
           <el-table-column type="selection" align="center"></el-table-column>
 
           <el-table-column prop="machineModel" :label="$t('machine_model')" align="center" width="150px"
-                           sortable="custom">
+                           sortable="custom" style="overflow: scroll">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
                 <el-link type="primary" @click="showDetail(scope.row)" target="_blank">
-                  {{ scope.row.machineModel }}
+                  <span style="display: block; word-break:keep-all;
+  white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>
                 </el-link>
               </el-tooltip>
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="machineSn" :label="$t('machine_sn')" align="center" width="188px"
+                           sortable="custom">
+            <template slot-scope="scope">
+              {{ scope.row.machineSn }}
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="managementIp" :label="$t('management_ip')" align="center" width="140px"
+                           sortable="custom">
+            <template slot-scope="scope">
+              {{ scope.row.managementIp }}
             </template>
           </el-table-column>
 
           <el-table-column :prop="c.prop" :label="c.label" align="center"
                            v-for="c in columns" sortable="custom"></el-table-column>
 
-          <el-table-column prop="status" :label="$t('machine_status')" align="center"
-                           sortable="custom" width="150px">
+          <el-table-column prop="status" :label="$t('machine_status')" align="center" width="150px">
             <template slot-scope="scope">
               <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
               <span style="margin-left: 10px">{{ scope.row.status }}</span>
             </template>
           </el-table-column>
 
+          <!--          <el-table-column prop="createTime" :label="$t('create_time')" align="center"-->
+          <!--                           sortable="custom">-->
+          <!--            <template slot-scope="scope">-->
+          <!--              {{ scope.row.createTime | dateFormat }}-->
+          <!--            </template>-->
 
-          <el-table-column :label="$t('execution_log')" align="center" min-width="100px">
-            <template slot-scope="scope">
-              <a href="javascript:void(0)" @click="expandChange(scope.row)">{{ $t('view') }}
-              </a>
-            </template>
-
-          </el-table-column>
-
-          <el-table-column prop="createTime" :label="$t('create_time')" align="center"
-                           sortable="custom">
-            <template slot-scope="scope">
-              {{ scope.row.createTime | dateFormat }}
-            </template>
-
-          </el-table-column>
+          <!--          </el-table-column>-->
 
           <el-table-column prop="" :label="$t('opt')" align="center" width="130px">
             <template slot="header" slot-scope="scope">
@@ -158,6 +163,8 @@
                   <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
                   </el-dropdown-item>
                   <el-dropdown-item @click.native="fillOBM(scope.row)">OBM {{ $t('info') }}
+                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="expandChange(scope.row)">{{ $t('view_execution_log') }}
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -413,19 +420,11 @@ export default {
       loading: false,
       columns: [
         {
-          label: this.$t('machine_sn'),
-          prop: "machineSn"
-        },
-        {
-          label: this.$t('management_ip'),
-          prop: "managementIp"
-        },
-        {
-          label: this.$t('ip'),
+          label: this.$t('IP'),
           prop: "ipArray"
         },
         {
-          label: this.$t('cpu'),
+          label: this.$t('CPU'),
           prop: "cpu"
         },
         {

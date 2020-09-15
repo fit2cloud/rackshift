@@ -1,6 +1,7 @@
 package io.rackshift.service;
 
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.config.WorkflowConfig;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.EndpointDTO;
 import io.rackshift.mybatis.domain.Endpoint;
@@ -22,7 +23,8 @@ public class EndpointService {
     private EndpointMapper endpointMapper;
     @Resource
     private ApplicationContext applicationContext;
-
+    @Resource
+    private WorkflowConfig workflowConfig;
     public Object add(EndpointDTO queryVO) {
 
         EndpointExample e = buildExample(queryVO);
@@ -40,13 +42,14 @@ public class EndpointService {
         Endpoint image = new Endpoint();
         BeanUtils.copyBean(image, queryVO);
         endpointMapper.insertSelective(image);
-
+        workflowConfig.initWorkflow();
         return true;
     }
 
     public Object update(EndpointDTO queryVO) {
         Endpoint image = new Endpoint();
         BeanUtils.copyBean(image, queryVO);
+        workflowConfig.initWorkflow();
         endpointMapper.updateByPrimaryKeySelective(image);
         return true;
     }
@@ -60,6 +63,7 @@ public class EndpointService {
         }
 
         endpointMapper.deleteByPrimaryKey(id);
+        workflowConfig.initWorkflow();
         return true;
     }
 

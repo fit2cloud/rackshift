@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class DHCPService {
     @Value("${dhcpd.leases.pos:/opt/rackshift/rackhd/dhcp/config/dhcpd.leases}")
     private String leasPpos;
-    @Value("${dhcpd.leases.pos:/opt/rackshift/rackhd/dhcp/config/dhcpd.conf}")
+    @Value("${dhcpd.conf.pos:/opt/rackshift/rackhd/dhcp/config/dhcpd.conf}")
     private String configPos;
     @Resource
     private DockerClientService dockerClientService;

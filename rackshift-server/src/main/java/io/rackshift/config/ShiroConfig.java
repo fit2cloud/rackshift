@@ -54,6 +54,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/anonymous/**", "anon");
         filterChainDefinitionMap.put("/**", "authc");
         filterChainDefinitionMap.put("/rs-websocket", "anon");
+        filterChainDefinitionMap.put("/refresh", "anon");
         return shiroFilterFactoryBean;
     }
 

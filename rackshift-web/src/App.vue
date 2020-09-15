@@ -2,25 +2,29 @@
   <div id="app">
     <el-container style=" border: 1px solid #eee" v-if="login">
       <el-header id="main-header">
-        <span id="main-title">RackShift</span>
-        <el-dropdown id="dropdown" @command="changeLaunguage">
+        <el-row>
+          <el-col :span="21"><span id="main-title">RackShift</span></el-col>
+          <el-col :span="3">
+            <el-dropdown id="dropdown" @command="changeLaunguage">
           <span class="el-dropdown-link">
               {{ $t('Languages') }}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="zh_CN">{{ $t('chinese') }}</el-dropdown-item>
-            <el-dropdown-item command="zh_TW">{{ $t('fanti') }}</el-dropdown-item>
-            <el-dropdown-item command="en_US">{{ $t('english') }}</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <span class="user-name">{{ user.name }}</span>
-        <el-dropdown id="dropdown" @command="action">
-          <i class="el-icon-setting" style="margin-right: 15px;cursor: pointer;"></i>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="info">{{ $t('info') }}</el-dropdown-item>
-            <el-dropdown-item command="logout">{{ $t('logout') }}</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="zh_CN">{{ $t('chinese') }}</el-dropdown-item>
+                <el-dropdown-item command="zh_TW">{{ $t('fanti') }}</el-dropdown-item>
+                <el-dropdown-item command="en_US">{{ $t('english') }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <span class="user-name">{{ user.name }}</span>
+            <el-dropdown id="dropdown" @command="action">
+              <i class="el-icon-setting" style="margin-right: 15px;cursor: pointer;"></i>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="info">{{ $t('info') }}</el-dropdown-item>
+                <el-dropdown-item command="logout">{{ $t('logout') }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </el-col>
+        </el-row>
 
       </el-header>
       <el-container>
@@ -131,7 +135,6 @@ body {
 }
 
 #main-header {
-  text-align: right;
   font-size: 12px;
   height: 45px !important;
   background: linear-gradient(to right, #409EFF, #409EFF 80%, #409EFF);
@@ -158,7 +161,6 @@ body {
   color: #fafafa;
   text-decoration: none;
   display: block;
-  position: fixed;
   left: 1.6rem;
 }
 

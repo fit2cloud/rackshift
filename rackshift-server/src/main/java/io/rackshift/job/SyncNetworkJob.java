@@ -2,6 +2,7 @@ package io.rackshift.job;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.config.WorkflowConfig;
 import io.rackshift.job.model.DHCPConfig;
 import io.rackshift.metal.sdk.util.HttpFutureUtils;
 import io.rackshift.mybatis.domain.Endpoint;
@@ -25,11 +26,11 @@ public class SyncNetworkJob {
     @Resource
     private NetworkService networkService;
     @Resource
-    private List<Endpoint> endPoints;
+    private WorkflowConfig workflowConfig;
 
     public void run() {
         List<Network> networks = new LinkedList<>();
-        for (Endpoint endPoint : endPoints) {
+        for (Endpoint endPoint : workflowConfig.getEndPoints()) {
 //            String res = HttpFutureUtils.getHttp("http://localhost" + ":8083/dhcp/configFile", ProxyUtil.getHeaders());
             String res = HttpFutureUtils.getHttp("http://" + endPoint.getIp() + ":8083/dhcp/configFile", ProxyUtil.getHeaders());
             if (StringUtils.isNotBlank(res)) {
