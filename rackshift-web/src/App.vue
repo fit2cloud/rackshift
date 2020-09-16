@@ -28,7 +28,7 @@
 
       </el-header>
       <el-container>
-        <el-aside>
+        <el-aside style="background-color: #F7F7F7">
           <el-menu id="main-menu" :unique-opened=false style="border-right: none;">
             <el-submenu :index="m.order" v-for="m in menus">
               <template slot="title"><i :class="m.icon"></i>{{ m.name }}</template>
@@ -131,13 +131,13 @@ body {
 .user-name {
   display: inline-block;
   margin-right: 10px;
-  color: #FFFFFF;
+  color: #9E9E9E;
 }
 
 #main-header {
   font-size: 12px;
   height: 45px !important;
-  background: linear-gradient(to right, #409EFF, #409EFF 80%, #409EFF);
+  background: linear-gradient(to right, #111, #111 80%, #111);
   /*background: linear-gradient(to right, #00447C ,#409EFF 80%, #00447C );*/
   /*background: linear-gradient(to right, #000000 20%, #00447C 80%);*/
   color: #333;
@@ -148,13 +148,13 @@ body {
 }
 
 #dropdown {
-  color: #ffffff;
+  color: #9E9E9E;
   cursor: pointer;
   margin-right: 12px;
 }
 
 #main-title {
-  font-size: 0.96667rem;
+  font-size: 1.3rem !important;
   font-weight: 400;
   font-family: Metropolis, Avenir Next, Helvetica Neue, Arial, sans-serif;
   letter-spacing: .01em;
@@ -165,7 +165,7 @@ body {
 }
 
 #main-menu {
-  /*background-color: #F5F5F5;*/
+  background-color: #F7F7F7;
 }
 
 .machine-title {

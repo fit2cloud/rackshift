@@ -1,49 +1,47 @@
 <template>
   <div>
-    <el-card>
-      <el-form label-width="101px">
-        <el-form-item :label="$t('custom_raid')">
-          <table class="detail-info" style="float: left;margin-top:20px;">
-            <thead>
-            <tr>
-              <th>
-                <el-button type="primary" icon="el-icon-plus" circle
-                           @click="payLoad.options['create-raid'].raidList.push({})">
-                </el-button>
-              </th>
-              <th>{{ $t('raid_type') }}</th>
-              <th>{{ $t('raid_disk') }}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(config, index) in payLoad.options['create-raid'].raidList">
-              <td>
-                <el-button type="primary" icon="el-icon-minus" circle
-                           @click="payLoad.options['create-raid']['raidList'].splice(index, 1)">
-                </el-button>
-              </td>
-              <td>
-                <el-select v-model="config.type">
-                  <el-option v-for="t in raidTypes" :label="t" :value="t">
-                    {{ t }}
-                  </el-option>
-                </el-select>
-              </td>
+    <el-form label-width="101px">
+      <el-form-item :label="$t('custom_raid')">
+        <table class="detail-info" style="float: left;margin-top:20px;">
+          <thead>
+          <tr>
+            <th>{{ $t('raid_type') }}</th>
+            <th>{{ $t('raid_disk') }}</th>
+            <th>
+              <el-button type="primary" icon="el-icon-plus" circle
+                         @click="payLoad.options['create-raid'].raidList.push({})">
+              </el-button>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(config, index) in payLoad.options['create-raid'].raidList">
+            <td>
+              <el-select v-model="config.type">
+                <el-option v-for="t in raidTypes" :label="t" :value="t">
+                  {{ t }}
+                </el-option>
+              </el-select>
+            </td>
 
-              <td>
-                <el-select v-model="config.drives" multiple>
-                  <el-option v-for="t in odisks" :label="t.drives"
-                             :value="parseInt(t.drive)">
-                    {{ t.raid + '-enclosureId:' + t.enclosureId + '-driveId:' + t.drive + '-' + t.size }}
-                  </el-option>
-                </el-select>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </el-form-item>
-      </el-form>
-    </el-card>
+            <td>
+              <el-select v-model="config.drives" multiple>
+                <el-option v-for="t in odisks" :label="t.drives"
+                           :value="parseInt(t.drive)">
+                  {{ t.raid + '-enclosureId:' + t.enclosureId + '-driveId:' + t.drive + '-' + t.size }}
+                </el-option>
+              </el-select>
+            </td>
+            <td>
+              <el-button type="primary" icon="el-icon-minus" circle
+                         @click="payLoad.options['create-raid']['raidList'].splice(index, 1)">
+              </el-button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 <script>

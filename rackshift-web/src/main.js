@@ -2,8 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './components/router/router'
 import i18n from "./i18n/i18n";
-import VueI18n from 'vue-i18n'
-import {dateFormat, brandsFormat, endpointFormat} from "./common/utils/CommonFilter";
+import {brandsFormat, dateFormat, endpointFormat} from "./common/utils/CommonFilter";
 import ElementUI, {
     Alert,
     Aside,
@@ -83,8 +82,8 @@ import ElementUI, {
     Tree,
     Upload
 } from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-
+// import 'element-ui/lib/theme-chalk/index.css';
+import '../theme/index.css'
 Vue.filter('dateFormat', dateFormat);
 Vue.filter('brandsFormat', brandsFormat);
 Vue.filter('endpointFormat', endpointFormat);

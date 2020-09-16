@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!--    <el-card>-->
     <el-form label-width="110px" :rules="rules" :model="payLoad.options.defaults" ref="form">
       <el-row>
         <el-col :span="12">
@@ -25,11 +24,6 @@
             <table class="detail-info" style="float: left;margin-top:20px;" v-show="showPartition">
               <thead>
               <tr>
-                <th>
-                  <el-button type="primary" icon="el-icon-plus" circle
-                             @click="payLoad.options.defaults.installPartitions.push({})">
-                  </el-button>
-                </th>
                 <th>{{ $t('mount_point') }}</th>
                 <th>
                   <el-row>
@@ -42,16 +36,16 @@
                   </el-row>
                 </th>
                 <th>{{ $t('fs_type') }}</th>
+                <th>
+                  <el-button type="primary" icon="el-icon-plus" circle
+                             @click="payLoad.options.defaults.installPartitions.push({})">
+                  </el-button>
+                </th>
               </tr>
               </thead>
               <tbody>
               <tr v-for="(partition, index) in payLoad.options.defaults.installPartitions"
                   v-show="partition.mountPoint != 'biosboot'">
-                <td>
-                  <el-button type="primary" icon="el-icon-minus" circle
-                             @click="payLoad.options.defaults.installPartitions.splice(index, 1)">
-                  </el-button>
-                </td>
                 <td>
                   <el-input v-model="partition.mountPoint"
                             :disabled="partition.mountPoint == 'biosboot'"></el-input>
@@ -66,6 +60,11 @@
                                :value="x"><span>{{ x }}</span>
                     </el-option>
                   </el-select>
+                </td>
+                <td>
+                  <el-button type="primary" icon="el-icon-minus" circle
+                             @click="payLoad.options.defaults.installPartitions.splice(index, 1)">
+                  </el-button>
                 </td>
               </tr>
               </tbody>
