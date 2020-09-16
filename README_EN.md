@@ -24,7 +24,7 @@ RackShift is a RackHD-based open source management platform for the full life cy
 
 ## Technical advantage
      
-- Full life cycle: It can cover the full life cycle management and control of bare metal from discovery, shelving, deployment, operation and maintenance;
+- Full life cycle: It can cover the full life cycle management and control of bare metal from discovery, shelving, deployment, operation and maintenance
 - Automation: All workflows are based on PXE or out-of-band protocol to achieve automation, which truly liberates computer room operation and maintenance personnel
 - Easy to operate: The operation is friendly, the open source bare metal installation platform is not intuitive enough to solve the problem, and the pain points to be solved are not known
 
