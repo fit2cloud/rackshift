@@ -4,21 +4,19 @@ import com.alibaba.fastjson.JSONObject;
 import io.rackshift.metal.sdk.util.HttpFutureUtils;
 import io.rackshift.model.ImageDTO;
 import io.rackshift.model.RSException;
-import io.rackshift.model.ResultHolder;
 import io.rackshift.mybatis.domain.EndpointExample;
 import io.rackshift.mybatis.domain.Image;
 import io.rackshift.mybatis.domain.ImageExample;
 import io.rackshift.mybatis.mapper.EndpointMapper;
 import io.rackshift.mybatis.mapper.ImageMapper;
 import io.rackshift.utils.BeanUtils;
-import io.rackshift.utils.HttpClientUtil;
 import io.rackshift.utils.ProxyUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jetty.util.UrlEncoded;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.print.attribute.standard.JobOriginatingUserName;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -57,8 +55,13 @@ public class ImageService {
     }
 
     public Object del(String id) {
-        imageMapper.deleteByPrimaryKey(id);
-        return true;
+        Image image = imageMapper.selectByPrimaryKey(id);
+        if (image == null) return false;
+        if (umount(image)) {
+            imageMapper.deleteByPrimaryKey(id);
+            return true;
+        }
+        return false;
     }
 
     public Object del(String[] ids) {
@@ -80,24 +83,23 @@ public class ImageService {
     @Value("${file.upload.dir}")
     private String fileUploadBase;
 
-    public Map mount(ImageDTO imageDTO) {
+    public Map mount(Image imageDTO) {
         String mountPath = null;
         String url = null;
         try {
             if (!imageDTO.getOriginalName().endsWith("iso")) {
                 RSException.throwExceptions("i18n_file_must_be_iso");
             }
-            if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
-                String mountName = imageDTO.getOriginalName().substring(0, imageDTO.getOriginalName().indexOf(".")) + Math.random() * 1000;
-                mountPath = fileUploadBase + File.separator + mountName;
-                String res = HttpFutureUtils.getHttp(String.format("http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":8083/image/mount?filePath=%s&mountPath=%s", imageDTO.getFilePath(), mountPath), ProxyUtil.getHeaders());
-                if (StringUtils.isNotBlank(res)) {
-                    JSONObject rObj = JSONObject.parseObject(res);
-                    if (rObj.containsKey("success") && rObj.getBoolean("success")) {
-                        url = "http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":9090/common/" + mountPath;
-                    } else {
-                        RSException.throwExceptions(rObj.getString("msg"));
-                    }
+            String mountName = imageDTO.getOriginalName().substring(0, imageDTO.getOriginalName().indexOf(".")) + Math.random() * 1000;
+            mountPath = fileUploadBase + File.separator + mountName;
+            String res = HttpFutureUtils.getHttp(String.format("http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":8083/image/mount?filePath=%s&mountPath=%s", UrlEncoded.encodeString(imageDTO.getFilePath()), UrlEncoded.encodeString(mountPath)), ProxyUtil.
+                    getHeaders());
+            if (StringUtils.isNotBlank(res)) {
+                JSONObject rObj = JSONObject.parseObject(res);
+                if (rObj.containsKey("success") && rObj.getBoolean("success")) {
+                    url = "http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":9090/common" + mountPath.replace(fileUploadBase, "").replace("\\", "/");
+                } else {
+                    RSException.throwExceptions(rObj.getString("msg"));
                 }
             }
         } catch (Exception e) {
@@ -111,14 +113,14 @@ public class ImageService {
         return map;
     }
 
-    private boolean umount(ImageDTO imageDTO) {
+    private boolean umount(Image imageDTO) {
         try {
             if (!imageDTO.getOriginalName().endsWith("iso")) {
                 RSException.throwExceptions("i18n_file_must_be_iso");
             }
             if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
 
-                String res = HttpFutureUtils.getHttp(String.format("http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":8083/image/umount?filePath=%s&mountPath=%s", imageDTO.getFilePath(), imageDTO.getMountPath()), ProxyUtil.getHeaders());
+                String res = HttpFutureUtils.getHttp(String.format("http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":8083/image/umount?filePath=%s&mountPath=%s", UrlEncoded.encodeString(imageDTO.getFilePath()), UrlEncoded.encodeString(imageDTO.getMountPath())), ProxyUtil.getHeaders());
                 if (StringUtils.isNotBlank(res)) {
                     JSONObject rObj = JSONObject.parseObject(res);
                     if (rObj.containsKey("success") && rObj.getBoolean("success")) {

@@ -82,21 +82,6 @@
             <el-input v-model="editObj.name" autocomplete="off"></el-input>
           </el-form-item>
 
-          <!--          <el-form-item :label="$t('endpoint')">-->
-          <!--            <el-select v-model="editObj.endpointId" :placeholder="$t('pls_select')">-->
-          <!--              <el-option-->
-          <!--                  v-for="(item, key) in allEndPoints"-->
-          <!--                  :label="item.name"-->
-          <!--                  :value="item.id">-->
-          <!--              </el-option>-->
-          <!--            </el-select>-->
-          <!--          </el-form-item>-->
-
-          <el-form-item :label="$t('url')" prop="url">
-            <el-input v-model="editObj.url" autocomplete="off"
-                      :placeholder="$t('pls_input_url')"></el-input>
-          </el-form-item>
-
           <el-form-item :label="$t('os')" prop="os">
             <el-select v-model="editObj.os" :placeholder="$t('pls_select')" v-on:change="changeOsVersion">
               <el-option
@@ -165,9 +150,6 @@ export default {
         ],
         osVersion: [
           {validator: requiredSelectValidator, trigger: 'blur', vue: this},
-        ],
-        url: [
-          {validator: requiredValidator, trigger: 'blur', vue: this, msg: this.$t('please_input_mounted_or_upload')},
         ],
       },
       query: {
@@ -346,9 +328,8 @@ export default {
       this.getData();
     },
     afterUploadSuccess(response) {
-      this.editObj.url = response.data.url;
-      this.editObj.mountPath = response.data.mountPath;
-      this.editObj.filePath = response.data.filePath;
+      this.editObj.originalName = response.originalName;
+      this.editObj.filePath = response.filePath;
     },
   }
 }

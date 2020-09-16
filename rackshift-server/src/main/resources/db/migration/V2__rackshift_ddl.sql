@@ -149,8 +149,7 @@ CREATE TABLE if not exists `image`
     `mount_path`            varchar(250)         DEFAULT NULL COMMENT '挂载的绝对路径',
     `ext_properties` longtext COMMENT '其他属性',
     `update_time`    bigint(20)  NOT NULL DEFAULT '0' COMMENT '同步时间',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `IDX_OS_VERSION` (`os`, `os_version`) USING BTREE
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 

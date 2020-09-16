@@ -102,8 +102,6 @@ public class ImageController {
         Map<String, String> r = new HashMap<>();
         String originalName = null;
         String filePath = null;
-        r.put("originalName", originalName);
-        r.put("filePath", filePath);
 
         ServletFileUpload upload = new ServletFileUpload();
         try {
@@ -119,6 +117,8 @@ public class ImageController {
                     IOUtils.copy(stream, out);
                     out.close();
                 }
+                r.put("originalName", originalName);
+                r.put("filePath", filePath);
                 //暂时只支持1个iso上传
                 return r;
             }

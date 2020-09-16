@@ -1,31 +1,28 @@
 package io.rackshift.rackshiftproxy.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.core.DockerClientBuilder;
 import io.rackshift.rackshiftproxy.model.R;
+import io.rackshift.rackshiftproxy.service.ImageService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.util.Date;
+import javax.annotation.Resource;
+import java.io.File;
 
 @Controller("image")
 @RequestMapping("image")
 public class ImageController {
-
-    @RequestMapping(value = "/test")
-    @ResponseBody
-    public String test() {
-        DockerClient client = DockerClientBuilder.getInstance().build();
-        return JSONObject.toJSONString(client.listImagesCmd().exec());
-    }
+    @Resource
+    private ImageService imageService;
 
     @RequestMapping(value = "/mount")
     @ResponseBody
     public R mount(@RequestParam String filePath, @RequestParam String mountPath) {
+        if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
+            filePath = filePath.replace("\\", "/");
+            mountPath = mountPath.replace("\\", "/");
+        }
         File uploadedFile = new File(filePath);
         File mountDir = new File(mountPath);
         if (!uploadedFile.exists()) {
@@ -41,9 +38,9 @@ public class ImageController {
         }
         try {
             if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
-                Runtime runtime = Runtime.getRuntime();
-                runtime.exec(String.format("echo >> %s %s iso9660 ro 0 0", filePath, mountDir));
-                runtime.exec(String.format("mount -a"));
+                if (!imageService.mountISO(filePath, mountPath)) {
+                    return R.failWithMsg("挂载失败！");
+                }
             } else {
                 return R.failWithMsg("只支持linux系统的挂载！");
             }
@@ -70,9 +67,9 @@ public class ImageController {
         }
         try {
             if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
-                Runtime runtime = Runtime.getRuntime();
-                runtime.exec(String.format("umount %s", mountDir));
-                runtime.exec(String.format("sed -i '/%s/d' /etc/fstab", uploadedFile.getName()));
+                if (!imageService.umountISO(filePath, mountPath)) {
+                    return R.failWithMsg("挂载失败！");
+                }
             } else {
                 return R.failWithMsg("只支持linux系统的挂载！");
             }
