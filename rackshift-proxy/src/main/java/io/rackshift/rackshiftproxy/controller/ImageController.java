@@ -54,6 +54,10 @@ public class ImageController {
     @RequestMapping(value = "/umount")
     @ResponseBody
     public R umount(@RequestParam String filePath, @RequestParam String mountPath) {
+        if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
+            filePath = filePath.replace("\\", "/");
+            mountPath = mountPath.replace("\\", "/");
+        }
         File uploadedFile = new File(filePath);
         File mountDir = new File(mountPath);
         if (!uploadedFile.exists()) {

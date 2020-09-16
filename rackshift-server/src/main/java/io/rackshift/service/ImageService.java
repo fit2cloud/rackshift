@@ -118,16 +118,14 @@ public class ImageService {
             if (!imageDTO.getOriginalName().endsWith("iso")) {
                 RSException.throwExceptions("i18n_file_must_be_iso");
             }
-            if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
 
-                String res = HttpFutureUtils.getHttp(String.format("http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":8083/image/umount?filePath=%s&mountPath=%s", UrlEncoded.encodeString(imageDTO.getFilePath()), UrlEncoded.encodeString(imageDTO.getMountPath())), ProxyUtil.getHeaders());
-                if (StringUtils.isNotBlank(res)) {
-                    JSONObject rObj = JSONObject.parseObject(res);
-                    if (rObj.containsKey("success") && rObj.getBoolean("success")) {
-                        return true;
-                    } else {
-                        RSException.throwExceptions(rObj.getString("msg"));
-                    }
+            String res = HttpFutureUtils.getHttp(String.format("http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":8083/image/umount?filePath=%s&mountPath=%s", UrlEncoded.encodeString(imageDTO.getFilePath()), UrlEncoded.encodeString(imageDTO.getMountPath())), ProxyUtil.getHeaders());
+            if (StringUtils.isNotBlank(res)) {
+                JSONObject rObj = JSONObject.parseObject(res);
+                if (rObj.containsKey("success") && rObj.getBoolean("success")) {
+                    return true;
+                } else {
+                    RSException.throwExceptions(rObj.getString("msg"));
                 }
             }
         } catch (Exception e) {
