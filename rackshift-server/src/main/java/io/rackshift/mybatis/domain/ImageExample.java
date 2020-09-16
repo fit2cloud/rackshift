@@ -524,6 +524,216 @@ public class ImageExample {
             return (Criteria) this;
         }
 
+        public Criteria andOriginalNameIsNull() {
+            addCriterion("original_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameIsNotNull() {
+            addCriterion("original_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameEqualTo(String value) {
+            addCriterion("original_name =", value, "originalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameNotEqualTo(String value) {
+            addCriterion("original_name <>", value, "originalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameGreaterThan(String value) {
+            addCriterion("original_name >", value, "originalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameGreaterThanOrEqualTo(String value) {
+            addCriterion("original_name >=", value, "originalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameLessThan(String value) {
+            addCriterion("original_name <", value, "originalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameLessThanOrEqualTo(String value) {
+            addCriterion("original_name <=", value, "originalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameLike(String value) {
+            addCriterion("original_name like", value, "originalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameNotLike(String value) {
+            addCriterion("original_name not like", value, "originalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameIn(List<String> values) {
+            addCriterion("original_name in", values, "originalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameNotIn(List<String> values) {
+            addCriterion("original_name not in", values, "originalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameBetween(String value1, String value2) {
+            addCriterion("original_name between", value1, value2, "originalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginalNameNotBetween(String value1, String value2) {
+            addCriterion("original_name not between", value1, value2, "originalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathIsNull() {
+            addCriterion("file_path is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathIsNotNull() {
+            addCriterion("file_path is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathEqualTo(String value) {
+            addCriterion("file_path =", value, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathNotEqualTo(String value) {
+            addCriterion("file_path <>", value, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathGreaterThan(String value) {
+            addCriterion("file_path >", value, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathGreaterThanOrEqualTo(String value) {
+            addCriterion("file_path >=", value, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathLessThan(String value) {
+            addCriterion("file_path <", value, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathLessThanOrEqualTo(String value) {
+            addCriterion("file_path <=", value, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathLike(String value) {
+            addCriterion("file_path like", value, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathNotLike(String value) {
+            addCriterion("file_path not like", value, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathIn(List<String> values) {
+            addCriterion("file_path in", values, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathNotIn(List<String> values) {
+            addCriterion("file_path not in", values, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathBetween(String value1, String value2) {
+            addCriterion("file_path between", value1, value2, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andFilePathNotBetween(String value1, String value2) {
+            addCriterion("file_path not between", value1, value2, "filePath");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathIsNull() {
+            addCriterion("mount_path is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathIsNotNull() {
+            addCriterion("mount_path is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathEqualTo(String value) {
+            addCriterion("mount_path =", value, "mountPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathNotEqualTo(String value) {
+            addCriterion("mount_path <>", value, "mountPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathGreaterThan(String value) {
+            addCriterion("mount_path >", value, "mountPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathGreaterThanOrEqualTo(String value) {
+            addCriterion("mount_path >=", value, "mountPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathLessThan(String value) {
+            addCriterion("mount_path <", value, "mountPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathLessThanOrEqualTo(String value) {
+            addCriterion("mount_path <=", value, "mountPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathLike(String value) {
+            addCriterion("mount_path like", value, "mountPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathNotLike(String value) {
+            addCriterion("mount_path not like", value, "mountPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathIn(List<String> values) {
+            addCriterion("mount_path in", values, "mountPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathNotIn(List<String> values) {
+            addCriterion("mount_path not in", values, "mountPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathBetween(String value1, String value2) {
+            addCriterion("mount_path between", value1, value2, "mountPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andMountPathNotBetween(String value1, String value2) {
+            addCriterion("mount_path not between", value1, value2, "mountPath");
+            return (Criteria) this;
+        }
+
         public Criteria andUpdateTimeIsNull() {
             addCriterion("update_time is null");
             return (Criteria) this;

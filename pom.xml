@@ -5,7 +5,7 @@
     <groupId>io.rackshift</groupId>
     <artifactId>rackshift</artifactId>
     <version>1.0.0</version>
-    <name>Archetype - rackshift</name>
+    <name>rackshift</name>
     <url>http://maven.apache.org</url>
     <packaging>pom</packaging>
     <modules>

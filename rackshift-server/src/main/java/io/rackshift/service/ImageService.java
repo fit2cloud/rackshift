@@ -1,20 +1,28 @@
 package io.rackshift.service;
 
+import com.alibaba.fastjson.JSONObject;
+import io.rackshift.metal.sdk.util.HttpFutureUtils;
 import io.rackshift.model.ImageDTO;
 import io.rackshift.model.RSException;
+import io.rackshift.model.ResultHolder;
 import io.rackshift.mybatis.domain.EndpointExample;
 import io.rackshift.mybatis.domain.Image;
 import io.rackshift.mybatis.domain.ImageExample;
 import io.rackshift.mybatis.mapper.EndpointMapper;
 import io.rackshift.mybatis.mapper.ImageMapper;
 import io.rackshift.utils.BeanUtils;
+import io.rackshift.utils.HttpClientUtil;
+import io.rackshift.utils.ProxyUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.print.attribute.standard.JobOriginatingUserName;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ImageService {
@@ -26,6 +34,9 @@ public class ImageService {
     public Object add(ImageDTO queryVO) {
         Image image = new Image();
         BeanUtils.copyBean(image, queryVO);
+        Map<String, String> map = mount(queryVO);
+        image.setUrl(map.get("url"));
+        image.setMountPath(map.get("mountPath"));
         imageMapper.insertSelective(image);
         return true;
     }
@@ -33,7 +44,15 @@ public class ImageService {
     public Object update(ImageDTO queryVO) {
         Image image = new Image();
         BeanUtils.copyBean(image, queryVO);
-        imageMapper.updateByPrimaryKeySelective(image);
+        Image dbImage = imageMapper.selectByPrimaryKey(queryVO.getId());
+        if (!StringUtils.isAnyBlank(queryVO.getUrl(), dbImage.getUrl()) && !queryVO.getUrl().equals(dbImage.getUrl())) {
+            if (umount(queryVO)) {
+                image.setFilePath(null);
+                image.setMountPath(null);
+            }
+        }
+        imageMapper.updateByPrimaryKey(image);
+
         return true;
     }
 
@@ -61,27 +80,60 @@ public class ImageService {
     @Value("${file.upload.dir}")
     private String fileUploadBase;
 
-    public String mount(String path, String originalName, String endpointId) {
+    public Map mount(ImageDTO imageDTO) {
+        String mountPath = null;
+        String url = null;
         try {
-            if (!originalName.endsWith("iso")) {
+            if (!imageDTO.getOriginalName().endsWith("iso")) {
                 RSException.throwExceptions("i18n_file_must_be_iso");
             }
             if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
-                String mountPath = originalName.substring(0, originalName.indexOf(".")) + Math.random() * 1000;
-                String mountFullPath = fileUploadBase + File.separator + mountPath;
-                if (!new File(mountFullPath).exists()) {
-                    new File(mountFullPath).mkdirs();
-                    Runtime.getRuntime().exec(String.format("mount %s %s", path, mountFullPath));
+                String mountName = imageDTO.getOriginalName().substring(0, imageDTO.getOriginalName().indexOf(".")) + Math.random() * 1000;
+                mountPath = fileUploadBase + File.separator + mountName;
+                String res = HttpFutureUtils.getHttp(String.format("http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":8083/image/mount?filePath=%s&mountPath=%s", imageDTO.getFilePath(), mountPath), ProxyUtil.getHeaders());
+                if (StringUtils.isNotBlank(res)) {
+                    JSONObject rObj = JSONObject.parseObject(res);
+                    if (rObj.containsKey("success") && rObj.getBoolean("success")) {
+                        url = "http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":9090/common/" + mountPath;
+                    } else {
+                        RSException.throwExceptions(rObj.getString("msg"));
+                    }
                 }
-                return "http://" + getEndpointUrl(endpointId) + ":9090/common/" + mountPath;
             }
-            return path;
         } catch (Exception e) {
-            if (new File(path).exists())
-                new File(path).delete();
+            if (new File(imageDTO.getFilePath()).exists())
+                new File(imageDTO.getFilePath()).delete();
             RSException.throwExceptions("i18n_file_upload_fail");
         }
-        return null;
+        Map<String, String> map = new HashMap<>();
+        map.put("mountPath", mountPath);
+        map.put("url", url);
+        return map;
+    }
+
+    private boolean umount(ImageDTO imageDTO) {
+        try {
+            if (!imageDTO.getOriginalName().endsWith("iso")) {
+                RSException.throwExceptions("i18n_file_must_be_iso");
+            }
+            if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
+
+                String res = HttpFutureUtils.getHttp(String.format("http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":8083/image/umount?filePath=%s&mountPath=%s", imageDTO.getFilePath(), imageDTO.getMountPath()), ProxyUtil.getHeaders());
+                if (StringUtils.isNotBlank(res)) {
+                    JSONObject rObj = JSONObject.parseObject(res);
+                    if (rObj.containsKey("success") && rObj.getBoolean("success")) {
+                        return true;
+                    } else {
+                        RSException.throwExceptions(rObj.getString("msg"));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            if (new File(imageDTO.getFilePath()).exists())
+                new File(imageDTO.getFilePath()).delete();
+            RSException.throwExceptions("i18n_file_upload_fail");
+        }
+        return false;
     }
 
     private String getEndpointUrl(String endpointId) {

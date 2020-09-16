@@ -11,7 +11,7 @@
     <groupId>io.rackshift.server</groupId>
     <artifactId>rackshift-server</artifactId>
     <version>1.0.0</version>
-    <name>Archetype - rackshift-server</name>
+    <name>rackshift-server</name>
     <url>http://maven.apache.org</url>
 
     <properties>

@@ -276,7 +276,6 @@ export default {
       if (this.editType == 'edit') {
         HttpUtil.post("/image/update", this.editObj, (res) => {
           this.editDialogVisible = false;
-          this.editObj.defaultParams = JSON.stringify(this.editObj.defaultParams);
           this.$message.success(this.$t('edit_success'));
           this.getData();
           this.loading = false;
@@ -347,7 +346,9 @@ export default {
       this.getData();
     },
     afterUploadSuccess(response) {
-      this.editObj.url = response;
+      this.editObj.url = response.data.url;
+      this.editObj.mountPath = response.data.mountPath;
+      this.editObj.filePath = response.data.filePath;
     },
   }
 }

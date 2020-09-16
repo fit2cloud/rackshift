@@ -10,6 +10,6 @@
   <groupId>io.rackshift.web</groupId>
   <artifactId>rackshift-web</artifactId>
   <version>${rackshift.version}</version>
-  <name>Archetype - rackshift-web</name>
+  <name>rackshift-web</name>
   <url>http://maven.apache.org</url>
 </project>

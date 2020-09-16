@@ -17,6 +17,12 @@ public class Image implements Serializable {
 
     private String url;
 
+    private String originalName;
+
+    private String filePath;
+
+    private String mountPath;
+
     private Long updateTime;
 
     private String extProperties;

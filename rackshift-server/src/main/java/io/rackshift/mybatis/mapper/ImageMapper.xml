@@ -8,6 +8,9 @@
     <result column="os" jdbcType="VARCHAR" property="os" />
     <result column="os_version" jdbcType="VARCHAR" property="osVersion" />
     <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="original_name" jdbcType="VARCHAR" property="originalName" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+    <result column="mount_path" jdbcType="VARCHAR" property="mountPath" />
     <result column="update_time" jdbcType="BIGINT" property="updateTime" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.Image">
@@ -72,7 +75,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, endpoint_id, name, os, os_version, url, update_time
+    id, endpoint_id, name, os, os_version, url, original_name, file_path, mount_path, 
+    update_time
   </sql>
   <sql id="Blob_Column_List">
     ext_properties
@@ -128,9 +132,11 @@
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.Image">
     insert into image (id, endpoint_id, name, 
       os, os_version, url, 
+      original_name, file_path, mount_path, 
       update_time, ext_properties)
     values (#{id,jdbcType=VARCHAR}, #{endpointId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{os,jdbcType=VARCHAR}, #{osVersion,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{originalName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{mountPath,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=BIGINT}, #{extProperties,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.Image">
@@ -153,6 +159,15 @@
       </if>
       <if test="url != null">
         url,
+      </if>
+      <if test="originalName != null">
+        original_name,
+      </if>
+      <if test="filePath != null">
+        file_path,
+      </if>
+      <if test="mountPath != null">
+        mount_path,
       </if>
       <if test="updateTime != null">
         update_time,
@@ -179,6 +194,15 @@
       </if>
       <if test="url != null">
         #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="originalName != null">
+        #{originalName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null">
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="mountPath != null">
+        #{mountPath,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=BIGINT},
@@ -215,6 +239,15 @@
       <if test="record.url != null">
         url = #{record.url,jdbcType=VARCHAR},
       </if>
+      <if test="record.originalName != null">
+        original_name = #{record.originalName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filePath != null">
+        file_path = #{record.filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mountPath != null">
+        mount_path = #{record.mountPath,jdbcType=VARCHAR},
+      </if>
       <if test="record.updateTime != null">
         update_time = #{record.updateTime,jdbcType=BIGINT},
       </if>
@@ -234,6 +267,9 @@
       os = #{record.os,jdbcType=VARCHAR},
       os_version = #{record.osVersion,jdbcType=VARCHAR},
       url = #{record.url,jdbcType=VARCHAR},
+      original_name = #{record.originalName,jdbcType=VARCHAR},
+      file_path = #{record.filePath,jdbcType=VARCHAR},
+      mount_path = #{record.mountPath,jdbcType=VARCHAR},
       update_time = #{record.updateTime,jdbcType=BIGINT},
       ext_properties = #{record.extProperties,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
@@ -248,6 +284,9 @@
       os = #{record.os,jdbcType=VARCHAR},
       os_version = #{record.osVersion,jdbcType=VARCHAR},
       url = #{record.url,jdbcType=VARCHAR},
+      original_name = #{record.originalName,jdbcType=VARCHAR},
+      file_path = #{record.filePath,jdbcType=VARCHAR},
+      mount_path = #{record.mountPath,jdbcType=VARCHAR},
       update_time = #{record.updateTime,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -271,6 +310,15 @@
       <if test="url != null">
         url = #{url,jdbcType=VARCHAR},
       </if>
+      <if test="originalName != null">
+        original_name = #{originalName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null">
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="mountPath != null">
+        mount_path = #{mountPath,jdbcType=VARCHAR},
+      </if>
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=BIGINT},
       </if>
@@ -287,6 +335,9 @@
       os = #{os,jdbcType=VARCHAR},
       os_version = #{osVersion,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
+      original_name = #{originalName,jdbcType=VARCHAR},
+      file_path = #{filePath,jdbcType=VARCHAR},
+      mount_path = #{mountPath,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=BIGINT},
       ext_properties = #{extProperties,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
@@ -298,6 +349,9 @@
       os = #{os,jdbcType=VARCHAR},
       os_version = #{osVersion,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
+      original_name = #{originalName,jdbcType=VARCHAR},
+      file_path = #{filePath,jdbcType=VARCHAR},
+      mount_path = #{mountPath,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=BIGINT}
     where id = #{id,jdbcType=VARCHAR}
   </update>

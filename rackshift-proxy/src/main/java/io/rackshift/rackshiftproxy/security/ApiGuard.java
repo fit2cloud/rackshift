@@ -24,7 +24,7 @@ public class ApiGuard {
     private static final String APISECRET = "rackshift-proxy-20200820";
     private static final String SIGNATURE = "signature";
 
-    @Pointcut("execution(* io.rackshift.rackshiftproxy.controller.DHCPController.*(..))")
+    @Pointcut("execution(* io.rackshift.rackshiftproxy.controller.*.*(..))")
     public void pointCut() {
 
     }
@@ -35,7 +35,7 @@ public class ApiGuard {
         if (StringUtils.isBlank(request.getHeader(SIGNATURE))) {
             throw new RuntimeException("ilegal call with no apikey");
         }
-        long time  = JWT.decode(request.getHeader(SIGNATURE)).getClaims().get("time").asLong();
+        long time = JWT.decode(request.getHeader(SIGNATURE)).getClaims().get("time").asLong();
 
         if (System.currentTimeMillis() - time > 5 * 60 * 1000) {
             throw new RuntimeException("signature timeout!");

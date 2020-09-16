@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("image")
@@ -92,13 +94,16 @@ public class ImageController {
 
     @ResponseBody
     @RequestMapping(value = "/upload", method = {RequestMethod.POST})
-    public String upload(@RequestParam(required = false) String endpointId, HttpServletRequest request) {
+    public Map upload(@RequestParam(required = false) String endpointId, HttpServletRequest request) {
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         if (!isMultipart) {
             RSException.throwExceptions(Translator.get("file-content error!"));
         }
+        Map<String, String> r = new HashMap<>();
         String originalName = null;
-        String path = null;
+        String filePath = null;
+        r.put("originalName", originalName);
+        r.put("filePath", filePath);
 
         ServletFileUpload upload = new ServletFileUpload();
         try {
@@ -107,20 +112,19 @@ public class ImageController {
                 FileItemStream item = iter.next();
                 InputStream stream = item.openStream();
                 originalName = item.getName();
-                path = fileUploadBase + File.separator + originalName;
+                filePath = fileUploadBase + File.separator + originalName;
                 if (item.isFormField()) {
                 } else {
-                    OutputStream out = new FileOutputStream(path);
+                    OutputStream out = new FileOutputStream(filePath);
                     IOUtils.copy(stream, out);
                     out.close();
                 }
+                //暂时只支持1个iso上传
+                return r;
             }
-        } catch (FileUploadException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return imageService.mount(path, originalName, endpointId);
+        return r;
     }
 }
