@@ -2,8 +2,6 @@
   <div class="container">
 
     <div class="machine-title">
-      <i class="el-icon-user-solid">{{ $t('Workflow') }}</i>
-
       <el-button-group class="batch-button">
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
             $t('add')
@@ -96,10 +94,11 @@
         :title="editType == 'edit' ? $t('edit_workflow') : $t('add_workflow')"
         :visible.sync="editDialogVisible"
         direction="rtl"
+
         :wrapperClosable="false"
         :before-close="handleClose">
       <div class="demo-drawer__content">
-        <el-form :model="editObj">
+        <el-form :model="editObj" :label-position="labelPosition">
 
           <el-form-item :label="$t('injectable_mame')">
             <el-select v-model="editObj.injectableName" :placeholder="$t('pls_select')"
@@ -191,6 +190,7 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
+      labelPosition: 'top',
       tableData: [],
       multipleSelection: [],
       delList: [],

@@ -1,10 +1,8 @@
 <template>
-  <el-tabs style="width:80vw" v-model="activeName">
+  <el-tabs style="width:80vw;" v-model="activeName">
     <el-tab-pane :label="$t('bare_metal')" name="bare-metal">
       <div>
         <div class="machine-title">
-          <i class="el-icon-user-solid">{{ $t('Machines') }}</i>
-
           <el-button-group class="batch-button">
             <!--            <el-button type="primary" icon="el-icon-circle-plus-outline">{{ $t('add') }}</el-button>-->
             <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
@@ -461,7 +459,8 @@ export default {
       curObm: {
         ip: null,
         userName: null,
-        pwd: null
+        pwd: null,
+        bareMetalId: null
       },
       obmLoading: false,
       fillWfParamsLoading: false,
@@ -565,14 +564,21 @@ export default {
       this.getHardware();
     },
     fillOBM(val) {
-      this.curObm.ip = val.managementIp;
-      this.curObm.userName = null;
-      this.curObm.pwd = null;
       if (val.outBandList.length > 0) {
-        this.curObm.userName = val.outBandList[0].userName;
-        this.curObm.pwd = val.outBandList[0].pwd;
+        this.curObm = {
+          ip: val.managementIp,
+          userName: val.outBandList[0].userName,
+          pwd: val.outBandList[0].pwd,
+          bareMetalId: val.id,
+        };
+      } else {
+        this.curObm = {
+          ip: val.managementIp,
+          userName: null,
+          pwd: null,
+          bareMetalId: val.id,
+        };
       }
-      this.curObm.bareMetalId = val.id;
       this.fillOutObms = true;
     },
     submitOBM() {

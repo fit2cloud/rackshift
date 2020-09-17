@@ -2,7 +2,6 @@
   <div class="container">
 
     <div class="machine-title">
-      <i class="el-icon-user-solid">{{ $t('Info') }}</i>
     </div>
 
     <el-row>
@@ -57,7 +56,7 @@ export default {
           this.$notify.success(this.$t('edit_success'));
           this.editObj = {};
         } else {
-          this.$notify.success(this.$t('edit_fail'));
+          this.$notify.error(this.$t('edit_fail'));
         }
       });
     },

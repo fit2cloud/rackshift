@@ -2,8 +2,6 @@
   <div class="container">
 
     <div class="machine-title">
-      <i class="el-icon-user-solid">{{ $t('Endpoint') }}</i>
-
       <el-button-group class="batch-button">
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
             $t('add')
@@ -97,7 +95,7 @@
         direction="rtl"
         :before-close="handleClose">
       <div class="demo-drawer__content">
-        <el-form :model="editObj">
+        <el-form :model="editObj" labelPosition="top">
 
           <el-form-item :label="$t('name')">
             <el-input v-model="editObj.name" autocomplete="off"

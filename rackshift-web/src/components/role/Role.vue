@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <div class="machine-title">
-      <i class="el-icon-user-solid">{{ $t('Images') }}</i>
       <div class="el-button-group batch-button">
         <el-button
             type="primary"
@@ -69,7 +68,7 @@
         :visible.sync="editDialogVisible"
         width="30%"
         :before-close="handleClose">
-      <el-form>
+      <el-form labelPosition="top">
         <el-form-item :label="$t('name')">
           <el-input v-model="editObj.name"></el-input>
         </el-form-item>

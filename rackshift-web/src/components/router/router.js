@@ -11,6 +11,7 @@ import ExecutionLog from "../execution-log/Execution-Log"
 import Workflow from "../workflow/Workflow"
 import Endpoint from "../endpoint/Endpoint"
 import Info from "../info/Info"
+import Wizard from "../wizard/Wizard"
 
 Vue.use(VueRouter);
 
@@ -28,6 +29,7 @@ const routes = [
     {path: '/workflow', component: Workflow},
     {path: '/endpoint', component: Endpoint},
     {path: '/info', component: Info},
+    {path: '/wizard', component: Wizard},
 ]
 const router = new VueRouter({
     routes: routes

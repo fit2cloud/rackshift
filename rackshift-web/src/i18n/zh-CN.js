@@ -203,4 +203,5 @@ export default {
     "fanti": "繁体",
     "english": "英语",
     "Languages": "语言",
+    "view_execution_log": "查看部署日志",
 };

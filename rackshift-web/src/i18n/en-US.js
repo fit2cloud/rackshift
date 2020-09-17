@@ -202,4 +202,5 @@ export default {
     "fanti": "Traditional",
     "english": "英语",
     "Languages": "Language",
+    "view_execution_log": "View deploy log",
 };

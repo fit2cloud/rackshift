@@ -2,7 +2,6 @@
   <div class="container">
 
     <div class="machine-title">
-      <i class="el-icon-user-solid">{{ $t('ExecutionLog') }}</i>
       <div class="el-button-group batch-button">
         <button type="button" class="el-button el-button--primary" @click="delAllSelection"><i
             class="el-icon-delete"></i>{{ $t('batch_del') }}

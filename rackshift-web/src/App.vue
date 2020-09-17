@@ -96,7 +96,7 @@ export default {
 
 <style>
 * {
-  font-size: 11px !important;
+  font-size: 13px !important;
 }
 
 body {
@@ -190,5 +190,13 @@ body {
 
 .el-button + .el-button {
   margin-left: 0px !important;
+}
+
+.demo-drawer__footer {
+  display: flex;
+}
+
+.demo-drawer__footer button {
+  flex: 1;
 }
 </style>

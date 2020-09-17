@@ -2,8 +2,6 @@
   <div class="container">
 
     <div class="machine-title">
-      <i class="el-icon-user-solid">{{ $t('Networks') }}</i>
-
       <el-button-group class="batch-button">
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
             $t('add')

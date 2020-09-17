@@ -11,7 +11,7 @@ export default {
             childs: [
                 {
                     "name": i18n.t('Wizard'),
-                    "router": "/Wizard",
+                    "router": "/wizard",
                     "requireRole": "user,admin",
                     "order": "2",
                     "icon": "el-icon-question"

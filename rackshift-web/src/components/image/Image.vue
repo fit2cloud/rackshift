@@ -2,8 +2,6 @@
   <div class="container">
 
     <div class="machine-title">
-      <i class="el-icon-user-solid">{{ $t('Images') }}</i>
-
       <el-button-group class="batch-button">
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
             $t('add')
@@ -297,8 +295,12 @@ export default {
         return;
       }
       HttpUtil.post("/image/del", ids, (res) => {
-        this.$message.success(this.$t('delete_success'));
-        this.getData();
+        if (res.data) {
+          this.$message.success(this.$t('delete_success'));
+          this.getData();
+        } else {
+          this.$message.success(this.$t('delete_fail'));
+        }
       });
       this.multipleSelection = [];
     },

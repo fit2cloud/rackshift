@@ -2,7 +2,6 @@
   <div>
 
     <div class="machine-title">
-      <i class="el-icon-user-solid">{{ $t('OBM') }}</i>
       <el-button-group class="batch-button">
         <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
         </el-button>

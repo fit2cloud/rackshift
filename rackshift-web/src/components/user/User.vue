@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <div class="machine-title">
-      <i class="el-icon-user-solid">{{ $t('User') }}</i>
       <div class="el-button-group batch-button">
         <el-button
             type="primary"
