@@ -65,7 +65,7 @@
                 <el-card>
                   <el-row>
                     <el-col :span="12">
-                      <h4>打通裸金属服务器带外网络以及PXE网络到RackShift的</h4>
+                      <h4>打通裸金属服务器带外网络以及PXE网络</h4>
                       <p><img src="../../assets/wizard/structure.jpg" alt=""></p>
                       <div class="wizard-tips">
                         物理机PXE网卡与RackShift必须是直连，也就是同一个2层网络，

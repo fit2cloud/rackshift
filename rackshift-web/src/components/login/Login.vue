@@ -9,7 +9,7 @@
           <div class="logo">
           </div>
           <div class="title">
-            <span id="s2">Rackshift</span>
+            <span id="s2">RackShift</span>
           </div>
           <div class="border"></div>
           <div class="welcome">

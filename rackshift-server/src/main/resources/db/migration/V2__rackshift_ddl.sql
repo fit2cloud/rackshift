@@ -284,9 +284,6 @@ CREATE TABLE if not exists `operation_log`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
-insert into system_parameter
-values ('main_endpoint', '192.168.43.14', 'endpoint', null);
-
 create table if not exists workflow_param_templates
 (
     id              varchar(50)  not null,
@@ -333,7 +330,7 @@ CREATE TABLE if not exists `execution_log`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin COMMENT ='执行日志';
+  COLLATE = utf8mb4_bin COMMENT ='部署日志';
 
 CREATE TABLE if not exists `execution_log_details`
 (
@@ -348,7 +345,7 @@ CREATE TABLE if not exists `execution_log_details`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin COMMENT ='执行日志详情';
+  COLLATE = utf8mb4_bin COMMENT ='部署日志详情';
 
 CREATE TABLE if not exists `workflow`
 (

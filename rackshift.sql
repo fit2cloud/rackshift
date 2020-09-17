@@ -193,7 +193,7 @@ CREATE TABLE `execution_log` (
   `status` varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '状态',
   `create_time` bigint(13) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='执行日志';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='部署日志';
 
 -- ----------------------------
 -- Records of execution_log
@@ -213,7 +213,7 @@ CREATE TABLE `execution_log_details` (
   `status` varchar(50) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '状态',
   `create_time` bigint(13) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='执行日志详情';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='部署日志详情';
 
 -- ----------------------------
 -- Records of execution_log_details
