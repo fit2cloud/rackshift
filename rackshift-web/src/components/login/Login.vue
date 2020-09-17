@@ -58,6 +58,7 @@
 
 .title > #s2 {
   color: #151515;
+  font-size: 20px !important;
 }
 
 .login-container {
@@ -69,15 +70,13 @@
 }
 
 .image {
-  background: url(../../assets/info.png);
+  background: url(../../assets/info.jpeg);
   height: 560px;
 }
 
 .btn > .submit {
   width: 100%;
   border-radius: 0;
-  /*border-color: #8B479B;*/
-  /*background-color: #8B479B;*/
 }
 
 .border {
@@ -85,7 +84,7 @@
   margin: 20px auto 20px;
   position: relative;
   width: 80px;
-  background: #409EFF;
+  background: #E95420;
 }
 
 .welcome {
@@ -113,10 +112,10 @@ export default {
     let validateUser = (rule, value, callback) => {
       if (value === '') {
         if (rule.field == "userName") {
-          callback(new Error('请输入用户名'));
+          callback(new Error(this.$t('pls_input_user_name')));
         }
         if (rule.field == "password") {
-          callback(new Error('请输入密码'));
+          callback(new Error(this.$t('pls_input_pwd')));
         }
       }
       callback();

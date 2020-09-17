@@ -64,6 +64,7 @@
         :title="editType == 'edit' ? $t('edit_system_parameter') : $t('add_system_parameter')"
         :visible.sync="editDialogVisible"
         direction="rtl"
+        :wrapperClosable="false"
         :before-close="handleClose">
       <div class="demo-drawer__content">
         <el-form :model="editObj">

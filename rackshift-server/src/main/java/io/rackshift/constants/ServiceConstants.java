@@ -29,4 +29,8 @@ public class ServiceConstants {
             return this.value;
         }
     }
+
+    public enum EndpointStatusEnum {
+        Online, Offline
+    }
 }

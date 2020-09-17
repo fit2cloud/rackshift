@@ -25,6 +25,7 @@ public class EndpointService {
     private ApplicationContext applicationContext;
     @Resource
     private WorkflowConfig workflowConfig;
+
     public Object add(EndpointDTO queryVO) {
 
         EndpointExample e = buildExample(queryVO);
@@ -46,9 +47,18 @@ public class EndpointService {
         return true;
     }
 
-    public Object update(EndpointDTO queryVO) {
+    public Object update(Endpoint queryVO) {
         Endpoint image = new Endpoint();
         BeanUtils.copyBean(image, queryVO);
+
+        EndpointExample e = new EndpointExample();
+        if (ServiceConstants.EndPointType.main_endpoint.name().equals(queryVO.getType())) {
+            e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.name());
+            if (endpointMapper.selectByExample(e).stream().count() != 0 && !endpointMapper.selectByExample(e).get(0).getId().equalsIgnoreCase(queryVO.getId())) {
+                return false;
+            }
+        }
+
         workflowConfig.initWorkflow();
         endpointMapper.updateByPrimaryKeySelective(image);
         return true;

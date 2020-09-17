@@ -84,12 +84,15 @@ import ElementUI, {
 } from 'element-ui';
 // import 'element-ui/lib/theme-chalk/index.css';
 import '../theme/index.css'
+
 Vue.filter('dateFormat', dateFormat);
 Vue.filter('brandsFormat', brandsFormat);
 Vue.filter('endpointFormat', endpointFormat);
+i18n.locale = localStorage.getItem('lang') || 'zh_CN';
 
-
-Vue.use(ElementUI);
+Vue.use(ElementUI, {
+    i18n: (key, value) => i18n.t(key, value)
+});
 
 Vue.use(Pagination);
 Vue.use(Dialog);
@@ -176,7 +179,7 @@ Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 
 Vue.config.productionTip = false
-i18n.locale = localStorage.getItem('lang') || 'zh_CN';
+
 new Vue({
     router,
     i18n,

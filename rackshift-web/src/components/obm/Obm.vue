@@ -63,6 +63,7 @@
         :title="editType == 'edit' ? $t('edit_outband') : $t('add_outband')"
         :visible.sync="editDialogVisible"
         direction="rtl"
+        :wrapperClosable="false"
         :before-close="handleClose">
       <div class="demo-drawer__content">
         <el-form :model="editObj">

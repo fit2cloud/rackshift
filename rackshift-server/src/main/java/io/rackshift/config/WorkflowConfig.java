@@ -52,7 +52,7 @@ public class WorkflowConfig {
         endPoints = endpointMapper.selectByExample(e);
         if (endPoints.size() > 0 && !endPoints.get(0).getIp().contains(":"))
             rackhdUrl = "http://" + endPoints.get(0).getIp() + ":9090";
-        else if (endPoints.get(0).getIp().contains(":"))
+        else if (endPoints.size() > 0 && endPoints.get(0).getIp().contains(":"))
             rackhdUrl = "http://" + endPoints.get(0).getIp();
         else
             rackhdUrl = "";

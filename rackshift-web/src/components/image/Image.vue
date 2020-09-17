@@ -75,9 +75,11 @@
         :title="editType == 'edit' ? $t('edit_image') : $t('add_image')"
         :visible.sync="editDialogVisible"
         direction="rtl"
+        size="40%"
+        :wrapperClosable="false"
         :before-close="handleClose">
       <div class="demo-drawer__content">
-        <el-form :model="editObj" :rules="rules" ref="form">
+        <el-form :model="editObj" :rules="rules" ref="form" label-width="50px" :label-position="labelPosition">
           <el-form-item :label="$t('name')" prop="name">
             <el-input v-model="editObj.name" autocomplete="off"></el-input>
           </el-form-item>
@@ -103,19 +105,21 @@
             </el-select>
           </el-form-item>
 
-          <el-upload
-              class="upload-demo"
-              drag
-              :on-success="afterUploadSuccess"
-              action="/image/upload"
-              accept="application/x-iso9660-image"
-              :multiple=false
-              style="margin-bottom: 20px;"
-          >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传ISO文件，且不超过10GB</div>
-          </el-upload>
+          <el-form-item>
+            <el-upload
+                class="upload-demo"
+                drag
+                :on-success="afterUploadSuccess"
+                action="/image/upload"
+                accept="application/x-iso9660-image"
+                :multiple=false
+                style="margin-bottom: 20px;"
+            >
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+              <div class="el-upload__tip" slot="tip">只能上传ISO文件，且不超过10GB</div>
+            </el-upload>
+          </el-form-item>
 
         </el-form>
         <div class="demo-drawer__footer">
@@ -162,6 +166,7 @@ export default {
       multipleSelection: [],
       delList: [],
       editVisible: false,
+      labelPosition: 'top',
       pageTotal: 0,
       idx: -1,
       id: -1,

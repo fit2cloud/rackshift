@@ -63,6 +63,7 @@
         size="50%"
         :title="editType == 'edit' ? $t('edit_execution_log') : $t('add_execution_log')"
         :visible.sync="editDialogVisible"
+        :wrapperClosable="false"
         direction="ttb"
         :before-close="handleClose">
       <div class="demo-drawer__content">
@@ -177,39 +178,49 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
+
     delAllSelection() {
       const length = this.multipleSelection.length;
       let str = '';
-      this.delList = this.delList.concat(this.multipleSelection);
       for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].name + ' ';
+        str += this.multipleSelection[i].machineModel + ' ';
       }
-      let ids = _.map(this.delList, (item) => item.id);
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$notify.error(this.$t('pls_select_network') + "!");
+        return;
+      }
       HttpUtil.post("/execution-log/del", ids, (res) => {
-        this.$message.success(`删除成功！删除了${str}！`);
+        this.$message.success(this.$t('delete_success'));
         this.getData();
       });
       this.multipleSelection = [];
     },
+
     viewDetail(row) {
       HttpUtil.get("/execution-log/getDetailById/" + row.id, {}, (res) => {
         this.detailLogs = res.data;
         this.editDialogVisible = true;
       });
     },
-    // 编辑操作
+    getSelectedIds: function () {
+      this.delList = [].concat(this.multipleSelection);
+      let ids = _.map(this.delList, (item) => item.id);
+      return ids;
+    },
+// 编辑操作
     handleEdit(row, type) {
       if (type == 'edit') {
         this.editDialogVisible = true;
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
       } else if (type == 'del') {
-        this.$confirm('确定要删除吗？', '提示', {
+        this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
           HttpUtil.get("/execution-log/del/" + row.id, {}, (res) => {
             this.getData();
-            this.$message.success('删除成功');
+            this.$message.success(this.$t('delete_success!'));
           });
         })
       } else {
@@ -217,8 +228,9 @@ export default {
         this.editType = type;
         this.editObj = {};
       }
-    },
-    // 分页导航
+    }
+    ,
+// 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
       this.getData();

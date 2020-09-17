@@ -69,6 +69,7 @@
         :title="editType == 'edit' ? '编辑用户' : '新增用户'"
         :visible.sync="drawer"
         direction="rtl"
+        :wrapperClosable="false"
         :before-close="handleClose">
       <div class="demo-drawer__content">
         <el-form :model="editObj">

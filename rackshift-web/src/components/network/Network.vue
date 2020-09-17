@@ -74,6 +74,7 @@
         :title="editType == 'edit' ? $t('edit_network') : $t('add_network')"
         :visible.sync="editDialogVisible"
         direction="rtl"
+        :wrapperClosable="false"
         :before-close="handleClose">
       <div class="demo-drawer__content">
         <el-form :model="editObj" :rules="rules" ref="form">

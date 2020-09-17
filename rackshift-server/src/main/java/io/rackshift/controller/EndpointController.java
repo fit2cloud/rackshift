@@ -32,7 +32,7 @@ public class EndpointController {
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @RequestMapping("getAllEndPoints")
     public ResultHolder getAllEndPoints() {
-        return ResultHolder.success( endpointService.getAllEndPoints());
+        return ResultHolder.success(endpointService.getAllEndPoints());
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)

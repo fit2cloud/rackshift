@@ -47,6 +47,17 @@
         </template>
       </el-table-column>
 
+      <el-table-column prop="status" :label="$t('status')" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.status == 'Online'" style="color:#67C23A">
+            Online
+          </span>
+          <span v-if="scope.row.status == 'Offline'" style="color:#909399">
+            Offline
+          </span>
+        </template>
+      </el-table-column>
+
       <el-table-column prop="" :label="$t('opt')" align="center">
         <template slot-scope="scope">
           <el-button
@@ -82,6 +93,7 @@
     <el-drawer
         :title="editType == 'edit' ? $t('edit_endpoint') : $t('add_endpoint')"
         :visible.sync="editDialogVisible"
+        :wrapperClosable="false"
         direction="rtl"
         :before-close="handleClose">
       <div class="demo-drawer__content">
@@ -102,11 +114,6 @@
           <el-form-item :label="$t('ip')">
             <el-input v-model="editObj.ip" autocomplete="off"
                       :placeholder="$t('pls_input_param_value')"></el-input>
-          </el-form-item>
-
-          <el-form-item :label="$t('status')">
-            <el-switch v-model="editObj.status" :active-value="'1'" :inactive-value="'0'"
-                       :disabled="editType != 'add' && editObj.type == 'main_endpoint'"></el-switch>
           </el-form-item>
 
         </el-form>
