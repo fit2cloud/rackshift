@@ -48,7 +48,7 @@
                   </div>
                 </el-card>
               </el-timeline-item>
-              <el-timeline-item timestamp="3" placement="top">
+              <el-timeline-item timestamp="5" placement="top">
                 <el-card>
                   <h4>RackShift已经准备就绪，接下来您将发现一台用于部署的裸金属服务器！</h4>
                 </el-card>
