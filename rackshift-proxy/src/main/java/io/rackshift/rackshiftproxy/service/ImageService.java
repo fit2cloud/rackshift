@@ -30,7 +30,7 @@ public class ImageService {
             String tempMountPath = "/tmp" + Math.random() * 10000;
             runtime.exec(String.format("mkdir -p %s", tempMountPath));
             runtime.exec(String.format("mount %s %s", filePath, tempMountPath));
-            runtime.exec(String.format("cp -r %s %s", tempMountPath, mountPath));
+            runtime.exec(String.format("cp -r %s/ %s", tempMountPath, mountPath));
             runtime.exec(String.format("umount %s", tempMountPath));
             runtime.exec(String.format("rm -rf %s", tempMountPath));
 
