@@ -28,11 +28,11 @@ public class ImageService {
 
             Runtime runtime = Runtime.getRuntime();
             String tempMountPath = "/tmp" + Math.random() * 10000;
-            runtime.exec(String.format("mkdir -p %s", tempMountPath));
-            runtime.exec(String.format("mount %s %s", filePath, tempMountPath));
-            runtime.exec(String.format("cp -r %s/ %s", tempMountPath, mountPath));
-            runtime.exec(String.format("umount %s", tempMountPath));
-            runtime.exec(String.format("rm -rf %s", tempMountPath));
+            System.out.println(getProcessOut(runtime.exec(String.format("mkdir -p %s", tempMountPath))));
+            System.out.println(getProcessOut(runtime.exec(String.format("mount %s %s", filePath, tempMountPath))));
+            System.out.println(getProcessOut(runtime.exec(String.format("cp -r %s/* %s", tempMountPath, mountPath))));
+            System.out.println(getProcessOut(runtime.exec(String.format("umount %s", tempMountPath))));
+            System.out.println(getProcessOut(runtime.exec(String.format("rm -rf %s", tempMountPath))));
 
             //mount 之后 必须重启http服务才能生效
             Runtime.getRuntime().exec(String.format("mount %s %s", filePath, mountPath));
@@ -66,6 +66,19 @@ public class ImageService {
             return false;
         }
         return true;
+    }
+
+    private static String getProcessOut(Process p) throws IOException {
+        InputStream in = p.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String line = null;
+        StringBuffer sb = new StringBuffer();
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        in.close();
+        reader.close();
+        return sb.toString();
     }
 
 }
