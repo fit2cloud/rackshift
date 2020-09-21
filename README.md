@@ -21,14 +21,14 @@ RackShift 是一款开源的裸金属服务器全生命周期平台，功能覆�
 
 组件说明：
 
-- RackShift-WEB： 基于vue2.6.11开发的单页应用
-- RackShift-Server： 基于SSM的SpringBoot应用，对RackHD的操作进行更高的抽象并且控制与RackHD API的交互，控制RackShift-Proxy节点，与RackShift-WEB一并打包成一个应用部署
-- RackShift-Proxy： 可单独与RackHD模块部署，主要用于主节点控制客户节点进行注入镜像下发，DHCP配置，远程KVM等等
-- RackHD： DELL EMC开源的裸金属供应软件，现已停止维护
-- Mysql：RackShift-Server主要运行数据的存储区
-- Mongo：RackHD与RackShift-Server的运行数据存储区
+- RackShift-WEB： 基于 VUE2.6.11 开发的单页应用
+- RackShift-Server： 基于 SSM 的 SpringBoot 应用，对 RackHD 的操作进行更高的抽象并且控制与 RackHD API的交互，控制 RackShift-Proxy 节点，与 RackShift-WEB 一并打包成一个应用部署
+- RackShift-Proxy： 可单独与 RackHD 模块部署，主要用于主节点控制客户节点进行注入镜像下发，DHCP 配置，远程 KVM 等等
+- RackHD： DELL EMC 开源的裸金属供应软件，现已停止维护
+- Mysql：RackShift-Server 主要运行数据的存储区
+- Mongo：RackHD 与RackShift-Server 的运行数据存储区
 - RabbitMQ: 各组件之间通信的中间件
-- DockerEngine：各组件都是以Docker容器运行在节点计算机
+- DockerEngine：各组件都是以 Docker 容器运行在节点计算机
 
 ## 组件调用关系
 ![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs_call.png)
