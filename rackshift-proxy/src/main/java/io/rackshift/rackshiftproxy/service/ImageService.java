@@ -13,6 +13,7 @@ public class ImageService {
 
     public boolean mountISO(String filePath, String fileUploadBase, String mountDirName) {
         try {
+            //宿主机内实现的代码
 //            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("/etc/fstab")));
 //            String line = null;
 //            StringBuffer text = new StringBuffer();
@@ -44,6 +45,7 @@ public class ImageService {
 
     public boolean umountISO(String filePath, String mountPath) {
         try {
+            //宿主机内实现的代码
 //            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("/etc/fstab")));
 //            String line = null;
 //            StringBuffer text = new StringBuffer();
@@ -61,9 +63,11 @@ public class ImageService {
             if (isoFile.exists()) {
                 isoFile.delete();
             }
-            if (mountPathFile.exists()) {
-                mountPathFile.delete();
-            }
+            //这个部分无法使用java进行文件的删除u
+//            if (mountPathFile.exists()) {
+//                mountPathFile.delete();
+//            }
+            Runtime.getRuntime().exec(String.format("rm -rf %s", mountPath));
         } catch (Exception e) {
             System.out.println("取消挂载失败！");
             return false;
