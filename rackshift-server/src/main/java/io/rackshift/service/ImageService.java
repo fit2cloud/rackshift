@@ -90,14 +90,14 @@ public class ImageService {
             if (!imageDTO.getOriginalName().endsWith("iso")) {
                 RSException.throwExceptions("i18n_file_must_be_iso");
             }
-            String mountName = imageDTO.getOriginalName().substring(0, imageDTO.getOriginalName().indexOf(".")) + Math.random() * 1000;
-            mountPath = fileUploadBase + File.separator + mountName;
-            String res = HttpFutureUtils.getHttp(String.format("http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":8083/image/mount?filePath=%s&mountPath=%s", UrlEncoded.encodeString(imageDTO.getFilePath()), UrlEncoded.encodeString(mountPath)), ProxyUtil.
+            String mountDirName = imageDTO.getOriginalName().substring(0, imageDTO.getOriginalName().indexOf(".")) + (int) (Math.random() * 10000);
+            mountPath = fileUploadBase + File.separator + mountDirName;
+            String res = HttpFutureUtils.getHttp(String.format("http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":8083/image/mount?filePath=%s&fileUploadBase=%s&mountDirName=%s", UrlEncoded.encodeString(imageDTO.getFilePath()), UrlEncoded.encodeString(fileUploadBase), UrlEncoded.encodeString(mountDirName)), ProxyUtil.
                     getHeaders());
             if (StringUtils.isNotBlank(res)) {
                 JSONObject rObj = JSONObject.parseObject(res);
                 if (rObj.containsKey("success") && rObj.getBoolean("success")) {
-                    url = "http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":9090/common" + mountPath.replace(fileUploadBase, "").replace("\\", "/");
+                    url = "http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":9090/common" + mountDirName;
                 } else {
                     RSException.throwExceptions(rObj.getString("msg"));
                 }

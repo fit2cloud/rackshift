@@ -11,7 +11,7 @@ public class ImageService {
     @Resource
     private DockerClientService dockerClientService;
 
-    public boolean mountISO(String filePath, String mountPath) {
+    public boolean mountISO(String filePath, String fileUploadBase, String mountDirName) {
         try {
 //            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("/etc/fstab")));
 //            String line = null;
@@ -25,17 +25,15 @@ public class ImageService {
 //            text.append(String.format("%s %s iso9660 ro 0 0", filePath, mountPath));
 //            writer.write(text.toString());
 //            writer.close();
-
+            String mountPath = fileUploadBase + "/" + mountDirName;
             Runtime runtime = Runtime.getRuntime();
-            String tempMountPath = "/tmp" + Math.random() * 10000;
-            System.out.println(getProcessOut(runtime.exec(String.format("mkdir -p %s", tempMountPath))));
-            System.out.println(getProcessOut(runtime.exec(String.format("mount %s %s", filePath, tempMountPath))));
-            System.out.println(getProcessOut(runtime.exec(String.format("cp -r %s/* %s", tempMountPath, mountPath))));
-            System.out.println(getProcessOut(runtime.exec(String.format("umount %s", tempMountPath))));
-            System.out.println(getProcessOut(runtime.exec(String.format("rm -rf %s", tempMountPath))));
+            System.out.println(getProcessOut(runtime.exec(String.format("mkdir -p /%s", mountDirName))));
+            System.out.println(getProcessOut(runtime.exec(String.format("mount %s /%s", filePath, mountDirName))));
+            System.out.println(getProcessOut(runtime.exec(String.format("cp -r /%s/ %s", mountDirName, mountPath))));
+            System.out.println(getProcessOut(runtime.exec(String.format("umount /%s", mountDirName))));
+            System.out.println(getProcessOut(runtime.exec(String.format("rm -rf /%s", mountDirName))));
 
             //mount 之后 必须重启http服务才能生效
-            Runtime.getRuntime().exec(String.format("mount %s %s", filePath, mountPath));
             dockerClientService.restartContainer("rackhd/on-http");
         } catch (Exception e) {
             System.out.println("挂载失败！");
