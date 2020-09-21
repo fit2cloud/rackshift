@@ -97,7 +97,7 @@ public class ImageService {
             if (StringUtils.isNotBlank(res)) {
                 JSONObject rObj = JSONObject.parseObject(res);
                 if (rObj.containsKey("success") && rObj.getBoolean("success")) {
-                    url = "http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":9090/common" + mountDirName;
+                    url = "http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":9090/common/" + mountDirName;
                 } else {
                     RSException.throwExceptions(rObj.getString("msg"));
                 }
