@@ -56,9 +56,14 @@ public class ImageService {
 //            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/etc/fstab")));
 //            writer.write(text.toString());
 //            writer.close();
-            Runtime runtime = Runtime.getRuntime();
-            runtime.exec(String.format("rm -rf %s", mountPath));
-//            Runtime.getRuntime().exec(String.format("umount %s", mountPath));
+            File isoFile = new File(filePath);
+            File mountPathFile = new File(mountPath);
+            if (isoFile.exists()) {
+                isoFile.delete();
+            }
+            if (mountPathFile.exists()) {
+                mountPathFile.delete();
+            }
         } catch (Exception e) {
             System.out.println("取消挂载失败！");
             return false;
