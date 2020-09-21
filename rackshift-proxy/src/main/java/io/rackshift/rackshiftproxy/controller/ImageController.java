@@ -32,7 +32,7 @@ public class ImageController {
         }
         try {
             if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
-                if (!imageService.mountISO(filePath,fileUploadBase, mountDirName)) {
+                if (!imageService.mountISO(filePath, fileUploadBase, mountDirName)) {
                     return R.failWithMsg("挂载失败！");
                 }
             } else {
@@ -51,17 +51,6 @@ public class ImageController {
         if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
             filePath = filePath.replace("\\", "/");
             mountPath = mountPath.replace("\\", "/");
-        }
-        File uploadedFile = new File(filePath);
-        File mountDir = new File(mountPath);
-        if (!uploadedFile.exists()) {
-            return R.failWithMsg("文件不存在！");
-        }
-        if (!uploadedFile.getName().endsWith("iso")) {
-            return R.failWithMsg("文件不是ISO格式！");
-        }
-        if (!mountDir.exists()) {
-            return R.failWithMsg("挂载目录不存在！");
         }
         try {
             if (System.getProperty("os.name").toLowerCase().indexOf("linux") != -1) {
