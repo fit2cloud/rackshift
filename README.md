@@ -6,6 +6,12 @@ RackShift 是一款开源的裸金属服务器全生命周期平台，功能覆�
 
 ![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs8.jpg)
 
+## 解决的问题
+- 大规模网络环境下设备的识别和发现所面临的挑战
+- 批量装机、RAID、更新固件
+- 裸金属云化，自服务化，快速构建企业的基础设施
+- 为大数据，智能数据中心
+
 ## 技术优势
   
 - 全生命周期: 能够覆盖裸金属从发现、上架、部署到运维的全生命周期管理；
@@ -14,7 +20,7 @@ RackShift 是一款开源的裸金属服务器全生命周期平台，功能覆�
 
 ## 功能列表
 
-<table class="confluenceTable"><colgroup><col style="width: 77.0px;"><col style="width: 105.0px;"><col style="width: 329.0px;"></colgroup><tbody><tr><td rowspan="14" class="confluenceTd">资源管理<br><br><br><br><br></td><td rowspan="8" class="confluenceTd">裸金属服务器<br><br><br><br><br></td><td class="confluenceTd">支持多种主流品牌的主动/被动发现</td></tr><tr><td class="confluenceTd">支持服务器全生命周期状态的管理</td></tr><tr><td colspan="1" class="confluenceTd">可批量装机/RAID</td></tr><tr><td class="confluenceTd">可同时运行多个工作流对多台服务器进行批量部署</td></tr><tr><td colspan="1" class="confluenceTd">裸金属支持自动选择合适的节点进行部署</td></tr><tr><td class="confluenceTd">可通过IPMI/SNMP/HTTP等协议进行远程控制</td></tr><tr><td class="confluenceTd">部署日志的查看和管理</td></tr><tr><td class="confluenceTd">可通过集成的WEB KVM远程管理裸金属服务器</td></tr><tr><td rowspan="3" class="confluenceTd">镜像</td><td colspan="1" class="confluenceTd">可在线上传并部署镜像</td></tr><tr><td colspan="1" class="confluenceTd">可对镜像进行在线实时管理</td></tr><tr><td colspan="1" class="confluenceTd">支持多节点高可用</td></tr><tr><td rowspan="3" class="confluenceTd">网络</td><td colspan="1" class="confluenceTd">DHCP地址池以及PXE配置</td></tr><tr><td colspan="1" class="confluenceTd">可查看DHCP服务分配日志</td></tr><tr><td colspan="1" class="confluenceTd">支持同时管理多个节点网段的DHCP服务</td></tr><tr><td rowspan="2" class="confluenceTd">控制</td><td class="confluenceTd">工作流</td><td colspan="1" class="confluenceTd">可自定义工作流</td></tr><tr><td colspan="1" class="confluenceTd">部署日志</td><td colspan="1" class="confluenceTd">在线管理</td></tr><tr><td rowspan="2" class="confluenceTd">系统</td><td colspan="1" class="confluenceTd">节点管理</td><td colspan="1" class="confluenceTd">支持实时管理节点和节点状态</td></tr><tr><td colspan="1" class="confluenceTd">用户管理</td><td colspan="1" class="confluenceTd">支持RBAC</td></tr></tbody></table>
+<table class="wrapped confluenceTable"><colgroup><col><col></colgroup><tbody><tr><td class="confluenceTd">自动化</td><td class="confluenceTd">支持主流品牌裸金属服务器的 PXE / IPMI / SNMP / HTTP 自动发现与自动配置</td></tr><tr><td class="confluenceTd">速度</td><td class="confluenceTd">无人值守安装 Ubuntu， CentOS, Windows 和 RHEL，部署完毕只需要重启一次，整个部署时间不超过8分钟</td></tr><tr><td colspan="1" class="confluenceTd">信息纳管</td><td colspan="1" class="confluenceTd">收集硬件设备信息， CPU， 内存， RAID 控制器， 磁盘， 网卡等，自动检测硬件变更</td></tr><tr><td colspan="1" class="confluenceTd">网络探测</td><td colspan="1" class="confluenceTd">支持通过多种协议自动探测网络中的硬件设备</td></tr><tr><td colspan="1" class="confluenceTd">存储优化</td><td colspan="1" class="confluenceTd">用户可选的 RAID ， Bcache ，LVM 存储配置</td></tr><tr><td colspan="1" class="confluenceTd">DevOps</td><td colspan="1" class="confluenceTd">集成 Ansible ，提供 Rest Api 完成对服务器的一系列自动化配置</td></tr><tr><td colspan="1" class="confluenceTd">多样的管理工具</td><td colspan="1" class="confluenceTd">支持多种品牌的官方管理工具如 DELL Racadm，HP SMH 等等</td></tr><tr><td colspan="1" class="confluenceTd">监控</td><td colspan="1" class="confluenceTd"><p>默认支持基于 SNMP 的带外硬件健康和状态监控，用户可自定义配置 Prometheus 进行 OS 层面的监控</p></td></tr><tr><td colspan="1" class="confluenceTd">KVM</td><td colspan="1" class="confluenceTd">支持主流服务器品牌 WEB KVM</td></tr><tr><td colspan="1" class="confluenceTd">身份验证</td><td colspan="1" class="confluenceTd">集成 LDAP，支持 OpenID， SAML 等多种授权模式</td></tr></tbody></table>
 
 ## 技术架构
 ![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs_structure.png)
