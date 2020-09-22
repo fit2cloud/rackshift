@@ -22,6 +22,8 @@ RackShift 是一款开源的裸金属服务器全生命周期平台，功能覆�
 
 <table class="wrapped confluenceTable"><colgroup><col><col></colgroup><tbody><tr><td class="confluenceTd">自动化</td><td class="confluenceTd">支持主流品牌裸金属服务器的 PXE / IPMI / SNMP / HTTP 自动发现与自动配置</td></tr><tr><td class="confluenceTd">速度</td><td class="confluenceTd">无人值守安装 Ubuntu， CentOS, Windows 和 RHEL，部署完毕只需要重启一次，整个部署时间不超过8分钟</td></tr><tr><td colspan="1" class="confluenceTd">信息纳管</td><td colspan="1" class="confluenceTd">收集硬件设备信息， CPU， 内存， RAID 控制器， 磁盘， 网卡等，自动检测硬件变更</td></tr><tr><td colspan="1" class="confluenceTd">网络探测</td><td colspan="1" class="confluenceTd">支持通过多种协议自动探测网络中的硬件设备</td></tr><tr><td colspan="1" class="confluenceTd">存储优化</td><td colspan="1" class="confluenceTd">用户可选的 RAID ， Bcache ，LVM 存储配置</td></tr><tr><td colspan="1" class="confluenceTd">DevOps</td><td colspan="1" class="confluenceTd">集成 Ansible ，提供 Rest Api 完成对服务器的一系列自动化配置</td></tr><tr><td colspan="1" class="confluenceTd">多样的管理工具</td><td colspan="1" class="confluenceTd">支持多种品牌的官方管理工具如 DELL Racadm，HP SMH 等等</td></tr><tr><td colspan="1" class="confluenceTd">监控</td><td colspan="1" class="confluenceTd"><p>默认支持基于 SNMP 的带外硬件健康和状态监控，用户可自定义配置 Prometheus 进行 OS 层面的监控</p></td></tr><tr><td colspan="1" class="confluenceTd">KVM</td><td colspan="1" class="confluenceTd">支持主流服务器品牌 WEB KVM</td></tr><tr><td colspan="1" class="confluenceTd">身份验证</td><td colspan="1" class="confluenceTd">集成 LDAP，支持 OpenID， SAML 等多种授权模式</td></tr></tbody></table>
 
+详细的版本规划请参考 [版本路线图](https://github.com/rackshift/rackshift/blob/master/ROADMAP.md)
+
 ## 技术架构
 ![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs_structure.png)
 
