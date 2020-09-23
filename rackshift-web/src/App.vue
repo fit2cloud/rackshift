@@ -169,7 +169,7 @@ body {
 }
 
 .machine-title {
-  padding: 10px;
+  padding: 10px 0 10px 0px;
 }
 
 .batch-button {

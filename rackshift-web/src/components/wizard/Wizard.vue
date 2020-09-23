@@ -1,6 +1,6 @@
 <template>
   <div class="block">
-    <el-row>
+    <el-row style="padding-left:10px">
       <el-col :span=1>
         <button @click="next" class="viewer">
           <i class="el-icon-arrow-right"></i>

@@ -972,4 +972,8 @@ export default {
 
 }
 
+.el-tabs__nav-wrap .is-top {
+  padding-left: 10px;
+}
+
 </style>
