@@ -8,7 +8,9 @@ import io.rackshift.model.ResultHolder;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.*;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
+import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.IPMIUtil;
+import io.rackshift.utils.LogUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,8 @@ public class BareMetalService {
     private NetworkCardMapper networkCardMapper;
     @Resource
     private RackHDService rackHDService;
+    @Resource
+    private EndpointService endpointService;
 
     public List<BareMetalDTO> list(BareMetalQueryVO queryVO) {
         return bareMetalManager.list(queryVO);
@@ -114,8 +118,14 @@ public class BareMetalService {
         }
         for (String id : ids) {
             BareMetal bareMetal = bareMetalManager.getBareMetalById(id);
-            if (StringUtils.isNotBlank(bareMetal.getServerId())) {
-                rackHDService.deleteNode(bareMetal);
+            if (endpointService.getById(bareMetal.getEndpointId()) != null) {
+                if (StringUtils.isNotBlank(bareMetal.getServerId())) {
+                    try {
+                        rackHDService.deleteNode(bareMetal);
+                    } catch (Exception e) {
+                        LogUtil.info("删除RackHD节点失败！", ExceptionUtils.getExceptionDetail(e));
+                    }
+                }
             }
             bareMetalManager.delBareMetalById(id);
         }

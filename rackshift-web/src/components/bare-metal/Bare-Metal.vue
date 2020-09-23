@@ -712,11 +712,6 @@ export default {
       this.getData();
     },
     getAllGraphDefinitions(name) {
-      //从mongo读取所有
-      // HttpUtil.get("/rackhd/graphdefinitions/1/1000", {name: name}, (res) => {
-      //     this.allGraphDefinitions = res.data.listObject;
-      // });
-
       HttpUtil.get("/workflow/listall", {name: name}, (res) => {
         if (res.data && res.data.length > 0) {
           res.data.forEach(w => {

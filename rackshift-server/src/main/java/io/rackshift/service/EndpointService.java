@@ -95,6 +95,11 @@ public class EndpointService {
             e.createCriteria().andNameEqualTo(queryVO.getName());
             return e;
         }
+        if (StringUtils.isNotBlank(queryVO.getId())) {
+            EndpointExample e = new EndpointExample();
+            e.createCriteria().andIdEqualTo(queryVO.getId());
+            return e;
+        }
         return new EndpointExample();
     }
 
@@ -104,5 +109,12 @@ public class EndpointService {
 
     public List<Endpoint> getAllEndPoints() {
         return endpointMapper.selectByExample(new EndpointExample());
+    }
+
+    public Endpoint getById(String id) {
+        if (StringUtils.isBlank(id)) {
+            return null;
+        }
+        return endpointMapper.selectByPrimaryKey(id);
     }
 }
