@@ -172,8 +172,12 @@ body {
   padding: 10px 0 10px 0px;
 }
 
+.machine-title2 {
+  padding: 0 0 10px 0;
+}
+
 .batch-button {
-  margin-left: 15px;
+  margin-left: 10px;
 }
 
 .demo-drawer__content {
@@ -184,6 +188,9 @@ body {
   margin-top: 10px;
 }
 
+.el-tabs__nav{
+  margin-left: 10px;
+}
 .el-drawer__body {
   overflow: scroll;
 }

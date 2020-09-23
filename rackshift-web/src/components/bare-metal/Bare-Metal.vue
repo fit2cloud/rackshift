@@ -2,7 +2,7 @@
   <el-tabs style="width:80vw;" v-model="activeName">
     <el-tab-pane :label="$t('bare_metal')" name="bare-metal">
       <div>
-        <div class="machine-title">
+        <div class="machine-title2">
           <el-button-group class="batch-button">
             <!--            <el-button type="primary" icon="el-icon-circle-plus-outline">{{ $t('add') }}</el-button>-->
             <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
