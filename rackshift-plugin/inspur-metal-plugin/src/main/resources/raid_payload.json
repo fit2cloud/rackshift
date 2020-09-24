@@ -1,0 +1,18 @@
+{
+  "options": {
+    "bootstrap-rancher": {
+      "dockerFile": "secure.erase.docker.tar.xz"
+    },
+    "create-raid": {
+      "createDefault": false,
+      "controller": 1,
+      "path": "/usr/Arcconf/arcconf",
+      "raidList": [
+        {
+          "type": "5",
+          "drives": "0 0 0 1 0 2 0 3"
+        }
+      ]
+    }
+  }
+}

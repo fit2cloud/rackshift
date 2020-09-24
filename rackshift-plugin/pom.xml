@@ -18,6 +18,7 @@
     <modules>
         <module>metal-plugin-sdk</module>
         <module>dell-metal-plugin</module>
+        <module>inspur-metal-plugin</module>
     </modules>
 
 </project>

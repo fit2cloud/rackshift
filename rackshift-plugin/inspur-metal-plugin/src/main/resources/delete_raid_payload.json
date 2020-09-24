@@ -1,0 +1,5 @@
+{
+  "bootstrap-rancher": {
+    "dockerFile": "secure.erase.docker.tar.xz"
+  }
+}
