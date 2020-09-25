@@ -49,8 +49,11 @@ RackShift 是一款开源的裸金属服务器全生命周期平台，功能覆�
 
 ## 快速开始
 
-- 下载最新Release安装包，并且使用tar -zxvf解压进入解压后的install目录
-- ./install.sh 即可！
+- 下载最新 Release 安装包，并且使用 tar -zxvf 解压进入解压后的 install 目录
+- ./install.sh 
+- 安装过程会花较多时间下载 Docker 镜像
+- 设置服务器 IP
+- 使用 service rackshift start 开始
 
 ## 微信群
 
