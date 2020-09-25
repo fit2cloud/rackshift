@@ -6,8 +6,8 @@ ADD ./target/rackshift-server-1.0.0.jar /opt
 
 VOLUME /opt/rackshift
 
-RUN apk update \
-apk add ipmitool
+RUN apk update
+RUN apk add ipmitool
 
 EXPOSE 5005
 
