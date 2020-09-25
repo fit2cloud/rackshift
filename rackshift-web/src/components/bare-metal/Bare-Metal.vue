@@ -543,7 +543,7 @@ export default {
     },
     power(opt, row) {
       HttpUtil.get("/bare-metal/power/" + row.id + "/" + opt, null, (res) => {
-        if (res.data.success) {
+        if (res.success) {
           this.$message.success(this.$t('success'));
         } else {
           this.$message.error(this.$t('error'));
