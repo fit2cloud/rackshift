@@ -18,6 +18,11 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.net.Inet4Address;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,6 +64,51 @@ public class WorkflowConfig {
 
         e.clear();
         endPoints = endpointMapper.selectByExample(e);
+        endPoints = endPoints.stream().map(endpoint -> {
+            if ("rackshift-proxy".equalsIgnoreCase(endpoint.getIp())) {
+                try {
+                    endpoint.setIp(getGateWayAddress(""));
+                } catch (Exception unknownHostException) {
+                    unknownHostException.printStackTrace();
+                }
+            }
+            return endpoint;
+        }).collect(Collectors.toList());
+    }
+
+    private static String getGateWayAddress(String ip) throws UnknownHostException, SocketException {
+        String localhost = Inet4Address.getLocalHost().getHostAddress();
+        if (StringUtils.isNotBlank(ip)) {
+            localhost = ip;
+        }
+        int maskLength = NetworkInterface.getByInetAddress(Inet4Address.getLocalHost()).getInterfaceAddresses().get(0).getNetworkPrefixLength();
+        StringBuffer sb = new StringBuffer();
+        StringBuffer number = new StringBuffer();
+
+        int i = 0;
+        while (i < 32) {
+            if (i < maskLength) {
+                sb.append("1");
+            }
+            if ((i + 1) % 8 == 0) {
+                number.append(Integer.valueOf(sb.toString().equals("") ? "0" : sb.toString()));
+                sb = new StringBuffer();
+                if (i != 31) {
+                    number.append(".");
+                }
+            }
+            i++;
+        }
+
+        String[] s1 = localhost.split("\\.");
+
+        String[] s2 = number.toString().split("\\.");
+
+        for (i = 0; i < s1.length; i++) {
+            s1[i] = String.valueOf(Integer.valueOf(s1[i]) & Integer.valueOf(s2[i], 2));
+        }
+        s1[s1.length - 1] = "1";
+        return StringUtils.join(s1, ".");
     }
 
     public static String geRrackhdUrl(String id) {
