@@ -47,6 +47,11 @@ RackShift 是一款开源的裸金属服务器全生命周期平台，功能覆�
 - 后端: [Spring Boot](https://www.tutorialspoint.com/spring_boot/spring_boot_introduction.htm)
 - 数据库: [MySQL](https://www.mysql.com/)
 
+## 快速开始
+
+- 下载最新Release安装包，并且使用tar -zxvf解压进入解压后的install目录
+- ./install.sh 即可！
+
 ## 微信群
 
 TBD
