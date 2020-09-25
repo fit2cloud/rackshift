@@ -95,7 +95,7 @@ public class RackHDService {
                 obmObj.put("service", "ipmi-obm-service");
                 obmObj.put("nodeId", bareMetal.getServerId());
 
-                String url = WorkflowConfig.geRrackhdUrl(bareMetal.getEndpointId());
+                String url = WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId());
                 if (url == null) {
                     return true;
                 }
@@ -126,7 +126,7 @@ public class RackHDService {
                 param.put("command", "cancel");
                 param.put("options", JSONObject.parse("{}"));
 
-                String url = WorkflowConfig.geRrackhdUrl(bareMetal.getEndpointId());
+                String url = WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId());
                 if (url == null) {
                     return false;
                 }
@@ -736,7 +736,7 @@ public class RackHDService {
         Endpoint endpoint = endpointMapper.selectByPrimaryKey(endPointId);
         if (endpoint == null) return new ArrayList<>();
 
-        String response = RackHDHttpClientUtil.get(WorkflowConfig.geRrackhdUrl(endPointId) + "/api/2.0/workflows?active=true", null);
+        String response = RackHDHttpClientUtil.get(WorkflowConfig.geRackhdUrlById(endPointId) + "/api/2.0/workflows?active=true", null);
         if (StringUtils.isNotBlank(response)) {
             JSONArray workflowArr = JSONArray.parseArray(response);
             if (workflowArr.size() > 0) {
@@ -747,7 +747,7 @@ public class RackHDService {
     }
 
     public boolean deleteNode(BareMetal bareMetal) {
-        RackHDResponse response = RackHDHttpClientUtil.delete(String.format(WorkflowConfig.geRrackhdUrl(bareMetal.getEndpointId()) + "/api/2.0/nodes/%s", bareMetal.getServerId()));
+        RackHDResponse response = RackHDHttpClientUtil.delete(String.format(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()) + "/api/2.0/nodes/%s", bareMetal.getServerId()));
         return response.getReCode() <= RackHDConstants.ERROR_RE_CODE;
     }
 }

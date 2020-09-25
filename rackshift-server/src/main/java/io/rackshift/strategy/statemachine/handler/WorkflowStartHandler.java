@@ -26,7 +26,7 @@ public class WorkflowStartHandler extends AbstractHandler {
             revert(event, getExecutionId(), getUser());
         }
 
-        boolean result = rackHDService.postWorkflow(WorkflowConfig.geRrackhdUrl(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
+        boolean result = rackHDService.postWorkflow(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
         if (result) {
             changeStatus(event, LifeStatus.allocated, false);
         } else {

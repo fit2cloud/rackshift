@@ -111,12 +111,22 @@ public class WorkflowConfig {
         return StringUtils.join(s1, ".");
     }
 
-    public static String geRrackhdUrl(String id) {
+    public static String geRackhdUrlById(String id) {
         Endpoint endpoint = staticEndpointMapper.selectByPrimaryKey(id);
+
+        if ("rackshift-proxy".equalsIgnoreCase(endpoint.getIp())) {
+            try {
+                endpoint.setIp(getGateWayAddress(""));
+            } catch (Exception unknownHostException) {
+                unknownHostException.printStackTrace();
+            }
+        }
+
         if (endpoint != null && !endpoint.getIp().contains(":"))
             return "http://" + endpoint.getIp() + ":9090";
         if (endpoint == null)
             return null;
+
         return "http://" + endpoint.getIp();
     }
 

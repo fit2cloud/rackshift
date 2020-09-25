@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.fit2cloud</groupId>
-  <artifactId>fit2cloud-inspur-metal-plugin</artifactId>
-  <version>${fit2cloud.version}</version>
+  <groupId>io.rackshift</groupId>
+  <artifactId>inspur-metal-plugin</artifactId>
+  <version>${rackshift.version}</version>
   <licenses>
     <license>
       <name>MIT</name>
@@ -142,9 +142,9 @@
     </repository>
   </distributionManagement>
   <properties>
-    <fit2cloud.version>2.0.0-pm-standard</fit2cloud.version>
     <spring.version>3.1.3.RELEASE</spring.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <rackshift.version>1.0.0</rackshift.version>
   </properties>
 </project>
 

@@ -52,9 +52,9 @@ public class DiscoveryStartHandler extends AbstractHandler {
         } else {
                 //清空之前所有正在运行的任务
             rackHDService.clearActiveWorkflow(bareMetal);
-            boolean result = rackHDService.postWorkflow(WorkflowConfig.geRrackhdUrl(bareMetal.getEndpointId()), bareMetal.getServerId(), "Graph.BootstrapRancher", null);
+            boolean result = rackHDService.postWorkflow(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), "Graph.BootstrapRancher", null);
             if (result) {
-                result = rackHDService.postWorkflow(WorkflowConfig.geRrackhdUrl(bareMetal.getEndpointId()), bareMetal.getServerId(), "Graph.Discovery", null);
+                result = rackHDService.postWorkflow(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), "Graph.Discovery", null);
                 //同步执行一次最新的发现
                 if (result) {
                     syncRackJob.run();
