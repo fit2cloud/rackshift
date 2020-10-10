@@ -31,7 +31,7 @@ const HttpUtil = {
     get: function (url, params, resolve, reject) {
         axios.get(url, params).then((res) => {
             if (res) {
-                if (res.success) {
+                if (res.data.success) {
                     resolve(res.data);
                 } else {
                     if (reject) {
@@ -57,7 +57,7 @@ const HttpUtil = {
             }
         }).then((res) => {
                 if (res) {
-                    if (res.success) {
+                    if (res.data.success) {
                         resolve(res.data);
                     } else {
                         if (reject) {

@@ -38,13 +38,13 @@
       <el-table-column prop="" :label="$t('opt')" align="center">
         <template slot-scope="scope">
           <el-button
-              type="text"
+              type="button"
               icon="el-icon-edit"
               @click="handleEdit(scope.row, 'edit')"
           >{{ $t('edit') }}
           </el-button>
           <el-button
-              type="text"
+              type="button"
               icon="el-icon-delete"
               class="red"
               @click="handleEdit(scope.row, 'del')"

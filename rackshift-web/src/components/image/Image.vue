@@ -295,7 +295,7 @@ export default {
         return;
       }
       HttpUtil.post("/image/del", ids, (res) => {
-        if (res.data) {
+        if (res.success) {
           this.$message.success(this.$t('delete_success'));
           this.getData();
         } else {
