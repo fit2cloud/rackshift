@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <div class="machine-title">
+    <div class="machine-title2">
       <el-button-group class="batch-button">
         <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
         </el-button>
@@ -18,15 +18,15 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" align="center"></el-table-column>
-      <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="center"
+      <el-table-column type="selection" align="left"></el-table-column>
+      <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="left"
                        v-for="c in columns" sortable></el-table-column>
-      <el-table-column prop="updateTime" :label="$t('update_time')" align="center">
+      <el-table-column prop="updateTime" :label="$t('update_time')" align="left">
         <template slot-scope="scope">
           {{ scope.row.updateTime | dateFormat }}
         </template>
       </el-table-column>
-      <el-table-column prop="" :label="$t('opt')" align="center">
+      <el-table-column prop="" :label="$t('opt')" align="left">
         <template slot-scope="scope">
           <el-button
               type="button"

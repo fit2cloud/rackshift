@@ -22,42 +22,42 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" align="center"></el-table-column>
+      <el-table-column type="selection" align="left"></el-table-column>
 
-      <el-table-column :prop="c.prop" :label="c.label" align="center"
+      <el-table-column :prop="c.prop" :label="c.label" align="left"
                        v-for="c in columns" sortable></el-table-column>
 
-      <el-table-column prop="settable" :label="$t('user_settable')" align="center">
+      <el-table-column prop="settable" :label="$t('user_settable')" align="left">
         <template slot-scope="scope">
           {{ scope.row.settable }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="settable" :label="$t('event_type')" align="center">
+      <el-table-column prop="settable" :label="$t('event_type')" align="left">
         <template slot-scope="scope">
           {{ scope.row.eventType | eventFormat }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="brands" :label="$t('brands')" align="center">
+      <el-table-column prop="brands" :label="$t('brands')" align="left">
         <template slot-scope="scope">
           {{ scope.row.brands | brandsFormat }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="status" :label="$t('status')" align="center">
+      <el-table-column prop="status" :label="$t('status')" align="left">
         <template slot-scope="scope">
           {{ scope.row.status }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="createTime" :label="$t('create_time')" align="center">
+      <el-table-column prop="createTime" :label="$t('create_time')" align="left">
         <template slot-scope="scope">
           {{ scope.row.createTime | dateFormat }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="" :label="$t('opt')" align="center">
+      <el-table-column prop="" :label="$t('opt')" align="left">
         <template slot-scope="scope">
           <el-button
               type="button"

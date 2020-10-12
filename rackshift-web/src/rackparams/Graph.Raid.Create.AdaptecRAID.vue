@@ -27,7 +27,7 @@
             <td>
               <el-select v-model="config.drives" multiple>
                 <el-option v-for="t in odisks" :label="t.drives"
-                           :value="parseInt(t.drive)">
+                           :value="parseInt(t.enclosureId) + '-' + parseInt(t.drive)">
                   {{ t.raid + '-enclosureId:' + t.enclosureId + '-driveId:' + t.drive + '-' + t.size }}
                 </el-option>
               </el-select>

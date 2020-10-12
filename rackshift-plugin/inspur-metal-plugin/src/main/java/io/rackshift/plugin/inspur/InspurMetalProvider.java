@@ -2,23 +2,26 @@ package io.rackshift.plugin.inspur;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import io.rackshift.metal.sdk.AbstractMetalProvider;
+import io.rackshift.metal.sdk.MetalPlugin;
 import io.rackshift.metal.sdk.MetalPluginException;
 import io.rackshift.metal.sdk.constants.BareMetalConstants;
 import io.rackshift.metal.sdk.constants.F2CResourceTypeConstants;
 import io.rackshift.metal.sdk.constants.ProtocolEnum;
-import io.rackshift.metal.sdk.model.*;
+import io.rackshift.metal.sdk.model.MachineEntity;
+import io.rackshift.metal.sdk.model.Metric;
+import io.rackshift.metal.sdk.model.PluginResult;
 import io.rackshift.metal.sdk.model.request.IPMIRequest;
 import io.rackshift.metal.sdk.util.*;
 import io.rackshift.plugin.inspur.model.InspurFruDTO;
 import io.rackshift.plugin.inspur.utils.IMS5280M4RestSpider;
 import io.rackshift.plugin.inspur.utils.IMS8480M4RestSpider;
 import io.rackshift.plugin.inspur.utils.IMSRestApi;
-import com.google.gson.Gson;
-import io.rackshift.metal.sdk.MetalPlugin;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static io.rackshift.metal.sdk.constants.RackHDConstants.workflowPostUrl;
 
@@ -163,15 +166,16 @@ public class InspurMetalProvider extends AbstractMetalProvider {
 
     @Override
     public JSONObject getRaidPayLoad(String raidConfigDTOStr) throws MetalPluginException {
-        RaidConfigDTO raidConfigDTO = gson.fromJson(raidConfigDTOStr, RaidConfigDTO.class);
-        JSONObject raidPayload = JSONObject.parseObject(getPageTemplate());
+        JSONObject raidPayload = JSONObject.parseObject(raidConfigDTOStr);
+
         JSONObject createRaid = raidPayload.getJSONObject("options").getJSONObject("create-raid");
         JSONArray raidList = new JSONArray();
 
-        for (RaidConfigDTO.OneRaidConfig c : raidConfigDTO.getRaidConfigs()) {
+        for (int i = 0; i < createRaid.getJSONArray("raidList").size(); i++) {
+            JSONObject c = createRaid.getJSONArray("raidList").getJSONObject(i);
             JSONObject raidConfigObj = new JSONObject();
-            raidConfigObj.put("type", getValidRaidType(c.getRaidType()));
-            raidConfigObj.put("drives", c.getRaidDisks().stream().sorted(Comparator.comparing(Disk::getDrive)).map(d -> d.getEnclosureId() + " " + d.getDrive() + " ").reduce(" ", String::concat).trim());
+            raidConfigObj.put("type", getValidRaidType(c.getString("type")));
+            raidConfigObj.put("drives", c.getJSONArray("drives").stream().map(s -> ((String) s).replace("-", " ")).collect(Collectors.joining(" ")));
             raidList.add(raidConfigObj);
         }
         createRaid.put("raidList", raidList);

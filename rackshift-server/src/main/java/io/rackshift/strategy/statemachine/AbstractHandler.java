@@ -2,7 +2,10 @@ package io.rackshift.strategy.statemachine;
 
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.ExecutionLogConstants;
+import io.rackshift.constants.PluginConstants;
 import io.rackshift.manager.BareMetalManager;
+import io.rackshift.metal.sdk.IMetalProvider;
+import io.rackshift.metal.sdk.util.CloudProviderManager;
 import io.rackshift.model.RSException;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
@@ -25,6 +28,8 @@ public abstract class AbstractHandler implements IStateHandler {
     protected ExecutionLogService executionLogService;
     @Autowired
     private SimpMessagingTemplate template;
+    @Resource
+    private CloudProviderManager metalProviderManager;
 
     protected BareMetal getBareMetalById(String id) {
         return bareMetalManager.getBareMetalById(id);
@@ -34,6 +39,11 @@ public abstract class AbstractHandler implements IStateHandler {
         add(LifeStatus.ready);
         add(LifeStatus.allocated);
         add(LifeStatus.deployed);
+    }};
+
+    protected List<String> preProcessRaidWf = new ArrayList<String>() {{
+        add("Graph.Raid.Create.AdaptecRAID");
+        add("Graph.Raid.Create.PercRAID");
     }};
 
     protected ThreadLocal<Map<String, String>> executionMap = new ThreadLocal<>();
@@ -80,6 +90,7 @@ public abstract class AbstractHandler implements IStateHandler {
         }
 
         try {
+            paramPreProcess(event);
             handleYourself(event);
         } catch (Exception e) {
             executionLogService.error(executionId);
@@ -88,6 +99,21 @@ public abstract class AbstractHandler implements IStateHandler {
             throw new RuntimeException(e);
         }
     }
+
+    private void paramPreProcess(LifeEvent event) {
+        if (preProcessRaidWf.contains(event.getWorkflowRequestDTO().getWorkflowName())) {
+            if (Optional.of(event.getWorkflowRequestDTO()).isPresent()) {
+                WorkflowRequestDTO workflowRequestDTO = event.getWorkflowRequestDTO();
+                JSONObject params = workflowRequestDTO.getParams();
+
+                IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(getBareMetalById(event.getBareMetalId()).getMachineBrand()));
+                if (params != null) {
+                    workflowRequestDTO.setParams(iMetalProvider.getRaidPayLoad(params.toJSONString()));
+                }
+            }
+        }
+    }
+
 
     @Override
     public void revert(LifeEvent event, String executionId, String user) {

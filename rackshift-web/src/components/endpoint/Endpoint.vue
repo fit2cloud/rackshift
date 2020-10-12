@@ -22,30 +22,30 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" align="center"></el-table-column>
+      <el-table-column type="selection" align="left"></el-table-column>
 
-      <el-table-column :prop="c.prop" :label="c.label" align="center"
+      <el-table-column :prop="c.prop" :label="c.label" align="left"
                        v-for="c in columns" sortable></el-table-column>
 
-      <el-table-column prop="type" :label="$t('type')" align="center">
+      <el-table-column prop="type" :label="$t('type')" align="left">
         <template slot-scope="scope">
           {{ scope.row.type | endpointType }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="ip" :label="$t('ip')" align="center">
+      <el-table-column prop="ip" :label="$t('ip')" align="left">
         <template slot-scope="scope">
           {{ scope.row.ip }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="createTime" :label="$t('create_time')" align="center">
+      <el-table-column prop="createTime" :label="$t('create_time')" align="left">
         <template slot-scope="scope">
           {{ scope.row.createTime | dateFormat }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="status" :label="$t('status')" align="center">
+      <el-table-column prop="status" :label="$t('status')" align="left">
         <template slot-scope="scope">
           <span v-if="scope.row.status == 'Online'" style="color:#67C23A">
             Online
@@ -56,7 +56,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="" :label="$t('opt')" align="center">
+      <el-table-column prop="" :label="$t('opt')" align="left">
         <template slot-scope="scope">
           <el-button
               type="button"

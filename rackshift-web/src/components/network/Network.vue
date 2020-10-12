@@ -22,21 +22,21 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" align="center"></el-table-column>
-      <el-table-column prop="endpointId" :label="$t('endpoint')" align="center">
+      <el-table-column type="selection" align="left"></el-table-column>
+      <el-table-column prop="endpointId" :label="$t('endpoint')" align="left">
         <template slot-scope="scope">
           {{ scope.row.endpointId | endpointFormat }}
         </template>
       </el-table-column>
 
-      <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="center"
+      <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="left"
                        v-for="c in columns" sortable></el-table-column>
-      <el-table-column prop="createTime" :label="$t('create_time')" align="center">
+      <el-table-column prop="createTime" :label="$t('create_time')" align="left">
         <template slot-scope="scope">
           {{ scope.row.createTime | dateFormat }}
         </template>
       </el-table-column>
-      <el-table-column prop="" :label="$t('opt')" align="center">
+      <el-table-column prop="" :label="$t('opt')" align="left">
         <template slot-scope="scope">
           <el-button
               type="button"
