@@ -14,8 +14,6 @@
  ##  v0.1.1 （开发中）
  
  - [x] 样式微调
- - [x] Enpoint 下增加添加修改 PXE DHCP 网段
- - [x] 添加 DHCP 网段时根据 proxy 获取现存的网段
  - [x] 增加 Inspur 机型的发现、RAID 工作流支持
  - [x] 设备 IP 地址段扫描发现
  
