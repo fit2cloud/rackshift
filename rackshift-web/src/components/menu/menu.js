@@ -2,22 +2,22 @@ import i18n from "@/i18n/i18n";
 
 export default {
     menus: [
-        {
-            "name": i18n.t('OverView'),
-            "router": "/overview",
-            "requireRole": "admin",
-            "order": "1",
-            "icon": "el-icon-view",
-            childs: [
-                {
-                    "name": i18n.t('Wizard'),
-                    "router": "/wizard",
-                    "requireRole": "user,admin",
-                    "order": "2",
-                    "icon": "el-icon-question"
-                }
-            ]
-        },
+        // {
+        //     "name": i18n.t('OverView'),
+        //     "router": "/overview",
+        //     "requireRole": "admin",
+        //     "order": "1",
+        //     "icon": "el-icon-view",
+        //     childs: [
+        //         {
+        //             "name": i18n.t('Wizard'),
+        //             "router": "/wizard",
+        //             "requireRole": "user,admin",
+        //             "order": "2",
+        //             "icon": "el-icon-question"
+        //         }
+        //     ]
+        // },
         {
             "name": i18n.t('Resource'),
             "router": "/Resource",
