@@ -19,7 +19,21 @@ let WebSocketUtil = {
     },
     sendMessage: function (msg) {
         this.stompClient.send("/app/hello", {}, msg);
-    }
+    },
+    checkDoingThings(list, statusPro, topic, callback) {
+        let exists = false;
+        for (let i = 0; i < list.length; i++) {
+            if (list[i][statusPro] && ((list[i][statusPro].indexOf("ing") != -1) || list[i][statusPro].indexOf("ING") != -1)) {
+                exists = true;
+                break;
+            }
+        }
+        if (exists) {
+            if (!this.webSocket) {
+                this.webSocket = WebSocketUtil.openSocket(topic, callback);
+            }
+        }
+    },
 }
 
 export {WebSocketUtil}

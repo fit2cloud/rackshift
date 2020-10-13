@@ -33,4 +33,9 @@ public class ServiceConstants {
     public enum EndpointStatusEnum {
         Online, Offline
     }
+
+
+    public enum DiscoveryStatusEnum {
+        PENDING, ERROR, SUCCESS
+    }
 }

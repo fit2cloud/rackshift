@@ -12,6 +12,7 @@ import Workflow from "../workflow/Workflow"
 import Endpoint from "../endpoint/Endpoint"
 import Info from "../info/Info"
 import Wizard from "../wizard/Wizard"
+import Discovery from "../discovery/Discovery"
 
 Vue.use(VueRouter);
 
@@ -30,6 +31,7 @@ const routes = [
     {path: '/endpoint', component: Endpoint},
     {path: '/info', component: Info},
     {path: '/wizard', component: Wizard},
+    {path: '/discovery', component: Discovery},
 ]
 const router = new VueRouter({
     routes: routes

@@ -62,7 +62,7 @@
 <!--        <table tableName="endpoint"/>-->
 <!--        <table tableName="bare_me2tal"/>-->
 <!--        <table tableName="network"/>-->
-        <table tableName="image"/>
+        <table tableName="discovery_devices"/>
 <!--        <table tableName="cpu"/>-->
 <!--        <table tableName="disk"/>-->
 <!--        <table tableName="memory"/>-->

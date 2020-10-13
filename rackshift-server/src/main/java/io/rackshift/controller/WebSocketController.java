@@ -15,4 +15,10 @@ public class WebSocketController {
     public ResultHolder greeting(String hello, Session session) throws Exception {
         return ResultHolder.success("from server : " + hello);
     }
+
+    @MessageMapping("/discovery")
+    @SendTo("/topic/discovery")
+    public ResultHolder discovery(String hello, Session session) throws Exception {
+        return ResultHolder.success("from server : " + hello);
+    }
 }

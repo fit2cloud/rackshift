@@ -431,7 +431,7 @@ export default {
         {
           label: this.$t('memory'),
           prop: "memory",
-          expandLanguage : "en_US"
+          expandLanguage: "en_US"
         },
         {
           label: this.$t('disk'),
@@ -494,7 +494,7 @@ export default {
   }
   ,
   methods: {
-    resizeWith(c){
+    resizeWith(c) {
       return (c.expandLanguage && c.expandLanguage == localStorage.getItem('lang')) ? '100px' : '90px';
     },
     restoreParams() {
@@ -624,7 +624,7 @@ export default {
       HttpUtil.post("/bare-metal/list/" + this.query.pageIndex + "/" + this.query.pageSize, this.queryVO, (res) => {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
-        this.checkDoingThings(res.data.listObject);
+        WebSocketUtil.checkDoingThings(res.data.listObject, 'status', 'lifecycle', this.getData);
         this.loadingList = false;
       });
     },
@@ -778,17 +778,6 @@ export default {
     },
     addToSelectedWorkflow() {
       if (this.getWorkflowById().injectableName) {
-
-
-        // for (let i = 0; i < this.multipleSelection.length; i++) {
-        //   let componentId = this.getWorkflowById().injectableName + "-" + this.multipleSelection[i].id;
-        //   for (let j = 0; j < this.selectedWorkflow.length; j++) {
-        //     if (this.selectedWorkflow[j].componentId == componentId) {
-        //       // this.$notify.error(this.$t('same_workflow_node'));
-        //     }
-        //   }
-        // }
-
         let originWf = _.find(this.supportedWorkflow, s => s.injectableName == this.getWorkflowById().injectableName);
         for (let k = 0; k < this.multipleSelection.length; k++) {
           let duplicated = false;
@@ -850,23 +839,6 @@ export default {
       if (this.$refs.currentWfParamTemplate)
         this.$refs.currentWfParamTemplate.$destroy(true);
       this.selectedWorkflow.splice(index, 1);
-    },
-    checkDoingThings(list) {
-      let exists = false;
-      for (let i = 0; i < list.length; i++) {
-        if (list[i].status && list[i].status.indexOf("ing") != -1) {
-          exists = true;
-          break;
-        }
-      }
-      if (exists) {
-        if (!this.webSocket) {
-          this.webSocket = WebSocketUtil.openSocket('lifecycle', this.getData);
-        }
-      }
-    },
-    onmessage(msg) {
-      this.getData();
     },
   }
 }

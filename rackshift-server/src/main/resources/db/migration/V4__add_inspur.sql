@@ -41,3 +41,14 @@ values (7,
         null,
         'enable',
         now());
+
+CREATE TABLE discovery_devices (
+	id VARCHAR (50) NOT NULL,
+	bare_metal_rule_id VARCHAR (50) NOT NULL COMMENT '发现规则id',
+	`name` VARCHAR (50) NOT NULL COMMENT '随机数生成的一个名字',
+	ip VARCHAR (20) NOT NULL COMMENT 'ip地址',
+	description VARCHAR (200) DEFAULT NULL COMMENT '说明',
+	create_time BIGINT NOT NULL,
+	update_time BIGINT NOT NULL,
+	PRIMARY KEY (id)
+)

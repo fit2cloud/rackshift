@@ -56,13 +56,13 @@ export default {
                     "order": "7",
                     "icon": "el-icon-menu"
                 },
-                // {
-                //     "name": i18n.t('Discovery'),
-                //     "router": "/Discovery",
-                //     "requireRole": "admin",
-                //     "order": "2",
-                //     "icon": "el-icon-s-promotion"
-                // },
+                {
+                    "name": i18n.t('Discovery'),
+                    "router": "/Discovery",
+                    "requireRole": "admin",
+                    "order": "2",
+                    "icon": "el-icon-s-promotion"
+                },
             ]
         },
         {
