@@ -203,4 +203,5 @@ export default {
     "english": "英語",
     "Languages": "語言",
     "view_execution_log": "查看部署日志",
+    "not_supported_brand!": "不支持的品牌-",
 };

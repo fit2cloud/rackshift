@@ -175,7 +175,7 @@ public class InspurMetalProvider extends AbstractMetalProvider {
             JSONObject c = createRaid.getJSONArray("raidList").getJSONObject(i);
             JSONObject raidConfigObj = new JSONObject();
             raidConfigObj.put("type", getValidRaidType(c.getString("type")));
-            raidConfigObj.put("drives", c.getJSONArray("drives").stream().map(s -> ((String) s).replace("-", " ")).collect(Collectors.joining(" ")));
+            raidConfigObj.put("drives", c.getJSONArray("drives").stream().sorted().map(s -> ((String) s).replace("-", " ")).collect(Collectors.joining(" ")));
             raidList.add(raidConfigObj);
         }
         createRaid.put("raidList", raidList);

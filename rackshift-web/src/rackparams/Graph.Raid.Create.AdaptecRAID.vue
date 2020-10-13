@@ -27,7 +27,7 @@
             <td>
               <el-select v-model="config.drives" multiple>
                 <el-option v-for="t in odisks" :label="t.drives"
-                           :value="parseInt(t.enclosureId) + '-' + parseInt(t.drive)">
+                           :value="t.enclosureId + '-' + t.drive">
                   {{ t.raid + '-enclosureId:' + t.enclosureId + '-driveId:' + t.drive + '-' + t.size }}
                 </el-option>
               </el-select>
@@ -70,7 +70,7 @@ export default {
             "raidList": [
               {
                 "type": "5",
-                "drives": "0 0 0 1 0 2 0 3"
+                "drives": []
               }
             ]
           }
@@ -89,7 +89,7 @@ export default {
             "raidList": [
               {
                 "type": "5",
-                "drives": "0 0 0 1 0 2 0 3"
+                "drives": []
               }
             ]
           }
@@ -220,6 +220,11 @@ export default {
         this.cpus = res.data.cpus;
         this.memories = res.data.memories;
         this.disks = res.data.disks;
+
+        // if (res.data.disks && res.data.disks.length > 0) {
+        //   res.data.disks = _.orderBy(res.data.disks, ['drive'], ['asc']);
+        //   res.data.disks.forEach(d => this.disks.push(d.enclosureId + "-" + d.drive));
+        // }
         this.nics = res.data.nics;
       })
     }

@@ -203,4 +203,5 @@ export default {
     "english": "英语",
     "Languages": "Language",
     "view_execution_log": "View deploy log",
+    "not_supported_brand!": "not supported brand-",
 };
