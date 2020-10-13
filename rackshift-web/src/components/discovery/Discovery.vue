@@ -1,5 +1,5 @@
 <template>
-  <el-tabs style="width:80vw;" v-model="activeName">
+  <el-tabs style="width:80vw;" v-model="activeName" @tab-click="refreshChildData">
     <el-tab-pane :label="$t('discovery')" name="discovery">
       <div class="container">
 
@@ -43,31 +43,21 @@
 
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
-              <el-button
-                  type="button"
-                  icon="el-icon-edit"
-                  @click="handleEdit(scope.row, 'edit')"
-              >{{ $t('edit') }}
-              </el-button>
-
-              <el-button
-                  type="button"
-                  icon="el-icon-delete"
-                  class="red"
-                  v-if="scope.row.syncStatus.indexOf('ING') == -1"
-                  @click="handleEdit(scope.row, 'del')"
-              >{{ $t('del') }}
-              </el-button>
-
-              <el-button
-                  type="button"
-                  icon="el-icon-cycle"
-                  class="red"
-                  v-if="scope.row.syncStatus.indexOf('ING') == -1"
-                  @click="handleEdit(scope.row, 'sync')"
-              >{{ $t('sync') }}
-              </el-button>
-
+              <el-dropdown>
+                <el-button type="primary">
+                  {{ $t('opt') }}<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item @click.native="handleEdit(scope.row, 'edit')">{{ $t('edit') }}
+                  </el-dropdown-item>
+                  <el-dropdown-item v-if="scope.row.syncStatus.indexOf('ING') == -1"
+                                    @click.native="handleEdit(scope.row, 'del')">{{ $t('del') }}
+                  </el-dropdown-item>
+                  <el-dropdown-item v-if="scope.row.syncStatus.indexOf('ING') == -1"
+                                    @click.native="handleEdit(scope.row, 'sync')">{{ $t('sync') }}
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </template>
           </el-table-column>
         </el-table>
@@ -124,9 +114,7 @@
       </div>
     </el-tab-pane>
     <el-tab-pane :label="$t('discoveryed_devices')" name="devices">
-      <!--
-      ::todo
-      -->
+      <Devices ref="device"></Devices>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -136,6 +124,7 @@
 import HttpUtil from "../../common/utils/HttpUtil"
 import {requiredValidator, ipValidator} from "@/common/validator/CommonValidator";
 import {WebSocketUtil} from "@/common/utils/WebSocket";
+import Devices from "../discovery-devices/Discovery-devices"
 
 let _ = require('lodash');
 export default {
@@ -209,6 +198,9 @@ export default {
       return '/discovery/upload?fileName=' + this.fileName;
     }
   },
+  components: {
+    Devices
+  },
   mounted() {
     this.getData();
   },
@@ -222,7 +214,9 @@ export default {
         this.loadingList = false;
         WebSocketUtil.checkDoingThings(res.data.listObject, 'syncStatus', 'discovery', this.getData);
       });
-
+    },
+    refreshChildData() {
+      this.$refs.device.getData();
     },
     handleSizeChange(val) {
       this.query.pageSize = val;
