@@ -27,10 +27,11 @@ public class DiscoveryService {
     private SimpMessagingTemplate template;
 
     public Object add(BareMetalRuleDTO queryVO) {
-        BareMetalRule BareMetalRule = new BareMetalRule();
-        BeanUtils.copyBean(BareMetalRule, queryVO);
-        bareMetalRuleMapper.insertSelective(BareMetalRule);
-        new Thread(new DiscoveryTask(BareMetalRule, bareMetalRuleMapper, discoveryDevicesService, template)).start();
+        BareMetalRule bareMetalRule = new BareMetalRule();
+        BeanUtils.copyBean(bareMetalRule, queryVO);
+        bareMetalRule.setProviderId("");
+        bareMetalRuleMapper.insertSelective(bareMetalRule);
+        new Thread(new DiscoveryTask(bareMetalRule, bareMetalRuleMapper, discoveryDevicesService, template)).start();
         return true;
     }
 
@@ -46,6 +47,7 @@ public class DiscoveryService {
     public Object del(String id) {
         BareMetalRule BareMetalRule = bareMetalRuleMapper.selectByPrimaryKey(id);
         if (BareMetalRule == null) return false;
+        bareMetalRuleMapper.deleteByPrimaryKey(id);
         return false;
     }
 
@@ -80,6 +82,8 @@ public class DiscoveryService {
         if (ServiceConstants.DiscoveryStatusEnum.PENDING.name().equalsIgnoreCase(rule.getSyncStatus())) {
             return false;
         }
+        rule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.PENDING.name());
+        bareMetalRuleMapper.updateByPrimaryKey(rule);
         new Thread(new DiscoveryTask(rule, bareMetalRuleMapper, discoveryDevicesService, template)).start();
         return true;
     }

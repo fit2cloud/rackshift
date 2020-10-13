@@ -54,7 +54,7 @@
                   type="button"
                   icon="el-icon-delete"
                   class="red"
-                  v-if="scope.row.syncStatus.indexOf('ING') != -1"
+                  v-if="scope.row.syncStatus.indexOf('ING') == -1"
                   @click="handleEdit(scope.row, 'del')"
               >{{ $t('del') }}
               </el-button>
@@ -105,6 +105,9 @@
                 <el-input v-model="editObj.endIp" autocomplete="off"></el-input>
               </el-form-item>
 
+              <el-form-item :label="$t('mask')" prop="mask">
+                <el-input v-model="editObj.mask" autocomplete="off"></el-input>
+              </el-form-item>
 
             </el-form>
             <div class="demo-drawer__footer">
@@ -121,7 +124,9 @@
       </div>
     </el-tab-pane>
     <el-tab-pane :label="$t('discoveryed_devices')" name="devices">
-      sss
+      <!--
+      ::todo
+      -->
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -147,6 +152,9 @@ export default {
         endIp: [
           {validator: ipValidator, trigger: 'blur', vue: this},
         ],
+        mask: [
+          {validator: ipValidator, trigger: 'blur', vue: this},
+        ],
       },
       query: {
         name: '',
@@ -167,6 +175,21 @@ export default {
         {
           label: this.$t('name'),
           prop: "name",
+          sort: true
+        },
+        {
+          label: this.$t('start_ip'),
+          prop: "startIp",
+          sort: true
+        },
+        {
+          label: this.$t('end_ip'),
+          prop: "endIp",
+          sort: true
+        },
+        {
+          label: this.$t('mask'),
+          prop: "mask",
           sort: true
         },
       ],
@@ -197,6 +220,7 @@ export default {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
         this.loadingList = false;
+        WebSocketUtil.checkDoingThings(res.data.listObject, 'syncStatus', 'discovery', this.getData);
       });
 
     },
@@ -286,11 +310,12 @@ export default {
           });
         })
       } else if (type == 'sync') {
-        HttpUtil.get("/discovery/sync/" + row.id, {}, (res) => {
-          this.getData();
-          this.$message.success(this.$t('opt_success!'));
-          WebSocketUtil.checkDoingThings(res.data.listObject, 'syncStatus', 'discovery', this.getData);
-        });
+        HttpUtil.post("/discovery/sync",
+            [row.id]
+            , (res) => {
+              this.$message.success(this.$t('opt_success!'));
+              this.getData();
+            });
       } else {
         this.editDialogVisible = true;
         this.editType = type;

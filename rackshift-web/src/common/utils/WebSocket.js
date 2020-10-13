@@ -22,16 +22,20 @@ let WebSocketUtil = {
     },
     checkDoingThings(list, statusPro, topic, callback) {
         let exists = false;
-        for (let i = 0; i < list.length; i++) {
-            if (list[i][statusPro] && ((list[i][statusPro].indexOf("ing") != -1) || list[i][statusPro].indexOf("ING") != -1)) {
-                exists = true;
-                break;
+        if (list) {
+            for (let i = 0; i < list.length; i++) {
+                if (list[i][statusPro] && ((list[i][statusPro].indexOf("ing") != -1) || list[i][statusPro].indexOf("ING") != -1)) {
+                    exists = true;
+                    break;
+                }
             }
         }
         if (exists) {
             if (!this.webSocket) {
                 this.webSocket = WebSocketUtil.openSocket(topic, callback);
             }
+        } else {
+            this.webSocket = WebSocketUtil.openSocket(topic, callback);
         }
     },
 }

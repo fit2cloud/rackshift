@@ -3,23 +3,27 @@ package io.rackshift.utils;
 import org.apache.commons.net.util.SubnetUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class IpUtil {
-    public static List<String> getIpRange(String startIp, String endIp, String gateway, String mask) {
+    public static List<String> getIpRange(String startIp, String endIp, String mask) {
+        if(startIp != null && startIp.equals(endIp) && "255.255.255.255".equals(mask)) {
+            return new ArrayList<>(Collections.singletonList(startIp));
+        }
         List<String> result = new ArrayList<>();
-        SubnetUtils utils = new SubnetUtils(gateway, mask);
+        SubnetUtils utils = new SubnetUtils(startIp, mask);
         SubnetUtils.SubnetInfo info = utils.getInfo();
         String[] allIps = info.getAllAddresses();
-        for (String allIp : allIps) {
-            if (ipInRange(allIp, startIp, endIp)) {
-                result.add(allIp);
+        for (int i = 0; i < allIps.length; i++) {
+            if (ipInRange(allIps[i], startIp, endIp)) {
+                result.add(allIps[i]);
             }
         }
         return result;
     }
 
-    private static Boolean ipInRange(String ip, String startIp, String endIp) {
+    public static Boolean ipInRange(String ip, String startIp, String endIp) {
         String ipSection = startIp + "-" + endIp;
         ip = ip.trim();
         final String REGX_IP = "((25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]\\d|\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]\\d|\\d)";
@@ -42,5 +46,14 @@ public class IpUtil {
             ipe = t;
         }
         return ips <= ipt && ipt <= ipe;
+    }
+
+    public static long ipToInt(String ip) {
+        long ipNumbers = 0;
+        String[] split = ip.split("\\.");
+        for (int i = 0; i < 4; i++) {
+            ipNumbers += Long.parseLong(split[i]) << (24 - (8 * i));
+        }
+        return ipNumbers;
     }
 }

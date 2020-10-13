@@ -53,7 +53,7 @@ public class DiscoveryController {
         return ResultHolder.success(discoveryService.del(ids));
     }
 
-@RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @RequestMapping("sync")
     public ResultHolder sync(@RequestBody String[] ids) {
         return ResultHolder.success(discoveryService.sync(ids));

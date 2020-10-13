@@ -54,6 +54,7 @@ public class DiscoveryDevicesService {
     public Object del(String id) {
         DiscoveryDevices DiscoveryDevices = discoveryDevicesMapper.selectByPrimaryKey(id);
         if (DiscoveryDevices == null) return false;
+        discoveryDevicesMapper.deleteByPrimaryKey(id);
         return false;
     }
 

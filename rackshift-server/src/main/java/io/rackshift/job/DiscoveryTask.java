@@ -6,6 +6,7 @@ import io.rackshift.mybatis.domain.DiscoveryDevices;
 import io.rackshift.mybatis.mapper.BareMetalRuleMapper;
 import io.rackshift.service.DiscoveryDevicesService;
 import io.rackshift.utils.IpUtil;
+import io.rackshift.utils.UUIDUtil;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class DiscoveryTask extends Thread {
     @Override
     public void run() {
         try {
-            List<String> ips = IpUtil.getIpRange(bareMetalRule.getStartIp(), bareMetalRule.getEndIp(), null, bareMetalRule.getMask());
+            List<String> ips = IpUtil.getIpRange(bareMetalRule.getStartIp(), bareMetalRule.getEndIp(), bareMetalRule.getMask());
             if (ips != null && ips.size() > 0) {
                 ips.forEach(ip -> {
                     if (io.rackshift.metal.sdk.util.IpUtil.ping(ip)) {
@@ -37,11 +38,15 @@ public class DiscoveryTask extends Thread {
                         if (d != null) {
                             discoveryDevicesService.update(d);
                         } else {
+                            d = new DiscoveryDevices();
+                            d.setDescription("ping");
+                            d.setIp(ip);
+                            d.setName(UUIDUtil.newUUID());
+                            d.setBareMetalRuleId(bareMetalRule.getId());
                             discoveryDevicesService.add(d);
                         }
                     }
                 });
-                template.convertAndSend("/topic/discovery", "");
             }
             bareMetalRule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.SUCCESS.name());
 
@@ -49,6 +54,7 @@ public class DiscoveryTask extends Thread {
             bareMetalRule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.ERROR.name());
             //::todo
         }
+        template.convertAndSend("/topic/discovery", "");
         bareMetalRuleMapper.updateByPrimaryKey(bareMetalRule);
     }
 }

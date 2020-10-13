@@ -55,8 +55,8 @@ public class NetworkService {
         for (Network n : networks) {
             int total = 0;
             ipSet = new HashSet<>();
-            List<String> ipRanges = IpUtil.getIpRange(n.getStartIp(), n.getEndIp(), n.getStartIp(), n.getNetmask());
-            List<String> ipRanges2 = IpUtil.getIpRange(queryVO.getStartIp(), queryVO.getEndIp(), queryVO.getStartIp(), queryVO.getNetmask());
+            List<String> ipRanges = IpUtil.getIpRange(n.getStartIp(), n.getEndIp(), n.getNetmask());
+            List<String> ipRanges2 = IpUtil.getIpRange(queryVO.getStartIp(), queryVO.getEndIp(), queryVO.getNetmask());
             total = ipRanges.size() + ipRanges2.size();
             ipSet.addAll(ipRanges);
             ipSet.addAll(ipRanges2);
