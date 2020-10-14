@@ -214,4 +214,11 @@ public class BareMetalManager {
         return example;
     }
 
+    public void addToBareMetal(BareMetal bareMetal) {
+        String managementIp = bareMetal.getManagementIp();
+        BareMetal bareMetal1 = getBareMetalByIp(managementIp);
+        if (bareMetal1 == null) {
+            bareMetalMapper.insertSelective(bareMetal);
+        }
+    }
 }

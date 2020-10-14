@@ -31,21 +31,19 @@
 
       <el-table-column prop="" :label="$t('opt')" align="left">
         <template slot-scope="scope">
-          <el-button
-              type="button"
-              icon="el-icon-edit"
-              @click="handleEdit(scope.row, 'edit')"
-          >{{ $t('edit') }}
-          </el-button>
-
-          <el-button
-              type="button"
-              icon="el-icon-delete"
-              class="red"
-              @click="handleEdit(scope.row, 'del')"
-          >{{ $t('del') }}
-          </el-button>
-
+          <el-dropdown>
+            <el-button type="primary">
+              {{ $t('opt') }}<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="handleEdit(scope.row, 'edit')">{{ $t('edit') }}
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="handleEdit(scope.row, 'del')">{{ $t('del') }}
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="handleEdit(scope.row, 'addToDevice')">{{ $t('add_to_device') }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -61,6 +59,41 @@
           :total="pageTotal">
       </el-pagination>
     </div>
+
+    <el-dialog :title="$t('add_to_device')" :visible.sync="deviceDialogVisible">
+      <el-form :model="dForm">
+        <el-row>
+          <el-col :span="deviceDialogWidth">
+            <el-form-item :label="$t('machine_model')" :label-width="formLabelWidth">
+              <el-input v-model="curObm.machineModel" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="deviceDialogWidth">
+            <el-form-item :label="$t('management_ip')" :label-width="formLabelWidth">
+              <el-input v-model="curObm.managementIp" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="deviceDialogWidth">
+            <el-form-item :label="$t('endpoint')" :label-width="formLabelWidth">
+              <el-select v-model="curObm.endpointId" :placeholder="$t('pls_select')">
+                <el-option
+                    v-for="(item, key) in allEndPoints"
+                    :label="item.name"
+                    :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="deviceDialogVisible = false">{{ $t('cancel') }}</el-button>
+        <el-button type="primary" @click="submitOBM" :loading="obmLoading">{{ $t('confirm') }}</el-button>
+      </div>
+    </el-dialog>
 
     <el-drawer
         :title="editType == 'edit' ? $t('edit_discovery-devices') : $t('add_discovery-devices')"
@@ -118,6 +151,7 @@ export default {
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
       },
+      deviceDialogWidth: 10,
       query: {
         name: '',
         pageIndex: 1,
@@ -151,6 +185,9 @@ export default {
         },
       ],
       editDialogVisible: false,
+      deviceDialogVisible: false,
+      obmLoading: false,
+      curObm: {},
       editType: 'edit',
       editObj: {
         name: null,
@@ -168,6 +205,7 @@ export default {
   },
   mounted() {
     this.getData();
+    this.getAllEndPoints();
   },
   methods: {
     // 获取 easy-mock 的模拟数据
@@ -265,13 +303,13 @@ export default {
             this.$message.success(this.$t('delete_success!'));
           });
         })
-      } else if (type == 'sync') {
-        HttpUtil.post("/discovery-devices/sync",
-            [row.id]
-            , (res) => {
-              this.$message.success(this.$t('opt_success!'));
-              this.getData();
-            });
+      } else if (type == 'addToDevice') {
+        this.deviceDialogVisible = true;
+        this.curObm = {
+          managementIp: row.ip,
+          machineModel: row.name,
+          ruleId: row.bareMetalRuleId
+        }
       } else {
         this.editDialogVisible = true;
         this.editType = type;
@@ -285,6 +323,22 @@ export default {
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
       this.getData();
+    },
+    submitOBM() {
+      HttpUtil.post("discovery-devices/addToBareMetal", this.curObm, (res) => {
+        if (res.data) {
+          this.$notify.success(this.$t("opt_success"));
+        } else {
+          this.$notify.success(this.$t("opt_fail"));
+        }
+        this.deviceDialogVisible = false;
+      });
+    },
+    getAllEndPoints() {
+      HttpUtil.get("/endpoint/getAllEndPoints", {}, (res) => {
+        this.allEndPoints = res.data;
+        localStorage.setItem("allEndPoints", JSON.stringify(res.data));
+      });
     },
   }
 }

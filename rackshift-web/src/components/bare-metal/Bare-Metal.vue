@@ -133,7 +133,7 @@
 
           <el-table-column prop="status" :label="$t('machine_status')" align="left" width="150px">
             <template slot-scope="scope">
-              <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
+              <i class="el-icon-loading" v-if="scope.row.status && scope.row.status.indexOf('ing') != -1"></i>
               <span style="margin-left: 10px">{{ scope.row.status }}</span>
             </template>
           </el-table-column>

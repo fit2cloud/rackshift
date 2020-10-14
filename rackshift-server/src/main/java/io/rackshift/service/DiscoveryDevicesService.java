@@ -1,6 +1,7 @@
 package io.rackshift.service;
 
 import io.rackshift.job.DiscoveryTask;
+import io.rackshift.model.BareMetalDTO;
 import io.rackshift.model.DiscoveryDevicesDTO;
 import io.rackshift.mybatis.domain.DiscoveryDevices;
 import io.rackshift.mybatis.domain.DiscoveryDevicesExample;
@@ -17,6 +18,8 @@ import java.util.Optional;
 public class DiscoveryDevicesService {
     @Resource
     private DiscoveryDevicesMapper discoveryDevicesMapper;
+    @Resource
+    private BareMetalService bareMetalService;
     @Resource
     private EndpointMapper endpointMapper;
 
@@ -72,5 +75,9 @@ public class DiscoveryDevicesService {
 
     private DiscoveryDevicesExample buildExample(DiscoveryDevicesDTO queryVO) {
         return new DiscoveryDevicesExample();
+    }
+
+    public boolean addToBareMetal(BareMetalDTO bareMetalDTO) {
+        return bareMetalService.addToBareMetal(bareMetalDTO);
     }
 }

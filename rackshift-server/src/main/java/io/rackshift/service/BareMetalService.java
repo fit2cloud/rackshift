@@ -8,9 +8,8 @@ import io.rackshift.model.ResultHolder;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.*;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
-import io.rackshift.utils.ExceptionUtils;
-import io.rackshift.utils.IPMIUtil;
-import io.rackshift.utils.LogUtil;
+import io.rackshift.strategy.statemachine.LifeStatus;
+import io.rackshift.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -129,6 +128,18 @@ public class BareMetalService {
             }
             bareMetalManager.delBareMetalById(id);
         }
+        return true;
+    }
+
+    public boolean addToBareMetal(BareMetalDTO bareMetalDTO) {
+        if (StringUtils.isAnyBlank(bareMetalDTO.getManagementIp(), bareMetalDTO.getMachineModel(), bareMetalDTO.getRuleId())) {
+            RSException.throwExceptions(Translator.get("i18n_param_error"));
+        }
+        BareMetal bareMetal = new BareMetal();
+        BeanUtils.copyBean(bareMetal, bareMetalDTO);
+        bareMetal.setStatus(LifeStatus.onrack.name());
+
+        bareMetalManager.addToBareMetal(bareMetal);
         return true;
     }
 }

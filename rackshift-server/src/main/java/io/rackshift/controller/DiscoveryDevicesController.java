@@ -3,8 +3,10 @@ package io.rackshift.controller;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.rackshift.constants.AuthorizationConstants;
+import io.rackshift.model.BareMetalDTO;
 import io.rackshift.model.DiscoveryDevicesDTO;
 import io.rackshift.model.ResultHolder;
+import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.service.DiscoveryDevicesService;
 import io.rackshift.utils.PageUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -51,6 +53,12 @@ public class DiscoveryDevicesController {
     @RequestMapping("del")
     public ResultHolder del(@RequestBody String[] ids) {
         return ResultHolder.success(discoveryDevicesService.del(ids));
+    }
+
+@RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @RequestMapping("addToBareMetal")
+    public ResultHolder addToBareMetal(@RequestBody BareMetalDTO bareMetalDTO) {
+        return ResultHolder.success(discoveryDevicesService.addToBareMetal(bareMetalDTO));
     }
 
 }
