@@ -29,7 +29,7 @@ public class ImageService {
             String mountPath = fileUploadBase + "/" + mountDirName;
             Runtime runtime = Runtime.getRuntime();
             System.out.println(getProcessOut(runtime.exec(String.format("mkdir -p /%s", mountDirName))));
-            System.out.println(getProcessOut(runtime.exec(String.format("mount %s /%s", filePath, mountDirName))));
+            System.out.println(getProcessOut(runtime.exec(String.format("mount -t iso9660 %s /%s", filePath, mountDirName))));
             System.out.println(getProcessOut(runtime.exec(String.format("cp -r /%s/ %s", mountDirName, mountPath))));
             System.out.println(getProcessOut(runtime.exec(String.format("umount /%s", mountDirName))));
             System.out.println(getProcessOut(runtime.exec(String.format("rm -rf /%s", mountDirName))));
