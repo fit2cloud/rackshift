@@ -95,6 +95,9 @@ public class BareMetalManager {
             BareMetal bareMetal = rackHDService.convertToPm(e);
             BareMetal dbBareMetal = getBareMetalBySn(bareMetal.getMachineSn());
             if (dbBareMetal == null) {
+                dbBareMetal = getBareMetalByIp(bareMetal.getManagementIp());
+            }
+            if (dbBareMetal == null) {
                 bareMetalMapper.insertSelective(bareMetal);
             } else {
                 //对正在进行中的状态进行查询，如果对应的node没有正在运行中的任务，则该进行中的状态自动到终点
