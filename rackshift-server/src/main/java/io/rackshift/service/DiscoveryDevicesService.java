@@ -1,6 +1,5 @@
 package io.rackshift.service;
 
-import io.rackshift.job.DiscoveryTask;
 import io.rackshift.model.BareMetalDTO;
 import io.rackshift.model.DiscoveryDevicesDTO;
 import io.rackshift.mybatis.domain.DiscoveryDevices;

@@ -26,6 +26,8 @@ public class EndpointPoller {
                 String res = HttpFutureUtils.getHttp(String.format("http://%s:8083/endpoint/heartBeat", e.getIp()), ProxyUtil.getHeaders());
                 if (StringUtils.isNotBlank(res) && "ok".equalsIgnoreCase(res)) {
                     e.setStatus(ServiceConstants.EndpointStatusEnum.Online.name());
+                } else {
+                    e.setStatus(ServiceConstants.EndpointStatusEnum.Offline.name());
                 }
             } catch (Exception e1) {
                 e.setStatus(ServiceConstants.EndpointStatusEnum.Offline.name());

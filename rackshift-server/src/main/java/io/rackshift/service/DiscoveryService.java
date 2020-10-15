@@ -1,7 +1,7 @@
 package io.rackshift.service;
 
 import io.rackshift.constants.ServiceConstants;
-import io.rackshift.job.DiscoveryTask;
+import io.rackshift.job.model.DiscoveryTask;
 import io.rackshift.model.BareMetalRuleDTO;
 import io.rackshift.mybatis.domain.BareMetalRule;
 import io.rackshift.mybatis.domain.BareMetalRuleExample;
