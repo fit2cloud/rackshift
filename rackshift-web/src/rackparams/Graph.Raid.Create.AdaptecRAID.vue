@@ -71,7 +71,7 @@ export default {
             "path": "/usr/Arcconf/arcconf",
             "raidList": [
               {
-                "type": "5",
+                "type": null,
                 "drives": []
               }
             ]
@@ -90,7 +90,7 @@ export default {
             "path": "/usr/Arcconf/arcconf",
             "raidList": [
               {
-                "type": "5",
+                "type": null,
                 "drives": []
               }
             ]
@@ -210,7 +210,7 @@ export default {
         if (newDisks.indexOf(disks[j]) == -1) {
           newDisks.push(disks[j]);
         } else {
-          this.$notify.error(this.$t('i18n_disk', '磁盘：') + diskMap[disks[j]].drive + this.$t('i18n_duplicate_in_array', '被重复选择进多个阵列，请检查！'));
+          this.$notify.error(this.$t('i18n_disk', '磁盘：') + disks[j] + this.$t('i18n_duplicate_in_array', '被重复选择进多个阵列，请检查！'));
           return false;
         }
       }

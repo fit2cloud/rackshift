@@ -132,12 +132,12 @@ export default {
         this.$notify.error(this.$t('i18n_pls_os_must_choose_one_raid', '请至少选择一组磁盘组建raid！'));
         return false;
       }
-      let diskStr = "";
+      let diskStr = [];
       for (let i = 0; i < raidConfig.length; i++) {
         let config = raidConfig[i];
         let raidType = config.type;
         let raidDisk = config.drives;
-        diskStr += raidDisk + ",";
+        diskStr = diskStr.concat(raidDisk);
         if (!raidType) {
           this.$notify.error(this.$t('i18n_di', '第') + (i + 1) + this.$t('i18n_zu_de_raid_not_config', '组的RAID策略没有设置！'));
           return false;
@@ -209,12 +209,12 @@ export default {
       }
       let disks = [];
       let newDisks = [];
-      disks = diskStr.substr(0, diskStr.length - 1).split(",");
+      disks = diskStr;
       for (let j = 0; j < disks.length; j++) {
         if (newDisks.indexOf(disks[j]) == -1) {
           newDisks.push(disks[j]);
         } else {
-          this.$notify.error(this.$t('i18n_disk', '磁盘：') + diskMap[disks[j]].drive + this.$t('i18n_duplicate_in_array', '被重复选择进多个阵列，请检查！'));
+          this.$notify.error(this.$t('i18n_disk', '磁盘：') + disks[j] + this.$t('i18n_duplicate_in_array', '被重复选择进多个阵列，请检查！'));
           return false;
         }
       }
