@@ -17,8 +17,7 @@ public class PluginTest {
 
     @Before
     public void setP() {
-        request = new IPMISnmpRequest("10.132.46.250", "administrator", "61505443");
-        request = new IPMISnmpRequest("dl3809.dahaia123.top", "administrator", "Fit2cloud@2019");
+        request = new IPMISnmpRequest("10.132.46.250", "administrator", "11111");
         request.setCommunity("public");
         request.setPort(161);
         iMetalProvider = new HpMetalProvider();
