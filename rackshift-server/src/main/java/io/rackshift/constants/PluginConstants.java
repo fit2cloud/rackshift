@@ -39,7 +39,7 @@ public class PluginConstants {
     }
 
     public enum PluginType {
-        HP_METAL_PLUGIN("fit2cloud-hp-metal-plugin",
+        HP_METAL_PLUGIN("hp-metal-plugin",
                 new ArrayList<String>() {{
                     add("HP");
                 }},
@@ -49,7 +49,7 @@ public class PluginConstants {
                 }}
         ),
 
-        DELL_METAL_PLUGIN("fit2cloud-dell-metal-plugin",
+        DELL_METAL_PLUGIN("dell-metal-plugin",
                 new ArrayList<String>() {{
                     add("DELL");
                     add("Dell Inc.");
@@ -60,7 +60,7 @@ public class PluginConstants {
                     put("root", "calvin");
                 }}),
 
-        INSPUR_METAL_PLUGIN("fit2cloud-inspur-metal-plugin",
+        INSPUR_METAL_PLUGIN("inspur-metal-plugin",
                 new ArrayList<String>() {{
                     add("Inspur");
                 }},
@@ -70,7 +70,7 @@ public class PluginConstants {
                     put("admin", "admin");
                 }}),
 
-        HUAWEI_METAL_PLUGIN("fit2cloud-huawei-metal-plugin",
+        HUAWEI_METAL_PLUGIN("huawei-metal-plugin",
                 new ArrayList<String>() {
                     {
                         add("Huawei");
@@ -83,7 +83,7 @@ public class PluginConstants {
                 }}
         ),
 
-        IBM_METAL_PLUGIN("fit2cloud-ibm-metal-plugin",
+        IBM_METAL_PLUGIN("ibm-metal-plugin",
                 new ArrayList<String>() {
                     {
                         add("IBM");

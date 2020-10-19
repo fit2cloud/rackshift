@@ -7,7 +7,7 @@ import io.rackshift.metal.sdk.AbstractMetalProvider;
 import io.rackshift.metal.sdk.MetalPlugin;
 import io.rackshift.metal.sdk.MetalPluginException;
 import io.rackshift.metal.sdk.constants.BareMetalConstants;
-import io.rackshift.metal.sdk.constants.F2CResourceTypeConstants;
+import io.rackshift.metal.sdk.constants.ResourceTypeConstants;
 import io.rackshift.metal.sdk.constants.ProtocolEnum;
 import io.rackshift.metal.sdk.model.MachineEntity;
 import io.rackshift.metal.sdk.model.Metric;
@@ -30,7 +30,7 @@ import static io.rackshift.metal.sdk.constants.RackHDConstants.workflowPostUrl;
 public class InspurMetalProvider extends AbstractMetalProvider {
 
     public InspurMetalProvider() {
-        super.name = "fit2cloud-inspur-metal-plugin";
+        super.name = "rackshift-inspur-metal-plugin";
     }
 
     private static Map<String, IMSRestApi> spiderMap = new HashMap() {{
@@ -185,7 +185,7 @@ public class InspurMetalProvider extends AbstractMetalProvider {
     @Override
     public JSONObject getDeleteRaidPayload() {
         try {
-            return JSONObject.parseObject(getPageTemplate(F2CResourceTypeConstants.RACKHD_RAID_DEL_PAYLOAD));
+            return JSONObject.parseObject(getPageTemplate(ResourceTypeConstants.RACKHD_RAID_DEL_PAYLOAD));
         } catch (MetalPluginException e) {
             e.printStackTrace();
         }

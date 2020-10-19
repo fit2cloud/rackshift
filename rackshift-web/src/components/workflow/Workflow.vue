@@ -101,7 +101,7 @@
         <el-form :model="editObj" :label-position="labelPosition">
 
           <el-form-item :label="$t('injectable_mame')">
-            <el-select v-model="editObj.injectableName" :placeholder="$t('pls_select')"
+            <el-select filterable v-model="editObj.injectableName" :placeholder="$t('pls_select')"
                        :disabled="editObj.type == 'system'" v-on:change="changeFriendlyName">
               <el-option
                   v-for="item in allRackHDWorkflows"

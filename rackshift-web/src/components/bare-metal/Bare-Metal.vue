@@ -29,7 +29,8 @@
               </div>
               <div class="run-splitter h25"></div>
               <!--                    <el-button class="h50">Workflow <span class="el-icon-caret-bottom"></span></el-button>-->
-              <el-select v-model="wfRequest.workflow" :placeholder="$t('please_select')" @change="getParamsTemplate">
+              <el-select v-model="wfRequest.workflow" filterable :placeholder="$t('please_select')"
+                         @change="getParamsTemplate">
                 <el-option
                     v-for="g in supportedWorkflow"
                     :label="g.friendlyName"
@@ -265,7 +266,7 @@
           <div class="demo-drawer__content">
             <el-tabs v-model="detailShowName">
               <el-tab-pane :label="$t('detail')" name="detail">
-                <el-form ref="form" :model="machine">
+                <el-form ref="form" :model="machine" label-position="top">
                   <el-form-item :label="$t('machine_model')">
                     {{ machine.machineModel }}
                   </el-form-item>
@@ -924,7 +925,6 @@ export default {
 
 .detail-info {
   border: 1px solid #EBEEF5;
-  text-align: center;
   border-spacing: 0px !important;
   width: 100%;
 }
@@ -939,8 +939,7 @@ export default {
   text-overflow: ellipsis;
   vertical-align: middle;
   position: relative;
-  text-align: center;
-
+  text-align: left;
 }
 
 .el-tabs__nav-wrap .is-top {

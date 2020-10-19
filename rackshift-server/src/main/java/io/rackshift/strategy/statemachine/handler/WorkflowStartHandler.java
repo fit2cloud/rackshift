@@ -6,6 +6,8 @@ import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.service.RackHDService;
 import io.rackshift.strategy.statemachine.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import javax.annotation.Resource;
 
@@ -13,6 +15,8 @@ import javax.annotation.Resource;
 public class WorkflowStartHandler extends AbstractHandler {
     @Resource
     private RackHDService rackHDService;
+    @Autowired
+    private SimpMessagingTemplate template;
 
     @Override
     public void handleYourself(LifeEvent event) {
@@ -32,5 +36,6 @@ public class WorkflowStartHandler extends AbstractHandler {
         } else {
             revert(event, getExecutionId(), getUser());
         }
+        template.convertAndSend("/topic/lifecycle", "");
     }
 }

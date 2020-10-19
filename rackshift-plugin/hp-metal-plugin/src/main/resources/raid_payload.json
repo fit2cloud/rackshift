@@ -1,0 +1,18 @@
+{
+  "options": {
+    "bootstrap-rancher": {
+      "dockerFile": "secure.erase.docker.tar.xz"
+    },
+    "create-raid": {
+      "createDefault": false,
+      "path": "/usr/sbin/hpssacli",
+      "controller": 0,
+      "raidList": [
+        {
+          "type": "5",
+          "drives": "1I:2:1,..."
+        }
+      ]
+    }
+  }
+}

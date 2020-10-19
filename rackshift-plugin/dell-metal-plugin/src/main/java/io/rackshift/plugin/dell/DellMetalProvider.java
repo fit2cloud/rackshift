@@ -6,7 +6,7 @@ import io.rackshift.metal.sdk.AbstractMetalProvider;
 import io.rackshift.metal.sdk.MetalPlugin;
 import io.rackshift.metal.sdk.MetalPluginException;
 import io.rackshift.metal.sdk.constants.BareMetalConstants;
-import io.rackshift.metal.sdk.constants.F2CResourceTypeConstants;
+import io.rackshift.metal.sdk.constants.ResourceTypeConstants;
 import io.rackshift.metal.sdk.constants.ProtocolEnum;
 import io.rackshift.metal.sdk.model.MachineEntity;
 import io.rackshift.metal.sdk.model.Metric;
@@ -194,7 +194,7 @@ public class DellMetalProvider extends AbstractMetalProvider {
         if (raidConfigDTO.getRaidConfigs().size() == 0) {
             return null;
         }
-        JSONObject payload = JSONObject.parseObject(getPageTemplate(F2CResourceTypeConstants.RACKHD_RAID_PAYLOAD));
+        JSONObject payload = JSONObject.parseObject(getPageTemplate(ResourceTypeConstants.RACKHD_RAID_PAYLOAD));
 
         List<RaidConfigDTO.OneRaidConfig> raidConfigList = raidConfigDTO.getRaidConfigs();
         JSONArray raidList = new JSONArray();
@@ -232,7 +232,7 @@ public class DellMetalProvider extends AbstractMetalProvider {
     @Override
     public JSONObject getDeleteRaidPayload() {
         try {
-            return JSONObject.parseObject(getPageTemplate(F2CResourceTypeConstants.RACKHD_RAID_DEL_PAYLOAD));
+            return JSONObject.parseObject(getPageTemplate(ResourceTypeConstants.RACKHD_RAID_DEL_PAYLOAD));
         } catch (MetalPluginException e) {
             e.printStackTrace();
         }

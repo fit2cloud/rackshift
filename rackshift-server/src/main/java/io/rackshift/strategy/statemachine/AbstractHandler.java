@@ -42,6 +42,7 @@ public abstract class AbstractHandler implements IStateHandler {
     }};
 
     protected List<String> preProcessRaidWf = new ArrayList<String>() {{
+        add("Graph.Raid.Create.HpssaRAID");
         add("Graph.Raid.Create.AdaptecRAID");
         add("Graph.Raid.Create.PercRAID");
     }};
