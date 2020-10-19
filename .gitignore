@@ -8,3 +8,4 @@ target
 /rackshift-plugin/rackshift-plugin.iml
 /rackshift-plugin/inspur-metal-plugin/inspur-metal-plugin.iml
 /rackshift-web/public/rackshift-web.lnk
+/rackshift-plugin/dell-metal-plugin/dependency-reduced-pom.xml
