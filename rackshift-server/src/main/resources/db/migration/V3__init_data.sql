@@ -2,7 +2,7 @@ insert into workflow
 values (1,
         'system',
         'Graph.InstallCentOS',
-        '安装Centos7 64位版',
+        '安装 Centos7 64位版',
         'POST_OS_WORKFLOW_START',
         '[\'DELL\', \'HP\', \'Inspur\']',
         'true',

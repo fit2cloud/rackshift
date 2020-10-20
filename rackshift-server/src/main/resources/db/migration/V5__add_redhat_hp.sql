@@ -41,3 +41,16 @@ values (10,
         null,
         'enable',
         now());
+
+insert into workflow
+values (11,
+        'system',
+        'Graph.InstallRHEL',
+        '安装 RedHat7 64位版',
+        'POST_OS_WORKFLOW_START',
+        '[\'DELL\', \'HP\', \'Inspur\']',
+        'true',
+        null,
+        'enable',
+        now());
+

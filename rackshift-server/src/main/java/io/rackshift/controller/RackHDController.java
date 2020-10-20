@@ -44,7 +44,54 @@ public class RackHDController {
                 "\t\t\t\"name\": \"7.6\"\n" +
                 "\t\t}\n" +
                 "\t]\n" +
-                "}]";
+                "},\n" +
+                "{\n" +
+                "\t\"id\": \"redhat\",\n" +
+                "\t\"name\": \"RedHat 64位\",\n" +
+                "\t\"versions\": [\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"7\"\n" +
+                "\t\t}\n" +
+                "\t]\n" +
+                "}\n" +
+                "]\n" +
+                "\n";
         return ResultHolder.success(JSONArray.parseArray(osAndVersionsStr));
+    }
+
+    public static void main(String[] args) {
+        String osAndVersionsStr = "[\n" +
+                "  {\n" +
+                "\t\"id\": \"centos\",\n" +
+                "\t\"name\": \"Centos 64位\",\n" +
+                "\t\"versions\": [{\n" +
+                "\t\t\t\"name\": \"5\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"6\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"7\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"7.4\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"7.6\"\n" +
+                "\t\t}\n" +
+                "\t]\n" +
+                "},\n" +
+                "{\n" +
+                "\t\"id\": \"redhat\",\n" +
+                "\t\"name\": \"RedHat 64位\",\n" +
+                "\t\"versions\": [\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"7\"\n" +
+                "\t\t}\n" +
+                "\t]\n" +
+                "}\n" +
+                "]\n" +
+                "\n";
+        System.out.println(osAndVersionsStr);
     }
 }
