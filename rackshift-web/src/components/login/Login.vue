@@ -18,7 +18,7 @@
             <el-input type="text" v-model="ruleForm.userName" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item :label="$t('password')" prop="password">
-            <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
+            <el-input type="password" v-model="ruleForm.password" autocomplete="off" show-password></el-input>
           </el-form-item>
 
           <div class="btn">
@@ -58,7 +58,7 @@
 
 .title > #s2 {
   color: #151515;
-  font-size: 20px !important;
+  font-size: 32px !important;
 }
 
 .login-container {

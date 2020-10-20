@@ -262,6 +262,7 @@
             :visible.sync="detailDrawer"
             direction="rtl"
             :with-header="false"
+            size="50%"
             :before-close="handleClose">
           <div class="demo-drawer__content">
             <el-tabs v-model="detailShowName">

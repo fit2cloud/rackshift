@@ -1,7 +1,7 @@
 <template>
   <el-tabs style="width:80vw;" v-model="activeName" @tab-click="refreshChildData">
     <el-tab-pane :label="$t('discovery')" name="discovery">
-      <div class="container">
+      <div class="container-discovery">
 
         <div class="machine-title">
           <el-button-group class="batch-button">
@@ -113,7 +113,7 @@
 
       </div>
     </el-tab-pane>
-    <el-tab-pane :label="$t('discoveryed_devices')" name="devices">
+    <el-tab-pane :label="$t('discoveryed_devices')" name="devices" style="overflow: scroll">
       <Devices ref="device"></Devices>
     </el-tab-pane>
   </el-tabs>
@@ -340,6 +340,13 @@ export default {
 
 .mr10 {
   margin-right: 10px;
+}
+
+.container-discovery {
+  padding: 10px;
+  background: #fff;
+  width: 100%;
+  height: calc(100vh - 125px);
 }
 
 </style>

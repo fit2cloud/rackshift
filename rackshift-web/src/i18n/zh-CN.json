@@ -216,5 +216,15 @@
   "user": "用户",
   "Wizard": "使用向导",
   "edit_workflow": "编辑工作流",
-  "Plugin": "插件"
+  "Plugin": "插件",
+  "pls_input_username": "请输入用户名",
+  "pls_input_password": "请输入密码",
+  "pls_input_params": "请输入参数",
+  "pls_select_username": "请选择用户名",
+  "pls_select_password": "请选择密码",
+  "pls_select_": "请选择",
+  "pls_input_hostname": "请输入hostname",
+  "hostname_must_not_have_invalid_word": "hostname不合法",
+  "cannt_be_null": "参数不能为空",
+  "invalid_format": "参数格式错误"
 }
