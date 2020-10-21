@@ -31,20 +31,16 @@
           </el-table-column>
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
-              <el-button
-                  type="button"
-                  icon="el-icon-edit"
-                  @click="viewDetail(scope.row)"
-              >{{ $t('view_detail') }}
-              </el-button>
+              <!--              <el-button-->
+              <!--                  type="button"-->
+              <!--                  icon="el-icon-edit"-->
+              <!--                  @click="viewDetail(scope.row)"-->
+              <!--              >{{ $t('view_detail') }}-->
+              <!--              </el-button>-->
 
-              <el-button
-                  type="button"
-                  icon="el-icon-delete"
-                  class="red"
-                  @click="handleEdit(scope.row, 'del')"
-              >{{ $t('del') }}
-              </el-button>
+              <RSButton @click="viewDetail(scope.row)" :tip="$t('view')"></RSButton>
+              <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
+
             </template>
           </el-table-column>
         </el-table>

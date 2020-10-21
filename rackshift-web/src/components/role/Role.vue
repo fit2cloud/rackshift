@@ -39,19 +39,8 @@
           </el-table-column>
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
-              <el-button
-                  type="button"
-                  icon="el-icon-edit"
-                  @click="handleEdit(scope.row, 'edit')"
-              >{{ $t('edit') }}
-              </el-button>
-              <el-button
-                  type="button"
-                  icon="el-icon-delete"
-                  class="red"
-                  @click="handleEdit(scope.row, 'del')"
-              >{{ $t('del') }}
-              </el-button>
+              <RSButton @click="handleEdit(scope.row, 'edit')"></RSButton>
+              <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
             </template>
           </el-table-column>
         </el-table>

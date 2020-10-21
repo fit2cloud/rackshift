@@ -82,6 +82,9 @@ import ElementUI, {
     Tree,
     Upload
 } from 'element-ui';
+import RSButton from './common/button/rsbutton/index';
+
+Vue.use(RSButton);
 // import 'element-ui/lib/theme-chalk/index.css';
 import '../theme/index.css'
 
@@ -179,7 +182,6 @@ Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 
 Vue.config.productionTip = false
-
 new Vue({
     router,
     i18n,

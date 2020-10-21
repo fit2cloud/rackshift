@@ -27,15 +27,15 @@
           <el-table-column type="selection" align="left"></el-table-column>
 
           <el-table-column :prop="c.prop" :label="c.label" align="left"
-                           v-for="c in columns" sortable></el-table-column>
+                           v-for="c in columns" sortable :formatter="getValidProText"></el-table-column>
 
           <el-table-column prop="settable" :label="$t('user_settable')" align="left">
             <template slot-scope="scope">
-              {{ scope.row.settable }}
+              {{ scope.row.settable | enabled }}
             </template>
           </el-table-column>
 
-          <el-table-column prop="settable" :label="$t('event_type')" align="left">
+          <el-table-column prop="eventType" :label="$t('event_type')" align="left">
             <template slot-scope="scope">
               {{ scope.row.eventType | eventFormat }}
             </template>
@@ -49,7 +49,7 @@
 
           <el-table-column prop="status" :label="$t('status')" align="left">
             <template slot-scope="scope">
-              {{ scope.row.status }}
+              {{ scope.row.status | enabled }}
             </template>
           </el-table-column>
 
@@ -61,21 +61,16 @@
 
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
-              <el-button
-                  type="button"
-                  icon="el-icon-edit"
-                  @click="handleEdit(scope.row, 'edit')"
-              >{{ $t('edit') }}
-              </el-button>
+              <RSButton @click="handleEdit(scope.row, 'edit')"></RSButton>
+              <RSButton v-if="scope.row.type != 'system'" icon="el-icon-delete" @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
 
-              <el-button
-                  type="button"
-                  icon="el-icon-delete"
-                  class="red"
-                  v-if="scope.row.type != 'system'"
-                  @click="handleEdit(scope.row, 'del')"
-              >{{ $t('del') }}
-              </el-button>
+<!--              <el-button-->
+<!--                  type="button"-->
+<!--                  icon="el-icon-delete"-->
+<!--                  class="red"-->
+<!--                  v-if="scope.row.type != 'system'"-->
+<!--                  @click="handleEdit(scope.row, 'del')"-->
+<!--              >{{ $t('del') }}-->
             </template>
           </el-table-column>
         </el-table>
@@ -174,6 +169,7 @@
 
 import HttpUtil from "../../common/utils/HttpUtil"
 import Vue from "vue"
+import i18n from "@/i18n/i18n";
 
 Vue.filter('eventFormat', function (name) {
   let allEventType = [];
@@ -250,7 +246,27 @@ export default {
     this.getAllRackHDWorkflows();
     this.getAllEventType();
   },
+  filters: {
+    enabled: function (v) {
+      if (v) {
+        return i18n.t("enabled");
+      } else {
+        return i18n.t("disabled");
+      }
+    }
+  },
   methods: {
+    getValidProText(row, column, cellValue, index) {
+      if (column.property == 'type') {
+        return this.$t(cellValue);
+      }
+      if (cellValue === true) {
+        return this.$t("enabled");
+      } else if (cellValue === false) {
+        return this.$t("disabled");
+      }
+      return cellValue;
+    },
     getAllRackHDWorkflows: function () {
       HttpUtil.get("workflow/listallRackHDWorkflows", null, (res) => {
         this.allRackHDWorkflows = res.data;

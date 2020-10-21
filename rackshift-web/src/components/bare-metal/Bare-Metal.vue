@@ -385,9 +385,9 @@
 
       </div>
     </el-tab-pane>
-    <el-tab-pane :label="$t('obm')" name="second">
-      <OBM></OBM>
-    </el-tab-pane>
+<!--    <el-tab-pane :label="$t('obm')" name="second">-->
+<!--      <OBM></OBM>-->
+<!--    </el-tab-pane>-->
 
   </el-tabs>
 </template>

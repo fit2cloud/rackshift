@@ -79,7 +79,7 @@ export default {
     "endIp": "End IP",
     "image": "Mirror",
     "create_time": "Create Time",
-    "vlanId": "vlanId",
+    "vlanId": "VlanId",
     "pls_select_": "Please select",
     "please_select": "Please select",
     "sync": "Sync",
@@ -237,4 +237,8 @@ export default {
     "zh_CN": "简体中文",
     "zh_TW": "繁體中文",
     "en_US": "English",
+    "enabled": "enabled",
+    "disabled": "disabled",
+    "system": "system",
+    "delete": "delete",
 };

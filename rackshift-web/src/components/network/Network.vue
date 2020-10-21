@@ -33,6 +33,7 @@
 
           <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="left"
                            v-for="c in columns" sortable></el-table-column>
+
           <el-table-column prop="createTime" :label="$t('create_time')" align="left">
             <template slot-scope="scope">
               {{ scope.row.createTime | dateFormat }}
@@ -40,20 +41,8 @@
           </el-table-column>
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
-              <el-button
-                  type="button"
-                  icon="el-icon-edit"
-                  @click="handleEdit(scope.row, 'edit')"
-              >{{ $t('edit') }}
-              </el-button>
-
-              <el-button
-                  type="button"
-                  icon="el-icon-delete"
-                  class="red"
-                  @click="handleEdit(scope.row, 'del')"
-              >{{ $t('del') }}
-              </el-button>
+              <RSButton @click="handleEdit(scope.row, 'edit')"></RSButton>
+              <RSButton icon="el-icon-delete" @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
             </template>
           </el-table-column>
         </el-table>

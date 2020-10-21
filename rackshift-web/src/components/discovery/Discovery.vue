@@ -343,7 +343,6 @@ export default {
 }
 
 .container-discovery {
-  padding: 10px;
   background: #fff;
   width: 100%;
   height: calc(100vh - 125px);
