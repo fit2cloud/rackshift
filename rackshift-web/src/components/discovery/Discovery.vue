@@ -113,7 +113,7 @@
 
       </div>
     </el-tab-pane>
-    <el-tab-pane :label="$t('discoveryed_devices')" name="devices" style="overflow: scroll">
+    <el-tab-pane :label="$t('discoveryed_devices')" name="devices">
       <Devices ref="device"></Devices>
     </el-tab-pane>
   </el-tabs>

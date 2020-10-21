@@ -127,10 +127,12 @@ export default {
       },
       rules: {
         userName: [
-          {validator: validateUser, trigger: 'blur'}
+          // {validator: validateUser, trigger: 'blur'}
+          {required: true, message: this.$t('commons.input_login_username'), trigger: 'blur'},
         ],
         password: [
-          {validator: validateUser, trigger: 'blur'}
+          // {validator: validateUser, trigger: 'blur'}
+          {required: true, message: this.$t('commons.input_login_username'), trigger: 'blur'},
         ]
       },
       msg: null
@@ -167,7 +169,11 @@ export default {
             localStorage.setItem('first', true);
             window.location.href = "/";
           }, (msg) => {
-            this.msg = msg;
+            if (msg && msg.indexOf('Authentication failed for token submission') != -1) {
+              this.$message.error(this.$t('username_pwd_error_login_fail'));
+            } else {
+              this.$message.error(this.$t('login_fail'));
+            }
           })
         } else {
           console.log('error submit!!');

@@ -61,7 +61,7 @@
     </div>
 
     <el-dialog :title="$t('add_to_device')" :visible.sync="deviceDialogVisible">
-      <el-form :model="dForm">
+      <el-form>
         <el-row>
           <el-col :span="deviceDialogWidth">
             <el-form-item :label="$t('machine_model')" :label-width="formLabelWidth">
@@ -167,6 +167,7 @@ export default {
       idx: -1,
       id: -1,
       loading: false,
+      formLabelWidth: '80px',
       columns: [
         {
           label: this.$t('name'),
@@ -293,7 +294,6 @@ export default {
         this.editDialogVisible = true;
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
-        this.changeOsVersion();
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'

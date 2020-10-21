@@ -1,94 +1,101 @@
 <template>
-  <div class="container">
 
-    <div class="machine-title">
-      <div class="el-button-group batch-button">
-        <button type="button" class="el-button el-button--primary" @click="delAllSelection"><i
-            class="el-icon-delete"></i>{{ $t('batch_del') }}
-        </button>
-      </div>
-    </div>
+  <el-tabs style="width:80vw;" v-model="activeName">
+    <el-tab-pane :label="$t('ExecutionLog')" name="execution-log">
+      <div class="container">
 
-    <el-table
-        :data="tableData"
-        class="table"
-        ref="multipleTable"
-        v-loading="loadingList"
-        header-cell-class-name="table-header"
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" align="left"></el-table-column>
-      <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="left"
-                       v-for="c in columns" sortable></el-table-column>
-      <el-table-column prop="createTime" :label="$t('create_time')" align="left">
-        <template slot-scope="scope">
-          {{ scope.row.createTime | dateFormat }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="" :label="$t('opt')" align="left">
-        <template slot-scope="scope">
-          <el-button
-              type="button"
-              icon="el-icon-edit"
-              @click="viewDetail(scope.row)"
-          >{{ $t('view_detail') }}
-          </el-button>
-
-          <el-button
-              type="button"
-              icon="el-icon-delete"
-              class="red"
-              @click="handleEdit(scope.row, 'del')"
-          >{{ $t('del') }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <div class="pagination">
-      <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handlePageChange"
-          :current-page="query.pageIndex"
-          :page-sizes="[10, 20, 50, 100]"
-          :page-size="10"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pageTotal">
-      </el-pagination>
-    </div>
-
-    <el-drawer
-        size="50%"
-        :title="editType == 'edit' ? $t('edit_execution_log') : $t('add_execution_log')"
-        :visible.sync="editDialogVisible"
-        :wrapperClosable="false"
-        direction="ttb"
-        :before-close="handleClose">
-      <div class="demo-drawer__content">
-        <el-card>
-          <table class="detail-info">
-            <tr>
-              <td>{{ $t('time') }}</td>
-              <td>{{ $t('user') }}</td>
-              <td>{{ $t('operation') }}</td>
-              <td>{{ $t('output') }}</td>
-            </tr>
-            <tr v-for="l in detailLogs">
-              <td>{{ l.createTime | dateFormat }}</td>
-              <td>{{ l.user }}</td>
-              <td>{{ l.operation }}</td>
-              <td>{{ l.outPut }}</td>
-            </tr>
-          </table>
-        </el-card>
-        <div class="demo-drawer__footer fr">
-          <el-button @click="editDialogVisible = false">{{ $t('close') }}</el-button>
+        <div class="machine-title">
+          <div class="el-button-group batch-button">
+            <button type="button" class="el-button el-button--primary" @click="delAllSelection"><i
+                class="el-icon-delete"></i>{{ $t('batch_del') }}
+            </button>
+          </div>
         </div>
-      </div>
-    </el-drawer>
 
-  </div>
+        <el-table
+            :data="tableData"
+            class="table"
+            ref="multipleTable"
+            v-loading="loadingList"
+            header-cell-class-name="table-header"
+            style="width: 100%"
+            @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="selection" align="left"></el-table-column>
+          <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="left"
+                           v-for="c in columns" sortable></el-table-column>
+          <el-table-column prop="createTime" :label="$t('create_time')" align="left">
+            <template slot-scope="scope">
+              {{ scope.row.createTime | dateFormat }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="" :label="$t('opt')" align="left">
+            <template slot-scope="scope">
+              <el-button
+                  type="button"
+                  icon="el-icon-edit"
+                  @click="viewDetail(scope.row)"
+              >{{ $t('view_detail') }}
+              </el-button>
+
+              <el-button
+                  type="button"
+                  icon="el-icon-delete"
+                  class="red"
+                  @click="handleEdit(scope.row, 'del')"
+              >{{ $t('del') }}
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div class="pagination">
+          <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handlePageChange"
+              :current-page="query.pageIndex"
+              :page-sizes="[10, 20, 50, 100]"
+              :page-size="10"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="pageTotal">
+          </el-pagination>
+        </div>
+
+        <el-drawer
+            size="50%"
+            :title="editType == 'edit' ? $t('edit_execution_log') : $t('add_execution_log')"
+            :visible.sync="editDialogVisible"
+            :wrapperClosable="false"
+            direction="ttb"
+            :before-close="handleClose">
+          <div class="demo-drawer__content">
+            <el-card>
+              <table class="detail-info">
+                <tr>
+                  <td>{{ $t('time') }}</td>
+                  <td>{{ $t('user') }}</td>
+                  <td>{{ $t('operation') }}</td>
+                  <td>{{ $t('output') }}</td>
+                </tr>
+                <tr v-for="l in detailLogs">
+                  <td>{{ l.createTime | dateFormat }}</td>
+                  <td>{{ l.user }}</td>
+                  <td>{{ l.operation }}</td>
+                  <td>{{ l.outPut }}</td>
+                </tr>
+              </table>
+            </el-card>
+            <div class="demo-drawer__footer fr">
+              <el-button @click="editDialogVisible = false">{{ $t('close') }}</el-button>
+            </div>
+          </div>
+        </el-drawer>
+
+      </div>
+    </el-tab-pane>
+  </el-tabs>
+
+
 </template>
 
 <script>
@@ -99,6 +106,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      activeName: 'execution-log',
       query: {
         name: '',
         pageIndex: 1,

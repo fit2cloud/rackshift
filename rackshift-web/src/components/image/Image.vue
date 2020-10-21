@@ -1,137 +1,142 @@
 <template>
-  <div class="container">
+  <el-tabs style="width:80vw;" v-model="activeName">
+    <el-tab-pane :label="$t('image')" name="image">
+      <div class="container">
 
-    <div class="machine-title">
-      <el-button-group class="batch-button">
-        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
-            $t('add')
-          }}
-        </el-button>
-        <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
-        </el-button>
-        <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
-      </el-button-group>
-    </div>
-
-    <el-table
-        :data="tableData"
-        class="table"
-        ref="multipleTable"
-        v-loading="loadingList"
-        header-cell-class-name="table-header"
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" align="left"></el-table-column>
-      <el-table-column prop="endpointId" :label="$t('endpoint')" align="left">
-        <template slot-scope="scope">
-          {{ scope.row.endpointId | endpointFormat }}
-        </template>
-      </el-table-column>
-
-      <el-table-column :prop="c.prop" :label="c.label" align="left"
-                       v-for="c in columns" sortable></el-table-column>
-      <el-table-column prop="updateTime" :label="$t('update_time')" align="left">
-        <template slot-scope="scope">
-          {{ scope.row.updateTime | dateFormat }}
-        </template>
-      </el-table-column>
-
-      <el-table-column prop="" :label="$t('opt')" align="left">
-        <template slot-scope="scope">
-          <el-button
-              type="button"
-              icon="el-icon-edit"
-              @click="handleEdit(scope.row, 'edit')"
-          >{{ $t('edit') }}
-          </el-button>
-
-          <el-button
-              type="button"
-              icon="el-icon-delete"
-              class="red"
-              @click="handleEdit(scope.row, 'del')"
-          >{{ $t('del') }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <div class="pagination">
-      <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handlePageChange"
-          :current-page="query.pageIndex"
-          :page-sizes="[10, 20, 50, 100]"
-          :page-size="10"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pageTotal">
-      </el-pagination>
-    </div>
-
-    <el-drawer
-        :title="editType == 'edit' ? $t('edit_image') : $t('add_image')"
-        :visible.sync="editDialogVisible"
-        direction="rtl"
-        size="40%"
-        :wrapperClosable="false"
-        :before-close="handleClose">
-      <div class="demo-drawer__content">
-        <el-form :model="editObj" :rules="rules" ref="form" label-width="50px" :label-position="labelPosition">
-          <el-form-item :label="$t('name')" prop="name">
-            <el-input v-model="editObj.name" autocomplete="off"></el-input>
-          </el-form-item>
-
-          <el-form-item :label="$t('os')" prop="os">
-            <el-select v-model="editObj.os" :placeholder="$t('pls_select')" v-on:change="changeOsVersion">
-              <el-option
-                  v-for="(item, key) in allOs"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item :label="$t('os_version')" prop="osVersion">
-            <el-select v-model="editObj.osVersion" :placeholder="$t('pls_input_os_version')">
-              <el-option
-                  v-for="(item, key) in allOsVersion"
-                  :key="item.name"
-                  :label="item.name"
-                  :value="item.name">
-              </el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item>
-            <el-upload
-                class="upload-demo"
-                drag
-                :on-success="afterUploadSuccess"
-                action="/image/upload"
-                accept="application/x-iso9660-image"
-                :multiple=false
-                style="margin-bottom: 20px;"
-            >
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-              <div class="el-upload__tip" slot="tip">只能上传ISO文件，且不超过10GB</div>
-            </el-upload>
-          </el-form-item>
-
-        </el-form>
-        <div class="demo-drawer__footer">
-          <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
-          <el-button type="primary" @click="confirmEdit" :loading="loading">{{
-              loading ? $t('submitting') +
-                  '...' : $t('confirm')
-            }}
-          </el-button>
+        <div class="machine-title">
+          <el-button-group class="batch-button">
+            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
+                $t('add')
+              }}
+            </el-button>
+            <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
+            </el-button>
+            <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
+          </el-button-group>
         </div>
-      </div>
-    </el-drawer>
 
-  </div>
+        <el-table
+            :data="tableData"
+            class="table"
+            ref="multipleTable"
+            v-loading="loadingList"
+            header-cell-class-name="table-header"
+            style="width: 100%"
+            @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="selection" align="left"></el-table-column>
+          <el-table-column prop="endpointId" :label="$t('endpoint')" align="left">
+            <template slot-scope="scope">
+              {{ scope.row.endpointId | endpointFormat }}
+            </template>
+          </el-table-column>
+
+          <el-table-column :prop="c.prop" :label="c.label" align="left"
+                           v-for="c in columns" sortable></el-table-column>
+          <el-table-column prop="updateTime" :label="$t('update_time')" align="left">
+            <template slot-scope="scope">
+              {{ scope.row.updateTime | dateFormat }}
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="" :label="$t('opt')" align="left">
+            <template slot-scope="scope">
+              <el-button
+                  type="button"
+                  icon="el-icon-edit"
+                  @click="handleEdit(scope.row, 'edit')"
+              >{{ $t('edit') }}
+              </el-button>
+
+              <el-button
+                  type="button"
+                  icon="el-icon-delete"
+                  class="red"
+                  @click="handleEdit(scope.row, 'del')"
+              >{{ $t('del') }}
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div class="pagination">
+          <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handlePageChange"
+              :current-page="query.pageIndex"
+              :page-sizes="[10, 20, 50, 100]"
+              :page-size="10"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="pageTotal">
+          </el-pagination>
+        </div>
+
+        <el-drawer
+            :title="editType == 'edit' ? $t('edit_image') : $t('add_image')"
+            :visible.sync="editDialogVisible"
+            direction="rtl"
+            size="40%"
+            :wrapperClosable="false"
+            :before-close="handleClose">
+          <div class="demo-drawer__content">
+            <el-form :model="editObj" :rules="rules" ref="form" label-width="50px" :label-position="labelPosition">
+              <el-form-item :label="$t('name')" prop="name">
+                <el-input v-model="editObj.name" autocomplete="off"></el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('os')" prop="os">
+                <el-select v-model="editObj.os" :placeholder="$t('pls_select')" v-on:change="changeOsVersion">
+                  <el-option
+                      v-for="(item, key) in allOs"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="$t('os_version')" prop="osVersion">
+                <el-select v-model="editObj.osVersion" :placeholder="$t('pls_input_os_version')">
+                  <el-option
+                      v-for="(item, key) in allOsVersion"
+                      :key="item.name"
+                      :label="item.name"
+                      :value="item.name">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+
+              <el-form-item>
+                <el-upload
+                    class="upload-demo"
+                    drag
+                    :on-success="afterUploadSuccess"
+                    action="/image/upload"
+                    accept="application/x-iso9660-image"
+                    :multiple=false
+                    style="margin-bottom: 20px;"
+                >
+                  <i class="el-icon-upload"></i>
+                  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                  <div class="el-upload__tip" slot="tip">只能上传ISO文件，且不超过10GB</div>
+                </el-upload>
+              </el-form-item>
+
+            </el-form>
+            <div class="demo-drawer__footer">
+              <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
+              <el-button type="primary" @click="confirmEdit" :loading="loading">{{
+                  loading ? $t('submitting') +
+                      '...' : $t('confirm')
+                }}
+              </el-button>
+            </div>
+          </div>
+        </el-drawer>
+
+      </div>
+    </el-tab-pane>
+  </el-tabs>
+
 </template>
 
 <script>
@@ -143,6 +148,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      activeName: 'image',
       rules: {
         name: [
           {validator: requiredValidator, trigger: 'blur', vue: this},

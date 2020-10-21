@@ -1,132 +1,136 @@
 <template>
-  <div class="container">
+  <el-tabs style="width:80vw;" v-model="activeName">
+    <el-tab-pane :label="$t('endpoint')" name="endpoint">
+      <div class="container">
 
-    <div class="machine-title">
-      <el-button-group class="batch-button">
-        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
-            $t('add')
-          }}
-        </el-button>
-        <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
-        </el-button>
-        <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
-      </el-button-group>
-    </div>
+        <div class="machine-title">
+          <el-button-group class="batch-button">
+            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
+                $t('add')
+              }}
+            </el-button>
+            <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
+            </el-button>
+            <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
+          </el-button-group>
+        </div>
 
-    <el-table
-        :data="tableData"
-        class="table"
-        ref="multipleTable"
-        v-loading="loadingList"
-        header-cell-class-name="table-header"
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" align="left"></el-table-column>
+        <el-table
+            :data="tableData"
+            class="table"
+            ref="multipleTable"
+            v-loading="loadingList"
+            header-cell-class-name="table-header"
+            style="width: 100%"
+            @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="selection" align="left"></el-table-column>
 
-      <el-table-column :prop="c.prop" :label="c.label" align="left"
-                       v-for="c in columns" sortable></el-table-column>
+          <el-table-column :prop="c.prop" :label="c.label" align="left"
+                           v-for="c in columns" sortable></el-table-column>
 
-      <el-table-column prop="type" :label="$t('type')" align="left">
-        <template slot-scope="scope">
-          {{ scope.row.type | endpointType }}
-        </template>
-      </el-table-column>
+          <el-table-column prop="type" :label="$t('type')" align="left">
+            <template slot-scope="scope">
+              {{ scope.row.type | endpointType }}
+            </template>
+          </el-table-column>
 
-      <el-table-column prop="ip" :label="$t('ip')" align="left">
-        <template slot-scope="scope">
-          {{ scope.row.ip }}
-        </template>
-      </el-table-column>
+          <el-table-column prop="ip" :label="$t('ip')" align="left">
+            <template slot-scope="scope">
+              {{ scope.row.ip }}
+            </template>
+          </el-table-column>
 
-      <el-table-column prop="createTime" :label="$t('create_time')" align="left">
-        <template slot-scope="scope">
-          {{ scope.row.createTime | dateFormat }}
-        </template>
-      </el-table-column>
+          <el-table-column prop="createTime" :label="$t('create_time')" align="left">
+            <template slot-scope="scope">
+              {{ scope.row.createTime | dateFormat }}
+            </template>
+          </el-table-column>
 
-      <el-table-column prop="status" :label="$t('status')" align="left">
-        <template slot-scope="scope">
+          <el-table-column prop="status" :label="$t('status')" align="left">
+            <template slot-scope="scope">
           <span v-if="scope.row.status == 'Online'" style="color:#67C23A">
             Online
           </span>
-          <span v-if="scope.row.status == 'Offline'" style="color:#909399">
+              <span v-if="scope.row.status == 'Offline'" style="color:#909399">
             Offline
           </span>
-        </template>
-      </el-table-column>
+            </template>
+          </el-table-column>
 
-      <el-table-column prop="" :label="$t('opt')" align="left">
-        <template slot-scope="scope">
-          <el-button
-              type="button"
-              icon="el-icon-edit"
-              @click="handleEdit(scope.row, 'edit')"
-          >{{ $t('edit') }}
-          </el-button>
+          <el-table-column prop="" :label="$t('opt')" align="left">
+            <template slot-scope="scope">
+              <el-button
+                  type="button"
+                  icon="el-icon-edit"
+                  @click="handleEdit(scope.row, 'edit')"
+              >{{ $t('edit') }}
+              </el-button>
 
-          <el-button
-              type="button"
-              icon="el-icon-delete"
-              class="red"
-              @click="handleEdit(scope.row, 'del')"
-          >{{ $t('del') }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+              <el-button
+                  type="button"
+                  icon="el-icon-delete"
+                  class="red"
+                  @click="handleEdit(scope.row, 'del')"
+              >{{ $t('del') }}
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
 
-    <div class="pagination">
-      <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handlePageChange"
-          :current-page="query.pageIndex"
-          :page-sizes="[10, 20, 50, 100]"
-          :page-size="10"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pageTotal">
-      </el-pagination>
-    </div>
-
-    <el-drawer
-        :title="editType == 'edit' ? $t('edit_endpoint') : $t('add_endpoint')"
-        :visible.sync="editDialogVisible"
-        :wrapperClosable="false"
-        direction="rtl"
-        :before-close="handleClose">
-      <div class="demo-drawer__content">
-        <el-form :model="editObj" labelPosition="top">
-
-          <el-form-item :label="$t('name')">
-            <el-input v-model="editObj.name" autocomplete="off"
-                      :placeholder="$t('pls_input_param_value')"></el-input>
-          </el-form-item>
-
-          <el-form-item :label="$t('type')">
-
-            <el-select v-model="editObj.type">
-              <el-option v-for="t in allEndPointType" :label="t.name" :value="t.value"></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item :label="$t('ip')">
-            <el-input v-model="editObj.ip" autocomplete="off"
-                      :placeholder="$t('pls_input_param_value')"></el-input>
-          </el-form-item>
-
-        </el-form>
-        <div class="demo-drawer__footer">
-          <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
-          <el-button type="primary" @click="confirmEdit" :loading="loading">{{
-              loading ? $t('submitting') +
-                  '...' : $t('confirm')
-            }}
-          </el-button>
+        <div class="pagination">
+          <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handlePageChange"
+              :current-page="query.pageIndex"
+              :page-sizes="[10, 20, 50, 100]"
+              :page-size="10"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="pageTotal">
+          </el-pagination>
         </div>
-      </div>
-    </el-drawer>
 
-  </div>
+        <el-drawer
+            :title="editType == 'edit' ? $t('edit_endpoint') : $t('add_endpoint')"
+            :visible.sync="editDialogVisible"
+            :wrapperClosable="false"
+            direction="rtl"
+            :before-close="handleClose">
+          <div class="demo-drawer__content">
+            <el-form :model="editObj" labelPosition="top">
+
+              <el-form-item :label="$t('name')">
+                <el-input v-model="editObj.name" autocomplete="off"
+                          :placeholder="$t('pls_input_param_value')"></el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('type')">
+
+                <el-select v-model="editObj.type">
+                  <el-option v-for="t in allEndPointType" :label="t.name" :value="t.value"></el-option>
+                </el-select>
+              </el-form-item>
+
+              <el-form-item :label="$t('ip')">
+                <el-input v-model="editObj.ip" autocomplete="off"
+                          :placeholder="$t('pls_input_param_value')"></el-input>
+              </el-form-item>
+
+            </el-form>
+            <div class="demo-drawer__footer">
+              <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
+              <el-button type="primary" @click="confirmEdit" :loading="loading">{{
+                  loading ? $t('submitting') +
+                      '...' : $t('confirm')
+                }}
+              </el-button>
+            </div>
+          </div>
+        </el-drawer>
+
+      </div>
+    </el-tab-pane>
+  </el-tabs>
 </template>
 
 <script>
@@ -151,6 +155,7 @@ Vue.filter('endpointType', function (type) {
 export default {
   data() {
     return {
+      activeName: 'endpoint',
       query: {
         name: '',
         pageIndex: 1,

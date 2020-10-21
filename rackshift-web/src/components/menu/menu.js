@@ -95,7 +95,7 @@ export default {
             "icon": "el-icon-s-tools",
             childs: [
                 {
-                    "name": "Endpoint",
+                    "name": i18n.t('endpoint'),
                     "router": "/endpoint",
                     "requireRole": "admin",
                     "order": "13",

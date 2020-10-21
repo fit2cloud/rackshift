@@ -1,114 +1,120 @@
 <template>
-  <div class="container">
-    <div class="machine-title">
-      <div class="el-button-group batch-button">
-        <el-button
-            type="primary"
-            icon="el-icon-delete"
-            class="handle-del mr10"
-            @click="delAllSelection"
-        >{{ $t('batch_del') }}
-        </el-button>
-        <el-button
-            type="primary"
-            icon="el-icon-delete"
-            class="handle-del mr10"
-            @click="handleEdit({}, 'add')"
-        >{{ $t('add') }}
-        </el-button>
-      </div>
-    </div>
-    <el-table
-        :data="tableData"
-        class="table"
-        ref="multipleTable"
-        v-loading="loadingList"
-        header-cell-class-name="table-header"
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" align="left"></el-table-column>
-      <el-table-column :prop="c.prop" :label="c.label" align="left"
-                       v-for="c in columns"></el-table-column>
-      <el-table-column prop="updateTime" :label="$t('update_time')" align="left">
-        <template slot-scope="scope">
-          {{ scope.row.updateTime | dateFormat }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="" :label="$t('opt')" align="left">
-        <template slot-scope="scope">
-          <el-button
-              type="button"
-              icon="el-icon-edit"
-              @click="handleEdit(scope.row, 'edit')"
-          >{{ $t('edit') }}
-          </el-button>
-          <el-button
-              type="button"
-              icon="el-icon-delete"
-              class="red"
-              @click="handleEdit(scope.row, 'del')"
-          >{{ $t('del') }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="pagination">
-      <el-pagination
-          background
-          layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
-          :page-size="query.pageSize"
-          :total="pageTotal"
-          @current-change="handlePageChange"
-      ></el-pagination>
-    </div>
-
-    <el-drawer
-        :title="editType == 'edit' ? '编辑用户' : '新增用户'"
-        :visible.sync="drawer"
-        direction="rtl"
-        :wrapperClosable="false"
-        :before-close="handleClose">
-      <div class="demo-drawer__content">
-        <el-form :model="editObj">
-          <el-form-item label="ID" :label-width="formLabelWidth">
-            <el-input v-model="editObj.id" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('name')" :label-width="formLabelWidth">
-            <el-input v-model="editObj.name" autocomplete="off"
-                      :placeholder="$t('pls_input_name')"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('email')" :label-width="formLabelWidth">
-            <el-input v-model="editObj.email" autocomplete="off"
-                      :placeholder="$t('pls_input_email')"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('phone')" :label-width="formLabelWidth">
-            <el-input v-model="editObj.phone" autocomplete="off"
-                      :placeholder="$t('pls_input_phone')"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('role')" :label-width="formLabelWidth">
-            <el-select v-model="editObj.rolesIds" multiple :placeholder="$t('pls_select')">
-              <el-option
-                  v-for="(item, key) in allRoles"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <div class="demo-drawer__footer">
-          <el-button @click="cancelForm">{{ $t('cancel') }}</el-button>
-          <el-button type="primary" @click="confirmEdit" :loading="loading">{{
-              loading ? $t('submitting') +
-                  '...' : $t('confirm')
-            }}
-          </el-button>
+  <el-tabs style="width:80vw;" v-model="activeName">
+    <el-tab-pane :label="$t('user')" name="user">
+      <div class="container">
+        <div class="machine-title">
+          <div class="el-button-group batch-button">
+            <el-button
+                type="primary"
+                icon="el-icon-delete"
+                class="handle-del mr10"
+                @click="delAllSelection"
+            >{{ $t('batch_del') }}
+            </el-button>
+            <el-button
+                type="primary"
+                icon="el-icon-delete"
+                class="handle-del mr10"
+                @click="handleEdit({}, 'add')"
+            >{{ $t('add') }}
+            </el-button>
+          </div>
         </div>
+        <el-table
+            :data="tableData"
+            class="table"
+            ref="multipleTable"
+            v-loading="loadingList"
+            header-cell-class-name="table-header"
+            style="width: 100%"
+            @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="selection" align="left"></el-table-column>
+          <el-table-column :prop="c.prop" :label="c.label" align="left"
+                           v-for="c in columns"></el-table-column>
+          <el-table-column prop="updateTime" :label="$t('update_time')" align="left">
+            <template slot-scope="scope">
+              {{ scope.row.updateTime | dateFormat }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="" :label="$t('opt')" align="left">
+            <template slot-scope="scope">
+              <el-button
+                  type="button"
+                  icon="el-icon-edit"
+                  @click="handleEdit(scope.row, 'edit')"
+              >{{ $t('edit') }}
+              </el-button>
+              <el-button
+                  type="button"
+                  icon="el-icon-delete"
+                  class="red"
+                  @click="handleEdit(scope.row, 'del')"
+              >{{ $t('del') }}
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="pagination">
+          <el-pagination
+              background
+              layout="total, prev, pager, next"
+              :current-page="query.pageIndex"
+              :page-size="query.pageSize"
+              :total="pageTotal"
+              @current-change="handlePageChange"
+          ></el-pagination>
+        </div>
+
+        <el-drawer
+            :title="editType == 'edit' ? '编辑用户' : '新增用户'"
+            :visible.sync="drawer"
+            direction="rtl"
+            :wrapperClosable="false"
+            :before-close="handleClose">
+          <div class="demo-drawer__content">
+            <el-form :model="editObj">
+              <el-form-item label="ID" :label-width="formLabelWidth">
+                <el-input v-model="editObj.id" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('name')" :label-width="formLabelWidth">
+                <el-input v-model="editObj.name" autocomplete="off"
+                          :placeholder="$t('pls_input_name')"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('email')" :label-width="formLabelWidth">
+                <el-input v-model="editObj.email" autocomplete="off"
+                          :placeholder="$t('pls_input_email')"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('phone')" :label-width="formLabelWidth">
+                <el-input v-model="editObj.phone" autocomplete="off"
+                          :placeholder="$t('pls_input_phone')"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('role')" :label-width="formLabelWidth">
+                <el-select v-model="editObj.rolesIds" multiple :placeholder="$t('pls_select')">
+                  <el-option
+                      v-for="(item, key) in allRoles"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+            <div class="demo-drawer__footer">
+              <el-button @click="cancelForm">{{ $t('cancel') }}</el-button>
+              <el-button type="primary" @click="confirmEdit" :loading="loading">{{
+                  loading ? $t('submitting') +
+                      '...' : $t('confirm')
+                }}
+              </el-button>
+            </div>
+          </div>
+        </el-drawer>
       </div>
-    </el-drawer>
-  </div>
+    </el-tab-pane>
+  </el-tabs>
+
+
 </template>
 
 <script>
@@ -118,6 +124,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      activeName: 'user',
       query: {
         address: '',
         name: '',
