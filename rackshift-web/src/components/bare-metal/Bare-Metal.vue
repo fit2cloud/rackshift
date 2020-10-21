@@ -249,13 +249,13 @@
                        :workflow="selectedWorkflow[editWorkflowIndex]"
                        ref="currentWfParamTemplate"></component>
           </keep-alive>
-          <div>
+          <template v-slot:footer>
             <el-button @click="restoreParams">
               <i class="el-icon-refresh"></i>
               {{ $t('reset') }}
             </el-button>
-            <el-button @click="saveParams" :loading="fillWfParamsLoading">{{ $t('confirm') }}</el-button>
-          </div>
+            <el-button type="primary" @click="saveParams" :loading="fillWfParamsLoading">{{ $t('confirm') }}</el-button>
+          </template>
         </el-dialog>
 
         <!--详情页-->
