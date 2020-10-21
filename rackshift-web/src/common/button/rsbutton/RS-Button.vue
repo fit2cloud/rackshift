@@ -6,7 +6,7 @@
         :icon="type == 'del' ? 'el-icon-delete' : 'el-icon-edit' "
         :class="typeClass"
         @click="handleEdit"
-        style="margin-right: 10px;cursor: pointer;"
+        style="cursor: pointer;"
         circle
     >
     </el-button>

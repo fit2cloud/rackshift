@@ -127,12 +127,10 @@ export default {
       },
       rules: {
         userName: [
-          // {validator: validateUser, trigger: 'blur'}
-          {required: true, message: this.$t('commons.input_login_username'), trigger: 'blur'},
+          {validator: validateUser, trigger: 'blur'}
         ],
         password: [
-          // {validator: validateUser, trigger: 'blur'}
-          {required: true, message: this.$t('commons.input_login_username'), trigger: 'blur'},
+          {validator: validateUser, trigger: 'blur'}
         ]
       },
       msg: null

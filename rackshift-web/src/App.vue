@@ -196,10 +196,6 @@ body {
   overflow: scroll;
 }
 
-.el-button + .el-button {
-  margin-left: 0px !important;
-}
-
 .demo-drawer__footer {
   display: flex;
 }
@@ -244,5 +240,9 @@ body {
 
 .el-menu.el-menu--horizontal {
   border: none !important;
+}
+
+button {
+  cursor: pointer;
 }
 </style>

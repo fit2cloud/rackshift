@@ -168,7 +168,7 @@
                   </el-dropdown-item>
                   <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
                   </el-dropdown-item>
-                  <el-dropdown-item @click.native="fillOBM(scope.row)">OBM {{ $t('info') }}
+                  <el-dropdown-item @click.native="fillOBM(scope.row)"> {{ $t('OBM') + $t('info') }}
                   </el-dropdown-item>
                   <el-dropdown-item @click.native="expandChange(scope.row)">{{ $t('view_execution_log') }}
                   </el-dropdown-item>
@@ -229,10 +229,12 @@
               <el-input v-model="curObm.pwd" autocomplete="off" show-password></el-input>
             </el-form-item>
           </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="fillOutObms = false">{{ $t('cancel') }}</el-button>
-            <el-button type="primary" @click="submitOBM" :loading="obmLoading">{{ $t('confirm') }}</el-button>
-          </div>
+          <template v-slot:footer>
+            <div class="dialog-footer">
+              <el-button @click="fillOutObms = false">{{ $t('cancel') }}</el-button>
+              <el-button type="primary" @click="submitOBM" :loading="obmLoading">{{ $t('confirm') }}</el-button>
+            </div>
+          </template>
         </el-dialog>
 
         <!--参数配置-->
@@ -247,12 +249,11 @@
                        :workflow="selectedWorkflow[editWorkflowIndex]"
                        ref="currentWfParamTemplate"></component>
           </keep-alive>
-          <div class="dialog-footer" slot="footer">
+          <div>
             <el-button @click="restoreParams">
               <i class="el-icon-refresh"></i>
               {{ $t('reset') }}
             </el-button>
-
             <el-button @click="saveParams" :loading="fillWfParamsLoading">{{ $t('confirm') }}</el-button>
           </div>
         </el-dialog>
@@ -385,9 +386,9 @@
 
       </div>
     </el-tab-pane>
-<!--    <el-tab-pane :label="$t('obm')" name="second">-->
-<!--      <OBM></OBM>-->
-<!--    </el-tab-pane>-->
+    <!--    <el-tab-pane :label="$t('obm')" name="second">-->
+    <!--      <OBM></OBM>-->
+    <!--    </el-tab-pane>-->
 
   </el-tabs>
 </template>

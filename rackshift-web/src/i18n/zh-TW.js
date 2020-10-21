@@ -241,4 +241,5 @@ export default {
     "disabled": "否",
     "system": "系統",
     "delete": "刪除",
+    "no_valid_image!": "沒有找到鏡像，請先上傳鏡像文件！",
 };

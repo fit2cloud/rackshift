@@ -241,4 +241,5 @@ export default {
     "disabled": "disabled",
     "system": "system",
     "delete": "delete",
+    "no_valid_image!": "No mirror is found, please upload the mirror file first!"
 };
