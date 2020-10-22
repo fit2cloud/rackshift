@@ -1,12 +1,10 @@
-FROM openjdk:8-jdk-alpine
+FROM rackshift/rackshift-base:1.0
 
 RUN mkdir -p /opt/rackshift
 
 ADD ./target/rackshift-server-1.0.0.jar /opt
 
 VOLUME /opt/rackshift
-
-RUN apk --update add ipmitool
 
 EXPOSE 5005
 
