@@ -26,10 +26,22 @@
         >
           <el-table-column type="selection" align="left"></el-table-column>
 
+          <el-table-column prop="friendlyName" :label="$t('friendly_name')" align="left" width="220px">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">
+                <el-link type="primary" target="_blank">
+                  <span style="display: block; word-break:keep-all;
+  white-space:nowrap;overflow: hidden">{{ scope.row.friendlyName }}</span>
+                </el-link>
+              </el-tooltip>
+            </template>
+
+          </el-table-column>
+
           <el-table-column :prop="c.prop" :label="c.label" align="left"
                            v-for="c in columns" sortable :formatter="getValidProText"></el-table-column>
 
-          <el-table-column prop="settable" :label="$t('user_settable')" align="left">
+          <el-table-column prop="settable" :label="$t('user_settable')" align="left" width="130">
             <template slot-scope="scope">
               {{ scope.row.settable | enabled }}
             </template>
@@ -37,11 +49,16 @@
 
           <el-table-column prop="eventType" :label="$t('event_type')" align="left">
             <template slot-scope="scope">
-              {{ scope.row.eventType | eventFormat }}
+              <el-tooltip class="item" effect="dark" :content="scope.row.eventType" placement="right-end">
+                <el-link type="primary" target="_blank">
+                  <span style="display: block; word-break:keep-all;
+  white-space:nowrap;overflow: hidden">{{ scope.row.eventType | eventFormat }}</span>
+                </el-link>
+              </el-tooltip>
             </template>
           </el-table-column>
 
-          <el-table-column prop="brands" :label="$t('brands')" align="left">
+          <el-table-column prop="brands" :label="$t('brands')" align="left" width="150">
             <template slot-scope="scope">
               {{ scope.row.brands | brandsFormat }}
             </template>
@@ -53,7 +70,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="createTime" :label="$t('create_time')" align="left">
+          <el-table-column prop="createTime" :label="$t('create_time')" align="left" width="160">
             <template slot-scope="scope">
               {{ scope.row.createTime | dateFormat }}
             </template>
@@ -200,11 +217,6 @@ export default {
       loading: false,
       columns: [
         {
-          label: this.$t('friendly_name'),
-          prop: "friendlyName",
-          sort: true
-        },
-        {
           label: this.$t('type'),
           prop: "type",
           sort: true
@@ -334,7 +346,7 @@ export default {
       }
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
-        this.$notify.error(this.$t('pls_select_workflow') + "!");
+        this.$message.error(this.$t('pls_select_workflow') + "!");
         return;
       }
       HttpUtil.post("/workflow/del", ids, (res) => {

@@ -10,7 +10,10 @@
       style="cursor:pointer;"
   >
     <el-submenu index="1">
-      <template slot="title">{{ language }}</template>
+      <template slot="title">
+        <font-awesome-icon class="icon global" :icon="['fas', 'globe']"/>
+        {{ language }}
+      </template>
       <el-menu-item v-for="c in languages" @click="clicked(c)" :index="1 + '-' + c.index">
         {{ c.name }}
       </el-menu-item>

@@ -85,6 +85,11 @@ import ElementUI, {
 import RSButton from './common/button/rsbutton/index';
 
 Vue.use(RSButton);
+
+import icon from './common/front/icon'
+
+Vue.use(icon);
+
 // import 'element-ui/lib/theme-chalk/index.css';
 import '../theme/index.css'
 
@@ -178,7 +183,7 @@ Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$prompt = MessageBox.prompt;
-Vue.prototype.$notify = Notification;
+Vue.prototype.$message = Notification;
 Vue.prototype.$message = Message;
 
 Vue.config.productionTip = false

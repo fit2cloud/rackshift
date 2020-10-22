@@ -87,21 +87,21 @@
             direction="rtl"
             :before-close="handleClose">
           <div class="demo-drawer__content">
-            <el-form :model="editObj" labelPosition="top">
+            <el-form :model="editObj" labelPosition="top" :rules="rules" ref="editForm">
 
-              <el-form-item :label="$t('name')">
+              <el-form-item :label="$t('name')" prop="name">
                 <el-input v-model="editObj.name" autocomplete="off"
                           :placeholder="$t('pls_input_param_value')"></el-input>
               </el-form-item>
 
-              <el-form-item :label="$t('type')">
+              <el-form-item :label="$t('type')" prop="type">
 
                 <el-select v-model="editObj.type">
                   <el-option v-for="t in allEndPointType" :label="t.name" :value="t.value"></el-option>
                 </el-select>
               </el-form-item>
 
-              <el-form-item :label="$t('ip')">
+              <el-form-item :label="$t('ip')" prop="ip">
                 <el-input v-model="editObj.ip" autocomplete="off"
                           :placeholder="$t('pls_input_param_value')"></el-input>
               </el-form-item>
@@ -127,6 +127,7 @@
 
 import HttpUtil from "../../common/utils/HttpUtil"
 import Vue from 'vue'
+import {ipValidator, requiredValidator} from "@/common/validator/CommonValidator";
 
 let _ = require('lodash');
 
@@ -145,6 +146,14 @@ Vue.filter('endpointType', function (type) {
 export default {
   data() {
     return {
+      rules: {
+        name: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        ip: [
+          {validator: ipValidator, trigger: 'blur', vue: this},
+        ],
+      },
       activeName: 'endpoint',
       query: {
         name: '',
@@ -217,6 +226,13 @@ export default {
       return ids;
     },
     confirmEdit() {
+      this.validateResult = true;
+      this.$refs.editForm.validate(f => {
+        if (!f) {
+          this.validateResult = false;
+        }
+      });
+      if (!this.validateResult) return;
       this.loading = true;
       this.editObj.brands = JSON.stringify(this.editObj.brands);
       if (this.editType == 'edit') {
@@ -252,7 +268,7 @@ export default {
       }
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
-        this.$notify.error(this.$t('pls_select_endpoint') + "!");
+        this.$message.error(this.$t('pls_select_endpoint') + "!");
         return;
       }
       HttpUtil.post("/endpoint/del", ids, (res) => {

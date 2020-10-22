@@ -53,10 +53,10 @@ export default {
     change() {
       HttpUtil.post("/user/change", this.editObj, (res) => {
         if (res.data) {
-          this.$notify.success(this.$t('edit_success'));
+          this.$message.success(this.$t('edit_success'));
           this.editObj = {};
         } else {
-          this.$notify.error(this.$t('edit_fail'));
+          this.$message.error(this.$t('edit_fail'));
         }
       });
     },

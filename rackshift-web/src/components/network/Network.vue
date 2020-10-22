@@ -287,7 +287,7 @@ export default {
       }
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
-        this.$notify.error(this.$t('pls_select_network') + "!");
+        this.$message.error(this.$t('pls_select_network') + "!");
         return;
       }
       HttpUtil.post("/network/del", ids, (res) => {

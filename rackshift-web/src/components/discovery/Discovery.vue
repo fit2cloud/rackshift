@@ -31,7 +31,7 @@
           <el-table-column prop="syncStatus" :label="$t('sync_status')" align="left">
             <template slot-scope="scope">
               <i class="el-icon-loading" v-if="scope.row.syncStatus.indexOf('ING') != -1"></i>
-              {{ scope.row.syncStatus }}
+              {{ $t(scope.row.syncStatus) }}
             </template>
           </el-table-column>
 
@@ -43,21 +43,26 @@
 
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
-              <el-dropdown>
-                <el-button type="primary">
-                  {{ $t('opt') }}<i class="el-icon-arrow-down el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item @click.native="handleEdit(scope.row, 'edit')">{{ $t('edit') }}
-                  </el-dropdown-item>
-                  <el-dropdown-item v-if="scope.row.syncStatus.indexOf('ING') == -1"
-                                    @click.native="handleEdit(scope.row, 'del')">{{ $t('del') }}
-                  </el-dropdown-item>
-                  <el-dropdown-item v-if="scope.row.syncStatus.indexOf('ING') == -1"
-                                    @click.native="handleEdit(scope.row, 'sync')">{{ $t('sync') }}
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
+<!--              <el-dropdown>-->
+<!--                <el-button type="primary">-->
+<!--                  {{ $t('opt') }}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>-->
+<!--                </el-button>-->
+<!--                <el-dropdown-menu slot="dropdown">-->
+<!--                  <el-dropdown-item @click.native="handleEdit(scope.row, 'edit')">{{ $t('edit') }}-->
+<!--                  </el-dropdown-item>-->
+<!--                  <el-dropdown-item v-if="scope.row.syncStatus.indexOf('ING') == -1"-->
+<!--                                    @click.native="handleEdit(scope.row, 'del')">{{ $t('del') }}-->
+<!--                  </el-dropdown-item>-->
+<!--                  <el-dropdown-item v-if="scope.row.syncStatus.indexOf('ING') == -1"-->
+<!--                                    @click.native="handleEdit(scope.row, 'sync')">{{ $t('sync') }}-->
+<!--                  </el-dropdown-item>-->
+<!--                </el-dropdown-menu>-->
+<!--              </el-dropdown>-->
+
+
+              <RSButton @click="handleEdit(scope.row, 'edit')"></RSButton>
+              <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
+              <RSButton @click="handleEdit(scope.row, 'sync')" type="sync" :tip="$t('sync')"></RSButton>
             </template>
           </el-table-column>
         </el-table>
@@ -236,7 +241,7 @@ export default {
         }
       });
       if (!this.validateResult) {
-        this.$notify.error(this.$t('validate_error'));
+        this.$message.error(this.$t('validate_error'));
         return;
       }
       this.loading = true;
@@ -274,7 +279,7 @@ export default {
       }
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
-        this.$notify.error(this.$t('pls_select_discovery') + "!");
+        this.$message.error(this.$t('pls_select_discovery') + "!");
         return;
       }
       HttpUtil.post("/discovery/del", ids, (res) => {
@@ -307,7 +312,7 @@ export default {
         HttpUtil.post("/discovery/sync",
             [row.id]
             , (res) => {
-              this.$message.success(this.$t('opt_success!'));
+              this.$message.success(this.$t('opt_success'));
               this.getData();
             });
       } else {

@@ -31,8 +31,21 @@
             </template>
           </el-table-column>
 
+          <el-table-column prop="name" :label="$t('name')" align="left">
+            <template slot-scope="scope">
+              {{ scope.row.name }}
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="url" :label="$t('url')" align="left">
+            <template slot-scope="scope">
+              <el-link type="primary" @click="showUrl(scope.row.url)">{{ $t('show') }}</el-link>
+            </template>
+          </el-table-column>
+
           <el-table-column :prop="c.prop" :label="c.label" align="left"
                            v-for="c in columns" sortable></el-table-column>
+
           <el-table-column prop="updateTime" :label="$t('update_time')" align="left">
             <template slot-scope="scope">
               {{ scope.row.updateTime | dateFormat }}
@@ -67,6 +80,7 @@
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
+
             <el-form :model="editObj" :rules="rules" ref="form" label-width="50px" :label-position="labelPosition">
               <el-form-item :label="$t('name')" prop="name">
                 <el-input v-model="editObj.name" autocomplete="off"></el-input>
@@ -121,6 +135,20 @@
           </div>
         </el-drawer>
 
+        <el-dialog
+            :title="$t('view_url')"
+            :visible.sync="showUrlVisible"
+            width="60%"
+            :before-close="handleClose">
+          <el-row>
+            <el-col :span="24">
+              <span>{{ currentUrl }} </span>
+              <el-link type="primary" :underline="false" @click="copyUrl($event)"><i class="el-icon-copy-document"></i>
+              </el-link>
+            </el-col>
+          </el-row>
+        </el-dialog>
+
       </div>
     </el-tab-pane>
   </el-tabs>
@@ -153,6 +181,8 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
+      showUrlVisible: false,
+      currentUrl: null,
       tableData: [],
       loadingList: [],
       multipleSelection: [],
@@ -164,15 +194,6 @@ export default {
       id: -1,
       loading: false,
       columns: [
-        {
-          label: this.$t('name'),
-          prop: "name",
-          sort: true
-        },
-        {
-          label: this.$t('url'),
-          prop: "url"
-        },
         {
           label: this.$t('os'),
           prop: "os"
@@ -204,6 +225,22 @@ export default {
     this.getAllEndPoints();
   },
   methods: {
+    copyUrl(e) {
+      e.preventDefault();
+      var content = this.currentUrl;
+      let oInput = document.createElement('input')
+      oInput.value = content;
+      document.body.appendChild(oInput);
+      oInput.select();
+      document.execCommand("Copy");
+      oInput.style.display = 'none';
+      document.body.removeChild(oInput);
+      this.$message.success(this.$t('copy_success'));
+    },
+    showUrl(url) {
+      this.showUrlVisible = true;
+      this.currentUrl = url;
+    },
     getAllEndPoints() {
       HttpUtil.get("/endpoint/getAllEndPoints", {}, (res) => {
         this.allEndPoints = [].concat(_.find(res.data, (e) => e.type == 'main_endpoint'));
@@ -234,6 +271,7 @@ export default {
     },
     handleClose() {
       this.editDialogVisible = false;
+      this.showUrlVisible = false;
     },
     add() {
       this.editDialogVisible = true;
@@ -247,7 +285,7 @@ export default {
         }
       });
       if (!this.validateResult) {
-        this.$notify.error(this.$t('validate_error'));
+        this.$message.error(this.$t('validate_error'));
         return;
       }
       this.loading = true;
@@ -285,7 +323,7 @@ export default {
       }
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
-        this.$notify.error(this.$t('pls_select_image') + "!");
+        this.$message.error(this.$t('pls_select_image') + "!");
         return;
       }
       HttpUtil.post("/image/del", ids, (res) => {

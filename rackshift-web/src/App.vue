@@ -245,4 +245,16 @@ body {
 button {
   cursor: pointer;
 }
+
+.drawer-header {
+  padding-bottom: 30px;
+}
+
+.el-tabs__item:focus.is-active.is-focus {
+  box-shadow: none;
+}
+
+:focus {
+  outline: 0;
+}
 </style>

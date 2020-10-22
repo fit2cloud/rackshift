@@ -3,7 +3,7 @@
               placement="bottom-end">
     <el-button
         type="button"
-        :icon="type == 'del' ? 'el-icon-delete' : 'el-icon-edit' "
+        :icon="icon"
         :class="typeClass"
         @click="handleEdit"
         style="cursor: pointer;"
@@ -33,8 +33,21 @@ export default {
         return "el-button";
       } else if (this.type == "del") {
         return "el-button--danger";
+      } else if (this.type == "sync") {
+        return "el-button--success";
       } else {
         return "el-button--primary";
+      }
+    },
+    icon: function () {
+      if (this.type == "edit") {
+        return "el-icon-edit";
+      } else if (this.type == "del") {
+        return "el-icon-delete";
+      } else if (this.type == "add") {
+        return "el-icon-plus";
+      } else if (this.type == "sync") {
+        return "el-icon-refresh";
       }
     }
   },

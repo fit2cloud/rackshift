@@ -135,7 +135,7 @@
           <el-table-column prop="status" :label="$t('machine_status')" align="left" width="150px">
             <template slot-scope="scope">
               <i class="el-icon-loading" v-if="scope.row.status && scope.row.status.indexOf('ing') != -1"></i>
-              <span style="margin-left: 10px">{{ scope.row.status }}</span>
+              <span style="margin-left: 10px">{{ scope.row.status | statusFilter }}</span>
             </template>
           </el-table-column>
 
@@ -390,8 +390,12 @@ import HttpUtil from "../../common/utils/HttpUtil";
 import {isAnyBlank, toLine} from "../../common/utils/CommonUtil";
 import OBM from "../obm/Obm"
 import Vue from "vue"
+import i18n from "@/i18n/i18n";
 import {WebSocketUtil} from "@/common/utils/WebSocket";
 
+Vue.filter('statusFilter', function (value) {
+  return i18n.t(value);
+});
 let _ = require('lodash');
 export default {
   data() {
@@ -583,7 +587,7 @@ export default {
     submitOBM() {
       this.obmLoading = true;
       if (isAnyBlank(this.curObm.ip, this.curObm.userName, this.curObm.pwd)) {
-        this.$notify.error(this.$t('pls_fill_in_blanks'));
+        this.$message.error(this.$t('pls_fill_in_blanks'));
         this.obmLoading = false;
         return;
       }
@@ -673,7 +677,7 @@ export default {
       }
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
-        this.$notify.error(this.$t('pls_select_bare_metal') + "!");
+        this.$message.error(this.$t('pls_select_bare_metal') + "!");
         return;
       }
       HttpUtil.post("/bare-metal/del", ids, (res) => {
@@ -724,7 +728,7 @@ export default {
     },
     runWorkflow() {
       if (!this.selectedWorkflow.length) {
-        this.$notify.error(this.$t('pls_select_workflow') + "!");
+        this.$message.error(this.$t('pls_select_workflow') + "!");
         return;
       }
       let that = this;
@@ -732,11 +736,11 @@ export default {
         return that.buildRequest(wf);
       });
       if (reqList.length == 0) {
-        this.$notify.error(this.$t('pls_select_node') + "!");
+        this.$message.error(this.$t('pls_select_node') + "!");
         return;
       }
       if (_.findIndex(reqList, r => r.settable && !r.params) != -1) {
-        this.$notify.error(this.$t('pls_set_params') + "!");
+        this.$message.error(this.$t('pls_set_params') + "!");
         return;
       }
       HttpUtil.post("/workflow/run", reqList, (res) => {
@@ -786,7 +790,7 @@ export default {
           if (duplicated) continue;
 
           if (_.findIndex(originWf.brands, w => w == this.multipleSelection[k].machineBrand) == -1) {
-            this.$notify.error(originWf.friendlyName + this.$t('not_supported_brand!') + ' ' + this.multipleSelection[k].machineBrand);
+            this.$message.error(originWf.friendlyName + this.$t('not_supported_brand!') + ' ' + this.multipleSelection[k].machineBrand);
             continue;
           }
 

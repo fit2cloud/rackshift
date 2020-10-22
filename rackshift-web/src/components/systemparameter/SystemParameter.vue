@@ -212,7 +212,7 @@ export default {
       }
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
-        this.$notify.error(this.$t('pls_select_system_parameter') + "!");
+        this.$message.error(this.$t('pls_select_system_parameter') + "!");
         return;
       }
       HttpUtil.post("/system_parameter/del", ids, (res) => {

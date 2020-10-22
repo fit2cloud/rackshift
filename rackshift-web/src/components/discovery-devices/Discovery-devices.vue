@@ -31,19 +31,9 @@
 
       <el-table-column prop="" :label="$t('opt')" align="left">
         <template slot-scope="scope">
-          <el-dropdown>
-            <el-button type="primary">
-              {{ $t('opt') }}<i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="handleEdit(scope.row, 'edit')">{{ $t('edit') }}
-              </el-dropdown-item>
-              <el-dropdown-item @click.native="handleEdit(scope.row, 'del')">{{ $t('del') }}
-              </el-dropdown-item>
-              <el-dropdown-item @click.native="handleEdit(scope.row, 'addToDevice')">{{ $t('add_to_device') }}
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+          <RSButton @click="handleEdit(scope.row, 'edit')"></RSButton>
+          <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
+          <RSButton @click="handleEdit(scope.row, 'addToDevice')" type="add" :tip="$t('add_to_device')"></RSButton>
         </template>
       </el-table-column>
     </el-table>
@@ -170,11 +160,6 @@ export default {
       formLabelWidth: '80px',
       columns: [
         {
-          label: this.$t('name'),
-          prop: "name",
-          sort: true
-        },
-        {
           label: this.$t('ip'),
           prop: "ip",
           sort: true
@@ -237,7 +222,7 @@ export default {
         }
       });
       if (!this.validateResult) {
-        this.$notify.error(this.$t('validate_error'));
+        this.$message.error(this.$t('validate_error'));
         return;
       }
       this.loading = true;
@@ -275,7 +260,7 @@ export default {
       }
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
-        this.$notify.error(this.$t('pls_select_discovery-devices') + "!");
+        this.$message.error(this.$t('pls_select_discovery-devices') + "!");
         return;
       }
       HttpUtil.post("/discovery-devices/del", ids, (res) => {
@@ -327,9 +312,9 @@ export default {
     submitOBM() {
       HttpUtil.post("discovery-devices/addToBareMetal", this.curObm, (res) => {
         if (res.data) {
-          this.$notify.success(this.$t("opt_success"));
+          this.$message.success(this.$t("opt_success"));
         } else {
-          this.$notify.success(this.$t("opt_fail"));
+          this.$message.success(this.$t("opt_fail"));
         }
         this.deviceDialogVisible = false;
       });
