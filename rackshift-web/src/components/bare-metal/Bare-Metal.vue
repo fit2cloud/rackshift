@@ -217,7 +217,7 @@
         </el-drawer>
 
         <!--obm-->
-        <el-dialog :title="$t('obms')" :visible.sync="fillOutObms">
+        <el-dialog :title="$t('obms')" :visible.sync="fillOutObms" width="40vw">
           <el-form :model="form">
             <el-form-item :label="$t('ip')" :label-width="formLabelWidth">
               <el-input v-model="curObm.ip" autocomplete="off"></el-input>

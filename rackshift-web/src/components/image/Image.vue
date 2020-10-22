@@ -247,7 +247,7 @@ export default {
         }
       });
       if (!this.validateResult) {
-        this.$notify.error("validate_error");
+        this.$notify.error(this.$t('validate_error'));
         return;
       }
       this.loading = true;
