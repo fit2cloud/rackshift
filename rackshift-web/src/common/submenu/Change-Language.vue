@@ -51,7 +51,7 @@ export default {
   methods: {
     changeLanText() {
       let l = localStorage.getItem("language");
-      let lan = l != '' ? this.$t(l) : 'zh_CN';
+      let lan = l ? this.$t(l) : 'zh_CN';
       let index = _.findIndex(this.languages, function (o) {
         return o.value == l;
       });
