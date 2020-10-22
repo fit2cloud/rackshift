@@ -62,7 +62,7 @@
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
-            <el-form :model="editObj">
+            <el-form :model="editObj" label-position="top">
               <el-form-item label="ID" :label-width="formLabelWidth">
                 <el-input v-model="editObj.id" autocomplete="off"></el-input>
               </el-form-item>

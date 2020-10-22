@@ -7,7 +7,7 @@
   "del": "删除",
   "Languages": "语言",
   "cannt_be_null": "参数不能为空",
-  "hostname": "hostname",
+  "hostname": "HOSTNAME",
   "ExecutionLog": "部署日志",
   "password": "密码",
   "add_network": "添加网络",
@@ -54,7 +54,7 @@
   "confirm": "确定",
   "discoveryed_devices": "已发现网络设备",
   "pls_input_user_name": "请输入用户名",
-  "root_pwd": "root密码",
+  "root_pwd": "ROOT 密码",
   "pls_select_workflow": "请选择工作流",
   "network_devices": "网卡ip设置",
   "raid_disk": "RAID磁盘",
@@ -73,7 +73,7 @@
   "management_ip": "带外 IP",
   "proc_num_threads": "线程数",
   "memory_detail": "内存详情",
-  "invalid_format": "参数格式错误",
+  "ip_invalid_format": "IP 格式错误",
   "info": "信息",
   "add": "添加",
   "endIp": "结束 IP",
@@ -239,5 +239,7 @@
   "en_US": "English",
   "enabled": "是",
   "disabled": "否",
-  "system": "系统"
+  "system": "系统",
+  "no_valid_image!": "没有找到镜像，请先上传镜像文件！",
+  "delete": "删除"
 }

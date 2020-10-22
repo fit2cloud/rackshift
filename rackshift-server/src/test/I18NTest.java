@@ -55,7 +55,7 @@ public class I18NTest {
                 sb.append(line + "\n");
             }
 
-            Pattern p = Pattern.compile("\\$t\\('([a-zA-Z_0-9-!?]*)'\\)");
+            Pattern p = Pattern.compile("\\$t\\(['\"]*([a-zA-Z_0-9-!?]*)['\"]*\\)");
             Matcher m = p.matcher(sb.toString());
             while (m.find()) {
                 if (!i18n.containsKey(m.group(1).trim())) {
@@ -67,8 +67,8 @@ public class I18NTest {
 
 
     public static void main2(String[] args) {
-        Pattern p = Pattern.compile("\\$t\\('([a-zA-Z_0-9-!?]*)'\\)");
-        Matcher m = p.matcher("$t('no_valid_image!')");
+        Pattern p = Pattern.compile("\\$t\\(['\"]*([a-zA-Z_0-9-!?]*)['\"]*\\)");
+        Matcher m = p.matcher("$t(\"no_valid_image!\")");
         m.find();
         System.out.println(m.group(1));
     }

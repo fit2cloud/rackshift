@@ -62,15 +62,8 @@
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
               <RSButton @click="handleEdit(scope.row, 'edit')"></RSButton>
-              <RSButton v-if="scope.row.type != 'system'" icon="el-icon-delete" @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
-
-<!--              <el-button-->
-<!--                  type="button"-->
-<!--                  icon="el-icon-delete"-->
-<!--                  class="red"-->
-<!--                  v-if="scope.row.type != 'system'"-->
-<!--                  @click="handleEdit(scope.row, 'del')"-->
-<!--              >{{ $t('del') }}-->
+              <RSButton v-if="scope.row.type != 'system'" icon="el-icon-delete" @click="handleEdit(scope.row, 'del')"
+                        type="del"></RSButton>
             </template>
           </el-table-column>
         </el-table>
@@ -215,12 +208,7 @@ export default {
           label: this.$t('type'),
           prop: "type",
           sort: true
-        },
-        {
-          label: this.$t('injectable_name'),
-          prop: "injectableName",
-          sort: true
-        },
+        }
       ],
       editDialogVisible: false,
       editType: 'edit',

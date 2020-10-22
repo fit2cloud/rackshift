@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--    <el-card>-->
-    <el-form label-width="110px" :rules="rules" :model="payLoad.options.defaults" ref="form">
+    <el-form label-width="110px" :rules="rules" :model="payLoad.options.defaults" ref="form" label-position="right">
       <el-row>
         <el-col :span="12">
           <el-form-item :label="$t('hostname')" prop="hostname">
@@ -73,35 +73,31 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
+          <el-form v-for="d in payLoad.options.defaults.networkDevices" :model="d" :rules="nicRules"
+                   ref="nicForm" label-position="right" label-width="150px">
 
-          <el-form-item>
+            <el-form-item prop="device" :label="$t('network_card_mac')">
+              <el-select v-model="d.device">
+                <el-option :label="n.number + '(' + n.mac + ')'" :value="n.mac"
+                           v-for="n in nics"></el-option>
+              </el-select>
+            </el-form-item>
 
-            <el-form v-for="d in payLoad.options.defaults.networkDevices" :model="d" :rules="nicRules"
-                     ref="nicForm">
-
-              <el-form-item prop="device" :label="$t('network_card_mac')">
-                <el-select v-model="d.device">
-                  <el-option :label="n.number + '(' + n.mac + ')'" :value="n.mac"
-                             v-for="n in nics"></el-option>
-                </el-select>
+            <el-form :model="d.ipv4" :rules="nicRules" ref="nic2Form" label-position="right" label-width="150px">
+              <el-form-item prop="ipAddr" :label="$t('ip_addr')">
+                <el-input v-model="d.ipv4.ipAddr"></el-input>
               </el-form-item>
 
-              <el-form :model="d.ipv4" :rules="nicRules" ref="nic2Form">
-                <el-form-item prop="ipAddr" :label="$t('ip_addr')">
-                  <el-input v-model="d.ipv4.ipAddr"></el-input>
-                </el-form-item>
+              <el-form-item prop="gateway" :label="$t('gateway')">
+                <el-input v-model="d.ipv4.gateway"></el-input>
+              </el-form-item>
 
-                <el-form-item prop="gateway" :label="$t('gateway')">
-                  <el-input v-model="d.ipv4.gateway"></el-input>
-                </el-form-item>
-
-                <el-form-item prop="netmask" :label="$t('netmask')">
-                  <el-input v-model="d.ipv4.netmask"></el-input>
-                </el-form-item>
-              </el-form>
+              <el-form-item prop="netmask" :label="$t('netmask')">
+                <el-input v-model="d.ipv4.netmask"></el-input>
+              </el-form-item>
             </el-form>
+          </el-form>
 
-          </el-form-item>
         </el-col>
       </el-row>
 

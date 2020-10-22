@@ -48,7 +48,7 @@ function ipValidator(rule, value, callback) {
         callback(new Error(rule.vue.$t('cannt_be_null')));
     }
     if (!/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value)) {
-        callback(new Error(rule.vue.$t('invalid_format')));
+        callback(new Error(rule.vue.$t('ip_invalid_format')));
     }
     callback();
 }

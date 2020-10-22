@@ -66,7 +66,7 @@
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
-            <el-form :model="editObj" :rules="rules" ref="form">
+            <el-form :model="editObj" :rules="rules" ref="form" label-position="top">
 
               <el-form-item :label="$t('endpoint')" prop="endpointId">
                 <el-select v-model="editObj.endpointId" :placeholder="$t('pls_select')">
@@ -76,11 +76,6 @@
                       :value="item.id">
                   </el-option>
                 </el-select>
-              </el-form-item>
-
-              <el-form-item :label="$t('vlanId')" prop="vlanId">
-                <el-input v-model="editObj.vlanId" autocomplete="off" type="number"
-                          :placeholder="$t('pls_input_vlan_id')"></el-input>
               </el-form-item>
 
               <el-form-item :label="$t('startIp')" prop="startIp">
@@ -180,10 +175,6 @@ export default {
           label: this.$t('name'),
           prop: "name",
           sort: true
-        },
-        {
-          label: this.$t('vlan_id'),
-          prop: "vlanId"
         },
         {
           label: this.$t('dhcp_enable'),

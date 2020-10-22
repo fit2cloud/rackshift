@@ -139,14 +139,6 @@
             </template>
           </el-table-column>
 
-          <!--          <el-table-column prop="createTime" :label="$t('create_time')" align="left"-->
-          <!--                           sortable="custom">-->
-          <!--            <template slot-scope="scope">-->
-          <!--              {{ scope.row.createTime | dateFormat }}-->
-          <!--            </template>-->
-
-          <!--          </el-table-column>-->
-
           <el-table-column prop="" :label="$t('opt')" align="left" width="130px">
             <template slot="header" slot-scope="scope">
               <el-input
@@ -871,7 +863,7 @@ export default {
 
 #workflow-selector {
   border: solid #d7d2d2 1px;
-  min-width: 420px;
+  min-width: 450px;
   height: 120px;
   padding: 10px 10px 15px 10px;
   border-radius: 5px;
