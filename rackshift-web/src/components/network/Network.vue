@@ -32,7 +32,7 @@
           </el-table-column>
 
           <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="left"
-                           v-for="c in columns" sortable></el-table-column>
+                           v-for="c in columns" :sortable="c.sort"></el-table-column>
 
           <el-table-column prop="createTime" :label="$t('create_time')" align="left">
             <template slot-scope="scope">
@@ -178,11 +178,13 @@ export default {
         },
         {
           label: this.$t('dhcp_enable'),
-          prop: "dhcpEnable"
+          prop: "dhcpEnable",
+          sort: false
         },
         {
           label: this.$t('pxe_enable'),
-          prop: "pxeEnable"
+          prop: "pxeEnable",
+          sort: false
         }
       ],
       editDialogVisible: false,

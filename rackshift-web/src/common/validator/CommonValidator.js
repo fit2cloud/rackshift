@@ -24,7 +24,7 @@ function requiredSelectValidator(rule, value, callback) {
             callback(new Error(rule.vue.$t('pls_select_password')));
         }
         if (rule.name) {
-            callback(new Error(rule.vue.$t('pls_select_' + rule.name)));
+            callback(new Error(rule.vue.$t('pls_select_') + rule.vue.$t(rule.name)));
         } else {
             callback(new Error(rule.vue.$t('pls_select')));
         }

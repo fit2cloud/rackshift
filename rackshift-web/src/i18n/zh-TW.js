@@ -267,4 +267,18 @@ export default {
     "Wizard": "使用向導",
     "edit_workflow": "編輯工作流",
     "Plugin": "插件",
+    "FILL_OBMS": "補充 OBM 信息",
+    "PXE_BOOT_START": "PXE 啟動",
+    "PXE_BOOT_END": "PXE 啟動完畢",
+    "PXE_BOOT_CANCEL": "取消 PXE 啟動",
+    "POST_DISCOVERY_WORKFLOW_START": "下發發現工作流",
+    "POST_DISCOVERY_WORKFLOW_END": "發現工作流執行完畢",
+    "POST_DISCOVERY_WORKFLOW_CANCEL": "取消發現工作流",
+    "POST_OTHER_WORKFLOW_START": "下發通用工作流",
+    "POST_OTHER_WORKFLOW_END": "工作流執行完畢",
+    "POST_OTHER_WORKFLOW_CANCEL": "取消工作流",
+    "POST_OS_WORKFLOW_START": "下發安裝系統工作流",
+    "POST_OS_WORKFLOW_END": "安裝系統工作流執行完畢",
+    "POST_OS_WORKFLOW_CANCEL": "取消安裝系統工作流",
+    "device": "設備"
 }

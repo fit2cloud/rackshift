@@ -129,8 +129,13 @@
             </template>
           </el-table-column>
 
-          <el-table-column :prop="c.prop" :label="c.label" align="left"
-                           v-for="c in columns" sortable="custom" :width="resizeWith(c)"></el-table-column>
+          <el-table-column :prop="c.prop" :label="c.label" align="left" v-for="c in columns" sortable="custom"
+                           :width="resizeWith(c)">
+            <template slot-scope="scope">
+              <span v-if="!c.custom">{{ scope.row[c.prop] }}</span>
+              <span v-if="c.custom">{{ c.formatter(scope.row[c.prop]) }}</span>
+            </template>
+          </el-table-column>
 
           <el-table-column prop="status" :label="$t('machine_status')" align="left" width="150px">
             <template slot-scope="scope">
@@ -277,10 +282,10 @@
                     {{ machine.cpuType }} X {{ machine.cpu }}
                   </el-form-item>
                   <el-form-item :label="$t('memory')">
-                    {{ machine.memory }}{{ $t('GB') }}
+                    {{ machine.memory }}{{ ' ' + $t('GB') }}
                   </el-form-item>
                   <el-form-item :label="$t('disk')">
-                    {{ machine.disk }}{{ $t('GB') }}
+                    {{ machine.disk }}{{ ' ' + $t('GB') }}
                   </el-form-item>
                 </el-form>
               </el-tab-pane>
@@ -430,11 +435,25 @@ export default {
         {
           label: this.$t('memory'),
           prop: "memory",
-          expandLanguage: "en_US"
+          expandLanguage: "en_US",
+          custom: true,
+          formatter: function (item) {
+            if (item) {
+              return parseInt(item) + ' GB'
+            }
+            return item;
+          }
         },
         {
           label: this.$t('disk'),
-          prop: "disk"
+          prop: "disk",
+          custom: true,
+          formatter: function (item) {
+            if (item) {
+              return parseInt(item) / 1000 + ' TB'
+            }
+            return item;
+          }
         },
       ],
       detailDrawer: false,

@@ -20,7 +20,7 @@
     >
       <el-table-column type="selection" align="left"></el-table-column>
       <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="left"
-                       v-for="c in columns" sortable></el-table-column>
+                       v-for="c in columns" :sortable="c.sort"></el-table-column>
       <el-table-column prop="updateTime" :label="$t('update_time')" align="left">
         <template slot-scope="scope">
           {{ scope.row.updateTime | dateFormat }}

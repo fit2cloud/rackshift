@@ -21,7 +21,7 @@
                             v-for="c in m.childs" :index="m.order + '-' + c.order"
                             v-on:click="$router.push(c.router)">
                 <i :class="c.icon"></i>
-                {{ c.name }}
+                {{ $t(c.name) }}
               </el-menu-item>
             </el-submenu>
           </el-menu>
@@ -138,18 +138,12 @@ body {
   background: #111;
   /*background: linear-gradient(to right, #111, #111 80%, #111);*/
   /*background: linear-gradient(to right, #00447C ,#409EFF 80%, #00447C );*/
-  /*background: linear-gradient(to right, #000000 20%, #00447C 80%);*/
+  background: linear-gradient(to right, #000000 20%, #00447C 80%);
   color: #333;
   z-index: 2;
   line-height: 45px;
-  /*box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .12);*/
+  /*box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .12);*!*/
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px;
-}
-
-#dropdown {
-  color: #9E9E9E;
-  cursor: pointer;
-  margin-right: 12px;
 }
 
 #main-title {
@@ -221,15 +215,6 @@ body {
   padding: 0;
   margin: 0;
   display: inline-block;
-}
-
-.menus > * {
-  color: inherit;
-  padding: 0;
-  max-width: 180px;
-  white-space: pre;
-  cursor: pointer;
-  line-height: 40px;
 }
 
 .el-menu--horizontal > .el-submenu .el-submenu__title {

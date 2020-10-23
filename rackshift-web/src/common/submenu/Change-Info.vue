@@ -2,7 +2,7 @@
   <el-menu
       id="main-menu"
       :unique-opened=true
-      background-color="#111111"
+      background-color="#00447C"
       text-color="#fff"
       active-text-color="#fff"
       class="main-header-menu"
@@ -28,8 +28,8 @@ export default {
       user: JSON.parse(localStorage.getItem("user")),
       languages: [
         {
-          name: 'info',
-          value: 'info',
+          name: 'change_pwd',
+          value: 'change_pwd',
           index: '1'
         },
         {

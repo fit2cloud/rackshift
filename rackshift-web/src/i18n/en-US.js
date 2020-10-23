@@ -267,4 +267,18 @@ export default {
     "Wizard": "Use Wizard",
     "edit_workflow": "Edit Workflow",
     "Plugin": "Plugin",
+    "FILL_OBMS": "Supplementary OBM Information",
+    "PXE_BOOT_START": "PXE boot",
+    "PXE_BOOT_END": "PXE boot completed",
+    "PXE_BOOT_CANCEL": "Cancel PXE boot",
+    "POST_DISCOVERY_WORKFLOW_START": "Post a discovery workflow",
+    "POST_DISCOVERY_WORKFLOW_END": "Found that the workflow has been executed",
+    "POST_DISCOVERY_WORKFLOW_CANCEL": "Cancel discovery of worflow",
+    "POST_OTHER_WORKFLOW_START": "Send general workflow",
+    "POST_OTHER_WORKFLOW_END": "workflow execution completed",
+    "POST_OTHER_WORKFLOW_CANCEL": "Cancel workflow",
+    "POST_OS_WORKFLOW_START": "Send installation system workflow",
+    "POST_OS_WORKFLOW_END": "The installation system workflow has been executed",
+    "POST_OS_WORKFLOW_CANCEL": "Cancel installation of system workflow",
+    "device": "device"
 }

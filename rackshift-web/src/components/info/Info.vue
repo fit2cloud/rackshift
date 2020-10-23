@@ -4,7 +4,7 @@
     <div class="machine-title">
     </div>
 
-    <el-row>
+    <el-row class="info-body">
       <el-col :span="8">
       </el-col>
       <el-col :span="8">
@@ -53,10 +53,10 @@ export default {
     change() {
       HttpUtil.post("/user/change", this.editObj, (res) => {
         if (res.data) {
-          this.$message.success(this.$t('edit_success'));
+          this.$message.success(this.$t('opt_success'));
           this.editObj = {};
         } else {
-          this.$message.error(this.$t('edit_fail'));
+          this.$message.error(this.$t('opt_fail'));
         }
       });
     },
@@ -80,6 +80,10 @@ export default {
 
 .mr10 {
   margin-right: 10px;
+}
+
+.info-body {
+  margin-left: 10px;
 }
 
 </style>
