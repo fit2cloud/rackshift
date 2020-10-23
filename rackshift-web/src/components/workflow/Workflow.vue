@@ -26,7 +26,7 @@
         >
           <el-table-column type="selection" align="left"></el-table-column>
 
-          <el-table-column prop="friendlyName" :label="$t('friendly_name')" align="left" width="240px">
+          <el-table-column prop="friendlyName" :label="$t('friendly_name')" align="left">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">
                 <el-link type="primary" target="_blank">
@@ -42,7 +42,7 @@
                            v-for="c in columns" :sortable="c.sort" :formatter="getValidProText"
                            width="100"></el-table-column>
 
-          <el-table-column prop="eventType" :label="$t('event_type')" align="left" width="200">
+          <el-table-column prop="eventType" :label="$t('event_type')" align="left">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="i18n(scope.row.eventType)" placement="right-end">
                 <el-link type="primary" target="_blank">
@@ -53,13 +53,13 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="brands" :label="$t('brands')" align="left" width="150">
+          <el-table-column prop="brands" :label="$t('brands')" align="left">
             <template slot-scope="scope">
               {{ scope.row.brands | brandsFormat }}
             </template>
           </el-table-column>
 
-          <el-table-column prop="createTime" :label="$t('create_time')" align="left" width="160">
+          <el-table-column prop="createTime" :label="$t('create_time')" align="left">
             <template slot-scope="scope">
               {{ scope.row.createTime | dateFormat }}
             </template>

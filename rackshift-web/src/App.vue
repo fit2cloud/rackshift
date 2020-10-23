@@ -4,7 +4,6 @@
       <el-header id="main-header">
         <el-row type="flex" style="display: flex;">
           <el-col :span="20"><span id="main-title">RackShift</span></el-col>
-
           <el-col :span="4" class=" align-right          ">
             <ChangeLanguage></ChangeLanguage>
             <ChangeInfo></ChangeInfo>
@@ -118,11 +117,7 @@ body {
 }
 
 .container {
-  /*padding: 10px;*/
   background: #fff;
-  /*border: 1px solid #ddd;*/
-  /*border-left: none;*/
-  /*border-radius: 5px;*/
   width: 100%;
 }
 
@@ -135,14 +130,10 @@ body {
 #main-header {
   font-size: 12px;
   height: 45px !important;
-  background: #111;
-  /*background: linear-gradient(to right, #111, #111 80%, #111);*/
-  /*background: linear-gradient(to right, #00447C ,#409EFF 80%, #00447C );*/
   background: linear-gradient(to right, #00447C 20%, #00447C 80%);
   color: #333;
   z-index: 2;
   line-height: 45px;
-  /*box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .12);*!*/
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px;
 }
 

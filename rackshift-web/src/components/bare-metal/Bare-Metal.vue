@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="activeName">
+  <el-tabs v-model="activeName" style="width:80vw;">
     <el-tab-pane :label="$t('bare_metal')" name="bare-metal">
       <div class="machine-title2">
         <el-button-group class="batch-button">
@@ -93,7 +93,7 @@
       >
         <el-table-column type="selection" align="left"></el-table-column>
 
-        <el-table-column prop="machineModel" :label="$t('machine_model')" align="left" width="180"
+        <el-table-column prop="machineModel" :label="$t('machine_model')" align="left"
                          sortable="custom" style="overflow: scroll">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
@@ -106,27 +106,27 @@
         </el-table-column>
 
         <el-table-column prop="machineSn" :label="$t('machine_sn')" align="left"
-                         sortable="custom" width="150px">
+                         sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.machineSn }}
           </template>
         </el-table-column>
 
-        <el-table-column prop="managementIp" :label="$t('management_ip')" align="left" width="150px"
+        <el-table-column prop="managementIp" :label="$t('management_ip')" align="left"
                          sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.managementIp }}
           </template>
         </el-table-column>
 
-        <el-table-column prop="ipArray" :label="$t('IP')" align="left" width="140px"
+        <el-table-column prop="ipArray" :label="$t('IP')" align="left"
                          sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.ipArray }}
           </template>
         </el-table-column>
 
-        <el-table-column :prop="c.prop" :label="c.label" align="left" v-for="c in columns" sortable="custom"
+        <el-table-column :prop="$t(c.prop)" :label="$t(c.label)" align="left" v-for="c in columns" sortable="custom"
                          :width="resizeWith(c)">
           <template slot-scope="scope">
             <span v-if="!c.custom">{{ scope.row[c.prop] }}</span>
@@ -134,14 +134,14 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="status" :label="$t('machine_status')" align="left" width="150px">
+        <el-table-column prop="status" :label="$t('machine_status')" align="left">
           <template slot-scope="scope">
             <i class="el-icon-loading" v-if="scope.row.status && scope.row.status.indexOf('ing') != -1"></i>
             <span style="margin-left: 10px">{{ scope.row.status | statusFilter }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="" :label="$t('opt')" align="left" width="130px">
+        <el-table-column prop="" :label="$t('opt')" align="left">
           <template slot="header" slot-scope="scope">
             <el-input
                 v-model="search"
@@ -426,11 +426,11 @@ export default {
       loading: false,
       columns: [
         {
-          label: this.$t('CPU'),
+          label: 'CPU',
           prop: "cpu"
         },
         {
-          label: this.$t('memory'),
+          label: 'memory',
           prop: "memory",
           expandLanguage: "en_US",
           custom: true,
@@ -442,7 +442,7 @@ export default {
           }
         },
         {
-          label: this.$t('disk'),
+          label: 'disk',
           prop: "disk",
           custom: true,
           formatter: function (item) {
