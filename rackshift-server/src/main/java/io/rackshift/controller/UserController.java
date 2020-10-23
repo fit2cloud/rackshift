@@ -48,10 +48,10 @@ public class UserController {
         return ResultHolder.success(userService.del(id));
     }
 
-//    @RequestMapping("del")
-//    public ResultHolder del(@RequestBody String[] ids) {
-//        return ResultHolder.success(userService.del(ids));
-//    }
+    @RequestMapping("del")
+    public ResultHolder del(@RequestBody String[] ids) {
+        return ResultHolder.success(userService.del(ids));
+    }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @RequestMapping("change")

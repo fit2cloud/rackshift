@@ -239,19 +239,26 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    delAllSelection() {
-      const length = this.multipleSelection.length;
-      let str = '';
-      this.delList = this.delList.concat(this.multipleSelection);
-      for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].name + ' ';
-      }
+    getSelectedIds: function () {
+      this.delList = [].concat(this.multipleSelection);
       let ids = _.map(this.delList, (item) => item.id);
-      HttpUtil.post("/user/del", ids, (res) => {
-        this.$message.success(`删除成功！删除了${str}！`);
-        this.getData();
+      return ids;
+    },
+    delAllSelection() {
+      this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
+        type: 'warning'
+      }).then(() => {
+        let ids = this.getSelectedIds();
+        if (!ids || ids.length == 0) {
+          this.$message.error(this.$t('pls_select') + "!");
+          return;
+        }
+        HttpUtil.post("/user/del", ids, (res) => {
+          this.$message.success(this.$t('delete_success'));
+          this.getData();
+        });
+        this.multipleSelection = [];
       });
-      this.multipleSelection = [];
     },
     // 编辑操作
     handleEdit(row, type) {

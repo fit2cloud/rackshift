@@ -9,7 +9,7 @@
                 $t('add')
               }}
             </el-button>
-            <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
+            <el-button type="primary" icon="el-icon-delete" @click="delAllSelection">{{ $t('del') }}
             </el-button>
             <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
           </el-button-group>
@@ -264,25 +264,24 @@ export default {
       this.multipleSelection = val;
     },
     delAllSelection() {
-      const length = this.multipleSelection.length;
-      let str = '';
-      for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].machineModel + ' ';
-      }
-      let ids = this.getSelectedIds();
-      if (!ids || ids.length == 0) {
-        this.$message.error(this.$t('pls_select_endpoint') + "!");
-        return;
-      }
-      HttpUtil.post("/endpoint/del", ids, (res) => {
-        if (res.success) {
-          this.$message.success(this.$t('delete_success'));
-        } else {
-          this.$message.success(this.$t('delete_fail'));
+      this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
+        type: 'warning'
+      }).then(() => {
+        let ids = this.getSelectedIds();
+        if (!ids || ids.length == 0) {
+          this.$message.error(this.$t('pls_select_endpoint') + "!");
+          return;
         }
-        this.getData();
+        HttpUtil.post("/endpoint/del", ids, (res) => {
+          if (res.success) {
+            this.$message.success(this.$t('delete_success'));
+          } else {
+            this.$message.success(this.$t('delete_fail'));
+          }
+          this.getData();
+        });
+        this.multipleSelection = [];
       });
-      this.multipleSelection = [];
     },
     // 编辑操作
     handleEdit(row, type) {

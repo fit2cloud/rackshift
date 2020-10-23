@@ -177,21 +177,20 @@ export default {
     },
 
     delAllSelection() {
-      const length = this.multipleSelection.length;
-      let str = '';
-      for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].machineModel + ' ';
-      }
-      let ids = this.getSelectedIds();
-      if (!ids || ids.length == 0) {
-        this.$message.error(this.$t('pls_select_network') + "!");
-        return;
-      }
-      HttpUtil.post("/execution-log/del", ids, (res) => {
-        this.$message.success(this.$t('delete_success'));
-        this.getData();
+      this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
+        type: 'warning'
+      }).then(() => {
+        let ids = this.getSelectedIds();
+        if (!ids || ids.length == 0) {
+          this.$message.error(this.$t('pls_select_network') + "!");
+          return;
+        }
+        HttpUtil.post("/execution-log/del", ids, (res) => {
+          this.$message.success(this.$t('delete_success'));
+          this.getData();
+        });
+        this.multipleSelection = [];
       });
-      this.multipleSelection = [];
     },
 
     viewDetail(row) {

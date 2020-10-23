@@ -9,7 +9,7 @@
                 $t('add')
               }}
             </el-button>
-            <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
+            <el-button type="primary" icon="el-icon-delete" @click="delAllSelection">{{ $t('del') }}
             </el-button>
             <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
           </el-button-group>
@@ -282,21 +282,20 @@ export default {
       this.multipleSelection = val;
     },
     delAllSelection() {
-      const length = this.multipleSelection.length;
-      let str = '';
-      for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].machineModel + ' ';
-      }
-      let ids = this.getSelectedIds();
-      if (!ids || ids.length == 0) {
-        this.$message.error(this.$t('pls_select_network') + "!");
-        return;
-      }
-      HttpUtil.post("/network/del", ids, (res) => {
-        this.$message.success(this.$t('delete_success'));
-        this.getData();
+      this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
+        type: 'warning'
+      }).then(() => {
+        let ids = this.getSelectedIds();
+        if (!ids || ids.length == 0) {
+          this.$message.error(this.$t('pls_select_network') + "!");
+          return;
+        }
+        HttpUtil.post("/network/del", ids, (res) => {
+          this.$message.success(this.$t('delete_success'));
+          this.getData();
+        });
+        this.multipleSelection = [];
       });
-      this.multipleSelection = [];
     },
     // 编辑操作
     handleEdit(row, type) {

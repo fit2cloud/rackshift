@@ -139,6 +139,13 @@ public class UserService {
         return userMapper.updateByExampleSelective(user, userExample) > 0;
     }
 
+    public boolean del(String[] ids) {
+        for (String id : ids) {
+            del(id);
+        }
+        return true;
+    }
+
     public boolean change(JSONObject editObj) {
         String originPwd = editObj.getString("originPwd");
         String newPwd = editObj.getString("newPwd");
