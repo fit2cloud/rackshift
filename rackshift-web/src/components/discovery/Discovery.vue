@@ -43,23 +43,6 @@
 
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
-<!--              <el-dropdown>-->
-<!--                <el-button type="primary">-->
-<!--                  {{ $t('opt') }}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>-->
-<!--                </el-button>-->
-<!--                <el-dropdown-menu slot="dropdown">-->
-<!--                  <el-dropdown-item @click.native="handleEdit(scope.row, 'edit')">{{ $t('edit') }}-->
-<!--                  </el-dropdown-item>-->
-<!--                  <el-dropdown-item v-if="scope.row.syncStatus.indexOf('ING') == -1"-->
-<!--                                    @click.native="handleEdit(scope.row, 'del')">{{ $t('del') }}-->
-<!--                  </el-dropdown-item>-->
-<!--                  <el-dropdown-item v-if="scope.row.syncStatus.indexOf('ING') == -1"-->
-<!--                                    @click.native="handleEdit(scope.row, 'sync')">{{ $t('sync') }}-->
-<!--                  </el-dropdown-item>-->
-<!--                </el-dropdown-menu>-->
-<!--              </el-dropdown>-->
-
-
               <RSButton @click="handleEdit(scope.row, 'edit')"></RSButton>
               <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
               <RSButton @click="handleEdit(scope.row, 'sync')" type="sync" :tip="$t('sync')"></RSButton>
@@ -298,7 +281,6 @@ export default {
         this.editDialogVisible = true;
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
-        this.changeOsVersion();
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'

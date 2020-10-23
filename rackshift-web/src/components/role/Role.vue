@@ -59,13 +59,17 @@
             :visible.sync="editDialogVisible"
             width="30%"
             :before-close="handleClose">
-          <el-form labelPosition="top">
+
+          <el-form label-width="110px" label-position="right">
+
             <el-form-item :label="$t('name')">
               <el-input v-model="editObj.name"></el-input>
             </el-form-item>
+
             <el-form-item :label="$t('desc')">
               <el-input v-model="editObj.description"></el-input>
             </el-form-item>
+
             <el-form-item :label="$t('type')">
               <el-select v-model="editObj.type" :placeholder="$t('pls_select')">
                 <el-option label="管理员" value="admin"></el-option>
@@ -73,10 +77,13 @@
               </el-select>
             </el-form-item>
           </el-form>
-          <span slot="footer" class="dialog-footer">
-    <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
-    <el-button type="primary" @click="confirmEdit">{{ $t('confirm') }}</el-button>
-            </span>
+
+          <template v-slot:footer>
+            <div class="dialog-footer">
+              <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
+              <el-button type="primary" @click="confirmEdit">{{ $t('confirm') }}</el-button>
+            </div>
+          </template>
         </el-dialog>
 
       </div>

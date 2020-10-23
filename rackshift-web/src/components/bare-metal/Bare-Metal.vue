@@ -1,5 +1,5 @@
 <template>
-  <el-tabs style="width:80vw;" v-model="activeName">
+  <el-tabs v-model="activeName">
     <el-tab-pane :label="$t('bare_metal')" name="bare-metal">
       <div class="machine-title2">
         <el-button-group class="batch-button">
@@ -12,12 +12,11 @@
       <div id="control" style="display: flex;">
         <div id="run-workflow">
           <div class="el-icon-caret-right h25"
-               style="border-bottom: yellowgreen 1px solid;    width: 100%;">{{ $t('Run') }}
+               style="border-bottom: yellowgreen 1px solid;  width: 100%;">{{ $t('Run') }}
           </div>
           <div class="run-splitter h25"></div>
           <div>
             <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
-            <!--                            <el-button class="el-icon-close h50"></el-button>-->
           </div>
         </div>
 
@@ -27,7 +26,6 @@
               {{ $t('Workflow') }}
             </div>
             <div class="run-splitter h25"></div>
-            <!--                    <el-button class="h50">Workflow <span class="el-icon-caret-bottom"></span></el-button>-->
             <el-select v-model="wfRequest.workflow" filterable :placeholder="$t('please_select')"
                        @change="getParamsTemplate">
               <el-option
@@ -89,13 +87,13 @@
           ref="multipleTable"
           v-loading="loadingList"
           header-cell-class-name="table-header"
+          style="width: 100%"
           @sort-change="sortChange($event)"
-
           @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" align="left"></el-table-column>
 
-        <el-table-column prop="machineModel" :label="$t('machine_model')" align="left" width="180px"
+        <el-table-column prop="machineModel" :label="$t('machine_model')" align="left" width="180"
                          sortable="custom" style="overflow: scroll">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">

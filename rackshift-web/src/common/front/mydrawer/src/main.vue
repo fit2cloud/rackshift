@@ -126,7 +126,6 @@ export default {
   },
   watch: {
     visible(val) {
-      debugger
       if (val) {
         this.closed = false;
         this.$emit('open');
