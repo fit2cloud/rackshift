@@ -118,7 +118,7 @@
   "pls_input_os_version": "请输入 OS 版本号",
   "not_supported_brand!": "不支持品牌-",
   "Info": "个人信息",
-  "input_key_search": "请输入搜索关键字/型号/序列号/IP",
+  "input_key_search": "型号/序列号/IP",
   "add_endpoint": "添加节点",
   "pxeboot": "PXE 重启",
   "edit_fail": "编辑失败",
@@ -225,14 +225,14 @@
   "pls_select_password": "请选择密码",
   "disk": "磁盘",
   "network_card_mac": "网卡 MAC 地址",
-  "pls_input_params": "请输入参数",
+  "pls_input_params": "該項不能為空",
   "pls_input_name": "请输入名称",
   "pls_select_discovery-devices": "请选择已发现设备",
   "dhcp_enable": "是否开启 DHCP",
   "injectable_name": "RackHD 数据库名称",
   "proc_name": "处理器型号",
   "no_nessary_to_set": "无参数设置",
-  "raid": "Raid 级别",
+  "raid": "RAID 级别",
   "startIp": "开始 IP",
   "User": "用户",
   "enclosure_id": "EnclosureId",
@@ -266,5 +266,6 @@
   "user": "用户",
   "Wizard": "使用向导",
   "edit_workflow": "编辑工作流",
-  "Plugin": "插件"
+  "Plugin": "插件",
+  "admin": "管理员"
 }

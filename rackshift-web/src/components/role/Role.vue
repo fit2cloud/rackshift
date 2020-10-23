@@ -6,18 +6,19 @@
           <div class="el-button-group batch-button">
             <el-button
                 type="primary"
-                icon="el-icon-delete"
+                icon="el-icon-circle-plus-outline"
                 class="handle-del mr10"
-                @click="delAllSelection"
-            >{{ $t('batch_del') }}
+                @click="handleEdit({}, 'add')"
+            >{{ $t('add') }}
             </el-button>
             <el-button
                 type="primary"
                 icon="el-icon-delete"
                 class="handle-del mr10"
-                @click="handleEdit({}, 'add')"
-            >{{ $t('add') }}
+                @click="delAllSelection"
+            >{{ $t('delete') }}
             </el-button>
+            <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
           </div>
         </div>
         <el-table
@@ -60,20 +61,20 @@
             width="30%"
             :before-close="handleClose">
 
-          <el-form label-width="110px" label-position="right">
+          <el-form label-width="110px" :model="editObj" label-position="right" :rules="rules" ref="editForm">
 
-            <el-form-item :label="$t('name')">
+            <el-form-item :label="$t('name')" prop="name">
               <el-input v-model="editObj.name"></el-input>
             </el-form-item>
 
-            <el-form-item :label="$t('desc')">
+            <el-form-item :label="$t('desc')" prop="description">
               <el-input v-model="editObj.description"></el-input>
             </el-form-item>
 
-            <el-form-item :label="$t('type')">
+            <el-form-item :label="$t('type')" prop="type">
               <el-select v-model="editObj.type" :placeholder="$t('pls_select')">
-                <el-option label="管理员" value="admin"></el-option>
-                <el-option label="普通用户" value="user"></el-option>
+                <el-option :label="$t('admin')" value="admin"></el-option>
+                <el-option :label="$t('user')" value="user"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
@@ -96,11 +97,23 @@
 <script>
 
 import HttpUtil from "../../common/utils/HttpUtil"
+import {requiredValidator} from "@/common/validator/CommonValidator";
 
 let _ = require('lodash');
 export default {
   data() {
     return {
+      rules: {
+        name: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        description: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        type: [
+          {validator: requiredValidator, trigger: 'blur', vue: this, msg: this.$t('pls_select') + this.$t('type')},
+        ],
+      },
       activeName: 'role',
       query: {
         name: '',
@@ -157,6 +170,14 @@ export default {
       this.editType = 'add';
     },
     confirmEdit() {
+      this.validateResult = true;
+      this.$refs.editForm.validate(f => {
+        if (!f) {
+          this.validateResult = false;
+        }
+      });
+      if (!this.validateResult) return;
+
       if (this.editType == 'edit') {
         HttpUtil.post("/role/update", this.editObj, (res) => {
           this.editDialogVisible = false;

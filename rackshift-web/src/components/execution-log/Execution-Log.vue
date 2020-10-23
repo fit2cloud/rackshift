@@ -7,8 +7,9 @@
         <div class="machine-title">
           <div class="el-button-group batch-button">
             <button type="button" class="el-button el-button--primary" @click="delAllSelection"><i
-                class="el-icon-delete"></i>{{ $t('batch_del') }}
+                class="el-icon-delete"></i>{{ $t('delete') }}
             </button>
+            <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
           </div>
         </div>
 

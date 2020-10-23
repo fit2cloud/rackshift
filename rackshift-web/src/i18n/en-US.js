@@ -118,7 +118,7 @@ export default {
     "pls_input_os_version": "Please enter the OS version number",
     "not_supported_brand!": "The brand is not supported-",
     "Info": "Personal Information",
-    "input_key_search": "Please enter the search keyword/model/serial number/IP",
+    "input_key_search": "model/serial number/IP",
     "add_endpoint": "Add node",
     "pxeboot": "PXE reboot",
     "edit_fail": "Edit failed",
@@ -225,7 +225,7 @@ export default {
     "pls_select_password": "Please select a password",
     "disk": "Disk",
     "network_card_mac": "Network card MAC address",
-    "pls_input_params": "Please enter the miserable numbers",
+    "pls_input_params": "This cannot be null",
     "pls_input_name": "Please enter a name",
     "pls_select_discovery-devices": "Please select discovered devices",
     "dhcp_enable": "Whether to enable DHCP",
@@ -284,4 +284,9 @@ export default {
     "START": "Start",
     "TERMINATE": "User Termination",
     "END": "End",
+    "SUBMIT": "SUBMIT",
+    "PROCESSING": "PROCESSING",
+    "email_format_error": "Invalid Email Format",
+    "phone_format_error": "Invalid Phone Format",
+    "admin": "admin"
 }

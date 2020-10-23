@@ -9,15 +9,15 @@
       </el-col>
       <el-col :span="8">
         <div><h1>{{ $t('change_pwd') }}</h1></div>
-        <el-form :model="editObj">
-          <el-form-item :label="$t('origin-password')">
+        <el-form :model="editObj" :rules="rules" ref="editForm">
+          <el-form-item :label="$t('origin-password')" prop="originPwd">
             <el-input v-model="editObj.originPwd" show-password></el-input>
           </el-form-item>
-          <el-form-item :label="$t('new-password')">
+          <el-form-item :label="$t('new-password')" prop="newPwd">
             <el-input v-model="editObj.newPwd" show-password></el-input>
           </el-form-item>
 
-          <el-form-item :label="$t('confirm-password')">
+          <el-form-item :label="$t('confirm-password')" prop="confirmPwd">
             <el-input v-model="editObj.confirmPwd" show-password></el-input>
           </el-form-item>
 
@@ -37,7 +37,7 @@
 <script>
 
 import HttpUtil from "../../common/utils/HttpUtil"
-import Vue from "vue"
+import {requiredValidator} from "@/common/validator/CommonValidator";
 
 
 let _ = require('lodash');
@@ -45,12 +45,30 @@ export default {
   data() {
     return {
       editObj: {},
+      rules: {
+        originPwd: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        newPwd: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        confirmPwd: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ]
+      },
     };
   },
   mounted() {
   },
   methods: {
     change() {
+      this.validateResult = true;
+      this.$refs.editForm.validate(f => {
+        if (!f) {
+          this.validateResult = false;
+        }
+      });
+      if (!this.validateResult) return;
       HttpUtil.post("/user/change", this.editObj, (res) => {
         if (res.data) {
           this.$message.success(this.$t('opt_success'));

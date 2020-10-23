@@ -150,6 +150,9 @@ export default {
         name: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
+        type: [
+          {validator: requiredValidator, trigger: 'blur', vue: this, msg: this.$t('pls_select') + this.$t('endpoint')},
+        ],
         ip: [
           {validator: ipValidator, trigger: 'blur', vue: this},
         ],

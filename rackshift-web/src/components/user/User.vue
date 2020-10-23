@@ -6,18 +6,19 @@
           <div class="el-button-group batch-button">
             <el-button
                 type="primary"
-                icon="el-icon-delete"
+                icon="el-icon-circle-plus-outline"
                 class="handle-del mr10"
-                @click="delAllSelection"
-            >{{ $t('batch_del') }}
+                @click="handleEdit({}, 'add')"
+            >{{ $t('add') }}
             </el-button>
             <el-button
                 type="primary"
                 icon="el-icon-delete"
                 class="handle-del mr10"
-                @click="handleEdit({}, 'add')"
-            >{{ $t('add') }}
+                @click="delAllSelection"
+            >{{ $t('delete') }}
             </el-button>
+            <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
           </div>
         </div>
         <el-table
@@ -62,23 +63,23 @@
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
-            <el-form :model="editObj" label-position="top">
-              <el-form-item label="ID" :label-width="formLabelWidth">
+            <el-form :model="editObj" label-position="top" :rules="rules" ref="editForm">
+              <el-form-item label="ID" :label-width="formLabelWidth" prop="id">
                 <el-input v-model="editObj.id" autocomplete="off"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('name')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('name')" :label-width="formLabelWidth" prop="name">
                 <el-input v-model="editObj.name" autocomplete="off"
                           :placeholder="$t('pls_input_name')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('email')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('email')" :label-width="formLabelWidth" prop="email">
                 <el-input v-model="editObj.email" autocomplete="off"
                           :placeholder="$t('pls_input_email')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('phone')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('phone')" :label-width="formLabelWidth" prop="phone">
                 <el-input v-model="editObj.phone" autocomplete="off"
                           :placeholder="$t('pls_input_phone')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('role')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('role')" :label-width="formLabelWidth" prop="rolesIds">
                 <el-select v-model="editObj.rolesIds" multiple :placeholder="$t('pls_select')">
                   <el-option
                       v-for="(item, key) in allRoles"
@@ -108,11 +109,29 @@
 
 <script>
 import HttpUtil from "../../common/utils/HttpUtil";
+import {requiredValidator, phoneValidator, emailValidator} from "@/common/validator/CommonValidator";
 
 let _ = require('lodash');
 export default {
   data() {
     return {
+      rules: {
+        id: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        name: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        email: [
+          {validator: emailValidator, trigger: 'blur', vue: this},
+        ],
+        phone: [
+          {validator: phoneValidator, trigger: 'blur', vue: this},
+        ],
+        rolesIds: [
+          {validator: requiredValidator, trigger: 'blur', vue: this, msg: this.$t('pls_select') + this.$t('role')},
+        ],
+      },
       activeName: 'user',
       query: {
         address: '',
@@ -192,6 +211,13 @@ export default {
       this.editType = 'add';
     },
     confirmEdit() {
+      this.validateResult = true;
+      this.$refs.editForm.validate(f => {
+        if (!f) {
+          this.validateResult = false;
+        }
+      });
+      if (!this.validateResult) return;
       this.loading = true;
       if (this.editType == 'edit') {
         HttpUtil.post("/user/update", this.editObj, (res) => {
