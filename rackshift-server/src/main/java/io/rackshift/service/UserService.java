@@ -112,7 +112,8 @@ public class UserService {
     public boolean update(UserDTO queryVO) {
         User user = new User();
         BeanUtils.copyProperties(queryVO, user);
-        userMapper.updateByPrimaryKey(user);
+        user.setPassword(null);
+        userMapper.updateByPrimaryKeySelective(user);
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.createCriteria().andUserIdEqualTo(queryVO.getId());
         userRoleMapper.deleteByExample(userRoleExample);
