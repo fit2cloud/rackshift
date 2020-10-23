@@ -138,7 +138,7 @@ body {
   background: #111;
   /*background: linear-gradient(to right, #111, #111 80%, #111);*/
   /*background: linear-gradient(to right, #00447C ,#409EFF 80%, #00447C );*/
-  background: linear-gradient(to right, #000000 20%, #00447C 80%);
+  background: linear-gradient(to right, #00447C 20%, #00447C 80%);
   color: #333;
   z-index: 2;
   line-height: 45px;
@@ -234,11 +234,8 @@ button {
   padding-bottom: 30px;
 }
 
-:focus.is-active.is-focus.is-top {
-  box-shadow: none;
-}
-
 :focus {
   outline: 0;
 }
+
 </style>

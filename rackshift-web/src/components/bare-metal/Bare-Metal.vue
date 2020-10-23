@@ -1,387 +1,386 @@
 <template>
   <el-tabs style="width:80vw;" v-model="activeName">
     <el-tab-pane :label="$t('bare_metal')" name="bare-metal">
-      <div>
-        <div class="machine-title2">
-          <el-button-group class="batch-button">
-            <!--            <el-button type="primary" icon="el-icon-circle-plus-outline">{{ $t('add') }}</el-button>-->
-            <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
-            </el-button>
-            <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
-          </el-button-group>
+      <div class="machine-title2">
+        <el-button-group class="batch-button">
+          <!--            <el-button type="primary" icon="el-icon-circle-plus-outline">{{ $t('add') }}</el-button>-->
+          <el-button type="primary" icon="el-icon-delete-solid" @click="delAllSelection">{{ $t('del') }}
+          </el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
+        </el-button-group>
+      </div>
+      <div id="control" style="display: flex;">
+        <div id="run-workflow">
+          <div class="el-icon-caret-right h25"
+               style="border-bottom: yellowgreen 1px solid;    width: 100%;">{{ $t('Run') }}
+          </div>
+          <div class="run-splitter h25"></div>
+          <div>
+            <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
+            <!--                            <el-button class="el-icon-close h50"></el-button>-->
+          </div>
         </div>
-        <div id="control" style="display: flex;">
-          <div id="run-workflow">
-            <div class="el-icon-caret-right h25"
-                 style="border-bottom: yellowgreen 1px solid;    width: 100%;">{{ $t('Run') }}
+
+        <div id="workflow-selector" style="display: flex;">
+          <div id="select-workflow">
+            <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+              {{ $t('Workflow') }}
             </div>
             <div class="run-splitter h25"></div>
-            <div>
-              <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
-              <!--                            <el-button class="el-icon-close h50"></el-button>-->
-            </div>
+            <!--                    <el-button class="h50">Workflow <span class="el-icon-caret-bottom"></span></el-button>-->
+            <el-select v-model="wfRequest.workflow" filterable :placeholder="$t('please_select')"
+                       @change="getParamsTemplate">
+              <el-option
+                  v-for="g in supportedWorkflow"
+                  :label="g.friendlyName"
+                  :value="g.id"></el-option>
+            </el-select>
+
+            <el-button :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"
+                       @click="addToSelectedWorkflow"
+                       class="h50 ml10"><span
+                class="el-icon-circle-plus"></span>{{ $t('add_to_selected_wf_list') }}
+            </el-button>
           </div>
+        </div>
 
-          <div id="workflow-selector" style="display: flex;">
-            <div id="select-workflow">
-              <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
-                {{ $t('Workflow') }}
-              </div>
-              <div class="run-splitter h25"></div>
-              <!--                    <el-button class="h50">Workflow <span class="el-icon-caret-bottom"></span></el-button>-->
-              <el-select v-model="wfRequest.workflow" filterable :placeholder="$t('please_select')"
-                         @change="getParamsTemplate">
-                <el-option
-                    v-for="g in supportedWorkflow"
-                    :label="g.friendlyName"
-                    :value="g.id"></el-option>
-              </el-select>
-
-              <el-button :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"
-                         @click="addToSelectedWorkflow"
-                         class="h50 ml10"><span
-                  class="el-icon-circle-plus"></span>{{ $t('add_to_selected_wf_list') }}
-              </el-button>
-            </div>
-          </div>
-
-          <div id="action-list">
-            <div class="el-icon-s-operation h25"
-                 style="border-bottom: yellowgreen 1px solid;    width: 100%;">
-              <el-badge :value="selectedWorkflow.length" class="item" type="primary" v-show="selectedWorkflow.length">
-                {{ $t('selected_workflows') }}
-              </el-badge>
-              <span v-show="selectedWorkflow.length == 0">
+        <div id="action-list">
+          <div class="el-icon-s-operation h25"
+               style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+            <el-badge :value="selectedWorkflow.length" class="item" type="primary" v-show="selectedWorkflow.length">
+              {{ $t('selected_workflows') }}
+            </el-badge>
+            <span v-show="selectedWorkflow.length == 0">
               {{ $t('selected_workflows') }}
               </span>
-            </div>
-            <div>
-              <el-card v-for="(w, $index) in selectedWorkflow" style="height:100%;">
-                <el-row>
-                  <el-col :span="6">
-                    <el-button @click="deleteSelectedWorkflow($index)" class="h50 ml10"><span
-                        class="el-icon-remove"></span>{{ $t('del') }}
-                    </el-button>
-                  </el-col>
+          </div>
+          <div>
+            <el-card v-for="(w, $index) in selectedWorkflow" style="height:100%;">
+              <el-row>
+                <el-col :span="6">
+                  <el-button @click="deleteSelectedWorkflow($index)" class="h50 ml10"><span
+                      class="el-icon-remove"></span>{{ $t('del') }}
+                  </el-button>
+                </el-col>
 
-                  <el-col :span="10">
-                    {{ w.machineModel + ' ' + w.machineSn }}
-                    <br>
-                    {{ w.friendlyName }}
-                  </el-col>
+                <el-col :span="10">
+                  {{ w.machineModel + ' ' + w.machineSn }}
+                  <br>
+                  {{ w.friendlyName }}
+                </el-col>
 
-                  <el-col :span="8">
-                    <el-button @click="editWfParams($index)" v-if="w.settable">
-                      {{ $t('set_workflow_param') }}
-                    </el-button>
-                    <span v-if="!w.settable">
+                <el-col :span="8">
+                  <el-button @click="editWfParams($index)" v-if="w.settable">
+                    {{ $t('set_workflow_param') }}
+                  </el-button>
+                  <span v-if="!w.settable">
                                 {{ $t('no_nessary_to_set') }}
                               </span>
-                  </el-col>
-                </el-row>
-              </el-card>
-            </div>
+                </el-col>
+              </el-row>
+            </el-card>
           </div>
         </div>
+      </div>
 
-        <el-table
-            :data="tableData"
-            class="table"
-            ref="multipleTable"
-            v-loading="loadingList"
-            header-cell-class-name="table-header"
-            @sort-change="sortChange($event)"
-            style="width: 100%"
-            @selection-change="handleSelectionChange"
-        >
-          <el-table-column type="selection" align="left"></el-table-column>
+      <el-table
+          :data="tableData"
+          class="table"
+          ref="multipleTable"
+          v-loading="loadingList"
+          header-cell-class-name="table-header"
+          @sort-change="sortChange($event)"
 
-          <el-table-column prop="machineModel" :label="$t('machine_model')" align="left" width="180px"
-                           sortable="custom" style="overflow: scroll">
-            <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
-                <el-link type="primary" @click="showDetail(scope.row)" target="_blank">
+          @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" align="left"></el-table-column>
+
+        <el-table-column prop="machineModel" :label="$t('machine_model')" align="left" width="180px"
+                         sortable="custom" style="overflow: scroll">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
+              <el-link type="primary" @click="showDetail(scope.row)" target="_blank">
                   <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>
-                </el-link>
-              </el-tooltip>
-            </template>
-          </el-table-column>
+              </el-link>
+            </el-tooltip>
+          </template>
+        </el-table-column>
 
-          <el-table-column prop="machineSn" :label="$t('machine_sn')" align="left"
-                           sortable="custom" width="150px">
-            <template slot-scope="scope">
-              {{ scope.row.machineSn }}
-            </template>
-          </el-table-column>
+        <el-table-column prop="machineSn" :label="$t('machine_sn')" align="left"
+                         sortable="custom" width="150px">
+          <template slot-scope="scope">
+            {{ scope.row.machineSn }}
+          </template>
+        </el-table-column>
 
-          <el-table-column prop="managementIp" :label="$t('management_ip')" align="left" width="150px"
-                           sortable="custom">
-            <template slot-scope="scope">
-              {{ scope.row.managementIp }}
-            </template>
-          </el-table-column>
+        <el-table-column prop="managementIp" :label="$t('management_ip')" align="left" width="150px"
+                         sortable="custom">
+          <template slot-scope="scope">
+            {{ scope.row.managementIp }}
+          </template>
+        </el-table-column>
 
-          <el-table-column prop="ipArray" :label="$t('IP')" align="left" width="140px"
-                           sortable="custom">
-            <template slot-scope="scope">
-              {{ scope.row.ipArray }}
-            </template>
-          </el-table-column>
+        <el-table-column prop="ipArray" :label="$t('IP')" align="left" width="140px"
+                         sortable="custom">
+          <template slot-scope="scope">
+            {{ scope.row.ipArray }}
+          </template>
+        </el-table-column>
 
-          <el-table-column :prop="c.prop" :label="c.label" align="left" v-for="c in columns" sortable="custom"
-                           :width="resizeWith(c)">
-            <template slot-scope="scope">
-              <span v-if="!c.custom">{{ scope.row[c.prop] }}</span>
-              <span v-if="c.custom">{{ c.formatter(scope.row[c.prop]) }}</span>
-            </template>
-          </el-table-column>
+        <el-table-column :prop="c.prop" :label="c.label" align="left" v-for="c in columns" sortable="custom"
+                         :width="resizeWith(c)">
+          <template slot-scope="scope">
+            <span v-if="!c.custom">{{ scope.row[c.prop] }}</span>
+            <span v-if="c.custom">{{ c.formatter(scope.row[c.prop]) }}</span>
+          </template>
+        </el-table-column>
 
-          <el-table-column prop="status" :label="$t('machine_status')" align="left" width="150px">
-            <template slot-scope="scope">
-              <i class="el-icon-loading" v-if="scope.row.status && scope.row.status.indexOf('ing') != -1"></i>
-              <span style="margin-left: 10px">{{ scope.row.status | statusFilter }}</span>
-            </template>
-          </el-table-column>
+        <el-table-column prop="status" :label="$t('machine_status')" align="left" width="150px">
+          <template slot-scope="scope">
+            <i class="el-icon-loading" v-if="scope.row.status && scope.row.status.indexOf('ing') != -1"></i>
+            <span style="margin-left: 10px">{{ scope.row.status | statusFilter }}</span>
+          </template>
+        </el-table-column>
 
-          <el-table-column prop="" :label="$t('opt')" align="left" width="130px">
-            <template slot="header" slot-scope="scope">
-              <el-input
-                  v-model="search"
-                  size="mini"
-                  :placeholder="$t('input_key_search')" v-on:change="getData"/>
-            </template>
-            <template slot-scope="scope">
-              <el-dropdown>
-                <el-button type="primary">
-                  {{ $t('opt') }}<i class="el-icon-arrow-down el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item @click.native="power('on', scope.row)">{{ $t('poweron') }}
-                  </el-dropdown-item>
-                  <el-dropdown-item @click.native="power('off', scope.row)">{{ $t('poweroff') }}
-                  </el-dropdown-item>
-                  <el-dropdown-item @click.native="power('reset', scope.row)">{{ $t('powercycle') }}
-                  </el-dropdown-item>
-                  <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
-                  </el-dropdown-item>
-                  <el-dropdown-item @click.native="fillOBM(scope.row)"> {{ $t('OBM') + $t('info') }}
-                  </el-dropdown-item>
-                  <el-dropdown-item @click.native="expandChange(scope.row)">{{ $t('view_execution_log') }}
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="pagination">
-          <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handlePageChange"
-              :current-page="query.pageIndex"
-              :page-sizes="[10, 20, 50, 100]"
-              :page-size="10"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="pageTotal">
-          </el-pagination>
+        <el-table-column prop="" :label="$t('opt')" align="left" width="130px">
+          <template slot="header" slot-scope="scope">
+            <el-input
+                v-model="search"
+                size="mini"
+                :placeholder="$t('input_key_search')" v-on:change="getData"/>
+          </template>
+          <template slot-scope="scope">
+            <el-dropdown>
+              <el-button type="primary">
+                {{ $t('opt') }}<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click.native="power('on', scope.row)">{{ $t('poweron') }}
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="power('off', scope.row)">{{ $t('poweroff') }}
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="power('reset', scope.row)">{{ $t('powercycle') }}
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="fillOBM(scope.row)"> {{ $t('OBM') + $t('info') }}
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="expandChange(scope.row)">{{ $t('view_execution_log') }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagination">
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handlePageChange"
+            :current-page="query.pageIndex"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="10"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="pageTotal">
+        </el-pagination>
+      </div>
+
+      <el-drawer
+          size="50%"
+          :title="logTitle"
+          :visible.sync="executionLogDrawer"
+          direction="ttb"
+          min-height="40vh"
+          :wrapperClosable="false"
+          :before-close="handleCloseExecutionLog">
+        <el-card>
+          <table class="detail-info">
+            <tr>
+              <td>{{ $t('time') }}</td>
+              <td>{{ $t('user') }}</td>
+              <td>{{ $t('operation') }}</td>
+              <td>{{ $t('output') }}</td>
+            </tr>
+
+            <tr v-for="l in logs">
+              <td>{{ l.createTime | dateFormat }}</td>
+              <td>{{ l.user }}</td>
+              <td>{{ l.operation }}</td>
+              <td>{{ l.outPut }}</td>
+            </tr>
+          </table>
+        </el-card>
+      </el-drawer>
+
+      <!--obm-->
+      <el-dialog :title="$t('obms')" :visible.sync="fillOutObms" width="40vw">
+        <el-form :model="form">
+          <el-form-item :label="$t('ip')" :label-width="formLabelWidth">
+            <el-input v-model="curObm.ip" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('username')" :label-width="formLabelWidth">
+            <el-input v-model="curObm.userName" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('pwd')" :label-width="formLabelWidth">
+            <el-input v-model="curObm.pwd" autocomplete="off" show-password></el-input>
+          </el-form-item>
+        </el-form>
+        <template v-slot:footer>
+          <div class="dialog-footer">
+            <el-button @click="fillOutObms = false">{{ $t('cancel') }}</el-button>
+            <el-button type="primary" @click="submitOBM" :loading="obmLoading">{{ $t('confirm') }}</el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!--参数配置-->
+      <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="70vw">
+        <keep-alive>
+          <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
+                     :is="currentWfParamTemplate"
+                     :params="workflowParam"
+                     :extraParams="extraParams"
+                     :currentWorkflowIndex="editWorkflowIndex"
+                     :bareMetalId="selectedWorkflow[editWorkflowIndex].bareMetalId"
+                     :workflow="selectedWorkflow[editWorkflowIndex]"
+                     ref="currentWfParamTemplate"></component>
+        </keep-alive>
+        <template v-slot:footer>
+          <el-button @click="restoreParams">
+            <i class="el-icon-refresh"></i>
+            {{ $t('reset') }}
+          </el-button>
+          <el-button type="primary" @click="saveParams" :loading="fillWfParamsLoading">{{ $t('confirm') }}</el-button>
+        </template>
+      </el-dialog>
+
+      <!--详情页-->
+      <drawer
+          :visible.sync="detailDrawer"
+          direction="rtl"
+          :with-header="false"
+          size="50%"
+          :before-close="handleClose">
+
+        <div class="demo-drawer__content">
+          <el-tabs v-model="detailShowName">
+            <el-tab-pane :label="$t('detail')" name="detail">
+              <el-form ref="form" :model="machine" label-position="top">
+                <el-form-item :label="$t('machine_model')">
+                  {{ machine.machineModel }}
+                </el-form-item>
+                <el-form-item :label="$t('machine_sn')">
+                  {{ machine.machineSn }}
+                </el-form-item>
+                <el-form-item :label="$t('management_ip')">
+                  {{ machine.managementIp }}
+                </el-form-item>
+                <el-form-item :label="$t('bmc_mac')">
+                  {{ machine.bmcMac }}
+                </el-form-item>
+                <el-form-item :label="$t('cpu')">
+                  {{ machine.cpuType }} X {{ machine.cpu }}
+                </el-form-item>
+                <el-form-item :label="$t('memory')">
+                  {{ machine.memory }}{{ ' ' + $t('GB') }}
+                </el-form-item>
+                <el-form-item :label="$t('disk')">
+                  {{ machine.disk }}{{ ' ' + $t('GB') }}
+                </el-form-item>
+              </el-form>
+            </el-tab-pane>
+            <el-tab-pane :label="$t('cpu_detail')" name="cpuDetail" class="detail-pane">
+              <table class="detail-info">
+                <tr>
+                  <td>{{ $t('proc_name') }}</td>
+                  <td>{{ $t('proc_socket') }}</td>
+                  <td>{{ $t('proc_speed') }}</td>
+                  <td>{{ $t('proc_num_cores') }}</td>
+                  <td>{{ $t('proc_num_threads') }}</td>
+                  <td>{{ $t('sync_time') }}</td>
+                </tr>
+                <tr v-for="c in cpus">
+                  <td>{{ c.procName }}</td>
+                  <td>{{ c.procSocket }}</td>
+                  <td>{{ c.procSpeed }}</td>
+                  <td>{{ c.procNumCores }}</td>
+                  <td>{{ c.procNumThreads }}</td>
+                  <td>{{ c.syncTime | dateFormat }}</td>
+                </tr>
+              </table>
+            </el-tab-pane>
+            <el-tab-pane :label="$t('memory_detail')" name="memoryDetail" class="detail-pane">
+              <table class="detail-info">
+                <tr>
+                  <td>{{ $t('mem_cpu_num') }}</td>
+                  <td>{{ $t('mem_mod_num') }}</td>
+                  <td>{{ $t('mem_mod_size') }}</td>
+                  <td>{{ $t('mem_mod_type') }}</td>
+                  <td>{{ $t('mem_mod_num') }}</td>
+                  <td>{{ $t('mem_mod_frequency') }}</td>
+                  <td>{{ $t('mem_mod_part_num') }}</td>
+                  <td>{{ $t('mem_mod_min_volt') }}</td>
+                  <td>{{ $t('sync_time') }}</td>
+                </tr>
+                <tr v-for="c in memories">
+                  <td>{{ c.memCpuNum }}</td>
+                  <td>{{ c.memModNum }}</td>
+                  <td>{{ c.memModSize + ' GB' }}</td>
+                  <td>{{ c.memModType }}</td>
+                  <td>{{ c.memModNum }}</td>
+                  <td>{{ c.memModFrequency + ' MHz' }}</td>
+                  <td>{{ c.memModPartNum }}</td>
+                  <td>{{ c.memModMinVolt }}</td>
+                  <td>{{ c.syncTime | dateFormat }}</td>
+                </tr>
+              </table>
+            </el-tab-pane>
+            <el-tab-pane :label="$t('disk_detail')" name="diskDetail" class="detail-pane">
+              <table class="detail-info">
+                <tr>
+                  <td>{{ $t('enclosure_id') }}</td>
+                  <td>{{ $t('controller_id') }}</td>
+                  <td>{{ $t('drive') }}</td>
+                  <td>{{ $t('type') }}</td>
+                  <td>{{ $t('size') }}</td>
+                  <td>{{ $t('raid') }}</td>
+                  <td>{{ $t('manufactor') }}</td>
+                  <td>{{ $t('sn') }}</td>
+                  <td>{{ $t('sync_time') }}</td>
+                </tr>
+                <tr v-for="c in disks">
+                  <td>{{ c.enclosureId }}</td>
+                  <td>{{ c.controllerId }}</td>
+                  <td>{{ c.drive }}</td>
+                  <td>{{ c.type }}</td>
+                  <td>{{ c.size }}</td>
+                  <td>{{ c.raid }}</td>
+                  <td>{{ c.manufactor }}</td>
+                  <td>{{ c.sn }}</td>
+                  <td>{{ c.syncTime | dateFormat }}</td>
+                </tr>
+              </table>
+            </el-tab-pane>
+
+            <el-tab-pane :label="$t('nic_detail')" name="nicDetail" class="detail-pane">
+              <table class="detail-info">
+                <tr>
+                  <td>{{ $t('nic_number') }}</td>
+                  <td>{{ $t('mac') }}</td>
+                  <td>{{ $t('sync_time') }}</td>
+                </tr>
+                <tr v-for="c in nics">
+                  <td>{{ c.number }}</td>
+                  <td>{{ c.mac }}</td>
+                  <td>{{ c.syncTime | dateFormat }}</td>
+                </tr>
+              </table>
+            </el-tab-pane>
+          </el-tabs>
         </div>
 
-        <el-drawer
-            size="50%"
-            :title="logTitle"
-            :visible.sync="executionLogDrawer"
-            direction="ttb"
-            min-height="40vh"
-            :wrapperClosable="false"
-            :before-close="handleCloseExecutionLog">
-          <el-card>
-            <table class="detail-info">
-              <tr>
-                <td>{{ $t('time') }}</td>
-                <td>{{ $t('user') }}</td>
-                <td>{{ $t('operation') }}</td>
-                <td>{{ $t('output') }}</td>
-              </tr>
+      </drawer>
 
-              <tr v-for="l in logs">
-                <td>{{ l.createTime | dateFormat }}</td>
-                <td>{{ l.user }}</td>
-                <td>{{ l.operation }}</td>
-                <td>{{ l.outPut }}</td>
-              </tr>
-            </table>
-          </el-card>
-        </el-drawer>
-
-        <!--obm-->
-        <el-dialog :title="$t('obms')" :visible.sync="fillOutObms" width="40vw">
-          <el-form :model="form">
-            <el-form-item :label="$t('ip')" :label-width="formLabelWidth">
-              <el-input v-model="curObm.ip" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('username')" :label-width="formLabelWidth">
-              <el-input v-model="curObm.userName" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('pwd')" :label-width="formLabelWidth">
-              <el-input v-model="curObm.pwd" autocomplete="off" show-password></el-input>
-            </el-form-item>
-          </el-form>
-          <template v-slot:footer>
-            <div class="dialog-footer">
-              <el-button @click="fillOutObms = false">{{ $t('cancel') }}</el-button>
-              <el-button type="primary" @click="submitOBM" :loading="obmLoading">{{ $t('confirm') }}</el-button>
-            </div>
-          </template>
-        </el-dialog>
-
-        <!--参数配置-->
-        <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="70vw">
-          <keep-alive>
-            <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
-                       :is="currentWfParamTemplate"
-                       :params="workflowParam"
-                       :extraParams="extraParams"
-                       :currentWorkflowIndex="editWorkflowIndex"
-                       :bareMetalId="selectedWorkflow[editWorkflowIndex].bareMetalId"
-                       :workflow="selectedWorkflow[editWorkflowIndex]"
-                       ref="currentWfParamTemplate"></component>
-          </keep-alive>
-          <template v-slot:footer>
-            <el-button @click="restoreParams">
-              <i class="el-icon-refresh"></i>
-              {{ $t('reset') }}
-            </el-button>
-            <el-button type="primary" @click="saveParams" :loading="fillWfParamsLoading">{{ $t('confirm') }}</el-button>
-          </template>
-        </el-dialog>
-
-        <!--详情页-->
-        <el-drawer
-            :visible.sync="detailDrawer"
-            direction="rtl"
-            :with-header="false"
-            size="50%"
-            :before-close="handleClose">
-          <div class="demo-drawer__content">
-            <el-tabs v-model="detailShowName">
-              <el-tab-pane :label="$t('detail')" name="detail">
-                <el-form ref="form" :model="machine" label-position="top">
-                  <el-form-item :label="$t('machine_model')">
-                    {{ machine.machineModel }}
-                  </el-form-item>
-                  <el-form-item :label="$t('machine_sn')">
-                    {{ machine.machineSn }}
-                  </el-form-item>
-                  <el-form-item :label="$t('management_ip')">
-                    {{ machine.managementIp }}
-                  </el-form-item>
-                  <el-form-item :label="$t('bmc_mac')">
-                    {{ machine.bmcMac }}
-                  </el-form-item>
-                  <el-form-item :label="$t('cpu')">
-                    {{ machine.cpuType }} X {{ machine.cpu }}
-                  </el-form-item>
-                  <el-form-item :label="$t('memory')">
-                    {{ machine.memory }}{{ ' ' + $t('GB') }}
-                  </el-form-item>
-                  <el-form-item :label="$t('disk')">
-                    {{ machine.disk }}{{ ' ' + $t('GB') }}
-                  </el-form-item>
-                </el-form>
-              </el-tab-pane>
-              <el-tab-pane :label="$t('cpu_detail')" name="cpuDetail" class="detail-pane">
-                <table class="detail-info">
-                  <tr>
-                    <td>{{ $t('proc_name') }}</td>
-                    <td>{{ $t('proc_socket') }}</td>
-                    <td>{{ $t('proc_speed') }}</td>
-                    <td>{{ $t('proc_num_cores') }}</td>
-                    <td>{{ $t('proc_num_threads') }}</td>
-                    <td>{{ $t('sync_time') }}</td>
-                  </tr>
-                  <tr v-for="c in cpus">
-                    <td>{{ c.procName }}</td>
-                    <td>{{ c.procSocket }}</td>
-                    <td>{{ c.procSpeed }}</td>
-                    <td>{{ c.procNumCores }}</td>
-                    <td>{{ c.procNumThreads }}</td>
-                    <td>{{ c.syncTime | dateFormat }}</td>
-                  </tr>
-                </table>
-              </el-tab-pane>
-              <el-tab-pane :label="$t('memory_detail')" name="memoryDetail" class="detail-pane">
-                <table class="detail-info">
-                  <tr>
-                    <td>{{ $t('mem_cpu_num') }}</td>
-                    <td>{{ $t('mem_mod_num') }}</td>
-                    <td>{{ $t('mem_mod_size') }}</td>
-                    <td>{{ $t('mem_mod_type') }}</td>
-                    <td>{{ $t('mem_mod_num') }}</td>
-                    <td>{{ $t('mem_mod_frequency') }}</td>
-                    <td>{{ $t('mem_mod_part_num') }}</td>
-                    <td>{{ $t('mem_mod_min_volt') }}</td>
-                    <td>{{ $t('sync_time') }}</td>
-                  </tr>
-                  <tr v-for="c in memories">
-                    <td>{{ c.memCpuNum }}</td>
-                    <td>{{ c.memModNum }}</td>
-                    <td>{{ c.memModSize + ' GB' }}</td>
-                    <td>{{ c.memModType }}</td>
-                    <td>{{ c.memModNum }}</td>
-                    <td>{{ c.memModFrequency + ' MHz' }}</td>
-                    <td>{{ c.memModPartNum }}</td>
-                    <td>{{ c.memModMinVolt }}</td>
-                    <td>{{ c.syncTime | dateFormat }}</td>
-                  </tr>
-                </table>
-              </el-tab-pane>
-              <el-tab-pane :label="$t('disk_detail')" name="diskDetail" class="detail-pane">
-                <table class="detail-info">
-                  <tr>
-                    <td>{{ $t('enclosure_id') }}</td>
-                    <td>{{ $t('controller_id') }}</td>
-                    <td>{{ $t('drive') }}</td>
-                    <td>{{ $t('type') }}</td>
-                    <td>{{ $t('size') }}</td>
-                    <td>{{ $t('raid') }}</td>
-                    <td>{{ $t('manufactor') }}</td>
-                    <td>{{ $t('sn') }}</td>
-                    <td>{{ $t('sync_time') }}</td>
-                  </tr>
-                  <tr v-for="c in disks">
-                    <td>{{ c.enclosureId }}</td>
-                    <td>{{ c.controllerId }}</td>
-                    <td>{{ c.drive }}</td>
-                    <td>{{ c.type }}</td>
-                    <td>{{ c.size }}</td>
-                    <td>{{ c.raid }}</td>
-                    <td>{{ c.manufactor }}</td>
-                    <td>{{ c.sn }}</td>
-                    <td>{{ c.syncTime | dateFormat }}</td>
-                  </tr>
-                </table>
-              </el-tab-pane>
-
-              <el-tab-pane :label="$t('nic_detail')" name="nicDetail" class="detail-pane">
-                <table class="detail-info">
-                  <tr>
-                    <td>{{ $t('nic_number') }}</td>
-                    <td>{{ $t('mac') }}</td>
-                    <td>{{ $t('sync_time') }}</td>
-                  </tr>
-                  <tr v-for="c in nics">
-                    <td>{{ c.number }}</td>
-                    <td>{{ c.mac }}</td>
-                    <td>{{ c.syncTime | dateFormat }}</td>
-                  </tr>
-                </table>
-              </el-tab-pane>
-            </el-tabs>
-          </div>
-
-        </el-drawer>
-
-      </div>
     </el-tab-pane>
     <!--    <el-tab-pane :label="$t('obm')" name="second">-->
     <!--      <OBM></OBM>-->

@@ -87,8 +87,9 @@ import RSButton from './common/button/rsbutton/index';
 Vue.use(RSButton);
 
 import icon from './common/front/icon'
-
 Vue.use(icon);
+import RSDrawer from './common/front/mydrawer/index'
+Vue.use(RSDrawer);
 
 // import 'element-ui/lib/theme-chalk/index.css';
 import '../theme/index.css'
