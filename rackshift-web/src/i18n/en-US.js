@@ -288,5 +288,15 @@ export default {
     "PROCESSING": "PROCESSING",
     "email_format_error": "Invalid Email Format",
     "phone_format_error": "Invalid Phone Format",
-    "admin": "admin"
+    "admin": "admin",
+    "i18n_mount_point_cant_be_null": "The mount point cannot be empty!",
+    "i18n_capacity_cant_be_null": "Capacity cannot be empty!",
+    "i18n_must_be_root_swap_boot": "There must be root, swap and /boot partitions, and the minimum capacity of all partitions cannot be less than 1GB!",
+    "i18n_auto_or_number_0_or_1": "The partition capacity can only be number or auto, and the partition capacity of auto can only be 0 or 1!",
+    "i18n_must_be_auto_or_number": "The partition capacity must be auto or a number!",
+    "i18n_swap_must": "The swap partition format must be swap!",
+    "raidDisk": "raidDisk",
+    "i18n_file_type_cant_be_null": "File type cannot be empty!",
+    "i18n_all_greater_than_1_gb": "The minimum capacity of all partitions cannot be less than 1GB!",
+    "i18n_mut_only_one": "There must be one and only one root, swap and /boot partition!",
 }

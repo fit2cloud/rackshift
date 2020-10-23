@@ -288,5 +288,16 @@ export default {
     "PROCESSING": "處理中",
     "email_format_error": "郵箱格式錯誤",
     "phone_format_error": "手機格式錯誤",
-    "admin": "管理員"
+    "admin": "管理員",
+
+    "i18n_mount_point_cant_be_null": "掛載點不能為空！",
+    "i18n_capacity_cant_be_null": "容量不能為空！",
+    "i18n_must_be_root_swap_boot": "必須有根，swap和/boot分區，並且所有分區最低容量不能小於1GB！",
+    "i18n_auto_or_number_0_or_1": "分區容量只能是數字或者auto，並且容量為auto的分區只能為0個或者1個!",
+    "i18n_must_be_auto_or_number": "分區容量必須是auto或數字！",
+    "i18n_swap_must": "swap分區格式必須是swap！",
+    "raidDisk": "raidDisk",
+    "i18n_file_type_cant_be_null": "文件類型不能為空！",
+    "i18n_all_greater_than_1_gb": "所有分區最低容量不能小於1GB！",
+    "i18n_mut_only_one": "必須有且僅有壹個根，swap和/boot分區！",
 }

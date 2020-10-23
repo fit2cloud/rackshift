@@ -336,51 +336,51 @@ export default {
       for (let j = 0; j < this.payLoad.options.defaults.installPartitions.length; j++) {
         let p = this.payLoad.options.defaults.installPartitions[j];
         if (!p.mountPoint) {
-          this.$message.error(this.$t('i18n_mount_point_cant_be_null', '挂载点不能为空！'));
+          this.$message.error(this.$t('i18n_mount_point_cant_be_null'));
           this.validateResult = false;
         }
         if (!p.size) {
-          this.$message.error(this.$t('i18n_capacity_cant_be_null', '容量不能为空！'));
+          this.$message.error(this.$t('i18n_capacity_cant_be_null'));
           this.validateResult = false;
         }
         if (!p.fsType) {
-          this.$message.error(this.$t('i18n_file_type_cant_be_null', '文件类型不能为空！'));
+          this.$message.error(this.$t('i18n_file_type_cant_be_null'));
           this.validateResult = false;
         }
         if (p.mountPoint != 'biosboot' && ((this.unit == 'GB' && p.size < 1) || (this.unit == 'MB' && p.size < 1024))) {
-          this.$message.error(this.$t('i18n_all_greater_than_1_gb', '所有分区最低容量不能小于1GB！'));
+          this.$message.error(this.$t('i18n_all_greater_than_1_gb'));
           this.validateResult = false;
         }
         if (p.size && !/^[0-9]*$/.test(p.size)) {
           if (p.size != 'auto') {
-            this.$message.error(this.$t('i18n_auto_or_number_0_or_1', '分区容量只能是数字或者auto，并且容量为auto的分区只能为0个或者1个!'));
+            this.$message.error(this.$t('i18n_auto_or_number_0_or_1'));
             this.validateResult = false;
           }
         }
         if (p.size != 'auto' && !/\d+/.test(p.size)) {
-          this.$message.error(this.$t('i18n_must_be_auto_or_number', '分区容量必须是auto或数字！'));
+          this.$message.error(this.$t('i18n_must_be_auto_or_number'));
           this.validateResult = false;
         }
         if (p.mountPoint == '/' || p.mountPoint == '/boot' || p.mountPoint == 'swap' || p.mountPoint == 'biosboot') {
           exists++;
           if (p.mountPoint == 'swap' && p.fsType != 'swap') {
-            this.$message.error(this.$t('i18n_swap_must', 'swap分区格式必须是swap！'));
+            this.$message.error(this.$t('i18n_swap_must'));
             this.validateResult = false;
           }
 
           if ((this.unit == 'GB' && p.size < 1 && p.mountPoint != 'biosboot') || (this.unit == 'MB' && p.size < 1024 && p.mountPoint != 'biosboot')) {
-            this.$message.error(this.$t('i18n_must_be_root_swap_boot', '必须有根，swap，biosboot和/boot分区，并且除了biosboot分区所有分区最低容量不能小于1GB！'));
+            this.$message.error(this.$t('i18n_must_be_root_swap_boot'));
             this.validateResult = false;
           }
         }
       }
       if (exists != 4) {
-        this.$message.error(this.$t('i18n_mut_only_one', '必须有且仅有一个根，swap，biosboot和和/boot分区！'));
+        this.$message.error(this.$t('i18n_mut_only_one'));
         this.validateResult = false;
       }
 
       if (this.payLoad.options.defaults.installPartitions.length < 4) {
-        this.$message.error(this.$t('i18n_must_be_root_swap_boot', '必须有根，swap，biosboot和/boot分区，并且除了biosboot分区所有分区最低容量不能小于1GB！'));
+        this.$message.error(this.$t('i18n_must_be_root_swap_boot'));
         return false;
       }
 

@@ -13,8 +13,8 @@ public class I18NTest {
     //提取项目里面国际化的关键字
     public static void main(String[] args) throws IOException {
 //        File file = new File("D:\\rackshift\\rackshift-web\\src\\common\\validator\\CommonValidator.js");
-        File file = new File("D:\\rackshift\\rackshift-web\\src\\common\\utils");
-//        File file = new File("D:\\rackshift\\rackshift-web\\src\\rackparams");
+//        File file = new File("D:\\rackshift\\rackshift-web\\src\\common\\utils");
+        File file = new File("D:\\rackshift\\rackshift-web\\src\\rackparams");
 //        File file = new File("D:\\rackshift\\rackshift-web\\src\\components");
         File file2 = new File("D:\\rackshift\\rackshift-web\\src\\i18n\\zh-CN.json");
         BufferedReader reader = new BufferedReader(new FileReader(file2));
@@ -25,26 +25,31 @@ public class I18NTest {
         }
 
         JSONObject i18n = JSONObject.parseObject(sb.toString());
+        JSONObject r = JSONObject.parseObject("{}");
         sb.setLength(0);
         if (file.isDirectory()) {
             for (File listFile : file.listFiles()) {
                 if (listFile.isDirectory()) {
                     for (File file11 : listFile.listFiles())
-                        extract(file11, i18n);
+                        extract(file11, i18n, r);
                 } else {
-                    extract(listFile, i18n);
+                    extract(listFile, i18n, r);
                 }
             }
         } else {
-            extract(file, i18n);
+            extract(file, i18n, r);
         }
 
-        for (Map.Entry o : i18n.entrySet()) {
+//        for (Map.Entry o : i18n.entrySet()) {
+//            System.out.println("\"" + o.getKey() + "\"" + ":" + "\"" + o.getValue() + "\",");
+//        }
+
+        for (Map.Entry o : r.entrySet()) {
             System.out.println("\"" + o.getKey() + "\"" + ":" + "\"" + o.getValue() + "\",");
         }
     }
 
-    private static void extract(File listFile, JSONObject i18n) throws IOException {
+    private static void extract(File listFile, JSONObject i18n, JSONObject r) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(listFile));
         String line = null;
         StringBuffer sb = new StringBuffer();
@@ -61,6 +66,8 @@ public class I18NTest {
             while (m.find()) {
                 if (!i18n.containsKey(m.group(1).trim())) {
                     i18n.put(m.group(1), null);
+                    r.put(m.group(1), null);
+
                 }
             }
         }
@@ -68,8 +75,8 @@ public class I18NTest {
 
 
     public static void main2(String[] args) {
-        Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?]*)['\"]*\\)");
-        Matcher m = p.matcher("$t(\"no_valid_image!\")");
+        Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?,'/！ ]*)['\"]*\\)");
+        Matcher m = p.matcher("$t('i18n_must_be_root_swap_boot')");
         m.find();
         System.out.println(m.group(1));
     }
