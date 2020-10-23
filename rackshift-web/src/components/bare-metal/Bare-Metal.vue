@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="activeName" style="width:80vw;">
+  <el-tabs v-model="activeName" style="width:80vw;min-width: 1300px;">
     <el-tab-pane :label="$t('bare_metal')" name="bare-metal">
       <div class="machine-title2">
         <el-button-group class="batch-button">

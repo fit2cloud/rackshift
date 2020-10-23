@@ -90,7 +90,7 @@
             :title="editType == 'edit' ? $t('edit_workflow') : $t('add_workflow')"
             :visible.sync="editDialogVisible"
             direction="rtl"
-
+            size="50%"
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
@@ -108,8 +108,7 @@
               </el-form-item>
 
               <el-form-item :label="$t('friendly_name')">
-                <el-input v-model="editObj.friendlyName"></el-input>
-                <!--            <el-input v-model="editObj.friendlyName" autocomplete="off" :disabled="editObj.type == 'system'"></el-input>-->
+                <el-input v-model="editObj.friendlyName" resize="100"></el-input>
               </el-form-item>
 
               <el-form-item :label="$t('event_type')">

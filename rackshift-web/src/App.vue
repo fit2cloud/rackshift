@@ -128,7 +128,7 @@ body {
 }
 
 #main-header {
-  font-size: 12px;
+  min-width: 1520px;
   height: 45px !important;
   background: linear-gradient(to right, #00447C 20%, #00447C 80%);
   color: #333;
@@ -177,7 +177,7 @@ body {
 }
 
 .el-drawer__body {
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .demo-drawer__footer {
