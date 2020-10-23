@@ -26,7 +26,7 @@
         >
           <el-table-column type="selection" align="left"></el-table-column>
 
-          <el-table-column prop="friendlyName" :label="$t('friendly_name')" align="left" width="220px">
+          <el-table-column prop="friendlyName" :label="$t('friendly_name')" align="left" width="240px">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">
                 <el-link type="primary" target="_blank">
@@ -39,15 +39,10 @@
           </el-table-column>
 
           <el-table-column :prop="c.prop" :label="c.label" align="left"
-                           v-for="c in columns" :sortable="c.sort" :formatter="getValidProText"></el-table-column>
+                           v-for="c in columns" :sortable="c.sort" :formatter="getValidProText"
+                           width="100"></el-table-column>
 
-          <el-table-column prop="settable" :label="$t('user_settable')" align="left" width="130">
-            <template slot-scope="scope">
-              {{ scope.row.settable | enabled }}
-            </template>
-          </el-table-column>
-
-          <el-table-column prop="eventType" :label="$t('event_type')" align="left">
+          <el-table-column prop="eventType" :label="$t('event_type')" align="left" width="200">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="i18n(scope.row.eventType)" placement="right-end">
                 <el-link type="primary" target="_blank">
@@ -61,12 +56,6 @@
           <el-table-column prop="brands" :label="$t('brands')" align="left" width="150">
             <template slot-scope="scope">
               {{ scope.row.brands | brandsFormat }}
-            </template>
-          </el-table-column>
-
-          <el-table-column prop="status" :label="$t('status')" align="left">
-            <template slot-scope="scope">
-              {{ scope.row.status | enabled }}
             </template>
           </el-table-column>
 
