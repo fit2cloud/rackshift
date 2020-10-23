@@ -3,14 +3,14 @@ import i18n from "@/i18n/i18n";
 export default {
     menus: [
         // {
-        //     "name": i18n.t('OverView'),
+        //     "name": 'OverView',
         //     "router": "/overview",
         //     "requireRole": "admin",
         //     "order": "1",
         //     "icon": "el-icon-view",
         //     childs: [
         //         {
-        //             "name": i18n.t('Wizard'),
+        //             "name": 'Wizard',
         //             "router": "/wizard",
         //             "requireRole": "user,admin",
         //             "order": "2",
@@ -19,14 +19,14 @@ export default {
         //     ]
         // },
         {
-            "name": i18n.t('Resource'),
+            "name": 'Resource',
             "router": "/Resource",
             "requireRole": "admin,user",
             "order": "3",
             "icon": "el-icon-folder-opened",
             childs: [
                 {
-                    "name": i18n.t('Bare Metal Server'),
+                    "name": 'Bare Metal Server',
                     "router": "/bare-metal",
                     "requireRole": "user,admin",
                     "order": "4",
@@ -34,7 +34,7 @@ export default {
                 },
 
                 {
-                    "name": i18n.t('Image'),
+                    "name": 'Image',
                     "router": "/image",
                     "requireRole": "user,admin",
                     "order": "5",
@@ -43,21 +43,21 @@ export default {
             ]
         },
         {
-            "name": i18n.t('Network'),
+            "name": 'Network',
             "router": "/network",
             "requireRole": "admin",
             "order": "6",
             "icon": "el-icon-s-grid",
             childs: [
                 {
-                    "name": i18n.t('Subnet'),
+                    "name": 'Subnet',
                     "router": "/network",
                     "requireRole": "admin",
                     "order": "7",
                     "icon": "el-icon-menu"
                 },
                 {
-                    "name": i18n.t('Discovery'),
+                    "name": 'Discovery',
                     "router": "/Discovery",
                     "requireRole": "admin",
                     "order": "2",
@@ -66,21 +66,21 @@ export default {
             ]
         },
         {
-            "name": i18n.t('Control'),
+            "name": 'Control',
             "router": "/Control",
             "requireRole": "admin",
             "order": "9",
             "icon": "el-icon-unlock",
             childs: [
                 {
-                    "name": i18n.t('Workflow'),
+                    "name": 'Workflow',
                     "router": "/WorkFlow",
                     "requireRole": "admin",
                     "order": "10",
                     "icon": "el-icon-s-unfold",
                 },
                 {
-                    "name": i18n.t('Execution Log'),
+                    "name": 'Execution Log',
                     "router": "/execution-log",
                     "requireRole": "admin",
                     "order": "11",
@@ -88,27 +88,27 @@ export default {
                 },
             ]
         }, {
-            "name": i18n.t('Configuration'),
+            "name": 'Configuration',
             "router": "/Setting",
             "requireRole": "admin",
             "order": "12",
             "icon": "el-icon-s-tools",
             childs: [
                 {
-                    "name": i18n.t('endpoint'),
+                    "name": 'endpoint',
                     "router": "/endpoint",
                     "requireRole": "admin",
                     "order": "13",
                     "icon": "el-icon-s-promotion",
                 },
                 {
-                    "name": i18n.t('User'),
+                    "name": 'User',
                     "router": "/user",
                     "requireRole": "admin",
                     "order": "14",
                     "icon": "el-icon-user-solid",
                 }, {
-                    "name": i18n.t('Role'),
+                    "name": 'Role',
                     "router": "/role",
                     "requireRole": "admin",
                     "order": "15",
@@ -122,7 +122,7 @@ export default {
                 //     "icon" : "el-icon-s-home",
                 // },
                 // {
-                //     "name": i18n.t('Plugin'),
+                //     "name": 'Plugin',
                 //     "router": "/Plugin",
                 //     "requireRole": "user,admin",
                 //     "order": "6",

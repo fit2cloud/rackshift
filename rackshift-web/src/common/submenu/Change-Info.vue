@@ -12,7 +12,7 @@
     <el-submenu index="1">
       <template slot="title">{{ user.name }}</template>
       <el-menu-item v-for="c in languages" @click="clicked(c.value)" :index="1 + '-' + c.index">
-        {{ c.name }}
+        {{ $t(c.name) }}
       </el-menu-item>
     </el-submenu>
   </el-menu>
@@ -28,12 +28,12 @@ export default {
       user: JSON.parse(localStorage.getItem("user")),
       languages: [
         {
-          name: this.$t('info'),
+          name: 'info',
           value: 'info',
           index: '1'
         },
         {
-          name: this.$t('logout'),
+          name: 'logout',
           index: '2',
           value: 'logout',
         },

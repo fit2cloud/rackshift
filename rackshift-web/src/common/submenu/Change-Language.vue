@@ -12,10 +12,10 @@
     <el-submenu index="1">
       <template slot="title">
         <font-awesome-icon class="icon global" :icon="['fas', 'globe']"/>
-        {{ language }}
+        {{ $t(language) }}
       </template>
       <el-menu-item v-for="c in languages" @click="clicked(c)" :index="1 + '-' + c.index">
-        {{ c.name }}
+        {{ $t(c.name) }}
       </el-menu-item>
     </el-submenu>
   </el-menu>
@@ -28,17 +28,17 @@ export default {
       language: null,
       languages: [
         {
-          name: this.$t('zh_CN'),
+          name: 'zh_CN',
           value: 'zh_CN',
           index: '1'
         },
         {
-          name: this.$t('zh_TW'),
+          name: 'zh_TW',
           index: '2',
           value: 'zh_TW',
         },
         {
-          name: this.$t('en_US'),
+          name: 'en_US',
           index: '3',
           value: 'en_US',
         }
@@ -50,8 +50,7 @@ export default {
   },
   methods: {
     changeLanText() {
-      let l = localStorage.getItem("language");
-      let lan = l ? this.$t(l) : 'zh_CN';
+      let l = localStorage.getItem("lang") ? localStorage.getItem("lang") : 'zh_CN';
       let index = _.findIndex(this.languages, function (o) {
         return o.value == l;
       });
@@ -59,8 +58,6 @@ export default {
     },
     changeLaunguage(l) {
       this.$setLang(l);
-      localStorage.setItem("language", l);
-      window.location.reload();
       this.changeLanText();
     },
     clicked: function (c) {

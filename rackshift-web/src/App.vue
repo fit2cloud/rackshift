@@ -16,7 +16,7 @@
         <el-aside style="background-color: #F7F7F7">
           <el-menu id="main-menu" :unique-opened=false style="border-right: none;">
             <el-submenu :index="m.order" v-for="m in menus">
-              <template slot="title"><i :class="m.icon"></i>{{ m.name }}</template>
+              <template slot="title"><i :class="m.icon"></i>{{ $t(m.name) }}</template>
               <el-menu-item :class="$route.path == c.router ? 'is-active' : ''"
                             v-for="c in m.childs" :index="m.order + '-' + c.order"
                             v-on:click="$router.push(c.router)">
@@ -63,6 +63,8 @@ export default {
       this.$router.push("/bare-metal");
       localStorage.removeItem('first');
     }
+    let l = localStorage.getItem("lang") ? localStorage.getItem("lang") : 'zh_CN';
+    this.changeLaunguage(l);
   }
   ,
   methods: {
@@ -76,9 +78,6 @@ export default {
     ,
     changeLaunguage(l) {
       this.$setLang(l);
-      this.language = this.lanMap[l];
-      localStorage.setItem("language", this.language);
-      window.location.reload();
     }
     ,
     action(command) {
@@ -169,7 +168,7 @@ body {
 }
 
 .machine-title {
-  padding: 10px 0 10px 0px;
+  padding: 0px 0 10px 0px;
 }
 
 .machine-title2 {
@@ -250,7 +249,7 @@ button {
   padding-bottom: 30px;
 }
 
-.el-tabs__item:focus.is-active.is-focus {
+:focus.is-active.is-focus.is-top {
   box-shadow: none;
 }
 
