@@ -24,6 +24,11 @@
           <el-table-column type="selection" align="left"></el-table-column>
           <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="left"
                            v-for="c in columns" :sortable="c.sort"></el-table-column>
+          <el-table-column prop="status" :label="$t('status')" align="left">
+            <template slot-scope="scope">
+              {{ $t(scope.row.status) }}
+            </template>
+          </el-table-column>
           <el-table-column prop="createTime" :label="$t('create_time')" align="left">
             <template slot-scope="scope">
               {{ scope.row.createTime | dateFormat }}
@@ -31,16 +36,8 @@
           </el-table-column>
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
-              <!--              <el-button-->
-              <!--                  type="button"-->
-              <!--                  icon="el-icon-edit"-->
-              <!--                  @click="viewDetail(scope.row)"-->
-              <!--              >{{ $t('view_detail') }}-->
-              <!--              </el-button>-->
-
               <RSButton @click="viewDetail(scope.row)" :tip="$t('view')"></RSButton>
               <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
-
             </template>
           </el-table-column>
         </el-table>
@@ -70,13 +67,13 @@
                 <tr>
                   <td>{{ $t('time') }}</td>
                   <td>{{ $t('user') }}</td>
-                  <td>{{ $t('operation') }}</td>
+                  <td>{{ $t('status') }}</td>
                   <td>{{ $t('output') }}</td>
                 </tr>
                 <tr v-for="l in detailLogs">
                   <td>{{ l.createTime | dateFormat }}</td>
                   <td>{{ l.user }}</td>
-                  <td>{{ l.operation }}</td>
+                  <td>{{ $t(l.operation) }}</td>
                   <td>{{ l.outPut }}</td>
                 </tr>
               </table>
@@ -125,10 +122,6 @@ export default {
           label: this.$t('user'),
           prop: "user",
           sort: true
-        },
-        {
-          label: this.$t('status'),
-          prop: "status"
         }
       ],
       editDialogVisible: false,

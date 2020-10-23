@@ -280,5 +280,8 @@ export default {
     "POST_OS_WORKFLOW_START": "下发安装系统工作流",
     "POST_OS_WORKFLOW_END": "安装系统工作流执行完毕",
     "POST_OS_WORKFLOW_CANCEL": "取消安装系统工作流",
-    "device": "设备"
+    "device": "设备",
+    "START": "开始",
+    "TERMINATE": "用户终止",
+    "END": "结束",
 }

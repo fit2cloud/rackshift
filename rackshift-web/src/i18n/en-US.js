@@ -263,7 +263,7 @@ export default {
     "login_fail": "Failed to log on to six",
     "zh_CN": "简体中文",
     "Machines": "Bare Metal Server",
-    "user": "用护",
+    "user": "User",
     "Wizard": "Use Wizard",
     "edit_workflow": "Edit Workflow",
     "Plugin": "Plugin",
@@ -280,5 +280,8 @@ export default {
     "POST_OS_WORKFLOW_START": "Send installation system workflow",
     "POST_OS_WORKFLOW_END": "The installation system workflow has been executed",
     "POST_OS_WORKFLOW_CANCEL": "Cancel installation of system workflow",
-    "device": "device"
+    "device": "device",
+    "START": "Start",
+    "TERMINATE": "User Termination",
+    "END": "End",
 }
