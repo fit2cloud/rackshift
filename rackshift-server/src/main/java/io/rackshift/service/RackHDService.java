@@ -459,25 +459,46 @@ public class RackHDService {
                     en.setSerialNo(dmi.getJSONObject("System Information").getString("Serial Number"));
                 }
                 //cpu
-                JSONArray cpuInfo = dmi.getJSONArray("Processor Information");
-                en.setCpu(cpuInfo.size());
-                en.setCore(Optional.ofNullable(cpuInfo.getJSONObject(0).getInteger("Core Count")).orElse(1));
-                en.setThread(Optional.ofNullable(cpuInfo.getJSONObject(0).getInteger("Thread Count")).orElse(2));
-                en.setCpuFre(cpuInfo.getJSONObject(0).getString("Current Speed"));
-                en.setCpuType(cpuInfo.getJSONObject(0).getString("Version"));
 
-                for (int l = 0; l < cpuInfo.size(); l++) {
-                    if ("Not Specified".equalsIgnoreCase(cpuInfo.getJSONObject(l).getString("Version"))) {
-                        continue;
+                Object processor = dmi.getObject("Processor Information", Object.class);
+                if (processor instanceof JSONArray) {
+                    JSONArray cpuInfo = (JSONArray) processor;
+                    en.setCpu(cpuInfo.size());
+                    en.setCore(Optional.ofNullable(cpuInfo.getJSONObject(0).getInteger("Core Count")).orElse(1));
+                    en.setThread(Optional.ofNullable(cpuInfo.getJSONObject(0).getInteger("Thread Count")).orElse(2));
+                    en.setCpuFre(cpuInfo.getJSONObject(0).getString("Current Speed"));
+                    en.setCpuType(cpuInfo.getJSONObject(0).getString("Version"));
+
+                    for (int l = 0; l < cpuInfo.size(); l++) {
+                        if ("Not Specified".equalsIgnoreCase(cpuInfo.getJSONObject(l).getString("Version"))) {
+                            continue;
+                        }
+                        Cpu cpu = new Cpu();
+                        cpu.setProcNumThreads(cpuInfo.getJSONObject(l).getString("Thread Count"));
+                        cpu.setSyncTime(System.currentTimeMillis());
+                        cpu.setProcSpeed(cpuInfo.getJSONObject(l).getString("Current Speed").replace("MHz", "").replace(" ", ""));
+                        cpu.setProcSocket(cpuInfo.getJSONObject(l).getString("Socket Designation").replace("Proc", "").replace("CPU", "").replace(" ", ""));
+                        cpu.setProcNumCoresEnabled(cpuInfo.getJSONObject(l).getString("Core Enabled"));
+                        cpu.setProcNumCores(cpuInfo.getJSONObject(l).getString("Core Count"));
+                        cpu.setProcName(cpuInfo.getJSONObject(l).getString("Version"));
+                        cpus.add(cpu);
                     }
+                } else {
+                    JSONObject cpuInfo = (JSONObject) processor;
+                    en.setCpu(1);
+                    en.setCore(Optional.ofNullable(cpuInfo.getInteger("Core Count")).orElse(1));
+                    en.setThread(Optional.ofNullable(cpuInfo.getInteger("Thread Count")).orElse(2));
+                    en.setCpuFre(cpuInfo.getString("Current Speed"));
+                    en.setCpuType(cpuInfo.getString("Version"));
+
                     Cpu cpu = new Cpu();
-                    cpu.setProcNumThreads(cpuInfo.getJSONObject(l).getString("Thread Count"));
+                    cpu.setProcNumThreads(cpuInfo.getString("Thread Count"));
                     cpu.setSyncTime(System.currentTimeMillis());
-                    cpu.setProcSpeed(cpuInfo.getJSONObject(l).getString("Current Speed").replace("MHz", "").replace(" ", ""));
-                    cpu.setProcSocket(cpuInfo.getJSONObject(l).getString("Socket Designation").replace("Proc", "").replace("CPU", "").replace(" ", ""));
-                    cpu.setProcNumCoresEnabled(cpuInfo.getJSONObject(l).getString("Core Enabled"));
-                    cpu.setProcNumCores(cpuInfo.getJSONObject(l).getString("Core Count"));
-                    cpu.setProcName(cpuInfo.getJSONObject(l).getString("Version"));
+                    cpu.setProcSpeed(cpuInfo.getString("Current Speed").replace("MHz", "").replace(" ", ""));
+                    cpu.setProcSocket(cpuInfo.getString("Socket Designation").replace("Proc", "").replace("CPU", "").replace(" ", ""));
+                    cpu.setProcNumCoresEnabled(cpuInfo.getString("Core Enabled"));
+                    cpu.setProcNumCores(cpuInfo.getString("Core Count"));
+                    cpu.setProcName(cpuInfo.getString("Version"));
                     cpus.add(cpu);
                 }
             }
@@ -514,7 +535,9 @@ public class RackHDService {
                         for (int l = 0; l < pdList.size(); l++) {
                             JSONObject pdObj = pdList.getJSONObject(l);
                             Disk pd = new Disk();
-                            pd.setEnclosureId(Integer.parseInt(pdObj.getString("EID:Slt").split(":")[0]));
+                            String eId = pdObj.getString("EID:Slt").split(":")[0];
+                            //有些机型出厂不自带 RAID 卡 而是共用或者拆机使用，这个值获取不到
+                            pd.setEnclosureId(StringUtils.isBlank(eId)? 32 : Integer.valueOf(eId));
                             //暂时只支持一块raid卡 所以写死为0
                             pd.setControllerId(0);
                             pd.setDrive(pdObj.getString("EID:Slt").split(":")[1]);
