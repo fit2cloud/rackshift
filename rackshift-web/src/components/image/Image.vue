@@ -118,8 +118,8 @@
                     style="margin-bottom: 20px;"
                 >
                   <i class="el-icon-upload"></i>
-                  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                  <div class="el-upload__tip" slot="tip">只能上传ISO文件，且不超过10GB</div>
+                  <div class="el-upload__text">{{ $t('drag_file_into_or') }}<em>{{ $t('click_to_upload') }}</em></div>
+                  <div class="el-upload__tip" slot="tip">{{ $t('only_iso_no_more_than_10g') }}</div>
                 </el-upload>
               </el-form-item>
 

@@ -234,7 +234,7 @@ export default {
     "no_nessary_to_set": "No nessary to set",
     "raid": "Raid Level",
     "startIp": "Start IP",
-    "User": "用护",
+    "User": "User",
     "enclosure_id": "EnclosureId",
     "deployed": "Deployed",
     "bmc_mac": "Out-of-band MAC",
@@ -299,4 +299,7 @@ export default {
     "i18n_file_type_cant_be_null": "File type cannot be empty!",
     "i18n_all_greater_than_1_gb": "The minimum capacity of all partitions cannot be less than 1GB!",
     "i18n_mut_only_one": "There must be one and only one root, swap and /boot partition!",
+    "only_iso_no_more_than_10g": " can only upload ISO files, and no more than 10GB ",
+    "drag_file_into_or": "Drag the file here, or ",
+    "click_to_upload": " click to Upload ",
 }

@@ -300,4 +300,8 @@ export default {
     "i18n_file_type_cant_be_null": "文件類型不能為空！",
     "i18n_all_greater_than_1_gb": "所有分區最低容量不能小於1GB！",
     "i18n_mut_only_one": "必須有且僅有壹個根，swap和/boot分區！",
+
+    "only_iso_no_more_than_10g": "只能上傳ISO文件，且不超過10GB",
+    "drag_file_into_or": "將文件拖到此處，或",
+    "click_to_upload": "點擊上傳",
 }

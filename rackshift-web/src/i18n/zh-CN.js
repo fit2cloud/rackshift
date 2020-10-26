@@ -301,4 +301,8 @@ export default {
     "i18n_all_greater_than_1_gb": "所有分区最低容量不能小于1GB！",
     "i18n_mut_only_one": "必须有且仅有一个根，swap和/boot分区！",
 
+    "only_iso_no_more_than_10g": "只能上传ISO文件，且不超过10GB",
+    "drag_file_into_or": "将文件拖到此处，或",
+    "click_to_upload": "点击上传",
+
 }
