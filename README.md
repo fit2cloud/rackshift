@@ -2,15 +2,14 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2d7d7a82829e4e4e80c0f2a9aa2397ca)](https://app.codacy.com/manual/rackshift/rackshift?utm_source=github.com&utm_medium=referral&utm_content=rackshift/rackshift&utm_campaign=Badge_Grade_Dashboard)
 
-RackShift 是一款开源的裸金属服务器全生命周期平台，功能覆盖裸金属（物理机）的上架、RAID 配置、固件升级、操作系统安装、中间件部署等。RackShift 基于 RackHD 实现，提供可视化的 Web UI，支持世面上主流服务器品牌如浪潮、DELL EMC、HPE、华为、联想等。
+RackShift 是一款开源的裸金属服务器全生命周期管理平台，功能覆盖裸金属（物理机）的上架、RAID 配置、固件升级、操作系统安装、中间件部署等。RackShift 基于 RackHD 实现，提供可视化的 Web UI，支持世面上主流服务器品牌如浪潮、戴尔、华为、联想、惠普等。
 
 ![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs8.jpg)
 
 ## 解决的问题
-- 大规模网络环境下设备的识别和发现所面临的挑战
-- 批量装机、RAID、更新固件
-- 裸金属云化，自服务化，快速构建企业的基础设施
-- 为大数据处理，云计算量身定制的智能数据中心快速搭建方案
+- 大规模网络环境下裸金属设备的自动发现；
+- 批量装机、RAID配置和固件更新；
+- 裸金属云化、自服务化，快速构建企业的基础设施。
 
 ## 技术优势
   
@@ -29,14 +28,14 @@ RackShift 是一款开源的裸金属服务器全生命周期平台，功能覆�
 
 组件说明：
 
-- RackShift-WEB： 基于 VUE2.6.11 开发的单页应用
-- RackShift-Server： 基于 SSM 的 SpringBoot 应用，对 RackHD 的操作进行更高的抽象并且控制与 RackHD API的交互，控制 RackShift-Proxy 节点，与 RackShift-WEB 一并打包成一个应用部署
-- RackShift-Proxy： 可单独与 RackHD 模块部署，主要用于主节点控制客户节点进行注入镜像下发，DHCP 配置，远程 KVM 等等
-- RackHD： DELL EMC 开源的裸金属供应软件，现已停止维护
-- Mysql：RackShift-Server 主要运行数据的存储区
-- Mongo：RackHD 与RackShift-Server 的运行数据存储区
-- RabbitMQ: 各组件之间通信的中间件
-- DockerEngine：各组件都是以 Docker 容器运行在节点计算机
+- RackShift-Web： 基于 VUE2.6.11 开发的单页应用；
+- RackShift-Server： 基于 SSM 的 SpringBoot 应用，对 RackHD 的操作进行更高的抽象并且控制与 RackHD API的交互，控制 RackShift-Proxy 节点，与 RackShift-WEB 一并打包成一个应用部署；
+- RackShift-Proxy： 可单独与 RackHD 模块部署，主要用于主节点控制客户节点进行注入镜像下发，DHCP 配置，远程 KVM 等等；
+- RackHD： DELL EMC 开源的裸金属供应软件，现已停止维护；
+- Mysql：RackShift-Server 主要运行数据的存储区；
+- Mongo：RackHD 与 RackShift-Server 的运行数据存储区；
+- RabbitMQ: 各组件之间通信的中间件；
+- DockerEngine：各组件都是以 Docker 容器运行在节点计算机。
 
 ## 组件调用关系
 ![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs_call.png)
