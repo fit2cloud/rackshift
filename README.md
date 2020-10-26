@@ -49,7 +49,7 @@ RackShift 是一款开源的裸金属服务器全生命周期平台，功能覆�
 
 ## 快速开始
 
-- 下载最新 Release 安装包，并且使用 tar -zxvf 解压进入解压后的 install 目录
+- 下载最新 Release 安装包，并且使用 tar -zxvf 解压进入解压后的 installer 目录
 - ./install.sh 
 
 ## 微信群
