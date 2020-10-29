@@ -1,12 +1,10 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Java CI with Maven
+name: build rackshift image with maven & node
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
     branches: [ master ]
 
 jobs:
@@ -20,8 +18,21 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+        check-latest: true
     - name: Build with Maven
       run: |
         sudo docker login --username=${{secrets.DH_USERNAME}} --password=${{ secrets.DH_PWD }}
-        cd ./rackshift-server
+        cd ./rackshift-web
+        npm install
+        npm run build
+        rm -rf ../rackshift-server/src/main/resources/static
+        mkdir -p ../rackshift-server/src/main/resources/static
+        cp ./dist/* ../rackshift-server/src/main/resources/static
+        cd ../rackshift-server
+        mvn clean install -DskipTests
+        docker build -t rackshift/rackshift:actions .
+        docker push rackshift/rackshift:actions
         cat Dockerfile
