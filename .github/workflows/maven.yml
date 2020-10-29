@@ -30,7 +30,7 @@ jobs:
         npm run build
         rm -rf ../rackshift-server/src/main/resources/static
         mkdir -p ../rackshift-server/src/main/resources/static
-        cp ./dist/* ../rackshift-server/src/main/resources/static
+        cp -r ./dist/* ../rackshift-server/src/main/resources/static
         cd ../rackshift-server
         mvn clean install -DskipTests
         docker build -t rackshift/rackshift:actions .
