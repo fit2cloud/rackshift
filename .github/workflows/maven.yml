@@ -33,6 +33,6 @@ jobs:
         cp -r ./dist/* ../rackshift-server/src/main/resources/static
         cd ../
         mvn clean install -DskipTests
-        cd ../rackshift-server
+        cd ./rackshift-server
         docker build -t rackshift/rackshift:actions .
         docker push rackshift/rackshift:actions
