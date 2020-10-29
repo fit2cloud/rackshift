@@ -24,4 +24,4 @@ jobs:
       run: |
         sudo docker login --username=${{secrets.DH_USERNAME}} --password=${{ secrets.DH_PWD }}
         cd ./rackshift-server
-        echo Dockerfile
+        cat Dockerfile
