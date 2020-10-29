@@ -229,4 +229,8 @@ button {
   outline: 0;
 }
 
+
+.el-submenu__title {
+  border-bottom-color: transparent !important;
+}
 </style>
