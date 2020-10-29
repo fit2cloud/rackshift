@@ -22,9 +22,6 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-#        mvn -B package --file pom.xml
         sudo docker login --username=${{secrets.DH_USERNAME}} --password=${{ secrets.DH_PWD }}
         cd ./rackshift-server
         echo Dockerfile
-#        sudo docker build -t rackshift:rackshift:actions1 .
-#        sudo docker push rackshift:rackshift:actions1
