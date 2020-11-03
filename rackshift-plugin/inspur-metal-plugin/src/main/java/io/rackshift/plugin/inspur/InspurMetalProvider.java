@@ -30,7 +30,7 @@ import static io.rackshift.metal.sdk.constants.RackHDConstants.workflowPostUrl;
 public class InspurMetalProvider extends AbstractMetalProvider {
 
     public InspurMetalProvider() {
-        super.name = "rackshift-inspur-metal-plugin";
+        super.name = "inspur-metal-plugin";
     }
 
     private static Map<String, IMSRestApi> spiderMap = new HashMap() {{

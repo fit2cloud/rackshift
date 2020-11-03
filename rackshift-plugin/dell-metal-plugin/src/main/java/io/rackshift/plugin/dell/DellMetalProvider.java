@@ -27,7 +27,7 @@ import static io.rackshift.metal.sdk.constants.RackHDConstants.workflowPostUrl;
 public class DellMetalProvider extends AbstractMetalProvider {
 
     public DellMetalProvider() {
-        super.name = "rackshift-dell-metal-plugin";
+        super.name = "dell-metal-plugin";
     }
 
     private static final String temperatureLocal = "1.3.6.1.4.1.674.10892.5.4.700.20.1.8";
