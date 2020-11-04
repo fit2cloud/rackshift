@@ -304,5 +304,7 @@ export default {
     "only_iso_no_more_than_10g": "只能上传ISO文件，且不超过10GB",
     "drag_file_into_or": "将文件拖到此处，或",
     "click_to_upload": "点击上传",
+    "uefi_boot": "UEFI 引导",
+
 
 }

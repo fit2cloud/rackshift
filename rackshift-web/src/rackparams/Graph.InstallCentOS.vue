@@ -45,7 +45,7 @@
               </thead>
               <tbody>
               <tr v-for="(partition, index) in payLoad.options.defaults.installPartitions"
-                  v-show="partition.mountPoint != 'biosboot'">
+                  v-show="partition.mountPoint != 'biosboot' && partition.mountPoint != '/boot/efi'">
                 <td>
                   <el-input v-model="partition.mountPoint"
                             :disabled="partition.mountPoint == 'biosboot'"></el-input>
@@ -69,6 +69,10 @@
               </tr>
               </tbody>
             </table>
+          </el-form-item>
+
+          <el-form-item :label="$t('uefi_boot')">
+            <el-switch v-model="extraParams.uefi" @change="changeUefiBoot"></el-switch>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -157,6 +161,7 @@ export default {
           {validator: ipValidator, trigger: 'blur', vue: this},
         ]
       },
+      uefi: false,
       defaultPayLoad: {
         "options": {
           "defaults": {
@@ -279,6 +284,40 @@ export default {
   }
   ,
   methods: {
+    changeUefiBoot: function () {
+      if (this.extraParams.uefi) {
+        if (this.payLoad.options.defaults.installPartitions) {
+          let index = _.findIndex(this.payLoad.options.defaults.installPartitions, function (o) {
+            return o.mountPoint == 'biosboot'
+          });
+          if (index != -1) {
+            this.payLoad.options.defaults.installPartitions.splice(index, 1);
+            this.payLoad.options.defaults.installPartitions.push(
+                {
+                  "mountPoint": "/boot/efi",
+                  "size": "200",
+                  "fsType": "vfat"
+                }
+            );
+          }
+        }
+      } else {
+        let index = _.findIndex(this.payLoad.options.defaults.installPartitions, function (o) {
+          return o.mountPoint == '/boot/efi'
+        });
+        if (index != -1) {
+          this.payLoad.options.defaults.installPartitions.splice(index, 1);
+          this.payLoad.options.defaults.installPartitions.push(
+              {
+                "mountPoint": "biosboot",
+                "size": "1",
+                "fsType": "biosboot"
+              }
+          );
+        }
+      }
+      console.table(this.payLoad.options.defaults.installPartitions);
+    },
     restoreParams: function () {
       this.restorePartition();
     },
@@ -359,14 +398,14 @@ export default {
           this.$message.error(this.$t('i18n_must_be_auto_or_number'));
           this.validateResult = false;
         }
-        if (p.mountPoint == '/' || p.mountPoint == '/boot' || p.mountPoint == 'swap' || p.mountPoint == 'biosboot') {
+        if (p.mountPoint == '/' || p.mountPoint == '/boot' || p.mountPoint == 'swap' || p.mountPoint == 'biosboot' || p.mountPoint == '/boot/efi') {
           exists++;
           if (p.mountPoint == 'swap' && p.fsType != 'swap') {
             this.$message.error(this.$t('i18n_swap_must'));
             this.validateResult = false;
           }
 
-          if ((this.unit == 'GB' && p.size < 1 && p.mountPoint != 'biosboot') || (this.unit == 'MB' && p.size < 1024 && p.mountPoint != 'biosboot')) {
+          if ((this.unit == 'GB' && p.size < 1 && p.mountPoint != 'biosboot' && p.mountPoint != '/boot/efi') || (this.unit == 'MB' && p.size < 1024 && p.mountPoint != 'biosboot' && p.mountPoint != '/boot/efi')) {
             this.$message.error(this.$t('i18n_must_be_root_swap_boot'));
             this.validateResult = false;
           }

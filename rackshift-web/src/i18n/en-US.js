@@ -302,4 +302,5 @@ export default {
     "only_iso_no_more_than_10g": " can only upload ISO files, and no more than 10GB ",
     "drag_file_into_or": "Drag the file here, or ",
     "click_to_upload": " click to Upload ",
+    "uefi_boot": "UEFI BOOT",
 }
