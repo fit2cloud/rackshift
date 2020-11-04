@@ -1,0 +1,26 @@
+[
+  {
+    "id": "centos",
+    "name": "Centos 64位",
+    "versions": [
+      {
+        "name": "7"
+      },
+      {
+        "name": "7.4"
+      },
+      {
+        "name": "7.6"
+      }
+    ]
+  },
+  {
+    "id": "redhat",
+    "name": "RedHat 64位",
+    "versions": [
+      {
+        "name": "7.X"
+      }
+    ]
+  }
+]

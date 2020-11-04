@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 @RestController
 @RequestMapping("rackhd")
@@ -23,75 +27,16 @@ public class RackHDController {
     }
 
     @RequestMapping("/allOsAndVersion")
-    public ResultHolder allOsAndVersion() {
-        String osAndVersionsStr = "[\n" +
-                "  {\n" +
-                "\t\"id\": \"centos\",\n" +
-                "\t\"name\": \"Centos 64位\",\n" +
-                "\t\"versions\": [{\n" +
-                "\t\t\t\"name\": \"5\"\n" +
-                "\t\t},\n" +
-                "\t\t{\n" +
-                "\t\t\t\"name\": \"6\"\n" +
-                "\t\t},\n" +
-                "\t\t{\n" +
-                "\t\t\t\"name\": \"7\"\n" +
-                "\t\t},\n" +
-                "\t\t{\n" +
-                "\t\t\t\"name\": \"7.4\"\n" +
-                "\t\t},\n" +
-                "\t\t{\n" +
-                "\t\t\t\"name\": \"7.6\"\n" +
-                "\t\t}\n" +
-                "\t]\n" +
-                "},\n" +
-                "{\n" +
-                "\t\"id\": \"redhat\",\n" +
-                "\t\"name\": \"RedHat 64位\",\n" +
-                "\t\"versions\": [\n" +
-                "\t\t{\n" +
-                "\t\t\t\"name\": \"7\"\n" +
-                "\t\t}\n" +
-                "\t]\n" +
-                "}\n" +
-                "]\n" +
-                "\n";
-        return ResultHolder.success(JSONArray.parseArray(osAndVersionsStr));
-    }
-
-    public static void main(String[] args) {
-        String osAndVersionsStr = "[\n" +
-                "  {\n" +
-                "\t\"id\": \"centos\",\n" +
-                "\t\"name\": \"Centos 64位\",\n" +
-                "\t\"versions\": [{\n" +
-                "\t\t\t\"name\": \"5\"\n" +
-                "\t\t},\n" +
-                "\t\t{\n" +
-                "\t\t\t\"name\": \"6\"\n" +
-                "\t\t},\n" +
-                "\t\t{\n" +
-                "\t\t\t\"name\": \"7\"\n" +
-                "\t\t},\n" +
-                "\t\t{\n" +
-                "\t\t\t\"name\": \"7.4\"\n" +
-                "\t\t},\n" +
-                "\t\t{\n" +
-                "\t\t\t\"name\": \"7.6\"\n" +
-                "\t\t}\n" +
-                "\t]\n" +
-                "},\n" +
-                "{\n" +
-                "\t\"id\": \"redhat\",\n" +
-                "\t\"name\": \"RedHat 64位\",\n" +
-                "\t\"versions\": [\n" +
-                "\t\t{\n" +
-                "\t\t\t\"name\": \"7\"\n" +
-                "\t\t}\n" +
-                "\t]\n" +
-                "}\n" +
-                "]\n" +
-                "\n";
-        System.out.println(osAndVersionsStr);
+    public ResultHolder allOsAndVersion() throws IOException {
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream("os.json");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        StringBuffer sb = new StringBuffer();
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+        reader.close();
+        in.close();
+        return ResultHolder.success(JSONArray.parseArray(sb.toString()));
     }
 }

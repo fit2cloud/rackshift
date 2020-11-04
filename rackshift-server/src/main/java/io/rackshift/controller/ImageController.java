@@ -66,31 +66,6 @@ public class ImageController {
     public ResultHolder del(@RequestBody String[] ids) {
         return ResultHolder.success(imageService.del(ids));
     }
-//
-//    @ResponseBody
-//    @RequestMapping(value = "/upload", method = {RequestMethod.POST})
-//    public String upload(@RequestParam("file") MultipartFile file, @RequestParam(required = false) String endpointId) {
-//        String originalName = file.getOriginalFilename();
-//        String path = fileUploadBase + File.separator + originalName;
-//        try {
-//            if (!new File(path).exists()) {
-//                new File(path).createNewFile();
-//            }
-//            FileOutputStream fs = new FileOutputStream(path);
-//            byte[] buffer = new byte[1024 * 1024];
-//            int byteread = 0;
-//            InputStream stream = file.getInputStream();
-//            while ((byteread = stream.read(buffer)) != -1) {
-//                fs.write(buffer, 0, byteread);
-//                fs.flush();
-//            }
-//            fs.close();
-//        } catch (Exception e) {
-//            if (new File(path).exists())
-//                new File(path).delete();
-//        }
-//        return imageService.mount(path, originalName, endpointId);
-//    }
 
     @ResponseBody
     @RequestMapping(value = "/upload", method = {RequestMethod.POST})
