@@ -147,7 +147,7 @@ export default {
     "id": "ID",
     "proc_num_cores": "Number of processor cores",
     "view_detail": "View Details",
-    "selected_workflows": "Selected Workflows",
+    "selected_workflows": "Workflows to be Execute",
     "IP": "IP",
     "ip": "IP",
     "pls_input_phone": "Please enter the phone number",
@@ -247,7 +247,7 @@ export default {
     "netmask": "Subnet Mask",
     "param_key": "Misery Key",
     "ready": "Ready",
-    "add_to_selected_wf_list": "Add to selected workflow",
+    "add_to_selected_wf_list": "Add to workflow to be run",
     "provisioning": "Provisioning",
     "allocated": "Allocated",
     "friendly_name": "Name",
@@ -303,4 +303,7 @@ export default {
     "drag_file_into_or": "Drag the file here, or ",
     "click_to_upload": " click to Upload ",
     "uefi_boot": "UEFI BOOT",
+
+    "not_detected": "Not Detected",
+    "detected": "Detected",
 }

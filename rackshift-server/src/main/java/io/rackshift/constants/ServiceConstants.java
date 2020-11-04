@@ -38,4 +38,8 @@ public class ServiceConstants {
     public enum DiscoveryStatusEnum {
         PENDING, ERROR, SUCCESS
     }
+
+    public enum ImageStatusEnum {
+        not_detected, detected, error
+    }
 }

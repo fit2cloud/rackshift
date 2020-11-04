@@ -115,7 +115,6 @@ public abstract class AbstractHandler implements IStateHandler {
         }
     }
 
-
     @Override
     public void revert(LifeEvent event, String executionId, String user) {
         executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, String.format("错误：event:%s:worflow:%s,参数:%s,回滚状态至%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString(), getExecutionMap().get().get("beforeChangeStatus")));

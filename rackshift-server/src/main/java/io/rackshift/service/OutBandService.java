@@ -1,16 +1,17 @@
 package io.rackshift.service;
 
-import com.alibaba.fastjson.JSONObject;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.OutBandDTO;
+import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.domain.OutBandExample;
 import io.rackshift.mybatis.mapper.OutBandMapper;
-import io.rackshift.strategy.statemachine.LifeEvent;
-import io.rackshift.strategy.statemachine.LifeEventType;
-import io.rackshift.strategy.statemachine.StateMachine;
+import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.BeanUtils;
+import io.rackshift.utils.Translator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,10 +23,12 @@ public class OutBandService {
     private OutBandMapper outBandMapper;
     @Resource
     private BareMetalManager bareMetalManager;
-    @Resource
-    private StateMachine stateMachine;
+    @Autowired
+    private SimpMessagingTemplate template;
     @Resource
     private RackHDService rackHDService;
+    @Resource
+    private OutBandService outBandService;
 
     public void saveOrUpdate(OutBand o) {
         if (o.getId() != null) {
@@ -47,10 +50,25 @@ public class OutBandService {
     }
 
     public void fillOBMS(String bareMetalId, OutBand outBand) {
-        JSONObject params = new JSONObject();
-        params.put("outband", outBand);
-        LifeEvent input = LifeEvent.builder().withBareMetalId(bareMetalId).withEventType(LifeEventType.FILL_OBMS).withParams(params);
-        stateMachine.sendEvent(input);
+
+        BareMetal bareMetal = bareMetalManager.getBareMetalById(bareMetalId);
+        String curStatus = bareMetal.getStatus();
+
+        boolean result = rackHDService.createOrUpdateObm(outBand, bareMetal);
+        if (result) {
+            outBandService.saveOrUpdate(outBand);
+        } else {
+            RSException.throwExceptions(Translator.get("i18n_state_error"));
+        }
+
+        if (LifeStatus.onrack.name().equals(curStatus)) {
+            bareMetal.setStatus(LifeStatus.ready.name());
+            bareMetalManager.update(bareMetal, true);
+        } else {
+            bareMetalManager.update(bareMetal, false);
+        }
+
+        template.convertAndSend("/topic/lifecycle", "");
     }
 
     public Object add(OutBandDTO queryVO) {

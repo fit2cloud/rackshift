@@ -25,6 +25,8 @@ public class Image implements Serializable {
 
     private Long updateTime;
 
+    private String status;
+
     private String extProperties;
 
     private static final long serialVersionUID = 1L;

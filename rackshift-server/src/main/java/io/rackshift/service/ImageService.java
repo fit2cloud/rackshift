@@ -54,6 +54,10 @@ public class ImageService {
         return true;
     }
 
+    public Object update(Image queryVO) {
+        return update(queryVO);
+    }
+
     public Object del(String id) {
         Image image = imageMapper.selectByPrimaryKey(id);
         if (image == null) return false;

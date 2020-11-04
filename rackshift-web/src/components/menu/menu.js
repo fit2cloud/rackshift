@@ -107,13 +107,7 @@ export default {
                     "requireRole": "admin",
                     "order": "14",
                     "icon": "el-icon-user-solid",
-                }, {
-                    "name": 'Role',
-                    "router": "/role",
-                    "requireRole": "admin",
-                    "order": "15",
-                    "icon": "el-icon-user",
-                },
+                }
                 // {
                 //     "name": "系统参数",
                 //     "router": "/system-parameter",
