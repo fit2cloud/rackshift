@@ -27,6 +27,6 @@
  - [x] 重构工作流执行器
  - [x] 增加 查看历史工作流页面
  - [x] 增加 查看正在运行中工作流页面
- - [x] 增加 uefi 模式下 Centos / Redhat 装机支持
+ - [x] 增加 uefi 模式下 DELL 机型 Centos / Redhat 装机支持
 
 
