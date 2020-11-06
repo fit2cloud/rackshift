@@ -308,6 +308,8 @@ export default {
 
     "not_detected": "未在位",
     "detected": "在位",
+    "obm_not_exists": "带外信息未配置",
+    "help_doc": "帮助文档",
 
 
 }

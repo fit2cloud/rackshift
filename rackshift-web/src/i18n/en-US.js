@@ -306,4 +306,6 @@ export default {
 
     "not_detected": "Not Detected",
     "detected": "Detected",
+    "obm_not_exists": "OBM Info Not Set",
+    "help_doc": "Help Document",
 }

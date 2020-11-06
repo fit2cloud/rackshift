@@ -12,7 +12,7 @@
       <div id="control" style="display: flex;">
         <div id="run-workflow">
           <div class="el-icon-caret-right h25"
-               style="border-bottom: yellowgreen 1px solid;  width: 100%;">{{ $t('Run') }}
+               style="border-bottom: yellow#E95420 1px solid;  width: 100%;">{{ $t('Run') }}
           </div>
           <div class="run-splitter h25"></div>
           <div>
@@ -22,7 +22,7 @@
 
         <div id="workflow-selector" style="display: flex;">
           <div id="select-workflow">
-            <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+            <div class="el-icon-menu h25" style="border-bottom: yellow#E95420 1px solid;    width: 100%;">
               {{ $t('Workflow') }}
             </div>
             <div class="run-splitter h25"></div>
@@ -44,7 +44,7 @@
 
         <div id="action-list">
           <div class="el-icon-s-operation h25"
-               style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+               style="border-bottom: yellow#E95420 1px solid;    width: 100%;">
             <el-badge :value="selectedWorkflow.length" class="item" type="primary" v-show="selectedWorkflow.length">
               {{ $t('selected_workflows') }}
             </el-badge>
@@ -137,7 +137,7 @@
         <el-table-column prop="status" :label="$t('machine_status')" align="left">
           <template slot-scope="scope">
             <i class="el-icon-loading" v-if="scope.row.status && scope.row.status.indexOf('ing') != -1"></i>
-            <span style="margin-left: 10px">{{ scope.row.status | statusFilter }}</span>
+            <span style="margin-left: 10px" v-html="statusFilter(scope.row)"></span>
           </template>
         </el-table-column>
 
@@ -395,8 +395,8 @@ import Vue from "vue"
 import i18n from "@/i18n/i18n";
 import {WebSocketUtil} from "@/common/utils/WebSocket";
 
-Vue.filter('statusFilter', function (value) {
-  return i18n.t(value);
+Vue.filter('statusFilter', function (row) {
+  return i18n.t('PXE') + ' ' + i18n.t(row.status);
 });
 let _ = require('lodash');
 export default {
@@ -509,6 +509,11 @@ export default {
   }
   ,
   methods: {
+    statusFilter(row) {
+      return '<span style="display: inline-block;">' +
+          this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:#E95420;margin-left:5px;"></i><br>'
+          + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:#E95420;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;"></i>') + '</span>';
+    },
     resizeWith(c) {
       return (c.expandLanguage && c.expandLanguage == localStorage.getItem('lang')) ? '100px' : '90px';
     },
@@ -745,6 +750,13 @@ export default {
       if (!this.selectedWorkflow.length) {
         this.$message.error(this.$t('pls_select_workflow') + "!");
         return;
+      }
+      for (let i = 0; i < this.selectedWorkflow.length; i++) {
+        let obj = _.find(this.tableData, (o) => o.id == this.selectedWorkflow[i].bareMetalId);
+        if (!obj.outBandList.length) {
+          this.$message.error(obj.machineModel + '' + obj.machineSn + ' ' + this.$t('obm_not_exists') + "!");
+          return;
+        }
       }
       let that = this;
       let reqList = _.map(this.copy(this.selectedWorkflow), (wf) => {

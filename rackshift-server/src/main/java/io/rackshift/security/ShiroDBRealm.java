@@ -1,5 +1,6 @@
 package io.rackshift.security;
 
+import io.rackshift.constants.AuthorizationConstants;
 import io.rackshift.model.RSException;
 import io.rackshift.model.UserDTO;
 import io.rackshift.mybatis.domain.Role;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,9 @@ public class ShiroDBRealm extends AuthorizingRealm {
     @Value("${run.mode:release}")
     private String runMode;
 
+    private Set<String> roles = new HashSet<String>() {{
+        add(AuthorizationConstants.ROLE_ADMIN);
+    }};
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
@@ -43,7 +48,9 @@ public class ShiroDBRealm extends AuthorizingRealm {
                 RSException.throwExceptions(Translator.get("error"));
             }
         }
-        Set<String> roles = userDTO.getRoles().stream().map(Role::getType).collect(Collectors.toSet());
+//        Set<String> roles = userDTO.getRoles().stream().map(Role::getType).collect(Collectors.toSet());
+        //暂时不使用 RBAC 默认所有添加的用户都是 管理员
+
         simpleAuthenticationInfo.setRoles(roles);
 
         return simpleAuthenticationInfo;

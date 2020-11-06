@@ -39,7 +39,7 @@ public class ImageService {
         return true;
     }
 
-    public Object update(ImageDTO queryVO) {
+    public Object update(Image queryVO) {
         Image image = new Image();
         BeanUtils.copyBean(image, queryVO);
         Image dbImage = imageMapper.selectByPrimaryKey(queryVO.getId());
@@ -52,10 +52,6 @@ public class ImageService {
         imageMapper.updateByPrimaryKey(image);
 
         return true;
-    }
-
-    public Object update(Image queryVO) {
-        return update(queryVO);
     }
 
     public Object del(String id) {

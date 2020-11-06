@@ -97,6 +97,7 @@ public class UserService {
     public boolean add(UserDTO queryVO) {
         User user = new User();
         BeanUtils.copyProperties(queryVO, user);
+        user.setPassword(CodingUtil.md5(user.getPassword()));
         user.setStatus(UserStatus.NORMAL);
         userMapper.insertSelective(user);
         for (String roleId : queryVO.getRolesIds()) {

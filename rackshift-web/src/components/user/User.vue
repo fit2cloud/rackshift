@@ -57,7 +57,7 @@
         </div>
 
         <el-drawer
-            :title="editType == 'edit' ? '编辑用户' : '新增用户'"
+            :title="editType == 'edit' ? $t('edit')+$t('user') :  $t('add')+$t('user')"
             :visible.sync="drawer"
             direction="rtl"
             :wrapperClosable="false"
@@ -79,16 +79,23 @@
                 <el-input v-model="editObj.phone" autocomplete="off"
                           :placeholder="$t('pls_input_phone')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('role')" :label-width="formLabelWidth" prop="rolesIds">
-                <el-select v-model="editObj.rolesIds" multiple :placeholder="$t('pls_select')">
-                  <el-option
-                      v-for="(item, key) in allRoles"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id">
-                  </el-option>
-                </el-select>
+
+              <el-form-item :label="$t('password')" :label-width="formLabelWidth" prop="password"
+                            v-if="editType != 'edit'">
+                <el-input v-model="editObj.password" autocomplete="off"
+                          :placeholder="$t('pls_input_pwd')" show-password></el-input>
               </el-form-item>
+
+              <!--              <el-form-item :label="$t('role')" :label-width="formLabelWidth" prop="rolesIds">-->
+              <!--                <el-select v-model="editObj.rolesIds" multiple :placeholder="$t('pls_select')">-->
+              <!--                  <el-option-->
+              <!--                      v-for="(item, key) in allRoles"-->
+              <!--                      :key="item.id"-->
+              <!--                      :label="item.name"-->
+              <!--                      :value="item.id">-->
+              <!--                  </el-option>-->
+              <!--                </el-select>-->
+              <!--              </el-form-item>-->
             </el-form>
             <div class="demo-drawer__footer">
               <el-button @click="cancelForm">{{ $t('cancel') }}</el-button>
@@ -128,8 +135,8 @@ export default {
         phone: [
           {validator: phoneValidator, trigger: 'blur', vue: this},
         ],
-        rolesIds: [
-          {validator: requiredValidator, trigger: 'blur', vue: this, msg: this.$t('pls_select') + this.$t('role')},
+        password: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
       },
       activeName: 'user',
@@ -183,7 +190,7 @@ export default {
   },
   mounted() {
     this.getData();
-    this.getAllRoles();
+    // this.getAllRoles();
   },
   methods: {
     getData() {
