@@ -22,12 +22,42 @@
         >
           <el-table-column type="selection" align="left"></el-table-column>
 
+
+          <el-table-column prop="machineModel" :label="$t('Bare Metal Server')" align="left" :sortable="true">
+            <template slot-scope="scope">
+<!--              <span style="display: block; word-break:keep-all;-->
+<!--  white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>-->
+
+              <el-tooltip class="item" effect="dark" :content="scope.row.machineModel" placement="right-end">
+                <el-link type="primary" target="_blank">
+                  <span style="display: block; word-break:keep-all;
+  white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>
+                </el-link>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+
           <el-table-column :prop="c.prop" :label="$t(c.label)" align="left"
                            v-for="c in columns" :sortable="c.sort"></el-table-column>
+
+          <el-table-column prop="friendlyName" :label="$t('Workflow')" align="left" :sortable="true" width="210">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">
+                <el-link type="primary" target="_blank">
+                  <span style="display: block; word-break:keep-all;
+  white-space:nowrap;overflow: hidden">{{ scope.row.friendlyName }}</span>
+                </el-link>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="userId" :label="$t('user')" align="left" :sortable="true">
+          </el-table-column>
+
           <el-table-column prop="status" :label="$t('status')" align="left">
             <template slot-scope="scope">
-              <i class="el-icon-loading" v-if="scope.row.status.indexOf('ING') != -1"></i>
-              {{ $t(scope.row.status) }}
+              <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
+              <span style="margin-left: 10px">{{ $t(scope.row.status) }}</span>
             </template>
           </el-table-column>
 
@@ -140,23 +170,8 @@ export default {
       loading: false,
       columns: [
         {
-          label: 'Bare Metal Server',
-          prop: "machineModel",
-          sort: true
-        },
-        {
           label: 'machine_sn',
           prop: "machineSn",
-          sort: true
-        },
-        {
-          label: 'Workflow',
-          prop: "friendlyName",
-          sort: true
-        },
-        {
-          label: 'user',
-          prop: "userId",
           sort: true
         }
       ],

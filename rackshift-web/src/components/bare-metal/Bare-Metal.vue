@@ -508,9 +508,14 @@ export default {
   ,
   methods: {
     statusFilter(row) {
-      return '<span style="display: inline-block;">' +
-          this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i><br>'
-          + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
+      if (row.status.indexOf("ing") == -1) {
+        return '<span style="display: inline-block;">' +
+            this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i><br>'
+            + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
+      } else {
+        return '<span style="display: inline-block;">' +
+            this.$t('PXE') + ' ' + this.$t(row.status) + '<br>';
+      }
     },
     resizeWith(c) {
       return (c.expandLanguage && c.expandLanguage == localStorage.getItem('lang')) ? '100px' : '90px';
