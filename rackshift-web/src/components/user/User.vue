@@ -47,17 +47,18 @@
         </el-table>
         <div class="pagination">
           <el-pagination
-              background
-              layout="total, prev, pager, next"
+              layout="total, sizes, prev, pager, next, jumper"
               :current-page="query.pageIndex"
-              :page-size="query.pageSize"
+              :page-sizes="[10, 20, 50, 100]"
+              :page-size="10"
               :total="pageTotal"
+              @size-change="handleSizeChange"
               @current-change="handlePageChange"
           ></el-pagination>
         </div>
 
         <el-drawer
-            :title="editType == 'edit' ? '编辑用户' : '新增用户'"
+            :title="editType == 'edit' ? $t('edit')+$t('user') :  $t('add')+$t('user')"
             :visible.sync="drawer"
             direction="rtl"
             :wrapperClosable="false"
@@ -79,16 +80,23 @@
                 <el-input v-model="editObj.phone" autocomplete="off"
                           :placeholder="$t('pls_input_phone')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('role')" :label-width="formLabelWidth" prop="rolesIds">
-                <el-select v-model="editObj.rolesIds" multiple :placeholder="$t('pls_select')">
-                  <el-option
-                      v-for="(item, key) in allRoles"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.id">
-                  </el-option>
-                </el-select>
+
+              <el-form-item :label="$t('password')" :label-width="formLabelWidth" prop="password"
+                            v-if="editType != 'edit'">
+                <el-input v-model="editObj.password" autocomplete="off"
+                          :placeholder="$t('pls_input_pwd')" show-password></el-input>
               </el-form-item>
+
+              <!--              <el-form-item :label="$t('role')" :label-width="formLabelWidth" prop="rolesIds">-->
+              <!--                <el-select v-model="editObj.rolesIds" multiple :placeholder="$t('pls_select')">-->
+              <!--                  <el-option-->
+              <!--                      v-for="(item, key) in allRoles"-->
+              <!--                      :key="item.id"-->
+              <!--                      :label="item.name"-->
+              <!--                      :value="item.id">-->
+              <!--                  </el-option>-->
+              <!--                </el-select>-->
+              <!--              </el-form-item>-->
             </el-form>
             <div class="demo-drawer__footer">
               <el-button @click="cancelForm">{{ $t('cancel') }}</el-button>
@@ -128,8 +136,8 @@ export default {
         phone: [
           {validator: phoneValidator, trigger: 'blur', vue: this},
         ],
-        rolesIds: [
-          {validator: requiredValidator, trigger: 'blur', vue: this, msg: this.$t('pls_select') + this.$t('role')},
+        password: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
       },
       activeName: 'user',
@@ -183,9 +191,13 @@ export default {
   },
   mounted() {
     this.getData();
-    this.getAllRoles();
+    // this.getAllRoles();
   },
   methods: {
+    handleSizeChange(val) {
+      this.query.pageSize = val;
+      this.handlePageChange(this.query.pageIndex);
+    },
     getData() {
       this.loadingList = true;
       HttpUtil.post("/user/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {

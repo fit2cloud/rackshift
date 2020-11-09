@@ -274,9 +274,9 @@ public class RackHDService {
             String workflowId = (JSONObject.parseObject(response.getData())).getString("instanceId");
             workflowResponse = getWorkflowResponse(url, workflowId);
         } catch (Exception e) {
-            throw new RuntimeException("获取磁盘信息失败！" + ExceptionUtils.getExceptionDetail(e));
+            LogUtil.info("获取磁盘信息失败！" + ExceptionUtils.getExceptionDetail(e));
         }
-        return workflowResponse.isSuccess();
+        return true;
     }
 
     /**
@@ -537,7 +537,7 @@ public class RackHDService {
                             Disk pd = new Disk();
                             String eId = pdObj.getString("EID:Slt").split(":")[0];
                             //有些机型出厂不自带 RAID 卡 而是共用或者拆机使用，这个值获取不到
-                            pd.setEnclosureId(StringUtils.isBlank(eId)? 32 : Integer.valueOf(eId));
+                            pd.setEnclosureId(StringUtils.isBlank(eId) ? 32 : Integer.valueOf(eId));
                             //暂时只支持一块raid卡 所以写死为0
                             pd.setControllerId(0);
                             pd.setDrive(pdObj.getString("EID:Slt").split(":")[1]);
@@ -670,10 +670,6 @@ public class RackHDService {
         en.setMemories(memories);
         en.setCpus(cpus);
         en.setNodeId(nodeId);
-        //由于多次使用perccli catalog获取最新的磁盘信息来作为raid创建的依据，因此disk数据可能是磁盘数的倍数 所以需要取得最新的磁盘信息
-        if (disks.size() == 0 && needPerccliCatalog(ip, nodeId, en.getBrand()) && !("retry".equals(request))) {
-            return getNodeEntity(ip, nodeId, "retry");
-        }
         en.setDisks(getLatestDisk(disks));
         return en;
     }
@@ -755,6 +751,15 @@ public class RackHDService {
         }
     }
 
+    public String postWorkflowNoWait(String url, String nodeId, String workflow, JSONObject param) {
+
+        RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + "/api/2.0/nodes/%s/workflows?name=" + workflow, nodeId), param == null ? "" : param.toJSONString());
+        if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
+            throw new RuntimeException("操作失败！" + response.getData());
+        }
+        return (JSONObject.parseObject(response.getData())).getString("instanceId");
+    }
+
     public List<String> getActiveWorkflowNodeIds(String endPointId) {
         Endpoint endpoint = endpointMapper.selectByPrimaryKey(endPointId);
         if (endpoint == null) return new ArrayList<>();
@@ -772,5 +777,15 @@ public class RackHDService {
     public boolean deleteNode(BareMetal bareMetal) {
         RackHDResponse response = RackHDHttpClientUtil.delete(String.format(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()) + "/api/2.0/nodes/%s", bareMetal.getServerId()));
         return response.getReCode() <= RackHDConstants.ERROR_RE_CODE;
+    }
+
+    public String getWorkflowStatusById(String ip, String instanceId) {
+        try {
+            JSONObject res = JSONObject.parseObject(RackHDHttpClientUtil.get(ip + String.format(RackHDConstants.JOBS, instanceId), null));
+            return res.getString("status");
+        } catch (Exception e) {
+            LogUtil.error("更新workflow任务状态失败！" + ExceptionUtils.getExceptionDetail(e));
+        }
+        return null;
     }
 }

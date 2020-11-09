@@ -7,10 +7,9 @@
       active-text-color="#fff"
       class="main-header-menu"
       mode="horizontal"
-      style="cursor:pointer;"
   >
     <el-submenu index="1">
-      <template slot="title">{{ user.name }}</template>
+      <template slot="title" style="width: 150px;overflow: hidden;">{{ user.name }}</template>
       <el-menu-item v-for="c in languages" @click="clicked(c.value)" :index="1 + '-' + c.index">
         {{ $t(c.name) }}
       </el-menu-item>
@@ -33,8 +32,13 @@ export default {
           index: '1'
         },
         {
+          name: 'help_doc',
+          value: 'help_doc',
+          index: '2'
+        },
+        {
           name: 'logout',
-          index: '2',
+          index: '3',
           value: 'logout',
         },
       ],
@@ -53,8 +57,10 @@ export default {
     clicked: function (command) {
       if ('logout' == command) {
         this.logout();
-      } else {
+      } else if ('change_pwd' == command) {
         this.$router.push("info");
+      } else {
+        window.open("https://rackshift.github.io/rackshift-docs-static/");
       }
     }
   }

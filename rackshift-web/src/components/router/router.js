@@ -13,6 +13,7 @@ import Endpoint from "../endpoint/Endpoint"
 import Info from "../info/Info"
 import Wizard from "../wizard/Wizard"
 import Discovery from "../discovery/Discovery"
+import Task from "../task/Task"
 
 Vue.use(VueRouter);
 
@@ -32,6 +33,7 @@ const routes = [
     {path: '/info', component: Info},
     {path: '/wizard', component: Wizard},
     {path: '/discovery', component: Discovery},
+    {path: '/task', component: Task},
 ]
 const router = new VueRouter({
     routes: routes

@@ -3,8 +3,8 @@
     <el-container v-if="login">
       <el-header id="main-header">
         <el-row type="flex" style="display: flex;">
-          <el-col :span="20"><span id="main-title">RackShift</span></el-col>
-          <el-col :span="4" class=" align-right          ">
+          <el-col :span="19"><span id="main-title">RackShift</span></el-col>
+          <el-col :span="5" class=" align-right          ">
             <ChangeLanguage></ChangeLanguage>
             <ChangeInfo></ChangeInfo>
           </el-col>
@@ -232,5 +232,9 @@ button {
 
 .el-submenu__title {
   border-bottom-color: transparent !important;
+}
+
+.pagination {
+  float: right;
 }
 </style>

@@ -12,6 +12,7 @@
     <result column="file_path" jdbcType="VARCHAR" property="filePath" />
     <result column="mount_path" jdbcType="VARCHAR" property="mountPath" />
     <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.Image">
     <result column="ext_properties" jdbcType="LONGVARCHAR" property="extProperties" />
@@ -76,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, endpoint_id, name, os, os_version, url, original_name, file_path, mount_path, 
-    update_time
+    update_time, status
   </sql>
   <sql id="Blob_Column_List">
     ext_properties
@@ -133,11 +134,13 @@
     insert into image (id, endpoint_id, name, 
       os, os_version, url, 
       original_name, file_path, mount_path, 
-      update_time, ext_properties)
+      update_time, status, ext_properties
+      )
     values (#{id,jdbcType=VARCHAR}, #{endpointId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{os,jdbcType=VARCHAR}, #{osVersion,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
       #{originalName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{mountPath,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=BIGINT}, #{extProperties,jdbcType=LONGVARCHAR})
+      #{updateTime,jdbcType=BIGINT}, #{status,jdbcType=VARCHAR}, #{extProperties,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.Image">
     insert into image
@@ -171,6 +174,9 @@
       </if>
       <if test="updateTime != null">
         update_time,
+      </if>
+      <if test="status != null">
+        status,
       </if>
       <if test="extProperties != null">
         ext_properties,
@@ -206,6 +212,9 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
       </if>
       <if test="extProperties != null">
         #{extProperties,jdbcType=LONGVARCHAR},
@@ -251,6 +260,9 @@
       <if test="record.updateTime != null">
         update_time = #{record.updateTime,jdbcType=BIGINT},
       </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
       <if test="record.extProperties != null">
         ext_properties = #{record.extProperties,jdbcType=LONGVARCHAR},
       </if>
@@ -271,6 +283,7 @@
       file_path = #{record.filePath,jdbcType=VARCHAR},
       mount_path = #{record.mountPath,jdbcType=VARCHAR},
       update_time = #{record.updateTime,jdbcType=BIGINT},
+      status = #{record.status,jdbcType=VARCHAR},
       ext_properties = #{record.extProperties,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -287,7 +300,8 @@
       original_name = #{record.originalName,jdbcType=VARCHAR},
       file_path = #{record.filePath,jdbcType=VARCHAR},
       mount_path = #{record.mountPath,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=BIGINT}
+      update_time = #{record.updateTime,jdbcType=BIGINT},
+      status = #{record.status,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -322,6 +336,9 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=BIGINT},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
       <if test="extProperties != null">
         ext_properties = #{extProperties,jdbcType=LONGVARCHAR},
       </if>
@@ -339,6 +356,7 @@
       file_path = #{filePath,jdbcType=VARCHAR},
       mount_path = #{mountPath,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=BIGINT},
+      status = #{status,jdbcType=VARCHAR},
       ext_properties = #{extProperties,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -352,7 +370,8 @@
       original_name = #{originalName,jdbcType=VARCHAR},
       file_path = #{filePath,jdbcType=VARCHAR},
       mount_path = #{mountPath,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=BIGINT}
+      update_time = #{updateTime,jdbcType=BIGINT},
+      status = #{status,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

@@ -32,6 +32,7 @@ public class EndpointPoller {
             } catch (Exception e1) {
                 e.setStatus(ServiceConstants.EndpointStatusEnum.Offline.name());
             }
+            e.setIp(null);
             endpointService.update(e);
         });
 

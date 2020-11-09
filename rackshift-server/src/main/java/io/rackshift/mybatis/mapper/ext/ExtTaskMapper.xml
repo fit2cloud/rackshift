@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.mybatis.mapper.ext.ExtTaskMapper">
+    <resultMap id="BaseResultMap" type="Map">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="pre_task_id" jdbcType="VARCHAR" property="preTaskId"/>
+        <result column="work_flow_id" jdbcType="VARCHAR" property="workFlowId"/>
+        <result column="bare_metal_id" jdbcType="VARCHAR" property="bareMetalId"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="instance_id" jdbcType="VARCHAR" property="instanceId"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+        <result column="machine_model" jdbcType="VARCHAR" property="machineModel"/>
+        <result column="machine_sn" jdbcType="VARCHAR" property="machineSn"/>
+        <result column="friendly_name" jdbcType="VARCHAR" property="friendlyName"/>
+        <result column="params" jdbcType="LONGVARCHAR" property="params"/>
+        <result column="extParams" jdbcType="LONGVARCHAR" property="extparams"/>
+    </resultMap>
+
+    <select id="list" parameterType="io.rackshift.model.TaskDTO" resultMap="BaseResultMap">
+        select
+        task.*,
+        bare_metal.machine_model,
+        bare_metal.machine_sn,
+        workflow.friendly_name
+        from task
+        left join bare_metal on task.bare_metal_id = bare_metal.id
+        left join workflow on task.work_flow_id = workflow.injectable_name
+        left join user on task.user_id = user.id
+        <where>
+            <if test="machineSn != null and machineSn != ''">
+                bare_metal.machine_sn like #{sn}
+            </if>
+            <if test="machineModel != null and machineModel != ''">
+                bare_metal.machine_model like #{machineModel}
+            </if>
+            <if test="friendlyName != null and friendlyName != ''">
+                workflow.friendly_name like #{friendlyName}
+            </if>
+        </where>
+        order by task.create_time desc
+    </select>
+
+</mapper>

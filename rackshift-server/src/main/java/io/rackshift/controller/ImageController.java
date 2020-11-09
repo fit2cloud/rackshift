@@ -39,7 +39,7 @@ public class ImageController {
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @RequestMapping("list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody ImageDTO queryVO) {
-        Page<Object> page1 = PageHelper.startPage(page, pageSize, true);
+        Page<Object> page1 = PageHelper.startPage(page, 1000, true);
         return ResultHolder.success(PageUtils.setPageInfo(page1, imageService.list(queryVO)));
     }
 

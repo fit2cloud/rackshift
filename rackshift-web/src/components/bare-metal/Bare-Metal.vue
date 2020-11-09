@@ -44,7 +44,7 @@
 
         <div id="action-list">
           <div class="el-icon-s-operation h25"
-               style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+               style="border-bottom: yellowgreen 1px solid;width: 100%;">
             <el-badge :value="selectedWorkflow.length" class="item" type="primary" v-show="selectedWorkflow.length">
               {{ $t('selected_workflows') }}
             </el-badge>
@@ -93,7 +93,7 @@
       >
         <el-table-column type="selection" align="left"></el-table-column>
 
-        <el-table-column prop="machineModel" :label="$t('machine_model')" align="left"
+        <el-table-column prop="machine_model" :label="$t('machine_model')" align="left"
                          sortable="custom" style="overflow: scroll">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
@@ -105,28 +105,28 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="machineSn" :label="$t('machine_sn')" align="left"
+        <el-table-column prop="machine_sn" :label="$t('machine_sn')" align="left"
                          sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.machineSn }}
           </template>
         </el-table-column>
 
-        <el-table-column prop="managementIp" :label="$t('management_ip')" align="left"
+        <el-table-column prop="management_ip" :label="$t('management_ip')" align="left"
                          sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.managementIp }}
           </template>
         </el-table-column>
 
-        <el-table-column prop="ipArray" :label="$t('IP')" align="left"
+        <el-table-column prop="ip_array" :label="$t('IP')" align="left"
                          sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.ipArray }}
           </template>
         </el-table-column>
 
-        <el-table-column :prop="$t(c.prop)" :label="$t(c.label)" align="left" v-for="c in columns" sortable="custom"
+        <el-table-column :prop="c.prop" :label="$t(c.label)" align="left" v-for="c in columns" sortable="custom"
                          :width="resizeWith(c)">
           <template slot-scope="scope">
             <span v-if="!c.custom">{{ scope.row[c.prop] }}</span>
@@ -137,7 +137,7 @@
         <el-table-column prop="status" :label="$t('machine_status')" align="left">
           <template slot-scope="scope">
             <i class="el-icon-loading" v-if="scope.row.status && scope.row.status.indexOf('ing') != -1"></i>
-            <span style="margin-left: 10px">{{ scope.row.status | statusFilter }}</span>
+            <span style="margin-left: 10px" v-html="statusFilter(scope.row)"></span>
           </template>
         </el-table-column>
 
@@ -163,8 +163,6 @@
                 <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="fillOBM(scope.row)"> {{ $t('OBM') + $t('info') }}
-                </el-dropdown-item>
-                <el-dropdown-item @click.native="expandChange(scope.row)">{{ $t('view_execution_log') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -395,8 +393,8 @@ import Vue from "vue"
 import i18n from "@/i18n/i18n";
 import {WebSocketUtil} from "@/common/utils/WebSocket";
 
-Vue.filter('statusFilter', function (value) {
-  return i18n.t(value);
+Vue.filter('statusFilter', function (row) {
+  return i18n.t('PXE') + ' ' + i18n.t(row.status);
 });
 let _ = require('lodash');
 export default {
@@ -509,6 +507,11 @@ export default {
   }
   ,
   methods: {
+    statusFilter(row) {
+      return '<span style="display: inline-block;">' +
+          this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i><br>'
+          + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
+    },
     resizeWith(c) {
       return (c.expandLanguage && c.expandLanguage == localStorage.getItem('lang')) ? '100px' : '90px';
     },
@@ -622,7 +625,7 @@ export default {
       if (val.order) {
         this.queryVO = {
           searchKey: '%' + this.search + '%',
-          sort: toLine(val.prop) + " " + val.order.replace("ending", "")
+          sort: val.prop + " " + val.order.replace("ending", "")
         }
       } else {
         delete this.queryVO.sort;
@@ -745,6 +748,13 @@ export default {
       if (!this.selectedWorkflow.length) {
         this.$message.error(this.$t('pls_select_workflow') + "!");
         return;
+      }
+      for (let i = 0; i < this.selectedWorkflow.length; i++) {
+        let obj = _.find(this.tableData, (o) => o.id == this.selectedWorkflow[i].bareMetalId);
+        if (!obj.outBandList.length) {
+          this.$message.error(obj.machineModel + '' + obj.machineSn + ' ' + this.$t('obm_not_exists') + "!");
+          return;
+        }
       }
       let that = this;
       let reqList = _.map(this.copy(this.selectedWorkflow), (wf) => {

@@ -44,7 +44,12 @@
           </el-table-column>
 
           <el-table-column :prop="c.prop" :label="c.label" align="left"
-                           v-for="c in columns" :sortable="c.sort"></el-table-column>
+                           v-for="c in columns" :sortable="c.sort">
+            <template slot-scope="scope">
+              <span v-if="!c.custom">{{ scope.row[c.prop] }}</span>
+              <span v-if="c.custom">{{ c.formatter(scope.row[c.prop]) }}</span>
+            </template>
+          </el-table-column>
 
           <el-table-column prop="updateTime" :label="$t('update_time')" align="left">
             <template slot-scope="scope">
@@ -60,17 +65,17 @@
           </el-table-column>
         </el-table>
 
-        <div class="pagination">
-          <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handlePageChange"
-              :current-page="query.pageIndex"
-              :page-sizes="[10, 20, 50, 100]"
-              :page-size="10"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="pageTotal">
-          </el-pagination>
-        </div>
+        <!--        <div class="pagination">-->
+        <!--          <el-pagination-->
+        <!--              @size-change="handleSizeChange"-->
+        <!--              @current-change="handlePageChange"-->
+        <!--              :current-page="query.pageIndex"-->
+        <!--              :page-sizes="[10, 20, 50, 100]"-->
+        <!--              :page-size="10"-->
+        <!--              layout="total, sizes, prev, pager, next, jumper"-->
+        <!--              :total="pageTotal">-->
+        <!--          </el-pagination>-->
+        <!--        </div>-->
 
         <el-drawer
             :title="editType == 'edit' ? $t('edit_image') : $t('add_image')"
@@ -159,8 +164,10 @@
 
 import HttpUtil from "../../common/utils/HttpUtil"
 import {requiredValidator, requiredSelectValidator} from "@/common/validator/CommonValidator";
+import i18n from "@/i18n/i18n";
 
 let _ = require('lodash');
+
 export default {
   data() {
     return {
@@ -195,12 +202,28 @@ export default {
       loading: false,
       columns: [
         {
-          label: this.$t('os'),
+          label: 'os',
           prop: "os"
         },
         {
-          label: this.$t('os_vesion'),
+          label: 'os_vesion',
           prop: "osVersion"
+        },
+        {
+          label: 'status',
+          prop: "status",
+          custom: true,
+          statusMap: {
+            "not_detected": this.$t('not_detected'),
+            "detected": this.$t('detected'),
+            "error": this.$t('error'),
+          },
+          formatter: function (item) {
+            if (item) {
+              return this.statusMap[item];
+            }
+            return item;
+          }
         },
       ],
       editDialogVisible: false,

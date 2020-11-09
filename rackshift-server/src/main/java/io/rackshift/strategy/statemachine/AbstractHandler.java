@@ -85,7 +85,6 @@ public abstract class AbstractHandler implements IStateHandler {
         getExecutionMap().set(statusMap);
 
         if (StringUtils.isAnyBlank(bareMetal.getEndpointId(), bareMetal.getServerId())) {
-            executionLogService.error(executionId);
             executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, "该裸金属未执行discovery流程,无法进行部署");
             revert(event, executionId, user);
         }
@@ -94,7 +93,6 @@ public abstract class AbstractHandler implements IStateHandler {
             paramPreProcess(event);
             handleYourself(event);
         } catch (Exception e) {
-            executionLogService.error(executionId);
             executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, String.format("错误：%s", ExceptionUtils.getExceptionDetail(e)));
             revert(event, getExecutionId(), getUser());
             throw new RuntimeException(e);
@@ -114,7 +112,6 @@ public abstract class AbstractHandler implements IStateHandler {
             }
         }
     }
-
 
     @Override
     public void revert(LifeEvent event, String executionId, String user) {

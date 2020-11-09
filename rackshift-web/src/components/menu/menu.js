@@ -23,11 +23,11 @@ export default {
             "router": "/Resource",
             "requireRole": "admin,user",
             "order": "3",
-            "icon": "el-icon-folder-opened",
+            "icon": "el-icon-house",
             childs: [
                 {
                     "name": 'Bare Metal Server',
-                    "router": "/bare-metal",
+                    "router": "/Bare-Metal",
                     "requireRole": "user,admin",
                     "order": "4",
                     "icon": "el-icon-monitor"
@@ -35,7 +35,7 @@ export default {
 
                 {
                     "name": 'Image',
-                    "router": "/image",
+                    "router": "/Image",
                     "requireRole": "user,admin",
                     "order": "5",
                     "icon": "el-icon-view"
@@ -44,14 +44,14 @@ export default {
         },
         {
             "name": 'Network',
-            "router": "/network",
+            "router": "/Network",
             "requireRole": "admin",
             "order": "6",
             "icon": "el-icon-s-grid",
             childs: [
                 {
                     "name": 'Subnet',
-                    "router": "/network",
+                    "router": "/Network",
                     "requireRole": "admin",
                     "order": "7",
                     "icon": "el-icon-menu"
@@ -61,7 +61,7 @@ export default {
                     "router": "/Discovery",
                     "requireRole": "admin",
                     "order": "2",
-                    "icon": "el-icon-s-promotion"
+                    "icon": "el-icon-discover"
                 },
             ]
         },
@@ -80,11 +80,11 @@ export default {
                     "icon": "el-icon-s-unfold",
                 },
                 {
-                    "name": 'Execution Log',
-                    "router": "/execution-log",
+                    "name": 'Task',
+                    "router": "/Task",
                     "requireRole": "admin",
                     "order": "11",
-                    "icon": "el-icon-s-order",
+                    "icon": "el-icon-s-operation",
                 },
             ]
         }, {
@@ -96,24 +96,18 @@ export default {
             childs: [
                 {
                     "name": 'endpoint',
-                    "router": "/endpoint",
+                    "router": "/EndPoint",
                     "requireRole": "admin",
                     "order": "13",
                     "icon": "el-icon-s-promotion",
                 },
                 {
                     "name": 'User',
-                    "router": "/user",
+                    "router": "/User",
                     "requireRole": "admin",
                     "order": "14",
                     "icon": "el-icon-user-solid",
-                }, {
-                    "name": 'Role',
-                    "router": "/role",
-                    "requireRole": "admin",
-                    "order": "15",
-                    "icon": "el-icon-user",
-                },
+                }
                 // {
                 //     "name": "系统参数",
                 //     "router": "/system-parameter",
