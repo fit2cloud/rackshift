@@ -24,7 +24,7 @@ RackShift 是一款开源的裸金属服务器全生命周期管理平台，功�
 详细的版本规划请参考 [版本路线图](https://github.com/rackshift/rackshift/blob/master/ROADMAP.md)
 
 ## 技术架构
-![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs_structure.png)
+![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rackshift-struc.jpg)
 
 组件说明：
 
