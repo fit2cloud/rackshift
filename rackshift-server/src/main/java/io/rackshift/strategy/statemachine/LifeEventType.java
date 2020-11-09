@@ -3,6 +3,7 @@ package io.rackshift.strategy.statemachine;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +22,10 @@ public enum LifeEventType {
     POST_OTHER_WORKFLOW_END("workflow执行完毕"),
     POST_OTHER_WORKFLOW_CANCEL("取消workflow"),
     POST_OS_WORKFLOW_START("下发安装系统workflow", true),
-    POST_OS_WORKFLOW_END("安装系统workflow执行完毕"),
+    POST_OS_WORKFLOW_END("安装系统workflow执行完毕", new ArrayList<String>() {{
+        add("Graph.InstallCentOS");
+        add("Graph.InstallRHEL");
+    }}),
     POST_OS_WORKFLOW_CANCEL("取消安装系统workflow");
     @JSONField(name = "desc")
     private String desc;
@@ -50,8 +54,17 @@ public enum LifeEventType {
         this.visable = visable;
     }
 
-    public static LifeEventType fromWorkflow(String name) {
-        for (LifeEventType event : LifeEventType.values()) {
+    public static LifeEventType fromStartType(String name) {
+        for (LifeEventType event : Arrays.stream(LifeEventType.values()).filter(l -> l.name().toLowerCase().contains("start")).collect(Collectors.toList())) {
+            if (event.workflows != null && event.workflows.contains(name)) {
+                return event;
+            }
+        }
+        throw new RuntimeException("unsupported workflow!");
+    }
+
+    public static LifeEventType fromEndType(String name) {
+        for (LifeEventType event : Arrays.stream(LifeEventType.values()).filter(l -> l.name().toLowerCase().contains("end")).collect(Collectors.toList())) {
             if (event.workflows != null && event.workflows.contains(name)) {
                 return event;
             }

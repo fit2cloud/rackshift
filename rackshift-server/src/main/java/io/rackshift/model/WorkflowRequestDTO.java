@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 
 public class WorkflowRequestDTO {
     private String bareMetalId;
+    private String taskId;
     private String workflowName;
     private JSONObject params;
     private JSONObject extraParams;
@@ -55,5 +56,13 @@ public class WorkflowRequestDTO {
 
     public void setParams(JSONObject params) {
         this.params = params;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
     }
 }

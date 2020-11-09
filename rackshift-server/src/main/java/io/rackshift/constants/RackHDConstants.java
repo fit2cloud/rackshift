@@ -18,6 +18,7 @@ public class RackHDConstants {
     private static final String WORKFLOW_POWER_RESET = "Graph.Reboot.Node";
     private static final String WORKFLOW_INSTALL_CENTOS = "Graph.InstallCentOS";
     private static final String WORKFLOW_INSTALL_WINDOWS = "Graph.InstallWindowsServer";
+    public static final String JOBS = "/api/2.0/workflows/%s";
     public static final String WORKFLOWS = "/api/2.0/workflows/graphs";
     public static final String TASKS = "/api/2.0/workflows/tasks";
 

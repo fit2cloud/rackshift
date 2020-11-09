@@ -47,7 +47,7 @@ public class ExecutionLogService {
         log.setBareMetalId(bareMetalId);
         log.setLogId(logId);
         log.setOperation(operation);
-        log.setStatus(status);
+        log.setStatus(operation);
         log.setOutPut(outPut);
         executionLogDetailsMapper.insertSelective(log);
         return log;

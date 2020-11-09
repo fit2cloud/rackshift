@@ -46,7 +46,6 @@ public class SyncRackJob {
                     }
                 }
             }
-
             entities.forEach(e -> {
                 bareMetalManager.saveOrUpdateEntity(e);
             });

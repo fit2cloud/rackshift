@@ -12,7 +12,7 @@
       <div id="control" style="display: flex;">
         <div id="run-workflow">
           <div class="el-icon-caret-right h25"
-               style="border-bottom: yellow#E95420 1px solid;  width: 100%;">{{ $t('Run') }}
+               style="border-bottom: yellowgreen 1px solid;  width: 100%;">{{ $t('Run') }}
           </div>
           <div class="run-splitter h25"></div>
           <div>
@@ -22,7 +22,7 @@
 
         <div id="workflow-selector" style="display: flex;">
           <div id="select-workflow">
-            <div class="el-icon-menu h25" style="border-bottom: yellow#E95420 1px solid;    width: 100%;">
+            <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
               {{ $t('Workflow') }}
             </div>
             <div class="run-splitter h25"></div>
@@ -44,7 +44,7 @@
 
         <div id="action-list">
           <div class="el-icon-s-operation h25"
-               style="border-bottom: yellow#E95420 1px solid;    width: 100%;">
+               style="border-bottom: yellowgreen 1px solid;width: 100%;">
             <el-badge :value="selectedWorkflow.length" class="item" type="primary" v-show="selectedWorkflow.length">
               {{ $t('selected_workflows') }}
             </el-badge>
@@ -93,7 +93,7 @@
       >
         <el-table-column type="selection" align="left"></el-table-column>
 
-        <el-table-column prop="machineModel" :label="$t('machine_model')" align="left"
+        <el-table-column prop="machine_model" :label="$t('machine_model')" align="left"
                          sortable="custom" style="overflow: scroll">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
@@ -105,28 +105,28 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="machineSn" :label="$t('machine_sn')" align="left"
+        <el-table-column prop="machine_sn" :label="$t('machine_sn')" align="left"
                          sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.machineSn }}
           </template>
         </el-table-column>
 
-        <el-table-column prop="managementIp" :label="$t('management_ip')" align="left"
+        <el-table-column prop="management_ip" :label="$t('management_ip')" align="left"
                          sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.managementIp }}
           </template>
         </el-table-column>
 
-        <el-table-column prop="ipArray" :label="$t('IP')" align="left"
+        <el-table-column prop="ip_array" :label="$t('IP')" align="left"
                          sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.ipArray }}
           </template>
         </el-table-column>
 
-        <el-table-column :prop="$t(c.prop)" :label="$t(c.label)" align="left" v-for="c in columns" sortable="custom"
+        <el-table-column :prop="c.prop" :label="$t(c.label)" align="left" v-for="c in columns" sortable="custom"
                          :width="resizeWith(c)">
           <template slot-scope="scope">
             <span v-if="!c.custom">{{ scope.row[c.prop] }}</span>
@@ -163,8 +163,6 @@
                 <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="fillOBM(scope.row)"> {{ $t('OBM') + $t('info') }}
-                </el-dropdown-item>
-                <el-dropdown-item @click.native="expandChange(scope.row)">{{ $t('view_execution_log') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -511,8 +509,8 @@ export default {
   methods: {
     statusFilter(row) {
       return '<span style="display: inline-block;">' +
-          this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:#E95420;margin-left:5px;"></i><br>'
-          + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:#E95420;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;"></i>') + '</span>';
+          this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i><br>'
+          + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
     },
     resizeWith(c) {
       return (c.expandLanguage && c.expandLanguage == localStorage.getItem('lang')) ? '100px' : '90px';
@@ -627,7 +625,7 @@ export default {
       if (val.order) {
         this.queryVO = {
           searchKey: '%' + this.search + '%',
-          sort: toLine(val.prop) + " " + val.order.replace("ending", "")
+          sort: val.prop + " " + val.order.replace("ending", "")
         }
       } else {
         delete this.queryVO.sort;

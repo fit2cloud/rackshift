@@ -311,5 +311,12 @@ export default {
     "obm_not_exists": "带外信息未配置",
     "help_doc": "帮助文档",
 
+    "created": "待执行",
+    "running": "执行中",
+    "failed": "失败",
+    "succeeded": "成功",
+    "Task": "任务",
+    "instance_id": "任务 Id",
+
 
 }

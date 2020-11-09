@@ -48,6 +48,8 @@ export default {
         return "el-icon-plus";
       } else if (this.type == "sync") {
         return "el-icon-refresh";
+      } else if (this.type == "view") {
+        return "el-icon-view";
       }
     }
   },

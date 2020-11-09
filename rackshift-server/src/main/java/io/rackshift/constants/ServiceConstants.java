@@ -42,4 +42,8 @@ public class ServiceConstants {
     public enum ImageStatusEnum {
         not_detected, detected, error
     }
+
+    public enum TaskStatusEnum {
+        created, running, failed, succeeded
+    }
 }

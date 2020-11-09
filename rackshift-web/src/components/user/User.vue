@@ -47,11 +47,12 @@
         </el-table>
         <div class="pagination">
           <el-pagination
-              background
-              layout="total, prev, pager, next"
+              layout="total, sizes, prev, pager, next, jumper"
               :current-page="query.pageIndex"
-              :page-size="query.pageSize"
+              :page-sizes="[10, 20, 50, 100]"
+              :page-size="10"
               :total="pageTotal"
+              @size-change="handleSizeChange"
               @current-change="handlePageChange"
           ></el-pagination>
         </div>
@@ -193,6 +194,10 @@ export default {
     // this.getAllRoles();
   },
   methods: {
+    handleSizeChange(val) {
+      this.query.pageSize = val;
+      this.handlePageChange(this.query.pageIndex);
+    },
     getData() {
       this.loadingList = true;
       HttpUtil.post("/user/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {

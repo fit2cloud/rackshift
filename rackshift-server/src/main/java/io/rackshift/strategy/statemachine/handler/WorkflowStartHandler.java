@@ -2,9 +2,12 @@ package io.rackshift.strategy.statemachine.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.config.WorkflowConfig;
+import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
+import io.rackshift.mybatis.domain.Task;
 import io.rackshift.service.RackHDService;
+import io.rackshift.service.TaskService;
 import io.rackshift.strategy.statemachine.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,14 +18,18 @@ import javax.annotation.Resource;
 public class WorkflowStartHandler extends AbstractHandler {
     @Resource
     private RackHDService rackHDService;
+    @Resource
+    private TaskService taskService;
     @Autowired
     private SimpMessagingTemplate template;
 
     @Override
     public void handleYourself(LifeEvent event) {
         changeStatus(event, LifeStatus.provisioning, true);
-
-        //下发装机workflow
+        String taskId = event.getWorkflowRequestDTO().getTaskId();
+        Task task = taskService.getById(taskId);
+        task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
+        taskService.update(task);
         WorkflowRequestDTO requestDTO = event.getWorkflowRequestDTO();
         JSONObject params = requestDTO.getParams();
         BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
@@ -30,12 +37,10 @@ public class WorkflowStartHandler extends AbstractHandler {
             revert(event, getExecutionId(), getUser());
         }
 
-        boolean result = rackHDService.postWorkflow(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
-        if (result) {
-            changeStatus(event, LifeStatus.allocated, false);
-        } else {
-            revert(event, getExecutionId(), getUser());
-        }
+        String instanceId = rackHDService.postWorkflowNoWait(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
+        task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
+        task.setInstanceId(instanceId);
+        taskService.update(task);
         template.convertAndSend("/topic/lifecycle", "");
     }
 }

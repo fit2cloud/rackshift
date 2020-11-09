@@ -310,4 +310,11 @@ export default {
     "detected": "在位",
     "obm_not_exists": "帶外信息未配置",
     "help_doc": "幫助文檔",
+
+    "created": "待執行",
+    "running": "執行中",
+    "failed": "失敗",
+    "succeeded": "成功",
+    "Task": "任務",
+    "instance_id": "任務 Id",
 }

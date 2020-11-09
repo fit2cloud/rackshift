@@ -43,6 +43,8 @@ public class WorkflowService {
     private StateMachine stateMachine;
     @Resource
     private WorkflowMapper workflowMapper;
+    @Resource
+    private TaskService taskService;
 
     public Pager<JSONArray> getGraphDefinitions(String name, int page, int pageSize) {
         String collections = "graphdefinitions";
@@ -79,9 +81,10 @@ public class WorkflowService {
                     RSException.throwExceptions(Translator.get("i18n_error"));
                 }
 
-                events.add(LifeEvent.builder().withWorkflowRequestDTO(requestDTO).withEventType(LifeEventType.fromWorkflow(workflowName)));
+                events.add(LifeEvent.builder().withWorkflowRequestDTO(requestDTO).withEventType(LifeEventType.fromStartType(workflowName)));
             }
-            stateMachine.sendEventListAsyn(events);
+//            stateMachine.sendEventListAsyn(events);
+            taskService.createTaskFromEvents(events);
         });
 
         return ResultHolder.success("");

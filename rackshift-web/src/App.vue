@@ -233,4 +233,8 @@ button {
 .el-submenu__title {
   border-bottom-color: transparent !important;
 }
+
+.pagination {
+  float: right;
+}
 </style>

@@ -308,4 +308,11 @@ export default {
     "detected": "Detected",
     "obm_not_exists": "OBM Info Not Set",
     "help_doc": "Help Document",
+
+    "created": "to be executed",
+    "running": "running",
+    "failed": "failed,",
+    "succeeded": "successful",
+    "Task": "Task",
+    "instance_id": "Instance Id",
 }
