@@ -38,12 +38,12 @@ RackShift 是一款开源的裸金属服务器全生命周期管理平台，功�
 - DockerEngine：各组件都是以 Docker 容器运行在节点计算机。
 
 ## 组件调用关系
-![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rackshift-call.jpg)
+![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-call.jpg)
 
 ## 技术栈
 
 - 前端: [Vue.js](https://vuejs.org/)
-- 后端: [Spring Boot](https://www.tutorialspoint.com/spring_boot/spring_boot_introduction.htm)
+- 后端: [Spring Boot](https://www.tutorialspoint.com/spring_boot/spring_boot_introduction.htm)s
 - 数据库: [MySQL](https://www.mysql.com/)
 
 ## 快速开始
