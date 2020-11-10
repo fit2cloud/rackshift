@@ -311,7 +311,7 @@ export default {
 
     "created": "to be executed",
     "running": "running",
-    "failed": "failed,",
+    "failed": "failed",
     "succeeded": "successful",
     "Task": "Task",
     "instance_id": "Instance Id",

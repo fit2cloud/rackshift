@@ -69,7 +69,7 @@ public enum LifeEventType {
                 return event;
             }
         }
-        throw new RuntimeException("unsupported workflow!");
+        return LifeEventType.POST_OTHER_WORKFLOW_END;
     }
 
     @Override

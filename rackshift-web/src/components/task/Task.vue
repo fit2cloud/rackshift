@@ -25,8 +25,8 @@
 
           <el-table-column prop="machineModel" :label="$t('Bare Metal Server')" align="left" :sortable="true">
             <template slot-scope="scope">
-<!--              <span style="display: block; word-break:keep-all;-->
-<!--  white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>-->
+              <!--              <span style="display: block; word-break:keep-all;-->
+              <!--  white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>-->
 
               <el-tooltip class="item" effect="dark" :content="scope.row.machineModel" placement="right-end">
                 <el-link type="primary" target="_blank">
@@ -70,6 +70,7 @@
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
               <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
+              <RSButton @click="handleEdit(scope.row, 'view')" type="view"></RSButton>
             </template>
           </el-table-column>
         </el-table>

@@ -97,7 +97,7 @@ public class WorkflowJob {
                 LifeEvent event = LifeEvent.builder().withEventType(type);
                 WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
                 requestDTO.setTaskId(task.getId());
-                if (ServiceConstants.TaskStatusEnum.failed.name().equals(status)) {
+                if (ServiceConstants.TaskStatusEnum.cancelled.name().equals(status) || ServiceConstants.TaskStatusEnum.failed.name().equals(status)) {
                     requestDTO.setParams(JSONObject.parseObject("{ \"result\" : false}"));
 
                 } else if (ServiceConstants.TaskStatusEnum.succeeded.name().equals(status)) {

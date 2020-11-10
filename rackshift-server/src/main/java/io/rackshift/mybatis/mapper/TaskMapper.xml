@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.mybatis.mapper.TaskMapper">
+  <resultMap id="BaseResultMap" type="io.rackshift.mybatis.domain.Task">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="pre_task_id" jdbcType="VARCHAR" property="preTaskId" />
+    <result column="work_flow_id" jdbcType="VARCHAR" property="workFlowId" />
+    <result column="bare_metal_id" jdbcType="VARCHAR" property="bareMetalId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="instance_id" jdbcType="VARCHAR" property="instanceId" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.TaskWithBLOBs">
+    <result column="params" jdbcType="LONGVARCHAR" property="params" />
+    <result column="extParams" jdbcType="LONGVARCHAR" property="extparams" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, pre_task_id, work_flow_id, bare_metal_id, user_id, instance_id, status, create_time, 
+    update_time
+  </sql>
+  <sql id="Blob_Column_List">
+    params, extParams
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="io.rackshift.mybatis.domain.TaskExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.TaskExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from task
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from task
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="io.rackshift.mybatis.domain.TaskExample">
+    delete from task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="io.rackshift.mybatis.domain.TaskWithBLOBs">
+    insert into task (id, pre_task_id, work_flow_id, 
+      bare_metal_id, user_id, instance_id, 
+      status, create_time, update_time, 
+      params, extParams)
+    values (#{id,jdbcType=VARCHAR}, #{preTaskId,jdbcType=VARCHAR}, #{workFlowId,jdbcType=VARCHAR}, 
+      #{bareMetalId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{instanceId,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{updateTime,jdbcType=BIGINT}, 
+      #{params,jdbcType=LONGVARCHAR}, #{extparams,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.TaskWithBLOBs">
+    insert into task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="preTaskId != null">
+        pre_task_id,
+      </if>
+      <if test="workFlowId != null">
+        work_flow_id,
+      </if>
+      <if test="bareMetalId != null">
+        bare_metal_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="instanceId != null">
+        instance_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="params != null">
+        params,
+      </if>
+      <if test="extparams != null">
+        extParams,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="preTaskId != null">
+        #{preTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="workFlowId != null">
+        #{workFlowId,jdbcType=VARCHAR},
+      </if>
+      <if test="bareMetalId != null">
+        #{bareMetalId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="instanceId != null">
+        #{instanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="params != null">
+        #{params,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="extparams != null">
+        #{extparams,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="io.rackshift.mybatis.domain.TaskExample" resultType="java.lang.Long">
+    select count(*) from task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update task
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.preTaskId != null">
+        pre_task_id = #{record.preTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workFlowId != null">
+        work_flow_id = #{record.workFlowId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bareMetalId != null">
+        bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instanceId != null">
+        instance_id = #{record.instanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.params != null">
+        params = #{record.params,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.extparams != null">
+        extParams = #{record.extparams,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update task
+    set id = #{record.id,jdbcType=VARCHAR},
+      pre_task_id = #{record.preTaskId,jdbcType=VARCHAR},
+      work_flow_id = #{record.workFlowId,jdbcType=VARCHAR},
+      bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=VARCHAR},
+      instance_id = #{record.instanceId,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=BIGINT},
+      params = #{record.params,jdbcType=LONGVARCHAR},
+      extParams = #{record.extparams,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update task
+    set id = #{record.id,jdbcType=VARCHAR},
+      pre_task_id = #{record.preTaskId,jdbcType=VARCHAR},
+      work_flow_id = #{record.workFlowId,jdbcType=VARCHAR},
+      bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=VARCHAR},
+      instance_id = #{record.instanceId,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="io.rackshift.mybatis.domain.TaskWithBLOBs">
+    update task
+    <set>
+      <if test="preTaskId != null">
+        pre_task_id = #{preTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="workFlowId != null">
+        work_flow_id = #{workFlowId,jdbcType=VARCHAR},
+      </if>
+      <if test="bareMetalId != null">
+        bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="instanceId != null">
+        instance_id = #{instanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="params != null">
+        params = #{params,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="extparams != null">
+        extParams = #{extparams,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="io.rackshift.mybatis.domain.TaskWithBLOBs">
+    update task
+    set pre_task_id = #{preTaskId,jdbcType=VARCHAR},
+      work_flow_id = #{workFlowId,jdbcType=VARCHAR},
+      bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      instance_id = #{instanceId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=BIGINT},
+      params = #{params,jdbcType=LONGVARCHAR},
+      extParams = #{extparams,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.Task">
+    update task
+    set pre_task_id = #{preTaskId,jdbcType=VARCHAR},
+      work_flow_id = #{workFlowId,jdbcType=VARCHAR},
+      bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      instance_id = #{instanceId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

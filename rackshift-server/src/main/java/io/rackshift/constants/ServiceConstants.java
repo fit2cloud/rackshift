@@ -44,6 +44,6 @@ public class ServiceConstants {
     }
 
     public enum TaskStatusEnum {
-        created, running, failed, succeeded
+        created, running, failed, cancelled, succeeded
     }
 }

@@ -27,7 +27,6 @@ public class WorkflowEndHandler extends AbstractHandler {
 
         BareMetal bareMetal = getBareMetalById(event.getBareMetalId());
         TaskWithBLOBs task = taskService.getById(event.getWorkflowRequestDTO().getTaskId());
-        bareMetal.setIpArray(JSONObject.parseObject(task.getParams()).getJSONObject("options").getJSONObject("defaults").getJSONArray("networkDevices").getJSONObject(0).getJSONObject("ipv4").getString("ipAddr"));
         if (result) {
             bareMetal.setStatus(LifeStatus.allocated.name());
             task.setStatus(ServiceConstants.TaskStatusEnum.succeeded.name());
