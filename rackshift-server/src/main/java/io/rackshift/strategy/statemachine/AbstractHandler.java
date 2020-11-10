@@ -10,6 +10,7 @@ import io.rackshift.model.RSException;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.service.ExecutionLogService;
+import io.rackshift.service.TaskService;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +31,8 @@ public abstract class AbstractHandler implements IStateHandler {
     private SimpMessagingTemplate template;
     @Resource
     private CloudProviderManager metalProviderManager;
+    @Resource
+    private TaskService taskService;
 
     protected BareMetal getBareMetalById(String id) {
         return bareMetalManager.getBareMetalById(id);
@@ -100,6 +103,8 @@ public abstract class AbstractHandler implements IStateHandler {
     }
 
     private void paramPreProcess(LifeEvent event) {
+        String taskId = event.getWorkflowRequestDTO().getTaskId();
+        String user = taskService.getById(taskId).getUserId();
         if (preProcessRaidWf.contains(event.getWorkflowRequestDTO().getWorkflowName())) {
             if (Optional.of(event.getWorkflowRequestDTO()).isPresent()) {
                 WorkflowRequestDTO workflowRequestDTO = event.getWorkflowRequestDTO();
@@ -107,9 +112,13 @@ public abstract class AbstractHandler implements IStateHandler {
 
                 IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(getBareMetalById(event.getBareMetalId()).getMachineBrand()));
                 if (params != null) {
-                    workflowRequestDTO.setParams(iMetalProvider.getRaidPayLoad(params.toJSONString()));
+                    JSONObject param = iMetalProvider.getRaidPayLoad(params.toJSONString());
+                    executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), null, String.format("调用插件处理后参数为:%s", (Optional.ofNullable(param).orElse(new JSONObject())).toJSONString()));
+                    workflowRequestDTO.setParams(param);
                 }
             }
+        } else {
+            executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), null, String.format("无需处理参数为..."));
         }
     }
 

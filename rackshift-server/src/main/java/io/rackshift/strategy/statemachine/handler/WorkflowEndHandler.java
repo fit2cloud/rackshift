@@ -1,6 +1,7 @@
 package io.rackshift.strategy.statemachine.handler;
 
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.constants.ExecutionLogConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.mybatis.domain.BareMetal;
@@ -30,9 +31,11 @@ public class WorkflowEndHandler extends AbstractHandler {
         if (result) {
             bareMetal.setStatus(LifeStatus.allocated.name());
             task.setStatus(ServiceConstants.TaskStatusEnum.succeeded.name());
+            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), null, String.format("裸金属服务器:%s,部署成功！", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn()));
         } else {
             bareMetal.setStatus(LifeStatus.ready.name());
             task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
+            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), null, String.format("裸金属服务器:%s,部署失败！", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn()));
         }
         bareMetalManager.update(bareMetal, true);
         taskService.update(task);

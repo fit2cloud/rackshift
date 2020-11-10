@@ -1,6 +1,5 @@
 package io.rackshift.job;
 
-import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.ExecutionLogConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.mybatis.domain.Task;
@@ -52,9 +51,9 @@ public class WorkflowTask extends Thread {
             }
             task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
             taskService.update(task);
-            executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), null, String.format("执行event:%s:worflow:%s,参数:%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString()));
+            executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), null, String.format("开始执行event:%s:worflow:%", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
             handler.handle(event, taskId, user);
-            executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), null, String.format("执行event:%s:worflow:%s,参数:%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString()));
+            executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), null, String.format("结束执行event:%s:worflow:%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
         }
     }
 }
