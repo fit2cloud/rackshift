@@ -118,8 +118,6 @@
                     drag
                     :on-success="afterUploadSuccess"
                     action="/image/upload"
-                    accept="application/x-iso9660-image"
-                    :multiple=false
                     style="margin-bottom: 20px;"
                 >
                   <i class="el-icon-upload"></i>
