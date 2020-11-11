@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="activeName" style="width:80vw;min-width: 1300px;">
+  <el-tabs v-model="activeName" style="width:100vw;min-width: 1300px;">
     <el-tab-pane :label="$t('bare_metal')" name="bare-metal">
       <div class="machine-title2">
         <el-button-group class="batch-button">
@@ -910,7 +910,7 @@ export default {
   height: 120px;
   padding: 10px 10px 15px 10px;
   border-radius: 5px;
-  margin-left: 10px;
+  margin: 0 10px;
   overflow: auto;
 }
 

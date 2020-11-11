@@ -1,5 +1,5 @@
 <template>
-  <el-tabs style="width:80vw;" v-model="activeName">
+  <el-tabs style="width:100vw;" v-model="activeName">
     <el-tab-pane :label="$t('image')" name="image">
       <div class="container">
 
@@ -43,7 +43,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column :prop="c.prop" :label="c.label" align="left"
+          <el-table-column :prop="c.prop" :label="$t(c.label)" align="left"
                            v-for="c in columns" :sortable="c.sort">
             <template slot-scope="scope">
               <span v-if="!c.custom">{{ scope.row[c.prop] }}</span>

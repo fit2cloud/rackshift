@@ -1,5 +1,5 @@
 <template>
-  <el-tabs style="width:80vw;" v-model="activeName" @tab-click="refreshChildData">
+  <el-tabs style="width:100vw;" v-model="activeName" @tab-click="refreshChildData">
     <el-tab-pane :label="$t('discovery')" name="discovery">
       <div class="container-discovery">
 

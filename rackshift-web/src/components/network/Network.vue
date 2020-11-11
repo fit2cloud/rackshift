@@ -1,5 +1,5 @@
 <template>
-  <el-tabs style="width:80vw;" v-model="activeName">
+  <el-tabs style="width:100vw;" v-model="activeName">
     <el-tab-pane :label="$t('Network')" name="network">
       <div class="container">
 

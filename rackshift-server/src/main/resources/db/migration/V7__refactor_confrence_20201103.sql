@@ -1,6 +1,6 @@
 alter table image add column status varchar(50) default 'not_detected' comment '镜像状态: not_detected 未检测到, detected 已检测到';
 
-create table task
+create table if not exists task
 (
     id varchar(50) not null,
     pre_task_id varchar(50) default null comment '前置任务id',

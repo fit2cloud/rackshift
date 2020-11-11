@@ -236,5 +236,6 @@ button {
 
 .pagination {
   float: right;
+  padding: 2px 15px !important;
 }
 </style>
