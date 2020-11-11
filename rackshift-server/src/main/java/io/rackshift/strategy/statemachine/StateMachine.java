@@ -1,16 +1,22 @@
 package io.rackshift.strategy.statemachine;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.rackshift.job.WorkflowTask;
+import io.rackshift.constants.ExecutionLogConstants;
+import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.WorkflowRequestDTO;
+import io.rackshift.mybatis.domain.Task;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.service.ExecutionLogService;
 import io.rackshift.service.TaskService;
+import io.rackshift.utils.LogUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -20,26 +26,33 @@ public class StateMachine {
     @Resource
     private TaskService taskService;
     private ConcurrentHashMap<LifeEventType, IStateHandler> handlerMap = new ConcurrentHashMap<>();
+    private static List<String> endStatusList = new ArrayList<String>() {{
+        add(ServiceConstants.TaskStatusEnum.failed.name());
+        add(ServiceConstants.TaskStatusEnum.succeeded.name());
+    }};
 
     public void configureHandler(LifeEventType event, IStateHandler handler) {
         handlerMap.put(event, handler);
     }
 
-    public void sendTaskListAsyn(List<TaskWithBLOBs> tasks) {
-        List<LifeEvent> events = new LinkedList<>();
+    public void runTaskList(List<TaskWithBLOBs> tasks) {
         tasks.forEach(task -> {
-            LifeEventType type = LifeEventType.fromStartType(task.getWorkFlowId());
-            WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
-            requestDTO.setBareMetalId(task.getBareMetalId());
-            requestDTO.setTaskId(task.getId());
-            requestDTO.setWorkflowName(task.getWorkFlowId());
-            requestDTO.setParams(JSONObject.parseObject(task.getParams()));
-            LifeEvent lifeEvent = LifeEvent.builder().withEventType(type).withWorkflowRequestDTO(requestDTO);
-            events.add(lifeEvent);
-        });
-        List<WorkflowTask> workflowTasks = buildTaskQueue(events);
-        workflowTasks.forEach(t -> {
-            t.start();
+            LifeEvent event = buildEvent(task);
+            String taskId = event.getWorkflowRequestDTO().getTaskId();
+            if (task != null && ServiceConstants.TaskStatusEnum.created.name().equals(task.getStatus())) {
+                Task preTask = taskService.getById(task.getPreTaskId());
+                //等待前置任务处理结束才能执行
+                if (preTask == null || (preTask != null && endStatusList.contains(preTask.getStatus()))) {
+                    task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
+                    taskService.update(task);
+                    executionLogService.saveLogDetail(taskId, task.getUserId(), ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), String.format("开始执行:%s:worflow:%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
+                    if (handlerMap.get(event.getEventType()) != null) {
+                        handlerMap.get(event.getEventType()).handle(event, taskId, task.getUserId());
+                    } else {
+                        LogUtil.error(String.format("不支持的事件类型！%s", JSON.toJSONString(event)));
+                    }
+                }
+            }
         });
     }
 
@@ -47,21 +60,14 @@ public class StateMachine {
         handlerMap.get(event.getEventType()).handleNoSession(event);
     }
 
-    private List<WorkflowTask> buildTaskQueue(List<LifeEvent> events) {
-        List<WorkflowTask> workflowTasks = new LinkedList<>();
-
-        events.forEach(e -> {
-            workflowTasks.add(
-                    new WorkflowTask(e, handlerMap.get(e.getEventType()), executionLogService, null, taskService)
-            );
-        });
-
-        for (int i = 0; i < workflowTasks.size(); i++) {
-            if (i != 0) workflowTasks.get(i).setPreTask(workflowTasks.get(i - 1));
-        }
-
-        return workflowTasks;
+    private LifeEvent buildEvent(TaskWithBLOBs task) {
+        LifeEventType type = LifeEventType.fromStartType(task.getWorkFlowId());
+        WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
+        requestDTO.setBareMetalId(task.getBareMetalId());
+        requestDTO.setTaskId(task.getId());
+        requestDTO.setWorkflowName(task.getWorkFlowId());
+        requestDTO.setParams(JSONObject.parseObject(Optional.ofNullable(task.getParams()).orElse("{}")));
+        return LifeEvent.builder().withEventType(type).withWorkflowRequestDTO(requestDTO);
     }
-
 
 }

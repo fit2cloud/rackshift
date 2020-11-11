@@ -70,7 +70,7 @@
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
               <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
-              <RSButton @click="handleEdit(scope.row, 'view')" type="view"></RSButton>
+              <RSButton @click="handleEdit(scope.row, 'view')" type="view" :tip="$t('view_log')"></RSButton>
             </template>
           </el-table-column>
         </el-table>
@@ -91,26 +91,27 @@
             :title="$t('view_log')"
             :visible.sync="editDialogVisible"
             direction="rtl"
-            size="40%"
+            size="50%"
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
             <table class="detail-info">
               <tr>
+                <td>{{ $t('create_time') }}</td>
                 <td>{{ $t('output') }}</td>
               </tr>
 
-              <tr v-for="l in logs">
+              <tr v-for="(l, index) in logs">
+                <td class="nowrap">{{ l.createTime | dateFormat }}</td>
                 <td>{{ l.outPut }}</td>
+              </tr>
+              <tr>
+                <td><i v-if="editObj.status == 'running' "
+                       class="el-icon-loading"></i></td>
               </tr>
             </table>
             <div class="demo-drawer__footer">
-              <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
-              <el-button type="primary" @click="confirmEdit" :loading="loading">{{
-                  loading ? $t('submitting') +
-                      '...' : $t('confirm')
-                }}
-              </el-button>
+              <el-button @click="handleClose">{{ $t('close') }}</el-button>
             </div>
           </div>
         </el-drawer>
@@ -130,6 +131,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      refreshPointer: null,
       logs: [],
       activeName: 'task',
       rules: {
@@ -195,7 +197,7 @@ export default {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
         this.loadingList = false;
-        WebSocketUtil.checkDoingThings(res.data.listObject, 'syncStatus', 'task', this.getData);
+        WebSocketUtil.checkDoingThings(res.data.listObject, 'status', 'lifecycle', this.getData);
       });
     },
     refreshChildData() {
@@ -206,6 +208,7 @@ export default {
     },
     handleClose() {
       this.editDialogVisible = false;
+      window.clearInterval(this.refreshPointer);
     },
     add() {
       this.editDialogVisible = true;
@@ -258,11 +261,21 @@ export default {
           });
         })
       } else if (type == 'view') {
-        HttpUtil.get("/task/logs?id=" + row.id, {}, (res) => {
+        this.editObj = JSON.parse(JSON.stringify(row));
+        HttpUtil.get("/task/logs?id=" + this.editObj.id, {}, (res) => {
           this.editDialogVisible = true;
           this.logs = res.data;
+          if (this.editObj.status == 'running') {
+            this.refreshPointer = window.setInterval(this.refreshLogs, 2000);
+          }
         })
       }
+    },
+    refreshLogs() {
+      HttpUtil.get("/task/logs?id=" + this.editObj.id, {}, (res) => {
+        this.editDialogVisible = true;
+        this.logs = res.data;
+      })
     },
     // 分页导航
     handlePageChange(val) {
@@ -291,6 +304,10 @@ export default {
   background: #fff;
   width: 100%;
   height: calc(100vh - 125px);
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
 </style>

@@ -35,7 +35,6 @@ public class WorkflowJob {
     private RackHDService rackHDService;
     @Resource
     private StateMachine stateMachine;
-    private ConcurrentHashMap<String, Boolean> handlingMap = new ConcurrentHashMap<>();
 
     /**
      * 任务执行
@@ -48,29 +47,24 @@ public class WorkflowJob {
     @Scheduled(fixedDelay = 1 * 60 * 1000)
     public void run() {
         updateRunningTask();
-        runCreatedJob();
+        runCreatedTask();
     }
 
-    private void runCreatedJob() {
+    private void runCreatedTask() {
         List<TaskWithBLOBs> taskList;
         TaskExample te = new TaskExample();
         te.createCriteria().andStatusEqualTo(ServiceConstants.TaskStatusEnum.created.name());
-        te.setOrderByClause("create_time desc");
+        te.setOrderByClause("create_time asc");
         taskList = taskMapper.selectByExampleWithBLOBs(te);
 
         Map<String, List<TaskWithBLOBs>> groupTaskList = taskList.stream().collect(Collectors.groupingBy(Task::getBareMetalId));
         for (Map.Entry<String, List<TaskWithBLOBs>> entry : groupTaskList.entrySet()) {
             boolean activeTask = findActiveTaskById(entry.getKey());
+            //保证同一台机器同一时刻只能有一个任务处于执行状态
             if (!activeTask) {
-                List<TaskWithBLOBs> tasks = removeHandlingTasks(entry.getValue());
-                tasks.forEach(t -> handlingMap.put(t.getId(), true));
-                stateMachine.sendTaskListAsyn(tasks);
+                stateMachine.runTaskList(entry.getValue());
             }
         }
-    }
-
-    private List<TaskWithBLOBs> removeHandlingTasks(List<TaskWithBLOBs> value) {
-        return value.stream().filter(v -> !Optional.ofNullable(handlingMap.get(v.getId())).orElse(false)).collect(Collectors.toList());
     }
 
     private boolean findActiveTaskById(String key) {

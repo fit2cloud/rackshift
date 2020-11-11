@@ -334,6 +334,7 @@ export default {
     "i18n_raid1_must_greater_than_3":"raid3不能少于3块磁盘！",
     "i18n_disk":"磁盘：",
     "i18n_duplicate_in_array":"被重复选择进多个阵列，请检查！",
+    "view_log": "查看日志",
 
 
 }

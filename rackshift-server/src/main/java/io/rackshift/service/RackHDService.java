@@ -1,5 +1,6 @@
 package io.rackshift.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonArray;
@@ -776,6 +777,11 @@ public class RackHDService {
 
     public boolean deleteNode(BareMetal bareMetal) {
         RackHDResponse response = RackHDHttpClientUtil.delete(String.format(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()) + "/api/2.0/nodes/%s", bareMetal.getServerId()));
+        return response.getReCode() <= RackHDConstants.ERROR_RE_CODE;
+    }
+
+    public boolean cancelWorkflow(BareMetal bareMetal, String intanceId) {
+        RackHDResponse response = RackHDHttpClientUtil.put(String.format(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()) + "/api/2.0/nodes/%s/workflows/action", bareMetal.getServerId()), "{\"command\": \"cancel\"}", null);
         return response.getReCode() <= RackHDConstants.ERROR_RE_CODE;
     }
 

@@ -79,7 +79,7 @@ public abstract class AbstractHandler implements IStateHandler {
         try {
             handleYourself(event);
         } catch (Exception e) {
-            executionLogService.saveLogDetail(taskId, task.getUserId(), ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, String.format("错误：%s", ExceptionUtils.getExceptionDetail(e)));
+            executionLogService.saveLogDetail(taskId, task.getUserId(), ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), String.format("错误：%s", ExceptionUtils.getExceptionDetail(e)));
         }
     }
 
@@ -93,7 +93,7 @@ public abstract class AbstractHandler implements IStateHandler {
         getExecutionMap().set(statusMap);
 
         if (StringUtils.isAnyBlank(bareMetal.getEndpointId(), bareMetal.getServerId())) {
-            executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, "该裸金属未执行discovery流程,无法进行部署");
+            executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), "该裸金属未执行discovery流程,无法进行部署");
             revert(event, executionId, user);
         }
 
@@ -101,7 +101,7 @@ public abstract class AbstractHandler implements IStateHandler {
             paramPreProcess(event);
             handleYourself(event);
         } catch (Exception e) {
-            executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, String.format("错误：%s", ExceptionUtils.getExceptionDetail(e)));
+            executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), String.format("错误：%s", ExceptionUtils.getExceptionDetail(e)));
             revert(event, getExecutionId(), getUser());
             throw new RuntimeException(e);
         }
@@ -118,18 +118,18 @@ public abstract class AbstractHandler implements IStateHandler {
                 IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(getBareMetalById(event.getBareMetalId()).getMachineBrand()));
                 if (params != null) {
                     JSONObject param = iMetalProvider.getRaidPayLoad(params.toJSONString());
-                    executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), null, String.format("调用插件处理后参数为:%s", (Optional.ofNullable(param).orElse(new JSONObject())).toJSONString()));
+                    executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), String.format("调用插件处理后参数为:%s", (Optional.ofNullable(param).orElse(new JSONObject())).toJSONString()));
                     workflowRequestDTO.setParams(param);
                 }
             }
         } else {
-            executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), null, String.format("无需处理参数..."));
+            executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), String.format("无需处理参数..."));
         }
     }
 
     @Override
     public void revert(LifeEvent event, String executionId, String user) {
-        executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, String.format("错误：event:%s:worflow:%ss,参数:%s,回滚状态至%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString(), getExecutionMap().get().get("beforeChangeStatus")));
+        executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), String.format("错误：event:%s:worflow:%ss,参数:%s,回滚状态至%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString(), getExecutionMap().get().get("beforeChangeStatus")));
         changeStatus(event, LifeStatus.valueOf(getExecutionMap().get().get("beforeChangeStatus")), false);
         Task task = taskService.getById(executionId);
         task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());

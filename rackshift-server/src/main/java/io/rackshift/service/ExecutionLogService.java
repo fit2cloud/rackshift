@@ -40,14 +40,13 @@ public class ExecutionLogService {
         return log;
     }
 
-    public ExecutionLogDetails saveLogDetail(String logId, String user, String operation, String bareMetalId, String status, String outPut) {
+    public ExecutionLogDetails saveLogDetail(String logId, String user, String status, String bareMetalId, String outPut) {
         ExecutionLogDetails log = new ExecutionLogDetails();
         log.setCreateTime(System.currentTimeMillis());
         log.setUser(user);
         log.setBareMetalId(bareMetalId);
         log.setLogId(logId);
-        log.setOperation(operation);
-        log.setStatus(operation);
+        log.setStatus(status);
         log.setOutPut(outPut);
         executionLogDetailsMapper.insertSelective(log);
         return log;

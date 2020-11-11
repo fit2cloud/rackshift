@@ -332,4 +332,5 @@ export default {
     "i18n_raid1_must_greater_than_3": "raid3 the number of disk cannot less than three！",
     "i18n_disk": "Disk:",
     "i18n_duplicate_in_array": "Repeatedly selected into multiple arrays！",
+    "view_log": "View logs",
 }

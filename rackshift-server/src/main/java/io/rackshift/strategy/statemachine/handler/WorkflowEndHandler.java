@@ -31,11 +31,11 @@ public class WorkflowEndHandler extends AbstractHandler {
         if (result) {
             bareMetal.setStatus(LifeStatus.allocated.name());
             task.setStatus(ServiceConstants.TaskStatusEnum.succeeded.name());
-            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), null, String.format("裸金属服务器:%s,部署成功！", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn()));
+            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), String.format("裸金属服务器:%s,执行工作流 %s 成功！", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn(), task.getWorkFlowId()));
         } else {
             bareMetal.setStatus(LifeStatus.ready.name());
             task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
-            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), null, String.format("裸金属服务器:%s,部署失败！", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn()));
+            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), String.format("裸金属服务器:%s,执行工作流 %s 失败！", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn(), task.getWorkFlowId()));
         }
         bareMetalManager.update(bareMetal, true);
         taskService.update(task);

@@ -33,11 +33,11 @@ public class OsWorkflowEndHandler extends AbstractHandler {
             bareMetal.setIpArray(JSONObject.parseObject(task.getParams()).getJSONObject("options").getJSONObject("defaults").getJSONArray("networkDevices").getJSONObject(0).getJSONObject("ipv4").getString("ipAddr"));
             bareMetal.setStatus(LifeStatus.deployed.name());
             task.setStatus(ServiceConstants.TaskStatusEnum.succeeded.name());
-            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), null, String.format("裸金属服务器:%s,部署成功！业务IP:%s", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn(), bareMetal.getIpArray()));
+            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), String.format("裸金属服务器:%s,部署成功！业务IP:%s", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn(), bareMetal.getIpArray()));
         } else {
             bareMetal.setStatus(LifeStatus.ready.name());
             task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
-            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), null, String.format("裸金属服务器:%s,部署失败！", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn()));
+            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), String.format("裸金属服务器:%s,部署失败！", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn()));
         }
         bareMetalManager.update(bareMetal, true);
         taskService.update(task);

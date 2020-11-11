@@ -50,12 +50,6 @@ public class TaskController {
         return ResultHolder.success(taskService.del(ids));
     }
 
-    //
-//    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-//    @RequestMapping("sync")
-//    public ResultHolder sync(@RequestBody String[] ids) {
-//        return ResultHolder.success(taskService.sync(ids));
-//    }
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @RequestMapping("logs")
     public ResultHolder logs(@RequestParam String id) {

@@ -1,21 +1,25 @@
 package io.rackshift.service;
 
+import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.ServiceConstants;
+import io.rackshift.manager.BareMetalManager;
+import io.rackshift.model.RSException;
 import io.rackshift.model.TaskDTO;
+import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.ExecutionLogDetailsExample;
 import io.rackshift.mybatis.domain.Task;
 import io.rackshift.mybatis.domain.TaskExample;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
-import io.rackshift.mybatis.mapper.EndpointMapper;
 import io.rackshift.mybatis.mapper.ExecutionLogDetailsMapper;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.mybatis.mapper.ext.ExtTaskMapper;
 import io.rackshift.strategy.statemachine.LifeEvent;
+import io.rackshift.strategy.statemachine.LifeEventType;
+import io.rackshift.strategy.statemachine.StateMachine;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.SessionUtil;
 import io.rackshift.utils.UUIDUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -31,13 +35,13 @@ public class TaskService {
     @Resource
     private ExtTaskMapper extTaskMapper;
     @Resource
-    private DiscoveryDevicesService discoveryDevicesService;
+    private RackHDService rackHDService;
     @Resource
-    private EndpointMapper endpointMapper;
+    private BareMetalManager bareMetalManager;
+    @Resource
+    private StateMachine stateMachine;
     @Resource
     private ExecutionLogDetailsMapper executionLogDetailsMapper;
-    @Autowired
-    private SimpMessagingTemplate template;
 
     public Object add(TaskDTO queryVO) {
         TaskWithBLOBs task = new TaskWithBLOBs();
@@ -53,10 +57,28 @@ public class TaskService {
     }
 
     public Object del(String id) {
-        Task Task = taskMapper.selectByPrimaryKey(id);
-        if (Task == null) return false;
-        taskMapper.deleteByPrimaryKey(id);
-        return false;
+        Task task = taskMapper.selectByPrimaryKey(id);
+        if (task == null) return false;
+        if (StringUtils.isNotBlank(task.getInstanceId())) {
+            //rackhd 清除 任务
+            boolean r = rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()), task.getInstanceId());
+            if (r) {
+                WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
+                requestDTO.setTaskId(task.getId());
+                requestDTO.setParams(JSONObject.parseObject("{ \"result\" : false}"));
+
+                requestDTO.setBareMetalId(task.getBareMetalId());
+                LifeEventType type = LifeEventType.fromEndType(task.getWorkFlowId());
+                LifeEvent event = LifeEvent.builder().withEventType(type);
+                event.withWorkflowRequestDTO(requestDTO);
+                stateMachine.sendEvent(event);
+
+                taskMapper.deleteByPrimaryKey(id);
+            } else {
+                RSException.throwExceptions("取消任务失败！instanceID：" + task.getInstanceId());
+            }
+        }
+        return true;
     }
 
     public Object del(String[] ids) {
@@ -112,6 +134,7 @@ public class TaskService {
     public Object logs(String id) {
         ExecutionLogDetailsExample e = new ExecutionLogDetailsExample();
         e.createCriteria().andLogIdEqualTo(id);
+        e.setOrderByClause("create_time asc");
         return executionLogDetailsMapper.selectByExampleWithBLOBs(e);
     }
 }
