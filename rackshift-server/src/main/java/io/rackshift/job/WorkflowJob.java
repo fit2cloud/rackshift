@@ -92,20 +92,22 @@ public class WorkflowJob {
                 BareMetal b = bareMetalMapper.selectByPrimaryKey(task.getBareMetalId());
                 Endpoint endpoint = endpointService.getById(b.getEndpointId());
                 String status = rackHDService.getWorkflowStatusById("http://" + endpoint.getIp() + ":9090", task.getInstanceId());
-                LifeEventType type = LifeEventType.fromEndType(task.getWorkFlowId());
+                //运行结束
+                if (!ServiceConstants.TaskStatusEnum.running.name().equals(status)) {
+                    WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
+                    requestDTO.setTaskId(task.getId());
+                    if (ServiceConstants.TaskStatusEnum.cancelled.name().equals(status) || ServiceConstants.TaskStatusEnum.failed.name().equals(status)) {
+                        requestDTO.setParams(JSONObject.parseObject("{ \"result\" : false}"));
 
-                LifeEvent event = LifeEvent.builder().withEventType(type);
-                WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
-                requestDTO.setTaskId(task.getId());
-                if (ServiceConstants.TaskStatusEnum.cancelled.name().equals(status) || ServiceConstants.TaskStatusEnum.failed.name().equals(status)) {
-                    requestDTO.setParams(JSONObject.parseObject("{ \"result\" : false}"));
-
-                } else if (ServiceConstants.TaskStatusEnum.succeeded.name().equals(status)) {
-                    requestDTO.setParams(JSONObject.parseObject("{ \"result\" : true}"));
+                    } else if (ServiceConstants.TaskStatusEnum.succeeded.name().equals(status)) {
+                        requestDTO.setParams(JSONObject.parseObject("{ \"result\" : true}"));
+                    }
+                    requestDTO.setBareMetalId(task.getBareMetalId());
+                    LifeEventType type = LifeEventType.fromEndType(task.getWorkFlowId());
+                    LifeEvent event = LifeEvent.builder().withEventType(type);
+                    event.withWorkflowRequestDTO(requestDTO);
+                    stateMachine.sendEvent(event);
                 }
-                requestDTO.setBareMetalId(task.getBareMetalId());
-                event.withWorkflowRequestDTO(requestDTO);
-                stateMachine.sendEvent(event);
             } else {
                 task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
                 task.setUpdateTime(System.currentTimeMillis());

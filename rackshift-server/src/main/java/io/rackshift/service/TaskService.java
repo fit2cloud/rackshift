@@ -2,10 +2,12 @@ package io.rackshift.service;
 
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.TaskDTO;
+import io.rackshift.mybatis.domain.ExecutionLogDetailsExample;
 import io.rackshift.mybatis.domain.Task;
 import io.rackshift.mybatis.domain.TaskExample;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.mybatis.mapper.EndpointMapper;
+import io.rackshift.mybatis.mapper.ExecutionLogDetailsMapper;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.mybatis.mapper.ext.ExtTaskMapper;
 import io.rackshift.strategy.statemachine.LifeEvent;
@@ -32,6 +34,8 @@ public class TaskService {
     private DiscoveryDevicesService discoveryDevicesService;
     @Resource
     private EndpointMapper endpointMapper;
+    @Resource
+    private ExecutionLogDetailsMapper executionLogDetailsMapper;
     @Autowired
     private SimpMessagingTemplate template;
 
@@ -103,5 +107,11 @@ public class TaskService {
 
     public TaskWithBLOBs getById(String taskId) {
         return taskMapper.selectByPrimaryKey(taskId);
+    }
+
+    public Object logs(String id) {
+        ExecutionLogDetailsExample e = new ExecutionLogDetailsExample();
+        e.createCriteria().andLogIdEqualTo(id);
+        return executionLogDetailsMapper.selectByExampleWithBLOBs(e);
     }
 }

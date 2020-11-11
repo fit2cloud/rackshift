@@ -88,31 +88,22 @@
         </div>
 
         <el-drawer
-            :title="editType == 'edit' ? $t('edit_discovery') : $t('add_discovery')"
+            :title="$t('view_log')"
             :visible.sync="editDialogVisible"
             direction="rtl"
             size="40%"
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
-            <el-form :model="editObj" :rules="rules" ref="form" label-width="50px" :label-position="labelPosition">
-              <el-form-item :label="$t('name')" prop="name">
-                <el-input v-model="editObj.name" autocomplete="off"></el-input>
-              </el-form-item>
+            <table class="detail-info">
+              <tr>
+                <td>{{ $t('output') }}</td>
+              </tr>
 
-              <el-form-item :label="$t('start_ip')" prop="startIp">
-                <el-input v-model="editObj.startIp" autocomplete="off"></el-input>
-              </el-form-item>
-
-              <el-form-item :label="$t('end_ip')" prop="endIp">
-                <el-input v-model="editObj.endIp" autocomplete="off"></el-input>
-              </el-form-item>
-
-              <el-form-item :label="$t('mask')" prop="mask">
-                <el-input v-model="editObj.mask" autocomplete="off"></el-input>
-              </el-form-item>
-
-            </el-form>
+              <tr v-for="l in logs">
+                <td>{{ l.outPut }}</td>
+              </tr>
+            </table>
             <div class="demo-drawer__footer">
               <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
               <el-button type="primary" @click="confirmEdit" :loading="loading">{{
@@ -132,13 +123,14 @@
 <script>
 
 import HttpUtil from "../../common/utils/HttpUtil"
-import {requiredValidator, ipValidator} from "@/common/validator/CommonValidator";
+import {ipValidator, requiredValidator} from "@/common/validator/CommonValidator";
 import {WebSocketUtil} from "@/common/utils/WebSocket";
 
 let _ = require('lodash');
 export default {
   data() {
     return {
+      logs: [],
       activeName: 'task',
       rules: {
         name: [
@@ -220,33 +212,6 @@ export default {
       this.editType = 'add';
     },
     confirmEdit() {
-      this.validateResult = true;
-      this.$refs.form.validate(f => {
-        if (!f) {
-          this.validateResult = false;
-        }
-      });
-      if (!this.validateResult) {
-        this.$message.error(this.$t('validate_error'));
-        return;
-      }
-      this.loading = true;
-      this.editObj.brands = JSON.stringify(this.editObj.brands);
-      if (this.editType == 'edit') {
-        HttpUtil.post("/task/update", this.editObj, (res) => {
-          this.editDialogVisible = false;
-          this.$message.success(this.$t('edit_success'));
-          this.getData();
-          this.loading = false;
-        })
-      } else {
-        HttpUtil.post("/task/add", this.editObj, (res) => {
-          this.editDialogVisible = false;
-          this.$message.success(this.$t('add_success'));
-          this.getData();
-          this.loading = false;
-        })
-      }
     },
     // 多选操作
     handleSelectionChange(val) {
@@ -291,6 +256,11 @@ export default {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
           });
+        })
+      } else if (type == 'view') {
+        HttpUtil.get("/task/logs?id=" + row.id, {}, (res) => {
+          this.editDialogVisible = true;
+          this.logs = res.data;
         })
       }
     },

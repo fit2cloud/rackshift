@@ -45,15 +45,15 @@ public class WorkflowTask extends Thread {
                 } catch (InterruptedException e) {
                     Thread.interrupted();
                     // join异常才回滚workflow
-                    executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, String.format("执行event:%s:worflow:%s,前置任务失败！终止执行！", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
+                    executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), null, String.format("执行event:%s:worflow:%ss,前置任务失败！终止执行！", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
                     return;
                 }
             }
             task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
             taskService.update(task);
-            executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), null, String.format("开始执行event:%s:worflow:%", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
+            executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), null, String.format("开始执行event:%s:worflow:%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
             handler.handle(event, taskId, user);
-            executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), null, String.format("结束执行event:%s:worflow:%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
+            executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), null, String.format("结束执行event:%s:worflow:%ss", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
         }
     }
 }

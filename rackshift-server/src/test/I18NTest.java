@@ -61,23 +61,26 @@ public class I18NTest {
                 sb.append(line + "\n");
             }
 
-            Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?]*)['\"]*\\)");
+//            Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?]*)['\"]*\\)");
+//            Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?]*)['\"]*\\)");
+            Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?,/！ ]*)['\"],\\s*['\"]([a-zA-Z_0-9-!?,/！：， \\u4e00-\\u9fa5]*)['\"]*\\)");
             Matcher m = p.matcher(sb.toString());
             while (m.find()) {
-                if (!i18n.containsKey(m.group(1).trim())) {
-                    i18n.put(m.group(1), null);
-                    r.put(m.group(1), null);
-
-                }
+//                if (!i18n.containsKey(m.group(1).trim())) {
+//                    i18n.put(m.group(1), null);
+//                    r.put(m.group(1), null);
+//                }
+                if (!r.containsKey(m.group(1)) && !i18n.containsKey(m.group(1)))
+                    r.put(m.group(1), m.group(2));
             }
         }
     }
 
 
-    public static void main2(String[] args) {
-        Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?,'/！ ]*)['\"]*\\)");
-        Matcher m = p.matcher("$t('i18n_must_be_root_swap_boot')");
-        m.find();
-        System.out.println(m.group(1));
-    }
+//    public static void main(String[] args) {
+//        Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?,/！ ]*)['\"],\\s*['\"]([a-zA-Z_0-9-!?,/！ \\u4e00-\\u9fa5]*)['\"]*\\)");
+//        Matcher m = p.matcher("$t('i18n_di','第')");
+//        m.find();
+//        return m.group(2)
+//    }
 }

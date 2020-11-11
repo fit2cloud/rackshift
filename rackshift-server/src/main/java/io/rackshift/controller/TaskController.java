@@ -8,10 +8,7 @@ import io.rackshift.model.ResultHolder;
 import io.rackshift.service.TaskService;
 import io.rackshift.utils.PageUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -52,11 +49,16 @@ public class TaskController {
     public ResultHolder del(@RequestBody String[] ids) {
         return ResultHolder.success(taskService.del(ids));
     }
-//
+
+    //
 //    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
 //    @RequestMapping("sync")
 //    public ResultHolder sync(@RequestBody String[] ids) {
 //        return ResultHolder.success(taskService.sync(ids));
 //    }
-
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @RequestMapping("logs")
+    public ResultHolder logs(@RequestParam String id) {
+        return ResultHolder.success(taskService.logs(id));
+    }
 }

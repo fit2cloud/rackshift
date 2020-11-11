@@ -318,5 +318,22 @@ export default {
     "Task": "任务",
     "instance_id": "任务 Id",
 
+    "i18n_zu":"组",
+    "i18n_raid60_must_be_2n":"raid60磁盘数必须是2的倍数！",
+    "i18n_di":"第",
+    "i18n_raid1_must_be_2n":"raid1只能是2块或者2n块磁盘！",
+    "i18n_raid10_must_be_2n":"raid10磁盘数必须是2的倍数！",
+    "i18n_raid50_must_be_2n":"raid50磁盘数必须是2的倍数！",
+    "i18n_raid5_must_greater_than_3":"raid5不能少于3块磁盘！",
+    "i18n_raid10_must_greater_than_4":"raid10不能少于4块磁盘！",
+    "i18n_raid56_must_be_greater_than_8":"raid60不能少于8块磁盘！",
+    "i18n_pls_os_must_choose_one_raid":"请至少选择一组磁盘组建raid！",
+    "i18n_raid6_must_greater_than_4":"raid6不能少于4块磁盘！",
+    "i18n_raid50_must_greater_than_6":"raid50不能少于6块磁盘！",
+    "i18n_zu_de_raid_not_config":"组的RAID策略没有设置！",
+    "i18n_raid1_must_greater_than_3":"raid3不能少于3块磁盘！",
+    "i18n_disk":"磁盘：",
+    "i18n_duplicate_in_array":"被重复选择进多个阵列，请检查！",
+
 
 }
