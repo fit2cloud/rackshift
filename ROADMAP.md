@@ -45,7 +45,7 @@
 - [x] 增加默认 PXE 行为配置
 - [x] 增加插件页面，集成 DELL Racadm,IPMITOOL 简易命令执行器
 
-## v1.3.0 (开发中)
+## v1.4.0 (开发中)
 - [x] windows server 2012 2016 等装机支持
 - [x] ui 重构
 
