@@ -9,7 +9,7 @@
             <th>{{ $t('raid_disk') }}</th>
             <th>
               <el-button type="primary" icon="el-icon-plus" circle
-                         @click="payLoad.options['create-raid'].raidList.push({})">
+                         @click="addRaid()">
               </el-button>
             </th>
           </tr>
@@ -25,7 +25,7 @@
             </td>
 
             <td>
-              <el-select v-model="config.drives" multiple>
+              <el-select v-model="config.drives" multiple @change="changeDisk(config, index)">
                 <el-option v-for="t in odisks" :label="t.drives"
                            :value="parseInt(t.drive)">
                   {{
@@ -120,6 +120,24 @@ export default {
   }
   ,
   methods: {
+    addRaid() {
+      this.payLoad.options['create-raid'].raidList.push(
+          {
+            "enclosure": 32,
+            "type": null,
+            "drives": [],
+            "name": "VD" + this.payLoad.options['create-raid'].raidList.length
+          }
+      );
+    },
+    changeDisk(config) {
+      if (config.drives && config.drives.length > 0) {
+        let disk = _.find(this.odisks, (o) => o.drive == config.drives[0]);
+        if (disk) {
+          config.enclosure = disk.enclosureId;
+        }
+      }
+    },
     restoreParams: function () {
       this.restorePartition();
     },

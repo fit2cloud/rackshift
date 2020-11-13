@@ -6,12 +6,11 @@ import io.rackshift.metal.sdk.AbstractMetalProvider;
 import io.rackshift.metal.sdk.MetalPlugin;
 import io.rackshift.metal.sdk.MetalPluginException;
 import io.rackshift.metal.sdk.constants.BareMetalConstants;
-import io.rackshift.metal.sdk.constants.ResourceTypeConstants;
 import io.rackshift.metal.sdk.constants.ProtocolEnum;
+import io.rackshift.metal.sdk.constants.ResourceTypeConstants;
 import io.rackshift.metal.sdk.model.MachineEntity;
 import io.rackshift.metal.sdk.model.Metric;
 import io.rackshift.metal.sdk.model.PluginResult;
-import io.rackshift.metal.sdk.model.RaidConfigDTO;
 import io.rackshift.metal.sdk.model.request.IPMISnmpRequest;
 import io.rackshift.metal.sdk.util.*;
 import io.rackshift.plugin.dell.utils.*;
@@ -190,42 +189,29 @@ public class DellMetalProvider extends AbstractMetalProvider {
 
     @Override
     public JSONObject getRaidPayLoad(String raidConfigRequestStr) throws MetalPluginException {
-        RaidConfigDTO raidConfigDTO = gson.fromJson(raidConfigRequestStr, RaidConfigDTO.class);
-        if (raidConfigDTO.getRaidConfigs().size() == 0) {
-            return null;
-        }
-        JSONObject payload = JSONObject.parseObject(getPageTemplate(ResourceTypeConstants.RACKHD_RAID_PAYLOAD));
 
-        List<RaidConfigDTO.OneRaidConfig> raidConfigList = raidConfigDTO.getRaidConfigs();
+        JSONObject raidPayload = JSONObject.parseObject(raidConfigRequestStr);
+
+        JSONObject createRaid = raidPayload.getJSONObject("options").getJSONObject("create-raid");
         JSONArray raidList = new JSONArray();
-        for (int i = 0; i < raidConfigList.size(); i++) {
-            JSONObject raid = new JSONObject();
-            RaidConfigDTO.OneRaidConfig raidConfig = raidConfigList.get(i);
-            raid.put("enclosure", raidConfig.getRaidDisks().get(0).getEnclosureId());
-            raid.put("type", getValidRaidType(raidConfig.getRaidType()));
-            raid.put("name", "VD" + i);
-            int[] drives = new int[raidConfig.getRaidDisks().size()];
 
-            for (int j = 0; j < drives.length; j++) {
-                drives[j] = Integer.parseInt(raidConfig.getRaidDisks().get(j).getDrive());
-            }
+        for (int i = 0; i < createRaid.getJSONArray("raidList").size(); i++) {
+            JSONObject c = createRaid.getJSONArray("raidList").getJSONObject(i);
+            JSONObject raidConfigObj = new JSONObject();
+            raidConfigObj.put("type", getValidRaidType(c.getString("type")));
+            raidConfigObj.put("drives", c.getJSONArray("drives"));
+            raidConfigObj.put("name", c.getString("name"));
+            raidConfigObj.put("enclosure", c.getIntValue("enclosure"));
 
-            raid.put("drives", drives);
-            //如果是raid10/50/60 则必须添加参数 drivePerArray
-            if ("raid10".equalsIgnoreCase(getValidRaidType(raidConfig.getRaidType())) ||
-                    "raid50".equalsIgnoreCase(getValidRaidType(raidConfig.getRaidType())) ||
-                    "raid60".equalsIgnoreCase(getValidRaidType(raidConfig.getRaidType()))) {
-                raid.put("drivePerArray", 2);
+            if ("raid10".equalsIgnoreCase(getValidRaidType(c.getString("type"))) ||
+                    "raid50".equalsIgnoreCase(getValidRaidType(c.getString("type"))) ||
+                    "raid60".equalsIgnoreCase(getValidRaidType(c.getString("type")))) {
+                raidConfigObj.put("drivePerArray", 2);
             }
-            raidList.add(raid);
+            raidList.add(raidConfigObj);
         }
-
-        JSONObject options = payload.getJSONObject("options");
-        JSONObject bootstrap = payload.getJSONObject("bootstrap-rancher");
-        JSONObject createRaid = options.getJSONObject("create-raid");
-        createRaid.put("bootstrap-rancher", bootstrap);
         createRaid.put("raidList", raidList);
-        return payload;
+        return raidPayload;
     }
 
 

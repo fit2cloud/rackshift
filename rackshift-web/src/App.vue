@@ -94,7 +94,7 @@ export default {
 
 <style>
 * {
-  font-size: 14px !important;
+  /*font-size: 14px !important;*/
 }
 
 body {
