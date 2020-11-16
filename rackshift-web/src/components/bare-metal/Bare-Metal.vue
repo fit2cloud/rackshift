@@ -3,22 +3,23 @@
     <el-tab-pane :label="$t('bare_metal')" name="bare-metal">
       <div class="machine-title2">
         <el-button-group class="batch-button">
-          <!--            <el-button type="primary" icon="el-icon-circle-plus-outline">{{ $t('add') }}</el-button>-->
           <el-button type="primary" icon="el-icon-delete" @click="delAllSelection">{{ $t('del') }}
           </el-button>
           <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
+          <el-button type="primary" icon="el-icon-discover" @click="openDiscover">{{ $t('Discovery') }}</el-button>
+          <el-button type="primary" icon="el-icon-caret-right" @click="runWorkflow">{{ $t('Run') }}</el-button>
         </el-button-group>
       </div>
       <div id="control" style="display: flex;">
-        <div id="run-workflow">
-          <div class="el-icon-caret-right h25"
-               style="border-bottom: yellowgreen 1px solid;  width: 100%;">{{ $t('Run') }}
-          </div>
-          <div class="run-splitter h25"></div>
-          <div>
-            <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
-          </div>
-        </div>
+        <!--        <div id="run-workflow">-->
+        <!--          <div class="el-icon-caret-right h25"-->
+        <!--               style="border-bottom: yellowgreen 1px solid;  width: 100%;">{{ $t('Run') }}-->
+        <!--          </div>-->
+        <!--          <div class="run-splitter h25"></div>-->
+        <!--          <div>-->
+        <!--            <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>-->
+        <!--          </div>-->
+        <!--        </div>-->
 
         <div id="workflow-selector" style="display: flex;">
           <div id="select-workflow">
@@ -141,6 +142,12 @@
           </template>
         </el-table-column>
 
+        <el-table-column prop="status" :label="$t('power')" align="left">
+          <template slot-scope="scope">
+            <span v-text="scope.row.power"></span>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="" :label="$t('opt')" align="left">
           <template slot="header" slot-scope="scope">
             <el-input
@@ -230,7 +237,7 @@
       </el-dialog>
 
       <!--参数配置-->
-      <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="70vw">
+      <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="80vw">
         <keep-alive>
           <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
                      :is="currentWfParamTemplate"
@@ -249,6 +256,17 @@
           <el-button type="primary" @click="saveParams" :loading="fillWfParamsLoading">{{ $t('confirm') }}</el-button>
         </template>
       </el-dialog>
+
+      <el-drawer
+          :title="editType == 'edit' ? $t('edit_discovery') : $t('add_discovery')"
+          :visible.sync="discoveryVisible"
+          direction="rtl"
+          size="100%"
+          :with-header="false"
+          :wrapperClosable="false"
+          :before-close="handleClose">
+        <router-view is="discovery"></router-view>
+      </el-drawer>
 
       <!--详情页-->
       <drawer
@@ -389,6 +407,7 @@
 import HttpUtil from "../../common/utils/HttpUtil";
 import {isAnyBlank, toLine} from "../../common/utils/CommonUtil";
 import OBM from "../obm/Obm"
+import Discovery from "../discovery/Discovery"
 import Vue from "vue"
 import i18n from "@/i18n/i18n";
 import {WebSocketUtil} from "@/common/utils/WebSocket";
@@ -400,6 +419,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      discoveryVisible: false,
       search: null,
       fillWfParams: false,
       executionLogDrawer: false,
@@ -498,7 +518,7 @@ export default {
     }
   },
   components: {
-    OBM
+    OBM, Discovery
   },
   computed: {},
   mounted() {
@@ -507,6 +527,9 @@ export default {
   }
   ,
   methods: {
+    openDiscover() {
+      this.discoveryVisible = true;
+    },
     statusFilter(row) {
       if (row.status.indexOf("ing") == -1) {
         return '<span style="display: inline-block;">' +
@@ -657,6 +680,7 @@ export default {
     },
     handleClose() {
       this.detailDrawer = false;
+      this.discoveryVisible = false;
     },
     handleCloseExecutionLog() {
       this.executionLogDrawer = false;
