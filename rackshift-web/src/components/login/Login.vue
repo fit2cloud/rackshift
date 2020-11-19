@@ -4,30 +4,47 @@
 
       <el-col :span="12">
 
-        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm"
-                 class="form">
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm">
           <div class="logo">
+            <img src="../../assets/rackshift-02.png" style="width: 224px" alt="">
           </div>
           <div class="title">
-            <span id="s2">RackShift</span>
+            <span id="s1">{{ $t('Login') }}</span>
+            <span id="s2">
+              RackShift
+            </span>
           </div>
           <div class="border"></div>
           <div class="welcome">
+            {{ $t('welcome') }}
           </div>
-          <el-form-item :label="$t('user_name')" prop="userName">
-            <el-input type="text" v-model="ruleForm.userName" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('password')" prop="password">
-            <el-input type="password" v-model="ruleForm.password" autocomplete="off" show-password></el-input>
-          </el-form-item>
+          <div class="form">
+            <el-form-item v-slot:default>
+              <el-radio-group v-model="ldap">
+                <el-radio label="LDAP" size="mini" v-if="ldap">LDAP</el-radio>
+                <el-radio label="LOCAL" size="mini" v-if="ldap">普通登录</el-radio>
+              </el-radio-group>
+            </el-form-item>
 
+            <el-form-item prop="userName">
+              <el-input type="text" v-model="ruleForm.userName" autocomplete="off"
+                        :placeholder="$t('username_or_id')"></el-input>
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input type="password" v-model="ruleForm.password" autocomplete="off" show-password
+                        :placeholder="$t('password')"></el-input>
+            </el-form-item>
+          </div>
           <div class="btn">
             <el-button type="primary" class="submit" @click="submitForm('ruleForm')">{{ $t('Login') }}</el-button>
           </div>
           <div class="msg">
             {{ msg }}
           </div>
+
         </el-form>
+
+
       </el-col>
 
       <el-col :span="12" class="image">
@@ -46,13 +63,10 @@
 }
 
 .title {
-  font-size: 19px;
-  font-weight: 500;
-  margin: 0 0 10px 10px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  word-wrap: break-word;
-  white-space: nowrap;
+  margin-top: 50px;
+  font-size: 32px;
+  letter-spacing: 0;
+  text-align: center;
 }
 
 .title > #s1 {
@@ -100,8 +114,21 @@
 }
 
 .form {
-  margin-top: 60px;
+  margin-top: 30px;
   padding: 0 40px;
+}
+
+
+.btn {
+  margin-top: 40px;
+  padding: 0 40px;
+}
+
+.btn > .submit {
+  width: 100%;
+  border-radius: 0;
+  border-color: #E95420;
+  background-color: #E95420;
 }
 
 </style>
@@ -124,6 +151,7 @@ export default {
       callback();
     };
     return {
+      ldap: null,
       ruleForm: {
         userName: '',
         password: '',

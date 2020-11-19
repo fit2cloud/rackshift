@@ -3,7 +3,9 @@
     <el-container v-if="login">
       <el-header id="main-header">
         <div style="display: flex; float: right">
-          <div><span id="main-title">RackShift</span></div>
+          <div>
+            <img id="main-title" src="./assets/rackshift-04.png" alt="">
+          </div>
           <div class="align-right">
             <ChangeLanguage></ChangeLanguage>
             <ChangeInfo></ChangeInfo>
@@ -145,8 +147,10 @@ body {
   color: #fafafa;
   text-decoration: none;
   display: block;
-  left: 1.6rem;
+  left: 0.6rem;
   position: fixed;
+  width: 148px;
+  height: 37px;
 }
 
 #main-menu {

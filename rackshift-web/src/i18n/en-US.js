@@ -345,4 +345,6 @@ export default {
     "port": "Port",
     "founded_machine_number": "Founded Number",
     "Discovery_Rule": "Discovery Rule",
+    "username_or_id": "ID or Email",
+    "welcome": "Welcome Come Back，Input UserName and Password to Login to   RackShift",
 }

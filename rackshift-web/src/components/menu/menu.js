@@ -23,7 +23,7 @@ export default {
             "router": "/Resource",
             "requireRole": "admin,user",
             "order": "3",
-            "icon": "el-icon-house",
+            "icon": "el-icon-cloudy",
             childs: [
                 {
                     "name": 'Bare Metal Server',
