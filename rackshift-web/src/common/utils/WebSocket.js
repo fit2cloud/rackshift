@@ -8,11 +8,15 @@ let WebSocketUtil = {
         var socket = new SockJS('/rs-websocket');
         this.stompClient = Stomp.over(socket);
         this.stompClient.connect({}, function (frame) {
-            that.stompClient.subscribe('/topic/' + topic, function (greeting) {
-                if (cal) {
-                    cal();
-                }
-            });
+            try {
+                that.stompClient.subscribe('/topic/' + topic, function (greeting) {
+                    if (cal) {
+                        cal();
+                    }
+                });
+            } catch (e) {
+                console.log("订阅" + "/topic/" + topic + " 失败！");
+            }
         });
 
         return this.stompClient;
