@@ -5,7 +5,7 @@
         $t('back')
       }}
     </el-button>
-    <el-tabs style="width:100vw;" v-model="activeName" @tab-click="refreshChildData">
+    <el-tabs v-model="activeName" @tab-click="refreshChildData">
       <el-tab-pane :label="$t('discovery')" name="discovery">
         <div class="container-discovery">
 
@@ -207,7 +207,7 @@ export default {
         userName: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
-        password: [
+        pwd: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
         community: [

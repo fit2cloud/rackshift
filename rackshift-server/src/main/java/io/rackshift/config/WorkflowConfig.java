@@ -140,19 +140,22 @@ public class WorkflowConfig {
     public JSONArray allWorkflow() {
         try {
             String res = HttpFutureUtils.getHttp(getRackhdUrl() + RackHDConstants.WORKFLOWS, null);
-            return JSONArray.parseArray(res);
+            if (StringUtils.isNotBlank(res))
+                return JSONArray.parseArray(res);
         } catch (Exception e) {
-            return new JSONArray();
         }
+        return new JSONArray();
     }
 
     @Bean
     public JSONArray allTask() {
         try {
             String res = HttpFutureUtils.getHttp(getRackhdUrl() + RackHDConstants.TASKS, null);
+            if (StringUtils.isNotBlank(res))
+                return JSONArray.parseArray(res);
             return JSONArray.parseArray(res);
         } catch (Exception e) {
-            return new JSONArray();
         }
+        return new JSONArray();
     }
 }

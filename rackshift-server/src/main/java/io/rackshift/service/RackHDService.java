@@ -697,7 +697,7 @@ public class RackHDService {
         physicalMachine.setId(UUIDUtil.newUUID());
         physicalMachine.setMachineModel(machineEntity.getBrand() + " " + machineEntity.getModel());
         physicalMachine.setUpdateTime(System.currentTimeMillis());
-        physicalMachine.setStatus(LifeStatus.ready.toString());
+        physicalMachine.setStatus(Optional.ofNullable(machineEntity.getStatus()).orElse(LifeStatus.ready.toString()));
         physicalMachine.setManagementIp(machineEntity.getBmcIp());
         physicalMachine.setMachineSn(machineEntity.getSerialNo());
         //nodeId 存到serverId字段

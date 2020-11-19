@@ -135,7 +135,7 @@
 
         <el-table-column prop="status" :label="$t('power')" align="left">
           <template slot-scope="scope">
-            <span v-text="scope.row.power"></span>
+            <span v-html="powerFilter(scope.row.power)"></span>
           </template>
         </el-table-column>
 
@@ -519,14 +519,22 @@ export default {
   }
   ,
   methods: {
+    powerFilter(status) {
+      return this.$t(status);
+    },
     openDiscover() {
       this.discoveryVisible = true;
     },
     statusFilter(row) {
       if (row.status.indexOf("ing") == -1) {
-        return '<span style="display: inline-block;">' +
-            this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i><br>'
-            + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
+        if (row.serverId)
+          return '<span style="display: inline-block;">' +
+              this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i><br>'
+              + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
+        else
+          return '<span style="display: inline-block;">' +
+              this.$t('PXE') + ' ' + this.$t('status') + '<i class="el-icon-close" style="margin-left:5px;color: red;"></i><br>'
+              + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
       } else {
         return '<span style="display: inline-block;">' +
             this.$t('PXE') + ' ' + this.$t(row.status) + '<br>';

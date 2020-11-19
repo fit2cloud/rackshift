@@ -33,13 +33,15 @@ public class DiscoveryService {
     private SimpMessagingTemplate template;
     @Resource
     private CloudProviderManager metalProviderManager;
+    @Resource
+    private OutBandService outBandService;
 
     public Object add(BareMetalRuleDTO queryVO) {
         BareMetalRule bareMetalRule = new BareMetalRule();
         BeanUtils.copyBean(bareMetalRule, queryVO);
         bareMetalRule.setProviderId("");
         bareMetalRuleMapper.insertSelective(bareMetalRule);
-        new Thread(new DiscoveryTask(bareMetalRule, bareMetalRuleMapper, bareMetalManager, template, metalProviderManager)).start();
+        new Thread(new DiscoveryTask(bareMetalRule, bareMetalRuleMapper, bareMetalManager, template, metalProviderManager, outBandService)).start();
         return true;
     }
 
@@ -90,7 +92,7 @@ public class DiscoveryService {
         }
         rule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.PENDING.name());
         bareMetalRuleMapper.updateByPrimaryKey(rule);
-        new Thread(new DiscoveryTask(rule, bareMetalRuleMapper, bareMetalManager, template, metalProviderManager)).start();
+        new Thread(new DiscoveryTask(rule, bareMetalRuleMapper, bareMetalManager, template, metalProviderManager, outBandService)).start();
         return true;
     }
 }

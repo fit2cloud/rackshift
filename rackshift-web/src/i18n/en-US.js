@@ -333,4 +333,12 @@ export default {
     "i18n_disk": "Disk:",
     "i18n_duplicate_in_array": "Repeatedly selected into multiple arrays！",
     "view_log": "View logs",
+    "not_ready": "Not Ready",
+    "power": "Power",
+    "unknown": "Unknown",
+    "detect_params": "Detect Params",
+    "protocol": "Protocol",
+    "possible_params": "Possible Params",
+    "community": "Community",
+    "port": "Port",
 }

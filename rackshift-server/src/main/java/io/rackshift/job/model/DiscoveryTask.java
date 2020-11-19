@@ -12,6 +12,7 @@ import io.rackshift.model.MachineEntity;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.BareMetalRuleMapper;
+import io.rackshift.service.OutBandService;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.IpUtil;
@@ -37,16 +38,18 @@ public class DiscoveryTask extends Thread {
     private CountDownLatch countDownLatch;
     private Cache cache;
     private CloudProviderManager cloudProviderManager;
+    private OutBandService outBandService;
 
-    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, CloudProviderManager cloudProviderManager) {
+    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, CloudProviderManager cloudProviderManager, OutBandService outBandService) {
         this.bareMetalRule = bareMetalRule;
         this.bareMetalManager = bareMetalManager;
         this.template = template;
         this.bareMetalRuleMapper = bareMetalRuleMapper;
         this.cloudProviderManager = cloudProviderManager;
+        this.outBandService = outBandService;
     }
 
-    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, CountDownLatch countDownLatch, Cache cache, CloudProviderManager cloudProviderManager) {
+    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, CountDownLatch countDownLatch, Cache cache, CloudProviderManager cloudProviderManager, OutBandService outBandService) {
         this.bareMetalRule = bareMetalRule;
         this.bareMetalManager = bareMetalManager;
         this.template = template;
@@ -54,6 +57,7 @@ public class DiscoveryTask extends Thread {
         this.countDownLatch = countDownLatch;
         this.cache = cache;
         this.cloudProviderManager = cloudProviderManager;
+        this.outBandService = outBandService;
     }
 
     @Override
@@ -114,7 +118,19 @@ public class DiscoveryTask extends Thread {
                         if (entity != null) {
                             entity.setProviderId(iMetalProvider.getName());
                             entity.setRuleId(bareMetalRule.getId());
-                            bareMetalManager.saveOrUpdateEntity(entity);
+                            BareMetal bareMetal = bareMetalManager.saveOrUpdateEntity(entity);
+                            if (bareMetal == null) {
+                                LogUtil.error("保存machineEntity失敗！" + ip);
+                                continue;
+                            }
+                            if (ServiceConstants.IPMI_Rest.equalsIgnoreCase(request.getProtocol())) {
+                                OutBand o = new OutBand();
+                                o.setBareMetalId(bareMetal.getId());
+                                o.setIp(ip);
+                                o.setUserName(request.getUserName());
+                                o.setPwd(request.getPwd());
+                                outBandService.saveOrUpdate(o);
+                            }
                         } else {
                             LogUtil.info("探测裸金属失败！" + JSONObject.toJSONString(request));
                         }
@@ -123,7 +139,8 @@ public class DiscoveryTask extends Thread {
             }
             bareMetalRule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.SUCCESS.name());
 
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             bareMetalRule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.ERROR.name());
             LogUtil.error(String.format("嗅探发生异常:%s", ExceptionUtils.getExceptionDetail(e)));
         }
@@ -133,6 +150,7 @@ public class DiscoveryTask extends Thread {
         if (countDownLatch != null) {
             countDownLatch.countDown();
         }
+
     }
 
     private MachineEntity convert(io.rackshift.metal.sdk.model.MachineEntity machineEntity) {

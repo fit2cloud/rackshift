@@ -87,12 +87,13 @@ public class BareMetalManager {
         bareMetalMapper.updateByPrimaryKeySelective(oldBareMetal);
     }
 
-    public boolean saveOrUpdateEntity(MachineEntity e) {
+    public BareMetal saveOrUpdateEntity(MachineEntity e) {
         if (StringUtils.isBlank(e.getSerialNo())) {
-            return false;
+            return null;
         }
+        BareMetal bareMetal = null;
         try {
-            BareMetal bareMetal = rackHDService.convertToPm(e);
+            bareMetal = rackHDService.convertToPm(e);
             BareMetal dbBareMetal = getBareMetalBySn(bareMetal.getMachineSn());
             if (dbBareMetal == null) {
                 dbBareMetal = getBareMetalByIp(bareMetal.getManagementIp());
@@ -109,7 +110,7 @@ public class BareMetalManager {
         } catch (Exception ex) {
             LogUtil.error("转换rack实体出错！" + ExceptionUtils.getExceptionDetail(ex));
         }
-        return true;
+        return bareMetal;
     }
 
     private void saveOrUpdateHardWare(MachineEntity e) {
