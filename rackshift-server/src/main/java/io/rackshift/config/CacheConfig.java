@@ -11,8 +11,6 @@ import javax.annotation.Resource;
 
 @Configuration
 public class CacheConfig {
-    @Resource
-    private CacheManager cacheManager;
 
     @Bean
     public CacheManager cacheManager() {
@@ -29,7 +27,7 @@ public class CacheConfig {
         configuration.internalSetTimeToLive(12 * 60 * 60 * 1000);
         configuration.setMaxBytesLocalHeap(200 * 10000l);
         Cache c = new Cache(configuration);
-        cacheManager.addCache(c);
+        cacheManager().addCache(c);
         return c;
     }
 }
