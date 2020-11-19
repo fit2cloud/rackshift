@@ -4,7 +4,7 @@
 name: build rackshift image with maven & node
 
 on:
-  push:
+  create:
     branches: [ master ]
 
 jobs:
