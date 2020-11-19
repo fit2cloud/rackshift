@@ -110,6 +110,8 @@ public class DiscoveryTask extends Thread {
 
                     for (ProtocolRequest request : paramList) {
                         MachineEntity entity = null;
+                        //使用不同的协议去测试爬取硬件信息
+                        request.setHost(ip);
                         if (ServiceConstants.SNMP.equalsIgnoreCase(request.getProtocol())) {
                             entity = convert(iMetalProvider.getMachineEntityThroughSNMP(JSONObject.toJSONString(request)));
                         } else {
