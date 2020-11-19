@@ -6,7 +6,7 @@
         :icon="icon"
         :class="typeClass"
         @click="handleEdit"
-        style="cursor: pointer;"
+        style="cursor: pointer;font-size: 12px;"
         circle
     >
     </el-button>

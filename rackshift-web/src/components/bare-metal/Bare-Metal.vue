@@ -257,7 +257,7 @@
           :wrapperClosable="false"
 
           :before-close="handleClose">
-        <Discovery class="bare-discovery" @back="discoveryVisible =false"></Discovery>
+        <Discovery class="bare-discovery" @back="discoveryVisible =false" @queryByRuleId="queryByRuleId"></Discovery>
       </el-drawer>
 
       <!--详情页-->
@@ -384,14 +384,8 @@
             </el-tab-pane>
           </el-tabs>
         </div>
-
       </drawer>
-
     </el-tab-pane>
-    <!--    <el-tab-pane :label="$t('obm')" name="second">-->
-    <!--      <OBM></OBM>-->
-    <!--    </el-tab-pane>-->
-
   </el-tabs>
 </template>
 
@@ -516,9 +510,16 @@ export default {
   mounted() {
     this.getData();
     this.getAllGraphDefinitions();
+    console.log(this.$router.params);
   }
   ,
   methods: {
+    queryByRuleId(e) {
+      if (e) {
+        this.search = e;
+        this.getData(true);
+      }
+    },
     powerFilter(status) {
       return this.$t(status);
     },
@@ -660,10 +661,14 @@ export default {
       }
       this.getData();
     },
-    getData() {
+    getData(accurate) {
       this.loadingList = true;
       if (this.search) {
-        this.queryVO.searchKey = '%' + this.search + '%';
+        if (!accurate)
+          this.queryVO.searchKey = '%' + this.search + '%';
+        else
+          this.queryVO.searchKey = this.search;
+
       } else {
         this.queryVO.searchKey = null;
       }

@@ -259,7 +259,7 @@ export default {
     "mount_point": "挂载点",
     "pls_select_endpoint": "请选择节点",
     "no_valid_image!": "没有找到镜像，请先上传镜像文件！",
-    "add_discovery": "添加发现协议",
+    "add_discovery": "添加发现規則",
     "login_fail": "登陆失败",
     "zh_CN": "简体中文",
     "Machines": "裸金属服务器",
@@ -339,10 +339,14 @@ export default {
     "back": "回退",
     "power": "电源",
     "unknown": "未知",
+    "on": "开机",
+    "off": "关机",
     "detect_params": "扫描配置",
     "protocol": "协议",
     "possible_params": "尝试参数",
     "community": "社区名称",
     "port": "端口号",
+    "founded_machine_number": "已发现数量",
+    "Discovery_Rule": "发现规则",
 
 }

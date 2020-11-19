@@ -40,6 +40,7 @@ public class DiscoveryService {
         BareMetalRule bareMetalRule = new BareMetalRule();
         BeanUtils.copyBean(bareMetalRule, queryVO);
         bareMetalRule.setProviderId("");
+        bareMetalRule.setLastSyncTimestamp(System.currentTimeMillis());
         bareMetalRuleMapper.insertSelective(bareMetalRule);
         new Thread(new DiscoveryTask(bareMetalRule, bareMetalRuleMapper, bareMetalManager, template, metalProviderManager, outBandService)).start();
         return true;

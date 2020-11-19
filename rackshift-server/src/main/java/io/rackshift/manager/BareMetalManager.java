@@ -194,6 +194,7 @@ public class BareMetalManager {
             example.or(example.createCriteria().andMachineModelLike(queryVO.getSearchKey()));
             example.or(example.createCriteria().andMachineSnLike(queryVO.getSearchKey()));
             example.or(example.createCriteria().andManagementIpLike(queryVO.getSearchKey()));
+            example.or(example.createCriteria().andRuleIdEqualTo(queryVO.getSearchKey()));
         }
         return example;
     }

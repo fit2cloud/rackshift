@@ -5,143 +5,152 @@
         $t('back')
       }}
     </el-button>
-    <el-tabs v-model="activeName" @tab-click="refreshChildData">
-      <el-tab-pane :label="$t('discovery')" name="discovery">
-        <div class="container-discovery">
+    <el-divider content-position="left">{{ $t('Discovery_Rule') }}</el-divider>
+    <!--    <el-tabs v-model="activeName" @tab-click="refreshChildData">-->
+    <!--      <el-tab-pane :label="$t('discovery')" name="discovery">-->
+    <div class="container-discovery">
 
-          <div class="machine-title">
-            <el-button-group class="batch-button">
-              <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
-                  $t('add')
-                }}
-              </el-button>
-              <el-button type="primary" icon="el-icon-delete" @click="delAllSelection">{{ $t('del') }}
-              </el-button>
-              <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
-            </el-button-group>
+      <div class="machine-title">
+        <el-button-group class="batch-button">
+          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
+              $t('add')
+            }}
+          </el-button>
+          <el-button type="primary" icon="el-icon-delete" @click="delAllSelection">{{ $t('del') }}
+          </el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
+        </el-button-group>
+      </div>
+
+      <el-table
+          :data="tableData"
+          class="table"
+          ref="multipleTable"
+          v-loading="loadingList"
+          header-cell-class-name="table-header"
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" align="left"></el-table-column>
+
+        <el-table-column :prop="c.prop" :label="$t(c.label)" align="left"
+                         v-for="c in columns" :sortable="c.sort"></el-table-column>
+        <el-table-column prop="syncStatus" :label="$t('sync_status')" align="left">
+          <template slot-scope="scope">
+            <i class="el-icon-loading" v-if="scope.row.syncStatus.indexOf('ING') != -1"></i>
+            {{ $t(scope.row.syncStatus) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="number" :label="$t('founded_machine_number')" align="left">
+          <template slot-scope="scope">
+            <el-link type="primary" @click="showMachine(scope.row)">
+              {{ scope.row.number }}
+            </el-link>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="lastSyncTimestamp" :label="$t('last_sync_timestamp')" align="left">
+          <template slot-scope="scope">
+            {{ scope.row.lastSyncTimestamp | dateFormat }}
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="" :label="$t('opt')" align="left">
+          <template slot-scope="scope">
+            <RSButton @click="handleEdit(scope.row, 'edit')"></RSButton>
+            <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
+            <RSButton @click="handleEdit(scope.row, 'sync')" type="sync" :tip="$t('sync')"></RSButton>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div class="pagination">
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handlePageChange"
+            :current-page="query.pageIndex"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="10"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="pageTotal">
+        </el-pagination>
+      </div>
+
+      <el-drawer
+          :title="editType == 'edit' ? $t('edit_discovery') : $t('add_discovery')"
+          :visible.sync="editDialogVisible"
+          direction="rtl"
+          size="40%"
+          :modal=true
+          :wrapperClosable="false"
+          :appendToBody="true"
+          :before-close="handleClose">
+        <div class="demo-drawer__content">
+          <el-form :model="editObj" :rules="rules" ref="form" label-width="50px" :label-position="labelPosition">
+            <el-form-item :label="$t('name')" prop="name">
+              <el-input v-model="editObj.name" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item :label="$t('start_ip')" prop="startIp">
+              <el-input v-model="editObj.startIp" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item :label="$t('end_ip')" prop="endIp">
+              <el-input v-model="editObj.endIp" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item :label="$t('mask')" prop="mask">
+              <el-input v-model="editObj.mask" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item :label="$t('detect_params')" prop="params">
+              <el-switch v-model="customProtocol">{{ $t('set_detect_params') }}</el-switch>
+              <table class="test-protocol" v-if="customProtocol">
+                <tr>
+                  <td>{{ $t('protocol') }}</td>
+                  <td>{{ $t('possible_params') }}</td>
+                  <td>
+                    <RSButton type="add" :tip="$t('add_protocol_param')" @click="addTestProtocol"></RSButton>
+                  </td>
+                </tr>
+                <tr v-for="(p, $index) in editObj.credentialParam">
+                  <td>
+                    <el-select v-model="p.protocol">
+                      <el-option v-for="pro in protocols" :value="pro.name" :label="pro.name">
+                      </el-option>
+                    </el-select>
+                  </td>
+                  <td>
+                    <el-form :rules="protocolRules" ref="protocolForm" :model="p">
+                      <el-form-item v-if="p && p.protocol" v-for="param in findProtocol(p)" :label="$t(param.label)"
+                                    :prop="param.prop">
+                        <el-input :type="param.type" v-model="p[param.prop]"></el-input>
+                      </el-form-item>
+                    </el-form>
+                  </td>
+                  <td style="vertical-align: center;">
+                    <RSButton type="del" @click="delTestProtocol($index)"></RSButton>
+                  </td>
+                </tr>
+              </table>
+            </el-form-item>
+
+          </el-form>
+          <div class="demo-drawer__footer">
+            <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
+            <el-button type="primary" @click="confirmEdit" :loading="loading">{{
+                loading ? $t('submitting') +
+                    '...' : $t('confirm')
+              }}
+            </el-button>
           </div>
-
-          <el-table
-              :data="tableData"
-              class="table"
-              ref="multipleTable"
-              v-loading="loadingList"
-              header-cell-class-name="table-header"
-              style="width: 100%"
-              @selection-change="handleSelectionChange"
-          >
-            <el-table-column type="selection" align="left"></el-table-column>
-
-            <el-table-column :prop="c.prop" :label="c.label" align="left"
-                             v-for="c in columns" :sortable="c.sort"></el-table-column>
-            <el-table-column prop="syncStatus" :label="$t('sync_status')" align="left">
-              <template slot-scope="scope">
-                <i class="el-icon-loading" v-if="scope.row.syncStatus.indexOf('ING') != -1"></i>
-                {{ $t(scope.row.syncStatus) }}
-              </template>
-            </el-table-column>
-
-            <el-table-column prop="lastSyncTimestamp" :label="$t('last_sync_timestamp')" align="left">
-              <template slot-scope="scope">
-                {{ scope.row.lastSyncTimestamp | dateFormat }}
-              </template>
-            </el-table-column>
-
-            <el-table-column prop="" :label="$t('opt')" align="left">
-              <template slot-scope="scope">
-                <RSButton @click="handleEdit(scope.row, 'edit')"></RSButton>
-                <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
-                <RSButton @click="handleEdit(scope.row, 'sync')" type="sync" :tip="$t('sync')"></RSButton>
-              </template>
-            </el-table-column>
-          </el-table>
-
-          <div class="pagination">
-            <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handlePageChange"
-                :current-page="query.pageIndex"
-                :page-sizes="[10, 20, 50, 100]"
-                :page-size="10"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="pageTotal">
-            </el-pagination>
-          </div>
-
-          <el-drawer
-              :title="editType == 'edit' ? $t('edit_discovery') : $t('add_discovery')"
-              :visible.sync="editDialogVisible"
-              direction="rtl"
-              size="40%"
-              :modal=true
-              :wrapperClosable="false"
-              :appendToBody="true"
-              :before-close="handleClose">
-            <div class="demo-drawer__content">
-              <el-form :model="editObj" :rules="rules" ref="form" label-width="50px" :label-position="labelPosition">
-                <el-form-item :label="$t('name')" prop="name">
-                  <el-input v-model="editObj.name" autocomplete="off"></el-input>
-                </el-form-item>
-
-                <el-form-item :label="$t('start_ip')" prop="startIp">
-                  <el-input v-model="editObj.startIp" autocomplete="off"></el-input>
-                </el-form-item>
-
-                <el-form-item :label="$t('end_ip')" prop="endIp">
-                  <el-input v-model="editObj.endIp" autocomplete="off"></el-input>
-                </el-form-item>
-
-                <el-form-item :label="$t('mask')" prop="mask">
-                  <el-input v-model="editObj.mask" autocomplete="off"></el-input>
-                </el-form-item>
-
-                <el-form-item :label="$t('detect_params')" prop="params">
-                  <el-switch v-model="customProtocol">{{ $t('set_detect_params') }}</el-switch>
-                  <table class="test-protocol" v-if="customProtocol">
-                    <tr>
-                      <td>{{ $t('protocol') }}</td>
-                      <td>{{ $t('possible_params') }}</td>
-                      <td>
-                        <RSButton type="add" :tip="$t('add_protocol_param')" @click="addTestProtocol"></RSButton>
-                      </td>
-                    </tr>
-                    <tr v-for="(p, $index) in editObj.credentialParam">
-                      <td>
-                        <el-select v-model="p.protocol">
-                          <el-option v-for="pro in protocols" :value="pro.name" :label="pro.name">
-                          </el-option>
-                        </el-select>
-                      </td>
-                      <td>
-                        <el-form :rules="protocolRules" ref="protocolForm" :model="p">
-                          <el-form-item v-if="p && p.protocol" v-for="param in findProtocol(p)" :label="$t(param.label)"
-                                        :prop="param.prop">
-                            <el-input :type="param.type" v-model="p[param.prop]"></el-input>
-                          </el-form-item>
-                        </el-form>
-                      </td>
-                      <td style="vertical-align: center;">
-                        <RSButton type="del" @click="delTestProtocol($index)"></RSButton>
-                      </td>
-                    </tr>
-                  </table>
-                </el-form-item>
-
-              </el-form>
-              <div class="demo-drawer__footer">
-                <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
-                <el-button type="primary" @click="confirmEdit" :loading="loading">{{
-                    loading ? $t('submitting') +
-                        '...' : $t('confirm')
-                  }}
-                </el-button>
-              </div>
-            </div>
-          </el-drawer>
-
         </div>
-      </el-tab-pane>
-    </el-tabs>
+      </el-drawer>
+
+    </div>
+    <!--      </el-tab-pane>-->
+    <!--    </el-tabs>-->
   </div>
 </template>
 
@@ -235,28 +244,24 @@ export default {
       loading: false,
       columns: [
         {
-          label: this.$t('name'),
+          label: 'name',
           prop: "name",
           sort: true
         },
         {
-          label: this.$t('start_ip'),
+          label: 'start_ip',
           prop: "startIp",
           sort: true
         },
         {
-          label: this.$t('end_ip'),
+          label: 'end_ip',
           prop: "endIp",
           sort: true
         },
         {
-          label: this.$t('mask'),
+          label: 'mask',
           prop: "mask",
           sort: true
-        },
-        {
-          label: this.$t('find_machine_number'),
-          prop: "number",
         },
       ],
       editDialogVisible: false,
@@ -282,6 +287,10 @@ export default {
     this.getData();
   },
   methods: {
+    showMachine(rule) {
+      this.$emit('queryByRuleId', rule.id);
+      this.back();
+    },
     back() {
       this.$emit('back');
     },

@@ -336,9 +336,13 @@ export default {
     "not_ready": "Not Ready",
     "power": "Power",
     "unknown": "Unknown",
+    "on": "ON",
+    "off": "OFF",
     "detect_params": "Detect Params",
     "protocol": "Protocol",
     "possible_params": "Possible Params",
     "community": "Community",
     "port": "Port",
+    "founded_machine_number": "Founded Number",
+    "Discovery_Rule": "Discovery Rule",
 }
