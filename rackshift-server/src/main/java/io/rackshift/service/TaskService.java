@@ -59,6 +59,10 @@ public class TaskService {
     public Object del(String id) {
         Task task = taskMapper.selectByPrimaryKey(id);
         if (task == null) return false;
+        if (bareMetalManager.getBareMetalById(task.getBareMetalId()) == null) {
+            taskMapper.deleteByPrimaryKey(id);
+            return true;
+        }
         if (StringUtils.isNotBlank(task.getInstanceId())) {
             //rackhd 清除 任务
             boolean r = rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()), task.getInstanceId());
@@ -136,5 +140,11 @@ public class TaskService {
         e.createCriteria().andLogIdEqualTo(id);
         e.setOrderByClause("create_time asc");
         return executionLogDetailsMapper.selectByExampleWithBLOBs(e);
+    }
+
+    public int delByBareMetalId(String id) {
+        TaskExample e = new TaskExample();
+        e.createCriteria().andBareMetalIdEqualTo(id);
+        return taskMapper.deleteByExample(e);
     }
 }

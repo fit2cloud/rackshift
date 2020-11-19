@@ -4,22 +4,13 @@ import io.rackshift.mybatis.domain.BareMetalRule;
 
 public class BareMetalRuleDTO extends BareMetalRule {
 
-    private String searchKey;
-    private String sort;
+    private String number;
 
-    public String getSearchKey() {
-        return searchKey;
+    public String getNumber() {
+        return number;
     }
 
-    public void setSearchKey(String searchKey) {
-        this.searchKey = searchKey;
-    }
-
-    public String getSort() {
-        return sort;
-    }
-
-    public void setSort(String sort) {
-        this.sort = sort;
+    public void setNumber(String number) {
+        this.number = number;
     }
 }

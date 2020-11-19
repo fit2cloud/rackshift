@@ -38,6 +38,10 @@ public class BareMetalService {
     private RackHDService rackHDService;
     @Resource
     private EndpointService endpointService;
+    @Resource
+    private TaskService taskService;
+    @Resource
+    private ExecutionLogService executionLogService;
 
     public List<BareMetalDTO> list(BareMetalQueryVO queryVO) {
         return bareMetalManager.list(queryVO);
@@ -127,6 +131,8 @@ public class BareMetalService {
                 }
             }
             bareMetalManager.delBareMetalById(id);
+            taskService.delByBareMetalId(id);
+            executionLogService.delDetailsByBareMetalId(id);
         }
         return true;
     }

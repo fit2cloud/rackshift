@@ -1,6 +1,5 @@
 package io.rackshift.service;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonArray;
@@ -705,8 +704,8 @@ public class RackHDService {
         physicalMachine.setServerId(machineEntity.getNodeId());
 
         physicalMachine.setEndpointId(machineEntity.getEndPoint());
-        physicalMachine.setProviderId("rackhd");
-        physicalMachine.setRuleId("rackhd");
+        physicalMachine.setProviderId(Optional.ofNullable(machineEntity.getProviderId()).orElse("rackhd"));
+        physicalMachine.setRuleId(Optional.ofNullable(machineEntity.getRuleId()).orElse("rackhd"));
         physicalMachine.setMachineBrand(machineEntity.getBrand());
         physicalMachine.setCreateTime(System.currentTimeMillis());
         physicalMachine.setMemory(physicalMachine.getMemory());

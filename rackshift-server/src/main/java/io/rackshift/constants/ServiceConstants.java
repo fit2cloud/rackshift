@@ -6,6 +6,9 @@ public class ServiceConstants {
     public static final String DISABLE = "disable";
     public static final String ENDPOINT = "endpoint";
 
+    public static final String IPMI_Rest = "IPMI+Rest";
+    public static final String SNMP = "SNMP";
+
     public enum EndPointType {
         main_endpoint("主节点", "main_endpoint"), slave_endpoint("从节点", "slave_endpoint");
 

@@ -11,15 +11,6 @@
         </el-button-group>
       </div>
       <div id="control" style="display: flex;">
-        <!--        <div id="run-workflow">-->
-        <!--          <div class="el-icon-caret-right h25"-->
-        <!--               style="border-bottom: yellowgreen 1px solid;  width: 100%;">{{ $t('Run') }}-->
-        <!--          </div>-->
-        <!--          <div class="run-splitter h25"></div>-->
-        <!--          <div>-->
-        <!--            <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>-->
-        <!--          </div>-->
-        <!--        </div>-->
 
         <div id="workflow-selector" style="display: flex;">
           <div id="select-workflow">
@@ -264,8 +255,9 @@
           size="100%"
           :with-header="false"
           :wrapperClosable="false"
+
           :before-close="handleClose">
-        <router-view is="discovery"></router-view>
+        <Discovery class="bare-discovery" @back="discoveryVisible =false"></Discovery>
       </el-drawer>
 
       <!--详情页-->
@@ -998,4 +990,7 @@ export default {
   padding-left: 10px;
 }
 
+.bare-discovery {
+  padding: 20px;
+}
 </style>

@@ -2,10 +2,13 @@ package io.rackshift.job;
 
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.job.model.DiscoveryTask;
+import io.rackshift.manager.BareMetalManager;
+import io.rackshift.metal.sdk.util.CloudProviderManager;
 import io.rackshift.mybatis.domain.BareMetalRule;
 import io.rackshift.mybatis.domain.BareMetalRuleExample;
 import io.rackshift.mybatis.mapper.BareMetalRuleMapper;
 import io.rackshift.service.DiscoveryDevicesService;
+import net.sf.ehcache.Cache;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,12 @@ public class DiscoveryJob {
     private DiscoveryDevicesService discoveryDevicesService;
     @Resource
     private SimpMessagingTemplate simpMessagingTemplate;
+    @Resource
+    private Cache cache;
+    @Resource
+    private CloudProviderManager metalProviderManager;
+    @Resource
+    private BareMetalManager bareMetalManager;
 
     @Scheduled(fixedDelay = 1000 * 60 * 120)
     public void run() {
@@ -33,7 +42,7 @@ public class DiscoveryJob {
             CountDownLatch c = new CountDownLatch(rules.size());
             rules.forEach(r -> {
                 if (ServiceConstants.DiscoveryStatusEnum.PENDING.name().equalsIgnoreCase(r.getSyncStatus())) {
-                    executors.submit(new DiscoveryTask(r, bareMetalRuleMapper, discoveryDevicesService, simpMessagingTemplate, c));
+                    executors.submit(new DiscoveryTask(r, bareMetalRuleMapper, bareMetalManager, simpMessagingTemplate, c, cache, metalProviderManager));
                 }
             });
             try {
@@ -42,7 +51,5 @@ public class DiscoveryJob {
                 e.printStackTrace();
             }
         }
-
-
     }
 }

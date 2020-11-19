@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import io.rackshift.constants.RackHDConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.metal.sdk.util.HttpFutureUtils;
-import io.rackshift.metal.sdk.util.LogUtil;
 import io.rackshift.mybatis.domain.Endpoint;
 import io.rackshift.mybatis.domain.EndpointExample;
 import io.rackshift.mybatis.domain.Workflow;
@@ -22,7 +21,6 @@ import java.net.Inet4Address;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -140,21 +138,21 @@ public class WorkflowConfig {
 
     @Bean
     public JSONArray allWorkflow() {
-        String res = HttpFutureUtils.getHttp(getRackhdUrl() + RackHDConstants.WORKFLOWS, null);
-        if (StringUtils.isNotBlank(res)) {
+        try {
+            String res = HttpFutureUtils.getHttp(getRackhdUrl() + RackHDConstants.WORKFLOWS, null);
             return JSONArray.parseArray(res);
+        } catch (Exception e) {
+            return new JSONArray();
         }
-        LogUtil.info("无法获取endpoint的WORKFLOWS");
-        return new JSONArray();
     }
 
     @Bean
     public JSONArray allTask() {
-        String res = HttpFutureUtils.getHttp(getRackhdUrl() + RackHDConstants.TASKS, null);
-        if (StringUtils.isNotBlank(res)) {
+        try {
+            String res = HttpFutureUtils.getHttp(getRackhdUrl() + RackHDConstants.TASKS, null);
             return JSONArray.parseArray(res);
+        } catch (Exception e) {
+            return new JSONArray();
         }
-        LogUtil.info("无法获取endpoint的TASKS");
-        return new JSONArray();
     }
 }

@@ -43,6 +43,25 @@ public class MachineEntity {
     private List<Cpu> cpus;
     private List<Memory> memories;
 
+    private String providerId;
+    private String ruleId;
+
+    public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+
+    public String getRuleId() {
+        return ruleId;
+    }
+
+    public void setRuleId(String ruleId) {
+        this.ruleId = ruleId;
+    }
+
     private Map<String, String> extendInfo;
 
     public Map<String, String> getExtendInfo() {

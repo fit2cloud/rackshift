@@ -46,10 +46,13 @@
 }
 
 .title {
-  margin-top: 50px;
-  font-size: 32px;
-  letter-spacing: 0;
-  text-align: center;
+  font-size: 19px;
+  font-weight: 500;
+  margin: 0 0 10px 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+  white-space: nowrap;
 }
 
 .title > #s1 {

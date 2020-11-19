@@ -2,13 +2,13 @@
   <div id="app">
     <el-container v-if="login">
       <el-header id="main-header">
-        <el-row type="flex" style="display: flex;">
-          <el-col :span="19"><span id="main-title">RackShift</span></el-col>
-          <el-col :span="5" class=" align-right          ">
+        <div style="display: flex; float: right">
+          <div><span id="main-title">RackShift</span></div>
+          <div class="align-right">
             <ChangeLanguage></ChangeLanguage>
             <ChangeInfo></ChangeInfo>
-          </el-col>
-        </el-row>
+          </div>
+        </div>
 
       </el-header>
       <el-container>
@@ -19,7 +19,6 @@
               <el-menu-item :class="$route.path == c.router ? 'is-active' : ''"
                             v-for="c in m.childs" :index="m.order + '-' + c.order"
                             v-on:click="$router.push(c.router)">
-                <i :class="c.icon"></i>
                 {{ $t(c.name) }}
               </el-menu-item>
             </el-submenu>
@@ -49,6 +48,7 @@ export default {
       menus: menu.menus,
       login: localStorage.getItem("login") == "true",
       user: JSON.parse(localStorage.getItem("user")),
+      squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
     };
   }
   ,
@@ -129,11 +129,11 @@ body {
 
 #main-header {
   min-width: 1520px;
-  height: 45px !important;
-  background: linear-gradient(to right, #00447C 20%, #00447C 80%);
+  height: 40px !important;
+  background: linear-gradient(to right, rgb(55, 71, 84) 20%, rgb(55, 71, 84) 80%);
   color: #333;
   z-index: 2;
-  line-height: 45px;
+  line-height: 40px;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px;
 }
 
@@ -146,6 +146,7 @@ body {
   text-decoration: none;
   display: block;
   left: 1.6rem;
+  position: fixed;
 }
 
 #main-menu {
@@ -169,7 +170,7 @@ body {
 }
 
 .pagination {
-  margin-top: 10px;
+  margin: 20px 0;
 }
 
 .el-tabs__nav {
@@ -209,8 +210,8 @@ body {
 }
 
 .el-menu--horizontal > .el-submenu .el-submenu__title {
-  height: 44px !important;
-  line-height: 44px !important;
+  height: 40px !important;
+  line-height: 40px !important;
 }
 
 .el-menu.el-menu--horizontal {
@@ -237,5 +238,30 @@ button {
 .pagination {
   float: right;
   padding: 2px 15px !important;
+}
+
+.current-user.username {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 5px;
+  overflow-x: hidden;
+  padding-bottom: 0;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: 180px;
+}
+
+.current-user .edit {
+  opacity: 0;
+}
+
+.current-user:hover .edit {
+  opacity: 1;
+}
+
+.pointer {
+  cursor: pointer;
 }
 </style>

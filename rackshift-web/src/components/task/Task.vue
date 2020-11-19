@@ -231,7 +231,7 @@ export default {
       }).then(() => {
         let ids = this.getSelectedIds();
         if (!ids || ids.length == 0) {
-          this.$message.error(this.$t('pls_select_discovery') + "!");
+          this.$message.error(this.$t('pls_select_task') + "!");
           return;
         }
         HttpUtil.post("/task/del", ids, (res) => {

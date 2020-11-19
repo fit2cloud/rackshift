@@ -2,11 +2,15 @@ package io.rackshift.service;
 
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.job.model.DiscoveryTask;
+import io.rackshift.manager.BareMetalManager;
+import io.rackshift.metal.sdk.util.CloudProviderManager;
 import io.rackshift.model.BareMetalRuleDTO;
+import io.rackshift.model.BareMetalRuleVO;
 import io.rackshift.mybatis.domain.BareMetalRule;
 import io.rackshift.mybatis.domain.BareMetalRuleExample;
 import io.rackshift.mybatis.mapper.BareMetalRuleMapper;
 import io.rackshift.mybatis.mapper.EndpointMapper;
+import io.rackshift.mybatis.mapper.ext.ExtBareMetalRuleMapper;
 import io.rackshift.utils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -20,26 +24,29 @@ public class DiscoveryService {
     @Resource
     private BareMetalRuleMapper bareMetalRuleMapper;
     @Resource
-    private DiscoveryDevicesService discoveryDevicesService;
+    private ExtBareMetalRuleMapper extBareMetalRuleMapper;
+    @Resource
+    private BareMetalManager bareMetalManager;
     @Resource
     private EndpointMapper endpointMapper;
     @Autowired
     private SimpMessagingTemplate template;
+    @Resource
+    private CloudProviderManager metalProviderManager;
 
     public Object add(BareMetalRuleDTO queryVO) {
         BareMetalRule bareMetalRule = new BareMetalRule();
         BeanUtils.copyBean(bareMetalRule, queryVO);
         bareMetalRule.setProviderId("");
         bareMetalRuleMapper.insertSelective(bareMetalRule);
-        new Thread(new DiscoveryTask(bareMetalRule, bareMetalRuleMapper, discoveryDevicesService, template)).start();
+        new Thread(new DiscoveryTask(bareMetalRule, bareMetalRuleMapper, bareMetalManager, template, metalProviderManager)).start();
         return true;
     }
 
     public Object update(BareMetalRuleDTO queryVO) {
         BareMetalRule BareMetalRule = new BareMetalRule();
         BeanUtils.copyBean(BareMetalRule, queryVO);
-        BareMetalRule dbBareMetalRule = bareMetalRuleMapper.selectByPrimaryKey(queryVO.getId());
-        bareMetalRuleMapper.updateByPrimaryKey(BareMetalRule);
+        bareMetalRuleMapper.updateByPrimaryKeyWithBLOBs(BareMetalRule);
 
         return true;
     }
@@ -58,9 +65,8 @@ public class DiscoveryService {
         return null;
     }
 
-    public List<BareMetalRule> list(BareMetalRuleDTO queryVO) {
-        BareMetalRuleExample example = buildExample(queryVO);
-        return bareMetalRuleMapper.selectByExample(example);
+    public List<BareMetalRuleDTO> list(BareMetalRuleVO queryVO) {
+        return extBareMetalRuleMapper.list(queryVO);
     }
 
     private BareMetalRuleExample buildExample(BareMetalRuleDTO queryVO) {
@@ -84,7 +90,7 @@ public class DiscoveryService {
         }
         rule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.PENDING.name());
         bareMetalRuleMapper.updateByPrimaryKey(rule);
-        new Thread(new DiscoveryTask(rule, bareMetalRuleMapper, discoveryDevicesService, template)).start();
+        new Thread(new DiscoveryTask(rule, bareMetalRuleMapper, bareMetalManager, template, metalProviderManager)).start();
         return true;
     }
 }

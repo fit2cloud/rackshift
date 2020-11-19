@@ -78,7 +78,7 @@ public class ExecutionLogService {
     }
 
     private ExecutionLogExample buildExample(ExecutionLogDTO queryVO) {
-       ExecutionLogExample e = new ExecutionLogExample();
+        ExecutionLogExample e = new ExecutionLogExample();
         if (StringUtils.isNotBlank(queryVO.getUser())) {
             e.createCriteria().andUserEqualTo(queryVO.getUser());
 
@@ -114,5 +114,11 @@ public class ExecutionLogService {
         e.createCriteria().andLogIdEqualTo(id);
         e.setOrderByClause("create_time desc");
         return executionLogDetailsMapper.selectByExampleWithBLOBs(e);
+    }
+
+    public int delDetailsByBareMetalId(String id) {
+        ExecutionLogDetailsExample e = new ExecutionLogDetailsExample();
+        e.createCriteria().andBareMetalIdEqualTo(id);
+        return executionLogDetailsMapper.deleteByExample(e);
     }
 }

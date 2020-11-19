@@ -100,30 +100,10 @@ public class BareMetalManager {
             if (dbBareMetal == null) {
                 bareMetalMapper.insertSelective(bareMetal);
             } else {
-                //对正在进行中的状态进行查询，如果对应的node没有正在运行中的任务，则该进行中的状态自动到终点
-//                boolean end = false;
-//                List<String> nodeIds = rackHDService.getActiveWorkflowNodeIds();
-//                if (StringUtils.isNotBlank(bareMetal.getServerId()) && !nodeIds.contains(bareMetal.getServerId())) {
-//                    LifeEvent endEvent = null;
-//                    if (LifeStatus.discovering.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
-//                        endEvent = LifeEvent.POST_DISCOVERY_WORKFLOW_END;
-//                    } else if (LifeStatus.provisioning.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
-//                        endEvent = LifeEvent.POST_OTHER_WORKFLOW_END;
-//                    } else if (LifeStatus.deploying.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
-//                        endEvent = LifeEvent.POST_OS_WORKFLOW_END;
-//                    }
-//                    if (endEvent != null) {
-//                        endEvent.setBareMetalId(dbBareMetal.getId());
-//                        stateMachine.sendEventNoSession(endEvent);
-//                        end = true;
-//                    }
-//                }
-//                if (!end) {
                 if (LifeStatus.discovering.name().equalsIgnoreCase(dbBareMetal.getStatus()) || LifeStatus.provisioning.name().equalsIgnoreCase(dbBareMetal.getStatus()) || LifeStatus.deploying.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
                     bareMetal.setStatus(null);
                 }
                 update(bareMetal, false);
-//                }
             }
             saveOrUpdateHardWare(e);
         } catch (Exception ex) {
