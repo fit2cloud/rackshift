@@ -305,6 +305,7 @@ export default {
     "uefi_boot": "UEFI BOOT",
 
     "not_detected": "Not Detected",
+    "not_exists": "Not Detected",
     "detected": "Detected",
     "obm_not_exists": "OBM Info Not Set",
     "help_doc": "Help Document",

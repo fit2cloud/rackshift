@@ -2,10 +2,10 @@
   <div id="app">
     <el-container v-if="login">
       <el-header id="main-header">
+        <div style="display: inline-block;">
+          <img id="logo" src="./assets/rackshift-04.png" alt="">
+        </div>
         <div style="display: flex; float: right">
-          <div>
-            <img id="main-title" src="./assets/rackshift-04.png" alt="">
-          </div>
           <div class="align-right">
             <ChangeLanguage></ChangeLanguage>
             <ChangeInfo></ChangeInfo>
@@ -119,8 +119,7 @@ body {
 }
 
 .container {
-  background: #fff;
-  width: 100%;
+
 }
 
 .user-name {
@@ -267,5 +266,10 @@ button {
 
 .pointer {
   cursor: pointer;
+}
+
+#logo {
+  width: 148px;
+  height: 37px;
 }
 </style>

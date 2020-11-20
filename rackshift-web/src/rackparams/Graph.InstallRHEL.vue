@@ -430,7 +430,7 @@ export default {
       HttpUtil.post("/image/list/" + 1 + "/" + 1000, {}, (res) => {
         this.allImages = res.data.listObject;
         if (!this.allImages) {
-          this.$message.info(this.$t('no_valid_image!'));
+          this.$message.error(this.$t('no_valid_image!'));
           return;
         }
         if (!this.payLoad.options.defaults.repo) {
@@ -438,7 +438,7 @@ export default {
           if (centosImage) {
             this.payLoad.options.defaults.repo = centosImage.url;
           } else {
-            this.$message.info(this.$t('no_valid_image!'));
+            this.$message.error(this.$t('no_valid_image!'));
           }
         }
       });

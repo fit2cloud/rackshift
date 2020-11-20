@@ -285,13 +285,16 @@
                   {{ machine.bmcMac }}
                 </el-form-item>
                 <el-form-item :label="$t('cpu')">
-                  {{ machine.cpuType }} X {{ machine.cpu }}
+                  <span v-if="machine.cpu">{{ machine.cpuType }} X {{ machine.cpu }}</span>
+                  <span v-if="!machine.cpu">{{ $t('not_exists') }}</span>
                 </el-form-item>
                 <el-form-item :label="$t('memory')">
-                  {{ machine.memory }}{{ ' ' + $t('GB') }}
+                  <span v-if="machine.memory">{{ machine.memory }}{{ ' ' + $t('GB') }}</span>
+                  <span v-if="!machine.cpu">{{ $t('not_exists') }}</span>
                 </el-form-item>
                 <el-form-item :label="$t('disk')">
-                  {{ machine.disk }}{{ ' ' + $t('GB') }}
+                  <span v-if="machine.disk">{{ machine.disk }}{{ ' ' + $t('GB') }}</span>
+                  <span v-if="!machine.disk">{{ $t('not_exists') }}</span>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
@@ -996,7 +999,7 @@ export default {
   text-overflow: ellipsis;
   vertical-align: middle;
   position: relative;
-  text-align: left;
+  text-align: center;
 }
 
 .el-tabs__nav-wrap .is-top {

@@ -307,6 +307,7 @@ export default {
     "uefi_boot": "UEFI 引導",
 
     "not_detected": "未在位",
+    "not_exists": "未检测到",
     "detected": "在位",
     "obm_not_exists": "帶外信息未配置",
     "help_doc": "幫助文檔",
