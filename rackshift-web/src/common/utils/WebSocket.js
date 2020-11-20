@@ -38,8 +38,6 @@ let WebSocketUtil = {
             if (!this.webSocket) {
                 this.webSocket = WebSocketUtil.openSocket(topic, callback);
             }
-        } else {
-            this.webSocket = WebSocketUtil.openSocket(topic, callback);
         }
     },
 }
