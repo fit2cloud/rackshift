@@ -33,7 +33,7 @@ public class SyncOutBandJob {
     @Resource
     private RackHDService rackHDService;
 
-    @Scheduled(fixedDelay = 60 * 1000)
+    @Scheduled(fixedDelay = 300 * 1000)
     public void updatePowerOutBandStatusScheduler() {
         //测试每一个自发现机器带外的连通性，并且查看是否有物理机关联该带外ip（手动导入，不存在mac地址的只是视为信息纳管和基本开关机流程控制，因此不需要同步至物理机和RackHD）
         LocalDateTime before = LocalDateTime.now();
