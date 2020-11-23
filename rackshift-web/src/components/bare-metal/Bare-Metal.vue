@@ -859,41 +859,40 @@ export default {
       }
     },
     addToSelectedWorkflow() {
-      if (this.getWorkflowById().injectableName) {
-        let originWf = _.find(this.supportedWorkflow, s => s.injectableName == this.getWorkflowById().injectableName);
-        for (let k = 0; k < this.multipleSelection.length; k++) {
+      let that = this;
+      if (that.getWorkflowById().injectableName) {
+        let originWf = _.find(that.supportedWorkflow, s => s.injectableName == that.getWorkflowById().injectableName);
+        for (let k = 0; k < that.multipleSelection.length; k++) {
           let duplicated = false;
-          let componentId = this.getWorkflowById().injectableName + "-" + this.multipleSelection[k].id;
-          for (let j = 0; j < this.selectedWorkflow.length; j++) {
-            if (this.selectedWorkflow[j].componentId == componentId) {
+          let componentId = that.getWorkflowById().injectableName + "-" + that.multipleSelection[k].id;
+          for (let j = 0; j < that.selectedWorkflow.length; j++) {
+            if (that.selectedWorkflow[j].componentId == componentId) {
               duplicated = true;
             }
           }
 
           if (duplicated) continue;
-
-          if (_.findIndex(originWf.brands, w => w == this.multipleSelection[k].machineBrand) == -1) {
-            this.$message.error(originWf.friendlyName + this.$t('not_supported_brand!') + ' ' + this.multipleSelection[k].machineBrand);
+          if (_.findIndex(originWf.brands, w => w == that.multipleSelection[k].machineBrand) == -1) {
+            that.$message.error(originWf.friendlyName + that.$t('not_supported_brand!') + ' ' + that.multipleSelection[k].machineBrand);
             continue;
           }
 
-          this.selectedWorkflow.push(
+          that.selectedWorkflow.push(
               {
-                componentId: this.getWorkflowById().injectableName + "-" + this.multipleSelection[k].id,
-                bareMetalId: this.multipleSelection[k].id,
-                machineModel: this.multipleSelection[k].machineModel,
-                machineSn: this.multipleSelection[k].machineSn,
-                workflowName: this.getWorkflowById().injectableName,
+                componentId: that.getWorkflowById().injectableName + "-" + that.multipleSelection[k].id,
+                bareMetalId: that.multipleSelection[k].id,
+                machineModel: that.multipleSelection[k].machineModel,
+                machineSn: that.multipleSelection[k].machineSn,
+                workflowName: that.getWorkflowById().injectableName,
                 friendlyName: originWf.friendlyName,
                 settable: originWf.settable,
               }
           );
 
-          this.createWorkflowParamComponent(this.selectedWorkflow[this.selectedWorkflow.length - 1]);
+          that.createWorkflowParamComponent(that.selectedWorkflow[that.selectedWorkflow.length - 1]);
 
-          this.currentWfParamTemplate = this.selectedWorkflow[this.selectedWorkflow.length - 1].componentId;
-          if (this.workflowParamList.length) {
-            let that = this;
+          that.currentWfParamTemplate = that.selectedWorkflow[that.selectedWorkflow.length - 1].componentId;
+          if (that.workflowParamList.length) {
             let paramTemplate = _.find(that.workflowParamList, function (p) {
               return p.bareMetalId == that.selectedWorkflow[that.selectedWorkflow.length - 1].bareMetalId;
             });
@@ -905,15 +904,16 @@ export default {
               that.$set(that, 'extraParams', JSON.parse(paramTemplate.extraParams));
             }
 
-            that.selectedWorkflow[that.selectedWorkflow.length - 1].params = that.workflowParam;
-            that.selectedWorkflow[that.selectedWorkflow.length - 1].extraParams = that.extraParams;
+            that.selectedWorkflow[that.selectedWorkflow.length - 1].params = JSON.parse(paramTemplate.paramsTemplate);
+            that.selectedWorkflow[that.selectedWorkflow.length - 1].extraParams = JSON.parse(paramTemplate.extraParams);
           } else {
-            this.selectedWorkflow[this.selectedWorkflow.length - 1].params = originWf.defaultParams;
-            this.$set(this, 'workflowParam', originWf.defaultParams);
-            this.$set(this, 'extraParams', null);
+            that.selectedWorkflow[that.selectedWorkflow.length - 1].params = originWf.defaultParams;
+            that.$set(that, 'workflowParam', originWf.defaultParams);
+            that.$set(that, 'extraParams', null);
           }
         }
-        // this.$refs.multipleTable.clearSelection();
+        console.log("device : " + this.selectedWorkflow[this.selectedWorkflow.length - 1].params.options.defaults.networkDevices[0].device);
+        // that.$refs.multipleTable.clearSelection();
       }
     }
     ,
