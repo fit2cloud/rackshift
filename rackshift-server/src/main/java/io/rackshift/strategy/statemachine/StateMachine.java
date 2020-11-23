@@ -10,7 +10,6 @@ import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.service.ExecutionLogService;
 import io.rackshift.service.TaskService;
 import io.rackshift.utils.LogUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -38,16 +37,15 @@ public class StateMachine {
     public void runTaskList(List<TaskWithBLOBs> tasks) {
         tasks.forEach(task -> {
             LifeEvent event = buildEvent(task);
-            String taskId = event.getWorkflowRequestDTO().getTaskId();
             if (task != null && ServiceConstants.TaskStatusEnum.created.name().equals(task.getStatus())) {
                 Task preTask = taskService.getById(task.getPreTaskId());
                 //等待前置任务处理结束才能执行
                 if (preTask == null || (preTask != null && endStatusList.contains(preTask.getStatus()))) {
                     task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
                     taskService.update(task);
-                    executionLogService.saveLogDetail(taskId, task.getUserId(), ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), String.format("开始执行:%s:worflow:%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
+                    executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), String.format("开始执行:%s:worflow:%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
                     if (handlerMap.get(event.getEventType()) != null) {
-                        handlerMap.get(event.getEventType()).handle(event, taskId, task.getUserId());
+                        handlerMap.get(event.getEventType()).handle(event);
                     } else {
                         LogUtil.error(String.format("不支持的事件类型！%s", JSON.toJSONString(event)));
                     }

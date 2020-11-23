@@ -784,13 +784,19 @@ public class RackHDService {
         return response.getReCode() <= RackHDConstants.ERROR_RE_CODE;
     }
 
-    public String getWorkflowStatusById(String ip, String instanceId) {
+    public String getWorkflowStatusById(Endpoint endpoint, String instanceId) {
         try {
+            String ip = "http://" + endpoint.getIp() + ":9090";
             JSONObject res = JSONObject.parseObject(RackHDHttpClientUtil.get(ip + String.format(RackHDConstants.JOBS, instanceId), null));
             return res.getString("status");
         } catch (Exception e) {
             LogUtil.error("更新workflow任务状态失败！" + ExceptionUtils.getExceptionDetail(e));
         }
         return null;
+    }
+
+    public JSONObject getWorkflowById(Endpoint endpoint, String id) {
+        String res = RackHDHttpClientUtil.get(String.format("http://" + endpoint.getIp() + ":9090" + RackHDConstants.GET_WORKFLOW_URL + "/%s", id), null);
+        return JSONObject.parseObject(Optional.ofNullable(res).orElse("{}"));
     }
 }

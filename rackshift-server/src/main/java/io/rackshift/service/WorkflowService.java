@@ -83,7 +83,7 @@ public class WorkflowService {
 
                 events.add(LifeEvent.builder().withWorkflowRequestDTO(requestDTO).withEventType(LifeEventType.fromStartType(workflowName)));
             }
-//            stateMachine.sendEventListAsyn(events);
+            //插入数据库等待执行
             taskService.createTaskFromEvents(events);
         });
 

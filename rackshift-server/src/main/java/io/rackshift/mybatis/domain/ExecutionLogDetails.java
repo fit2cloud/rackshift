@@ -19,6 +19,8 @@ public class ExecutionLogDetails implements Serializable {
 
     private Long createTime;
 
+    private String instanceId;
+
     private String outPut;
 
     private static final long serialVersionUID = 1L;

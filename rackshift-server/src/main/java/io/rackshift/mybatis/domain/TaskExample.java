@@ -713,6 +713,76 @@ public class TaskExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andBeforeStatusIsNull() {
+            addCriterion("before_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusIsNotNull() {
+            addCriterion("before_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusEqualTo(String value) {
+            addCriterion("before_status =", value, "beforeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusNotEqualTo(String value) {
+            addCriterion("before_status <>", value, "beforeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusGreaterThan(String value) {
+            addCriterion("before_status >", value, "beforeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusGreaterThanOrEqualTo(String value) {
+            addCriterion("before_status >=", value, "beforeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusLessThan(String value) {
+            addCriterion("before_status <", value, "beforeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusLessThanOrEqualTo(String value) {
+            addCriterion("before_status <=", value, "beforeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusLike(String value) {
+            addCriterion("before_status like", value, "beforeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusNotLike(String value) {
+            addCriterion("before_status not like", value, "beforeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusIn(List<String> values) {
+            addCriterion("before_status in", values, "beforeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusNotIn(List<String> values) {
+            addCriterion("before_status not in", values, "beforeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusBetween(String value1, String value2) {
+            addCriterion("before_status between", value1, value2, "beforeStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeforeStatusNotBetween(String value1, String value2) {
+            addCriterion("before_status not between", value1, value2, "beforeStatus");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -44,9 +44,10 @@
 
         <el-table-column prop="number" :label="$t('founded_machine_number')" align="left">
           <template slot-scope="scope">
-            <el-link type="primary" @click="showMachine(scope.row)">
+            <el-link v-if="scope.row.number != '0'" type="primary" @click="showMachine(scope.row)">
               {{ scope.row.number }}
             </el-link>
+            <span v-if="scope.row.number == '0'">{{ scope.row.number }}</span>
           </template>
         </el-table-column>
 
@@ -288,8 +289,10 @@ export default {
   },
   methods: {
     showMachine(rule) {
-      this.$emit('queryByRuleId', rule.id);
-      this.back();
+      if (rule.number) {
+        this.$emit('queryByRuleId', rule.id);
+        this.back();
+      }
     },
     back() {
       this.$emit('back');

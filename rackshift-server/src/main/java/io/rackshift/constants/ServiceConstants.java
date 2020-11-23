@@ -49,4 +49,8 @@ public class ServiceConstants {
     public enum TaskStatusEnum {
         created, running, failed, cancelled, succeeded
     }
+
+    public enum RackHDTaskStatusEnum {
+        pending, failed, cancelled, succeeded
+    }
 }

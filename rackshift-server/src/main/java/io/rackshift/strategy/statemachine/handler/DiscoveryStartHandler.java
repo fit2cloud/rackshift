@@ -61,7 +61,7 @@ public class DiscoveryStartHandler extends AbstractHandler {
                 }
                 changeStatus(event, LifeStatus.ready, false);
             } else {
-                revert(event, getExecutionId(), getUser());
+                revert(event);
             }
         }
     }

@@ -6,10 +6,7 @@ import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.RSException;
 import io.rackshift.model.TaskDTO;
 import io.rackshift.model.WorkflowRequestDTO;
-import io.rackshift.mybatis.domain.ExecutionLogDetailsExample;
-import io.rackshift.mybatis.domain.Task;
-import io.rackshift.mybatis.domain.TaskExample;
-import io.rackshift.mybatis.domain.TaskWithBLOBs;
+import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.ExecutionLogDetailsMapper;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.mybatis.mapper.ext.ExtTaskMapper;
@@ -26,6 +23,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +40,8 @@ public class TaskService {
     private StateMachine stateMachine;
     @Resource
     private ExecutionLogDetailsMapper executionLogDetailsMapper;
+    @Resource
+    private EndpointService endpointService;
 
     public Object add(TaskDTO queryVO) {
         TaskWithBLOBs task = new TaskWithBLOBs();
@@ -59,12 +59,22 @@ public class TaskService {
     public Object del(String id) {
         Task task = taskMapper.selectByPrimaryKey(id);
         if (task == null) return false;
-        if (bareMetalManager.getBareMetalById(task.getBareMetalId()) == null) {
+        if (bareMetalManager.getBareMetalById(task.getBareMetalId()) == null || StringUtils.isBlank(task.getInstanceId())) {
             taskMapper.deleteByPrimaryKey(id);
             return true;
         }
         if (StringUtils.isNotBlank(task.getInstanceId())) {
             //rackhd 清除 任务
+            Endpoint endpoint = endpointService.getById(bareMetalManager.getBareMetalById(task.getBareMetalId()).getEndpointId());
+            if (endpoint == null) {
+                taskMapper.deleteByPrimaryKey(id);
+                return true;
+            }
+            String status = rackHDService.getWorkflowStatusById(endpoint, task.getInstanceId());
+            if (!ServiceConstants.TaskStatusEnum.running.name().equalsIgnoreCase(status)) {
+                taskMapper.deleteByPrimaryKey(id);
+                return true;
+            }
             boolean r = rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()), task.getInstanceId());
             if (r) {
                 WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
@@ -110,21 +120,34 @@ public class TaskService {
                 task.setBareMetalId(entry.getKey());
                 task.setWorkFlowId(e.getWorkflowRequestDTO().getWorkflowName());
                 task.setUserId(SessionUtil.getUser().getId());
-                task.setParams(e.getWorkflowRequestDTO().getParams() != null ? e.getWorkflowRequestDTO().getParams().toJSONString() : "");
-                task.setExtparams(e.getWorkflowRequestDTO().getExtraParams() != null ? e.getWorkflowRequestDTO().getExtraParams().toJSONString() : "");
+                task.setParams(Optional.ofNullable(e.getWorkflowRequestDTO().getParams()).orElse(new JSONObject()).toJSONString());
+                task.setExtparams(Optional.ofNullable(e.getWorkflowRequestDTO().getExtraParams()).orElse(new JSONObject()).toJSONString());
                 task.setStatus(ServiceConstants.TaskStatusEnum.created.name());
                 task.setCreateTime(System.currentTimeMillis());
                 list.add(task);
             });
 
+            BareMetal bareMetal = bareMetalManager.getBareMetalById(entry.getKey());
             for (int i = 0; i < list.size(); i++) {
                 if (i != 0) {
                     list.get(i).setPreTaskId(list.get(i - 1).getId());
                 }
-                taskMapper.insertSelective(list.get(i));
+                list.get(i).setBeforeStatus(bareMetal.getStatus());
             }
-
+            //第一个任务默认以之前的任意一个未结束任务为前置任务 如果全部都已经结束，则该任务为当前第一个执行任务
+            list.get(0).setPreTaskId(findLastTaskId(list.get(0).getBareMetalId()));
+            for (TaskWithBLOBs taskWithBLOBs : list) {
+                taskMapper.insertSelective(taskWithBLOBs);
+            }
         }
+    }
+
+    private String findLastTaskId(String bareMetalId) {
+        TaskExample e = new TaskExample();
+        e.createCriteria().andBareMetalIdEqualTo(bareMetalId).andStatusEqualTo(ServiceConstants.TaskStatusEnum.created.name());
+        e.or().andBareMetalIdEqualTo(bareMetalId).andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
+        List<Task> tasks = taskMapper.selectByExample(e);
+        return tasks.size() > 0 ? tasks.get(0).getId() : null;
     }
 
     private Map<String, List<LifeEvent>> groupByBM(List<LifeEvent> events) {
@@ -146,5 +169,10 @@ public class TaskService {
         TaskExample e = new TaskExample();
         e.createCriteria().andBareMetalIdEqualTo(id);
         return taskMapper.deleteByExample(e);
+    }
+
+
+    public static void main(String[] args) {
+        new ArrayList<>().get(0);
     }
 }

@@ -7,7 +7,7 @@
           <el-button-group class="batch-button">
             <el-button type="primary" icon="el-icon-delete" @click="delAllSelection">{{ $t('del') }}
             </el-button>
-            <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
+            <el-button type="primary" icon="el-icon-refresh" @click="getData()">{{ $t('refresh') }}</el-button>
           </el-button-group>
         </div>
 
@@ -29,10 +29,10 @@
               <!--  white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>-->
 
               <el-tooltip class="item" effect="dark" :content="scope.row.machineModel" placement="right-end">
-                <el-link type="primary" target="_blank">
-                  <span style="display: block; word-break:keep-all;
+                <!--                <el-link type="primary" target="_blank">-->
+                <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>
-                </el-link>
+                <!--                </el-link>-->
               </el-tooltip>
             </template>
           </el-table-column>
@@ -43,10 +43,10 @@
           <el-table-column prop="friendlyName" :label="$t('Workflow')" align="left" :sortable="true" width="210">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">
-                <el-link type="primary" target="_blank">
-                  <span style="display: block; word-break:keep-all;
+                <!--                <el-link type="primary" target="_blank">-->
+                <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.friendlyName }}</span>
-                </el-link>
+                <!--                </el-link>-->
               </el-tooltip>
             </template>
           </el-table-column>
@@ -95,7 +95,7 @@
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
-            <table class="detail-info">
+            <table class="detail-info" v-if="logs.length">
               <tr>
                 <td>{{ $t('create_time') }}</td>
                 <td>{{ $t('output') }}</td>
@@ -110,6 +110,7 @@
                        class="el-icon-loading"></i></td>
               </tr>
             </table>
+            <span v-else>{{ $t('no_more_logs') }}</span>
             <div class="demo-drawer__footer">
               <el-button @click="handleClose">{{ $t('close') }}</el-button>
             </div>
@@ -191,13 +192,16 @@ export default {
   },
   methods: {
     // 获取 easy-mock 的模拟数据
-    getData() {
+    getData(callback) {
       this.loadingList = true;
       HttpUtil.post("/task/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
         this.loadingList = false;
-        WebSocketUtil.checkDoingThings(res.data.listObject, 'status', 'lifecycle', this.getData);
+        WebSocketUtil.checkDoingThings(res.data.listObject, 'status', 'taskLifecycle', this.getData);
+        if (callback) {
+          callback();
+        }
       });
     },
     refreshChildData() {
@@ -241,9 +245,14 @@ export default {
           } else {
             this.$message.success(this.$t('delete_fail'));
           }
+          this.multipleSelection = [];
+        }, (res) => {
+          this.$message.error(res);
         });
+      }).catch(function (e) {
         this.multipleSelection = [];
       });
+
     },
     // 编辑操作
     handleEdit(row, type) {
@@ -262,26 +271,35 @@ export default {
         })
       } else if (type == 'view') {
         this.editObj = JSON.parse(JSON.stringify(row));
-        HttpUtil.get("/task/logs?id=" + this.editObj.id, {}, (res) => {
-          this.editDialogVisible = true;
-          this.logs = res.data;
-          if (this.editObj.status == 'running') {
-            this.refreshPointer = window.setInterval(this.refreshLogs, 2000);
+        const that = this;
+        HttpUtil.get("/task/logs?id=" + that.editObj.id, {}, (res) => {
+          that.editDialogVisible = true;
+          that.logs = res.data;
+          if (that.editObj.status == 'running') {
+            that.refreshPointer = setInterval(function () {
+              HttpUtil.get("/task/logs?id=" + that.editObj.id, {}, (res) => {
+                that.editDialogVisible = true;
+                that.logs = res.data;
+                if (that.logs && that.logs.length) {
+                  if (that.logs[that.logs.length - 1].status != 'pending') {
+                    that.getData(function () {
+                      that.editObj = _.find(that.tableData, (l) => l.id == that.editObj.id);
+                    });
+                    clearInterval(that.refreshPointer);
+                  }
+                }
+              })
+            }, 2000);
           }
-        })
+        });
       }
     },
-    refreshLogs() {
-      HttpUtil.get("/task/logs?id=" + this.editObj.id, {}, (res) => {
-        this.editDialogVisible = true;
-        this.logs = res.data;
-      })
-    },
-    // 分页导航
+// 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
       this.getData();
-    },
+    }
+    ,
   }
 }
 </script>

@@ -21,7 +21,10 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public abstract class AbstractHandler implements IStateHandler {
@@ -52,24 +55,6 @@ public abstract class AbstractHandler implements IStateHandler {
         add("Graph.Raid.Create.PercRAID");
     }};
 
-    protected ThreadLocal<Map<String, String>> executionMap = new ThreadLocal<>();
-
-    protected String getExecutionId() {
-        return executionMap.get().get("executionId");
-    }
-
-    protected String getUser() {
-        return executionMap.get().get("user");
-    }
-
-    protected String getBeforeChangeStatus() {
-        return executionMap.get().get("beforeChangeStatus");
-    }
-
-    public ThreadLocal<Map<String, String>> getExecutionMap() {
-        return executionMap;
-    }
-
     public abstract void handleYourself(LifeEvent event) throws Exception;
 
     @Override
@@ -84,25 +69,20 @@ public abstract class AbstractHandler implements IStateHandler {
     }
 
     @Override
-    public void handle(LifeEvent event, String executionId, String user) {
+    public void handle(LifeEvent event) {
         BareMetal bareMetal = getBareMetalById(event.getWorkflowRequestDTO().getBareMetalId());
-        Map<String, String> statusMap = new HashMap();
-        statusMap.put("beforeChangeStatus", bareMetal.getStatus());
-        statusMap.put("executionId", executionId);
-        statusMap.put("user", user);
-        getExecutionMap().set(statusMap);
-
+        Task task = taskService.getById(event.getWorkflowRequestDTO().getTaskId());
         if (StringUtils.isAnyBlank(bareMetal.getEndpointId(), bareMetal.getServerId())) {
-            executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), "该裸金属未执行discovery流程,无法进行部署");
-            revert(event, executionId, user);
+            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), "该裸金属未执行discovery流程,无法进行部署");
+            revert(event);
         }
 
         try {
             paramPreProcess(event);
             handleYourself(event);
         } catch (Exception e) {
-            executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), String.format("错误：%s", ExceptionUtils.getExceptionDetail(e)));
-            revert(event, getExecutionId(), getUser());
+            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), String.format("错误：%s", ExceptionUtils.getExceptionDetail(e)));
+            revert(event);
             throw new RuntimeException(e);
         }
     }
@@ -128,13 +108,13 @@ public abstract class AbstractHandler implements IStateHandler {
     }
 
     @Override
-    public void revert(LifeEvent event, String executionId, String user) {
-        executionLogService.saveLogDetail(executionId, user, ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), String.format("错误：event:%s:worflow:%ss,参数:%s,回滚状态至%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString(), getExecutionMap().get().get("beforeChangeStatus")));
-        changeStatus(event, LifeStatus.valueOf(getExecutionMap().get().get("beforeChangeStatus")), false);
-        Task task = taskService.getById(executionId);
+    public void revert(LifeEvent event) {
+        Task task = taskService.getById(event.getWorkflowRequestDTO().getTaskId());
         task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
         taskService.update(task);
-        template.convertAndSend("/topic/lifecycle", "");
+        changeStatus(event, LifeStatus.valueOf(task.getBeforeStatus()), false);
+        executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), String.format("错误：event:%s:worflow:%ss,参数:%s,回滚状态至%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString(), LifeStatus.valueOf(task.getBeforeStatus())));
+        notifyWebSocket();
     }
 
     protected void beforeChange(LifeStatus curStatus) {
@@ -149,5 +129,10 @@ public abstract class AbstractHandler implements IStateHandler {
         }
         bareMetal.setStatus(status.name());
         bareMetalManager.update(bareMetal, true);
+    }
+
+    protected void notifyWebSocket() {
+        template.convertAndSend("/topic/lifecycle", "");
+        template.convertAndSend("/topic/taskLifecycle", "");
     }
 }

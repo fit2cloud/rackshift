@@ -583,6 +583,76 @@ public class ExecutionLogDetailsExample {
             addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
+
+        public Criteria andInstanceIdIsNull() {
+            addCriterion("instance_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdIsNotNull() {
+            addCriterion("instance_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdEqualTo(String value) {
+            addCriterion("instance_id =", value, "instanceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdNotEqualTo(String value) {
+            addCriterion("instance_id <>", value, "instanceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdGreaterThan(String value) {
+            addCriterion("instance_id >", value, "instanceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdGreaterThanOrEqualTo(String value) {
+            addCriterion("instance_id >=", value, "instanceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdLessThan(String value) {
+            addCriterion("instance_id <", value, "instanceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdLessThanOrEqualTo(String value) {
+            addCriterion("instance_id <=", value, "instanceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdLike(String value) {
+            addCriterion("instance_id like", value, "instanceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdNotLike(String value) {
+            addCriterion("instance_id not like", value, "instanceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdIn(List<String> values) {
+            addCriterion("instance_id in", values, "instanceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdNotIn(List<String> values) {
+            addCriterion("instance_id not in", values, "instanceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdBetween(String value1, String value2) {
+            addCriterion("instance_id between", value1, value2, "instanceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInstanceIdNotBetween(String value1, String value2) {
+            addCriterion("instance_id not between", value1, value2, "instanceId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

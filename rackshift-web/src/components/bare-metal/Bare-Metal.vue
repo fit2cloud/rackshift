@@ -86,7 +86,7 @@
         <el-table-column type="selection" align="left"></el-table-column>
 
         <el-table-column prop="machine_model" :label="$t('machine_model')" align="left"
-                         sortable="custom" style="overflow: scroll">
+                         sortable="custom" style="overflow: scroll" width="180">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
               <el-link type="primary" @click="showDetail(scope.row)" target="_blank">
@@ -596,12 +596,16 @@ export default {
       }
     },
     power(opt, row) {
-      HttpUtil.get("/bare-metal/power/" + row.id + "/" + opt, null, (res) => {
-        if (res.success) {
-          this.$message.success(this.$t('success'));
-        } else {
-          this.$message.error(this.$t('error'));
-        }
+      this.$confirm(this.$t('confirm') + '?', this.$t('tips'), {
+        type: "warning"
+      }).then(() => {
+        HttpUtil.get("/bare-metal/power/" + row.id + "/" + opt, null, (res) => {
+          if (res.success) {
+            this.$message.success(this.$t('success'));
+          } else {
+            this.$message.error(this.$t('error'));
+          }
+        });
       });
     },
     getHardware() {

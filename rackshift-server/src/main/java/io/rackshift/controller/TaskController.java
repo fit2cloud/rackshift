@@ -55,4 +55,5 @@ public class TaskController {
     public ResultHolder logs(@RequestParam String id) {
         return ResultHolder.success(taskService.logs(id));
     }
+
 }

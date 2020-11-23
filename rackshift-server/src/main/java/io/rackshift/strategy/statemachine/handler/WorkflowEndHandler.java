@@ -19,8 +19,6 @@ public class WorkflowEndHandler extends AbstractHandler {
     private TaskService taskService;
     @Resource
     private BareMetalManager bareMetalManager;
-    @Autowired
-    private SimpMessagingTemplate template;
 
     @Override
     public void handleYourself(LifeEvent event) {
@@ -39,6 +37,6 @@ public class WorkflowEndHandler extends AbstractHandler {
         }
         bareMetalManager.update(bareMetal, true);
         taskService.update(task);
-        template.convertAndSend("/topic/lifecycle", "");
+        notifyWebSocket();
     }
 }

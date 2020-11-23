@@ -23,5 +23,7 @@ public class Task implements Serializable {
 
     private Long updateTime;
 
+    private String beforeStatus;
+
     private static final long serialVersionUID = 1L;
 }

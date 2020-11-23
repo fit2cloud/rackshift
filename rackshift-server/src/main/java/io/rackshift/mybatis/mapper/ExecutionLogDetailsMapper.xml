@@ -9,6 +9,7 @@
     <result column="bare_metal_id" jdbcType="VARCHAR" property="bareMetalId" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="instance_id" jdbcType="VARCHAR" property="instanceId" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.ExecutionLogDetails">
     <result column="out_put" jdbcType="LONGVARCHAR" property="outPut" />
@@ -72,7 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user, operation, log_id, bare_metal_id, status, create_time
+    id, user, operation, log_id, bare_metal_id, status, create_time, instance_id
   </sql>
   <sql id="Blob_Column_List">
     out_put
@@ -128,10 +129,12 @@
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.ExecutionLogDetails">
     insert into execution_log_details (id, user, operation, 
       log_id, bare_metal_id, status, 
-      create_time, out_put)
+      create_time, instance_id, out_put
+      )
     values (#{id,jdbcType=VARCHAR}, #{user,jdbcType=VARCHAR}, #{operation,jdbcType=VARCHAR}, 
       #{logId,jdbcType=VARCHAR}, #{bareMetalId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=BIGINT}, #{outPut,jdbcType=LONGVARCHAR})
+      #{createTime,jdbcType=BIGINT}, #{instanceId,jdbcType=VARCHAR}, #{outPut,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.ExecutionLogDetails">
     insert into execution_log_details
@@ -156,6 +159,9 @@
       </if>
       <if test="createTime != null">
         create_time,
+      </if>
+      <if test="instanceId != null">
+        instance_id,
       </if>
       <if test="outPut != null">
         out_put,
@@ -182,6 +188,9 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="instanceId != null">
+        #{instanceId,jdbcType=VARCHAR},
       </if>
       <if test="outPut != null">
         #{outPut,jdbcType=LONGVARCHAR},
@@ -218,6 +227,9 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=BIGINT},
       </if>
+      <if test="record.instanceId != null">
+        instance_id = #{record.instanceId,jdbcType=VARCHAR},
+      </if>
       <if test="record.outPut != null">
         out_put = #{record.outPut,jdbcType=LONGVARCHAR},
       </if>
@@ -235,6 +247,7 @@
       bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=BIGINT},
+      instance_id = #{record.instanceId,jdbcType=VARCHAR},
       out_put = #{record.outPut,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -248,7 +261,8 @@
       log_id = #{record.logId,jdbcType=VARCHAR},
       bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=BIGINT}
+      create_time = #{record.createTime,jdbcType=BIGINT},
+      instance_id = #{record.instanceId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -274,6 +288,9 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=BIGINT},
       </if>
+      <if test="instanceId != null">
+        instance_id = #{instanceId,jdbcType=VARCHAR},
+      </if>
       <if test="outPut != null">
         out_put = #{outPut,jdbcType=LONGVARCHAR},
       </if>
@@ -288,6 +305,7 @@
       bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT},
+      instance_id = #{instanceId,jdbcType=VARCHAR},
       out_put = #{outPut,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -298,7 +316,8 @@
       log_id = #{logId,jdbcType=VARCHAR},
       bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=BIGINT}
+      create_time = #{createTime,jdbcType=BIGINT},
+      instance_id = #{instanceId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

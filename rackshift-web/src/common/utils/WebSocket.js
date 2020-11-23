@@ -34,10 +34,8 @@ let WebSocketUtil = {
                 }
             }
         }
-        if (exists) {
-            if (!this.webSocket) {
-                this.webSocket = WebSocketUtil.openSocket(topic, callback);
-            }
+        if (!this.webSocket) {
+            this.webSocket = WebSocketUtil.openSocket(topic, callback);
         }
     },
 }

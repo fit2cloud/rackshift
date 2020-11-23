@@ -20,8 +20,6 @@ public class WorkflowStartHandler extends AbstractHandler {
     private RackHDService rackHDService;
     @Resource
     private TaskService taskService;
-    @Autowired
-    private SimpMessagingTemplate template;
 
     @Override
     public void handleYourself(LifeEvent event) {
@@ -34,13 +32,13 @@ public class WorkflowStartHandler extends AbstractHandler {
         JSONObject params = requestDTO.getParams();
         BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
         if (params == null) {
-            revert(event, getExecutionId(), getUser());
+            revert(event);
         }
 
         String instanceId = rackHDService.postWorkflowNoWait(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
         task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
         task.setInstanceId(instanceId);
         taskService.update(task);
-        template.convertAndSend("/topic/lifecycle", "");
+        notifyWebSocket();
     }
 }

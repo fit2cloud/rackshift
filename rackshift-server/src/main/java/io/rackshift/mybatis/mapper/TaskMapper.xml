@@ -11,6 +11,7 @@
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="create_time" jdbcType="BIGINT" property="createTime" />
     <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    <result column="before_status" jdbcType="VARCHAR" property="beforeStatus" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.TaskWithBLOBs">
     <result column="params" jdbcType="LONGVARCHAR" property="params" />
@@ -76,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, pre_task_id, work_flow_id, bare_metal_id, user_id, instance_id, status, create_time, 
-    update_time
+    update_time, before_status
   </sql>
   <sql id="Blob_Column_List">
     params, extParams
@@ -133,11 +134,13 @@
     insert into task (id, pre_task_id, work_flow_id, 
       bare_metal_id, user_id, instance_id, 
       status, create_time, update_time, 
-      params, extParams)
+      before_status, params, extParams
+      )
     values (#{id,jdbcType=VARCHAR}, #{preTaskId,jdbcType=VARCHAR}, #{workFlowId,jdbcType=VARCHAR}, 
       #{bareMetalId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{instanceId,jdbcType=VARCHAR}, 
       #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{updateTime,jdbcType=BIGINT}, 
-      #{params,jdbcType=LONGVARCHAR}, #{extparams,jdbcType=LONGVARCHAR})
+      #{beforeStatus,jdbcType=VARCHAR}, #{params,jdbcType=LONGVARCHAR}, #{extparams,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.TaskWithBLOBs">
     insert into task
@@ -168,6 +171,9 @@
       </if>
       <if test="updateTime != null">
         update_time,
+      </if>
+      <if test="beforeStatus != null">
+        before_status,
       </if>
       <if test="params != null">
         params,
@@ -203,6 +209,9 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="beforeStatus != null">
+        #{beforeStatus,jdbcType=VARCHAR},
       </if>
       <if test="params != null">
         #{params,jdbcType=LONGVARCHAR},
@@ -248,6 +257,9 @@
       <if test="record.updateTime != null">
         update_time = #{record.updateTime,jdbcType=BIGINT},
       </if>
+      <if test="record.beforeStatus != null">
+        before_status = #{record.beforeStatus,jdbcType=VARCHAR},
+      </if>
       <if test="record.params != null">
         params = #{record.params,jdbcType=LONGVARCHAR},
       </if>
@@ -270,6 +282,7 @@
       status = #{record.status,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=BIGINT},
       update_time = #{record.updateTime,jdbcType=BIGINT},
+      before_status = #{record.beforeStatus,jdbcType=VARCHAR},
       params = #{record.params,jdbcType=LONGVARCHAR},
       extParams = #{record.extparams,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
@@ -286,7 +299,8 @@
       instance_id = #{record.instanceId,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=BIGINT},
-      update_time = #{record.updateTime,jdbcType=BIGINT}
+      update_time = #{record.updateTime,jdbcType=BIGINT},
+      before_status = #{record.beforeStatus,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -318,6 +332,9 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=BIGINT},
       </if>
+      <if test="beforeStatus != null">
+        before_status = #{beforeStatus,jdbcType=VARCHAR},
+      </if>
       <if test="params != null">
         params = #{params,jdbcType=LONGVARCHAR},
       </if>
@@ -337,6 +354,7 @@
       status = #{status,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=BIGINT},
+      before_status = #{beforeStatus,jdbcType=VARCHAR},
       params = #{params,jdbcType=LONGVARCHAR},
       extParams = #{extparams,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
@@ -350,7 +368,8 @@
       instance_id = #{instanceId,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT},
-      update_time = #{updateTime,jdbcType=BIGINT}
+      update_time = #{updateTime,jdbcType=BIGINT},
+      before_status = #{beforeStatus,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

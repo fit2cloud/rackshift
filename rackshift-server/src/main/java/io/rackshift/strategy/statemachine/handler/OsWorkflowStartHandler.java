@@ -19,8 +19,7 @@ import javax.annotation.Resource;
 @EventHandlerAnnotation(LifeEventType.POST_OS_WORKFLOW_START)
 public class OsWorkflowStartHandler extends AbstractHandler {
 
-    @Autowired
-    private SimpMessagingTemplate template;
+
     @Resource
     private RackHDService rackHDService;
     @Resource
@@ -41,7 +40,7 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         JSONObject extraParams = requestDTO.getExtraParams();
         BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
         if (params == null) {
-            revert(event, getExecutionId(), getUser());
+            revert(event);
         }
         if (extraParams != null) {
             if (extraParams.containsKey("unit") && "GB".equalsIgnoreCase(extraParams.getString("unit"))) {
@@ -53,7 +52,7 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
         task.setInstanceId(workflowId);
         taskService.update(task);
-        template.convertAndSend("/topic/lifecycle", "");
+        notifyWebSocket();
     }
 
     private JSONObject setPartitionSize(JSONObject params) {

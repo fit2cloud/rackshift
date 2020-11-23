@@ -1,16 +1,19 @@
 package io.rackshift.job;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.BareMetalMapper;
+import io.rackshift.mybatis.mapper.ExecutionLogDetailsMapper;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.service.EndpointService;
 import io.rackshift.service.RackHDService;
 import io.rackshift.strategy.statemachine.LifeEvent;
 import io.rackshift.strategy.statemachine.LifeEventType;
 import io.rackshift.strategy.statemachine.StateMachine;
+import io.rackshift.utils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,8 @@ public class WorkflowJob {
     private RackHDService rackHDService;
     @Resource
     private StateMachine stateMachine;
+    @Resource
+    private ExecutionLogDetailsMapper executionLogDetailsMapper;
 
     /**
      * 任务执行
@@ -83,7 +88,9 @@ public class WorkflowJob {
             if (StringUtils.isNotBlank(task.getInstanceId())) {
                 BareMetal b = bareMetalMapper.selectByPrimaryKey(task.getBareMetalId());
                 Endpoint endpoint = endpointService.getById(b.getEndpointId());
-                String status = rackHDService.getWorkflowStatusById("http://" + endpoint.getIp() + ":9090", task.getInstanceId());
+                String status = rackHDService.getWorkflowStatusById(endpoint, task.getInstanceId());
+                //更新日志
+                writeDetailLog(endpoint, task);
                 //运行结束
                 if (!ServiceConstants.TaskStatusEnum.running.name().equals(status)) {
                     WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
@@ -100,10 +107,52 @@ public class WorkflowJob {
                     event.withWorkflowRequestDTO(requestDTO);
                     stateMachine.sendEvent(event);
                 }
+
             } else {
                 task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
                 task.setUpdateTime(System.currentTimeMillis());
                 taskMapper.updateByPrimaryKey(task);
+            }
+        }
+    }
+
+    /**
+     * 同步详细日志
+     *
+     * @param endpoint
+     * @param task
+     */
+    private void writeDetailLog(Endpoint endpoint, Task task) {
+        JSONObject runningWorkflow = rackHDService.getWorkflowById(endpoint, task.getInstanceId());
+        if (runningWorkflow.containsKey("tasks")) {
+            JSONArray tasks = runningWorkflow.getJSONArray("tasks");
+            for (int i = 0; i < tasks.size(); i++) {
+                JSONObject taskObj = tasks.getJSONObject(i);
+                ExecutionLogDetailsExample e = new ExecutionLogDetailsExample();
+                e.createCriteria().andInstanceIdEqualTo(taskObj.getString("instanceId"));
+                List<ExecutionLogDetails> logs = executionLogDetailsMapper.selectByExampleWithBLOBs(e);
+                if (logs.size() == 0) {
+                    ExecutionLogDetails ex = new ExecutionLogDetails();
+                    ex.setBareMetalId(task.getBareMetalId());
+                    ex.setInstanceId(taskObj.getString("instanceId"));
+                    ex.setLogId(task.getId());
+                    ex.setOperation(taskObj.getString("label"));
+                    ex.setStatus(taskObj.getString("state"));
+                    ex.setOutPut("子任务:" + taskObj.getString("label") + " 已提交,等待执行...");
+                    executionLogDetailsMapper.insertSelective(ex);
+                } else {
+                    ExecutionLogDetails ex = new ExecutionLogDetails();
+                    BeanUtils.copyBean(ex, logs.get(0));
+                    if (ServiceConstants.RackHDTaskStatusEnum.failed.name().equalsIgnoreCase(taskObj.getString("state"))) {
+                        ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行失败！详情：" + taskObj.getString("error"));
+                    } else if (ServiceConstants.RackHDTaskStatusEnum.succeeded.name().equalsIgnoreCase(taskObj.getString("state"))) {
+                        ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行成功！");
+                    } else if (ServiceConstants.RackHDTaskStatusEnum.cancelled.name().equalsIgnoreCase(taskObj.getString("state"))) {
+                        ex.setOutPut("子任务:" + taskObj.getString("label") + "已取消");
+                    }
+
+                    executionLogDetailsMapper.updateByPrimaryKeyWithBLOBs(ex);
+                }
             }
         }
     }
