@@ -510,17 +510,28 @@ export default {
     OBM, Discovery
   },
   computed: {},
+  destroyed() {
+    if (this.websocket) {
+      this.websocket.close();
+    }
+  },
   mounted() {
     if (!this.websocket) {
       this.websocket = new WebSocketUtil();
-      this.websocket.openSocket('lifecycle', this.getData);
+      this.websocket.openSocket('lifecycle', this.notify);
       this.getData();
     }
     this.getAllGraphDefinitions();
-    console.log(this.$router.params);
   }
   ,
   methods: {
+    notify(msg) {
+      this.getData();
+      this.$notify({
+        title: this.$t('server_message'),
+        message: msg,
+      });
+    },
     queryByRuleId(e) {
       if (e) {
         this.search = e;

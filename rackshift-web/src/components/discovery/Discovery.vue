@@ -323,7 +323,6 @@ export default {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
         this.loadingList = false;
-        WebSocketUtil.checkDoingThings(res.data.listObject, 'syncStatus', 'discovery', this.getData);
       });
     },
     refreshChildData() {

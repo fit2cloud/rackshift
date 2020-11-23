@@ -13,6 +13,7 @@ import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.Task;
 import io.rackshift.service.ExecutionLogService;
 import io.rackshift.service.TaskService;
+import io.rackshift.service.WorkflowService;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -38,6 +38,8 @@ public abstract class AbstractHandler implements IStateHandler {
     private CloudProviderManager metalProviderManager;
     @Resource
     private TaskService taskService;
+    @Resource
+    private WorkflowService workflowService;
 
     protected BareMetal getBareMetalById(String id) {
         return bareMetalManager.getBareMetalById(id);
@@ -129,11 +131,15 @@ public abstract class AbstractHandler implements IStateHandler {
         }
         bareMetal.setStatus(status.name());
         bareMetalManager.update(bareMetal, true);
-        notifyWebSocket();
+        notifyWebSocket(bareMetal, taskService.getById(event.getWorkflowRequestDTO().getTaskId()));
     }
 
-    protected void notifyWebSocket() {
-        template.convertAndSend("/topic/lifecycle", "");
-        template.convertAndSend("/topic/taskLifecycle", "");
+    protected void notifyWebSocket(BareMetal bareMetal, Task task) {
+        template.convertAndSend("/topic/lifecycle", String.format("裸金属：%s,状态变更为：%s", bareMetal.getMachineModel() + " " + bareMetal.getManagementIp(), bareMetal.getStatus()));
+        String msg = String.format("裸金属：%s,任务终止：%s,状态变更为：%s", bareMetal.getMachineModel() + " " + bareMetal.getManagementIp(), workflowService.getFriendlyName(task.getWorkFlowId()), task.getStatus());
+        if (ServiceConstants.TaskStatusEnum.running.name().equalsIgnoreCase(task.getStatus())) {
+            msg = String.format("裸金属：%s,任务开始：%s,状态变更为：%s", bareMetal.getMachineModel() + " " + bareMetal.getManagementIp(), workflowService.getFriendlyName(task.getWorkFlowId()), task.getStatus());
+        }
+        template.convertAndSend("/topic/taskLifecycle", msg);
     }
 }

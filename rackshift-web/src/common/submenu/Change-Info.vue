@@ -15,14 +15,18 @@
       </el-menu-item>
     </el-submenu>
   </el-menu>
+
 </template>
 <script>
 import HttpUtil from "@/common/utils/HttpUtil";
+import AboutUs from "@/common/about/AboutUs";
 
 let _ = require('lodash')
 export default {
+  components: {AboutUs},
   data() {
     return {
+      aboutUsVisible: false,
       language: null,
       user: JSON.parse(localStorage.getItem("user")),
       languages: [
@@ -37,8 +41,13 @@ export default {
           index: '2'
         },
         {
+          name: 'about',
+          value: 'about',
+          index: '3'
+        },
+        {
           name: 'logout',
-          index: '3',
+          index: '4',
           value: 'logout',
         },
       ],
@@ -59,6 +68,9 @@ export default {
         this.logout();
       } else if ('change_pwd' == command) {
         this.$router.push("info");
+      } else if ('about' == command) {
+        this.aboutUsVisible = true;
+        this.$emit('about');
       } else {
         window.open("https://rackshift.github.io/rackshift-docs-static/");
       }

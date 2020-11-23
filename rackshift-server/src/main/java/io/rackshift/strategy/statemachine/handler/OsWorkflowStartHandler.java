@@ -29,10 +29,8 @@ public class OsWorkflowStartHandler extends AbstractHandler {
 
     @Override
     public void handleYourself(LifeEvent event) {
-        changeStatus(event, LifeStatus.deploying, true);
         String taskId = event.getWorkflowRequestDTO().getTaskId();
         Task task = taskService.getById(taskId);
-
 
         //下发装机workflow
         WorkflowRequestDTO requestDTO = event.getWorkflowRequestDTO();
@@ -52,7 +50,7 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
         task.setInstanceId(workflowId);
         taskService.update(task);
-        notifyWebSocket();
+        changeStatus(event, LifeStatus.deploying, true);
     }
 
     private JSONObject setPartitionSize(JSONObject params) {

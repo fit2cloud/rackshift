@@ -8,7 +8,8 @@
         <div style="display: flex; float: right">
           <div class="align-right">
             <ChangeLanguage></ChangeLanguage>
-            <ChangeInfo></ChangeInfo>
+            <ChangeInfo @about="about"></ChangeInfo>
+            <AboutUs ref="about"></AboutUs>
           </div>
         </div>
 
@@ -42,11 +43,13 @@ import menu from './components/menu/menu'
 import HttpUtil from "./common/utils/HttpUtil";
 import ChangeLanguage from './common/submenu/Change-Language'
 import ChangeInfo from './common/submenu/Change-Info'
+import AboutUs from "@/common/about/AboutUs";
 
 export default {
   name: 'App',
   data() {
     return {
+      aboutUsVisible: false,
       menus: menu.menus,
       login: localStorage.getItem("login") == "true",
       user: JSON.parse(localStorage.getItem("user")),
@@ -56,7 +59,8 @@ export default {
   ,
   components: {
     ChangeLanguage,
-    ChangeInfo
+    ChangeInfo,
+    AboutUs
   }
   ,
   mounted() {
@@ -69,6 +73,9 @@ export default {
   }
   ,
   methods: {
+    about() {
+      this.$refs.about.open();
+    },
     logout() {
       HttpUtil.get("logout", null, () => {
         localStorage.removeItem("login");

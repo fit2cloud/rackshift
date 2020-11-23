@@ -147,4 +147,8 @@ public class WorkflowService {
 
         return ResultHolder.success(LifeEventType.getVisableTypes());
     }
+
+    public String getFriendlyName(String workflowId) {
+        return workflowManager.getFriendlyName(workflowId);
+    }
 }

@@ -1,8 +1,10 @@
 package io.rackshift.manager;
 
 import io.rackshift.model.WorkflowRequestDTO;
+import io.rackshift.mybatis.domain.WorkflowExample;
 import io.rackshift.mybatis.domain.WorkflowParamTemplatesExample;
 import io.rackshift.mybatis.domain.WorkflowParamTemplatesWithBLOBs;
+import io.rackshift.mybatis.mapper.WorkflowMapper;
 import io.rackshift.mybatis.mapper.WorkflowParamTemplatesMapper;
 import io.rackshift.utils.SessionUtil;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.util.List;
 public class WorkflowManager {
     @Resource
     private WorkflowParamTemplatesMapper workflowParamTemplatesMapper;
+    @Resource
+    private WorkflowMapper workflowMapper;
 
     public List<WorkflowParamTemplatesWithBLOBs> getParamsByName(String name) {
         WorkflowParamTemplatesExample example = new WorkflowParamTemplatesExample();
@@ -50,5 +54,11 @@ public class WorkflowManager {
             workflowParamTemplatesMapper.updateByPrimaryKeyWithBLOBs(workflowParamTemplates);
         }
         return workflowParamTemplates;
+    }
+
+    public String getFriendlyName(String workflowId) {
+        WorkflowExample e = new WorkflowExample();
+        e.createCriteria().andInjectableNameEqualTo(workflowId);
+        return workflowMapper.selectByExample(e).size() > 0 ? workflowMapper.selectByExample(e).get(0).getFriendlyName() : "";
     }
 }

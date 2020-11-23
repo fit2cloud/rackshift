@@ -188,14 +188,26 @@ export default {
       return '/task/upload?fileName=' + this.fileName;
     }
   },
+  destroyed() {
+    if (this.websocket) {
+      this.websocket.close();
+    }
+  },
   mounted() {
     if (!this.websocket) {
       this.websocket = new WebSocketUtil();
-      this.websocket.openSocket('taskLifecycle', this.getData);
+      this.websocket.openSocket('taskLifecycle', this.notify);
       this.getData();
     }
   },
   methods: {
+    notify(msg) {
+      this.getData();
+      this.$notify({
+        title: this.$t('server_message'),
+        message: msg,
+      });
+    },
     getLogs() {
       let that = this;
       HttpUtil.get("/task/logs?id=" + that.editObj.id, {}, (res) => {
@@ -294,9 +306,7 @@ export default {
         HttpUtil.get("/task/logs?id=" + that.editObj.id, {}, (res) => {
           that.editDialogVisible = true;
           that.logs = res.data;
-          if (that.editObj.status == 'running') {
-            that.refreshPointer = setInterval(that.getLogs, 2000);
-          }
+          that.refreshPointer = setInterval(that.getLogs, 2000);
         });
       }
     },

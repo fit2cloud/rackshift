@@ -352,5 +352,8 @@ export default {
     "username_or_id": "ID 或邮箱",
     "welcome": "欢迎回来，请输入用户名和密码登录RackShift",
     "no_more_logs": "无更多日志...",
+    "about": "关于",
+    "about_us": "关于",
+    "server_message": "服务器消息",
 
 }

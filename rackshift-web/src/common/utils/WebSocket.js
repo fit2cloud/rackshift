@@ -10,9 +10,9 @@ let WebSocketUtil = function () {
             this.stompClient = Stomp.over(socket);
             this.stompClient.connect({}, function (frame) {
                 try {
-                    that.stompClient.subscribe('/topic/' + topic, function (greeting) {
+                    that.stompClient.subscribe('/topic/' + topic, function (res) {
                         if (cal) {
-                            cal();
+                            cal(res.body);
                         }
                     });
                 } catch (e) {
@@ -22,19 +22,13 @@ let WebSocketUtil = function () {
 
             return this.stompClient;
         },
+        close: function () {
+            if (this.stompClient) {
+                this.stompClient.disconnect();
+            }
+        },
         sendMessage: function (msg) {
             this.stompClient.send("/app/hello", {}, msg);
-        },
-        checkDoingThings(list, statusPro, topic, callback) {
-            let exists = false;
-            if (list) {
-                for (let i = 0; i < list.length; i++) {
-                    if (list[i][statusPro] && ((list[i][statusPro].indexOf("ing") != -1) || list[i][statusPro].indexOf("ING") != -1)) {
-                        exists = true;
-                        break;
-                    }
-                }
-            }
         },
     }
 }

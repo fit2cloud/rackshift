@@ -349,4 +349,7 @@ export default {
     "username_or_id": "ID or Email",
     "welcome": "Welcome Come Back，Input UserName and Password to Login to   RackShift",
     "no_more_logs": "No More Logs...",
+    "about": "About",
+    "about_us": "About",
+    "server_message": "Message from Server",
 }

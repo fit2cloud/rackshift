@@ -47,7 +47,7 @@ public class WorkflowJob {
      * 2.2 检查本地和RackHD有无正在运行的任务
      * 2.3 如果没有则创建运行任务
      */
-    @Scheduled(fixedDelay = 1 * 60 * 1000)
+    @Scheduled(fixedDelay = 1 * 30 * 1000)
     public void run() {
         updateRunningTask();
         runCreatedTask();

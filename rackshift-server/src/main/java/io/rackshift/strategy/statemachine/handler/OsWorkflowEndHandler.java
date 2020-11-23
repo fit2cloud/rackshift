@@ -39,6 +39,6 @@ public class OsWorkflowEndHandler extends AbstractHandler {
         }
         bareMetalManager.update(bareMetal, true);
         taskService.update(task);
-        notifyWebSocket();
+        notifyWebSocket(bareMetal, task);
     }
 }
