@@ -15,7 +15,7 @@
 
       </el-header>
       <el-container style="height: calc(100vh - 40px)">
-        <el-aside style="background-color: #fff">
+        <el-aside style="background-color: #fff; min-height: 780px;">
           <el-menu id="main-menu" :unique-opened=false style="border-right: none;">
             <el-submenu :index="m.order" v-for="m in menus">
               <template slot="title"><i :class="m.icon"></i>{{ $t(m.name) }}</template>
