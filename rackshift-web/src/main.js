@@ -93,7 +93,6 @@ import RSDrawer from './common/front/mydrawer/index'
 
 Vue.use(RSDrawer);
 
-// import 'element-ui/lib/theme-chalk/index.css';
 import '../theme/index.css'
 
 Vue.filter('dateFormat', dateFormat);

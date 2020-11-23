@@ -355,5 +355,9 @@ export default {
     "about": "关于",
     "about_us": "关于",
     "server_message": "服务器消息",
+    "power_on": "开机",
+    "power_off": "关机",
+    "power_pxe": "PXE 重启",
+    "power_reset": "硬重启",
 
 }

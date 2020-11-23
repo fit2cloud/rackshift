@@ -352,4 +352,8 @@ export default {
     "about": "About",
     "about_us": "About",
     "server_message": "Message from Server",
+    "power_on": "Power On",
+    "power_off": "Power Off",
+    "power_pxe": "PXE Reset",
+    "power_reset": "Hard Power Reset",
 }

@@ -2,7 +2,7 @@
   <div id="app">
     <el-container v-if="login">
       <el-header id="main-header">
-        <div style="display: inline-block;">
+        <div style="display: inline-block; ">
           <img id="logo" src="./assets/rackshift-04.png" alt="">
         </div>
         <div style="display: flex; float: right">
@@ -14,8 +14,8 @@
         </div>
 
       </el-header>
-      <el-container>
-        <el-aside style="background-color: #F7F7F7">
+      <el-container style="height: calc(100vh - 40px)">
+        <el-aside style="background-color: #fff">
           <el-menu id="main-menu" :unique-opened=false style="border-right: none;">
             <el-submenu :index="m.order" v-for="m in menus">
               <template slot="title"><i :class="m.icon"></i>{{ $t(m.name) }}</template>
@@ -26,6 +26,18 @@
               </el-menu-item>
             </el-submenu>
           </el-menu>
+
+          <div class="rs-divider">
+          </div>
+
+          <a href="http://www.github.com/rackshift/rackshift" target="_blank" class="github">
+            <div>
+              <svg focusable="false" width="16" height="16">
+                <path d="M13,14H3c-0.6,0-1-0.4-1-1V3c0-0.6,0.4-1,1-1h5v1H3v10h10V8h1v5C14,13.6,13.6,14,13,14z"></path>
+                <path d="M10 1L10 2 13.3 2 9 6.3 9.7 7 14 2.7 14 6 15 6 15 1z"></path>
+              </svg>
+            </div>
+            <span class="text">GitHub</span></a>
         </el-aside>
 
         <el-container>
@@ -108,6 +120,7 @@ export default {
 
 body {
   color: #2B415C;
+  background: white;
   -webkit-font-smoothing: antialiased;
   margin: 0;
   padding: 0;
@@ -120,13 +133,13 @@ body {
 
 .el-aside {
   color: #333;
-  width: 220px !important;
-  border-right: none;
+  /*width: 220px !important;*/
+  border-right: 1px solid #e0e0e0;
   z-index: 1;
 }
 
 .container {
-
+  background: white;
 }
 
 .user-name {
@@ -160,7 +173,6 @@ body {
 }
 
 #main-menu {
-  background-color: #F7F7F7;
 }
 
 .machine-title {
@@ -278,5 +290,50 @@ button {
 #logo {
   width: 148px;
   height: 37px;
+}
+
+.rs-divider {
+  background-color: #DCDFE6;
+  position: relative;
+  display: block;
+  height: 1px;
+  margin: 10px 14px 10px 14px;
+}
+
+.github {
+  color: #161616;
+  display: flex;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 1rem;
+  text-decoration: none;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+
+.github > svg {
+  fill: #525252;
+}
+
+a.github:hover {
+  background: #e5e5e5;
+}
+
+.github .text {
+  overflow: hidden;
+  padding: 0 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #525252;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  letter-spacing: .1px;
+  -webkit-user-select: none;
+  user-select: none;
+  font-weight: 550;
 }
 </style>

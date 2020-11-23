@@ -54,85 +54,6 @@
   </div>
 </template>
 
-<style>
-.msg {
-  margin-top: 10px;
-  padding: 0 40px;
-  color: red;
-  text-align: center;
-}
-
-.title {
-  margin-top: 50px;
-  font-size: 32px;
-  letter-spacing: 0;
-  text-align: center;
-}
-
-.title > #s1 {
-  color: #999999;
-}
-
-.title > #s2 {
-  color: #151515;
-  font-size: 32px !important;
-}
-
-.login-container {
-  min-width: 800px;
-  max-width: 1440px;
-  height: 560px;
-  margin: calc((100vh - 560px) / 2) auto 0;
-  background-color: #FFFFFF;
-}
-
-.image {
-  background: url(../../assets/info.jpeg);
-  height: 560px;
-}
-
-.btn > .submit {
-  width: 100%;
-  border-radius: 0;
-}
-
-.border {
-  height: 2px;
-  margin: 20px auto 20px;
-  position: relative;
-  width: 80px;
-  background: #E95420;
-}
-
-.welcome {
-  margin-top: 50px;
-  font-size: 14px;
-  color: #999999;
-  letter-spacing: 0;
-  line-height: 18px;
-  text-align: center;
-}
-
-.form {
-  margin-top: 30px;
-  padding: 0 40px;
-}
-
-
-.btn {
-  margin-top: 40px;
-  padding: 0 40px;
-}
-
-.btn > .submit {
-  width: 100%;
-  border-radius: 0;
-  border-color: #E95420;
-  background-color: #E95420;
-}
-
-</style>
-
 <script>
 import HttpUtil from '../../common/utils/HttpUtil'
 
@@ -216,3 +137,87 @@ export default {
   }
 }
 </script>
+
+<style>
+
+
+.msg {
+  margin-top: 10px;
+  padding: 0 40px;
+  color: red;
+  text-align: center;
+}
+
+.title {
+  margin-top: 50px;
+  font-size: 32px;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.title > #s1 {
+  color: #999999;
+}
+
+.title > #s2 {
+  color: #151515;
+  font-size: 32px !important;
+}
+
+.login-container {
+  min-width: 800px;
+  max-width: 1440px;
+  height: 560px;
+  margin: calc((100vh - 560px) / 2) auto 0;
+  background-color: #FFFFFF;
+}
+
+.image {
+  background: url(../../assets/info.jpeg);
+  height: 560px;
+}
+
+.btn > .submit {
+  width: 100%;
+  border-radius: 0;
+}
+
+.border {
+  height: 2px;
+  margin: 20px auto 20px;
+  position: relative;
+  width: 80px;
+  background: #E95420;
+}
+
+.welcome {
+  margin-top: 50px;
+  font-size: 14px;
+  color: #999999;
+  letter-spacing: 0;
+  line-height: 18px;
+  text-align: center;
+}
+
+.form {
+  margin-top: 30px;
+  padding: 0 40px;
+}
+
+
+.btn {
+  margin-top: 40px;
+  padding: 0 40px;
+}
+
+.btn > .submit {
+  width: 100%;
+  border-radius: 0;
+  border-color: #E95420;
+  background-color: #E95420;
+}
+
+.logo {
+  margin: 30px 30px 0;
+}
+</style>

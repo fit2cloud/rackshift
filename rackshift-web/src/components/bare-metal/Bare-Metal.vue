@@ -156,7 +156,7 @@
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="power('off', scope.row)">{{ $t('poweroff') }}
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="power('reset', scope.row)">{{ $t('powercycle') }}
+                <el-dropdown-item @click.native="power('reset', scope.row)">{{ $t('reset') }}
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
                 </el-dropdown-item>
@@ -611,7 +611,7 @@ export default {
       }
     },
     power(opt, row) {
-      this.$confirm(this.$t('confirm') + '?', this.$t('tips'), {
+      this.$confirm(this.$t('confirm') + this.$t('power_' + opt) + '?', this.$t('tips'), {
         type: "warning"
       }).then(() => {
         HttpUtil.get("/bare-metal/power/" + row.id + "/" + opt, null, (res) => {

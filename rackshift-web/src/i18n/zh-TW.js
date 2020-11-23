@@ -354,4 +354,8 @@ export default {
     "about": "關於",
     "about_us": "關於",
     "server_message": "服務器消息",
+    "power_on": "開機",
+    "power_off": "關機",
+    "power_pxe": "PXE 重啓",
+    "power_reset": "硬重啓",
 }
