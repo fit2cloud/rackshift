@@ -131,29 +131,37 @@ public class WorkflowJob {
                 ExecutionLogDetailsExample e = new ExecutionLogDetailsExample();
                 e.createCriteria().andInstanceIdEqualTo(taskObj.getString("instanceId"));
                 List<ExecutionLogDetails> logs = executionLogDetailsMapper.selectByExampleWithBLOBs(e);
+                ExecutionLogDetails ex = new ExecutionLogDetails();
+
+
                 if (logs.size() == 0) {
-                    ExecutionLogDetails ex = new ExecutionLogDetails();
                     ex.setBareMetalId(task.getBareMetalId());
                     ex.setInstanceId(taskObj.getString("instanceId"));
                     ex.setLogId(task.getId());
                     ex.setOperation(taskObj.getString("label"));
                     ex.setStatus(taskObj.getString("state"));
-                    ex.setOutPut("子任务:" + taskObj.getString("label") + " 已提交,等待执行...");
+                    setSubTaskOutput(taskObj, ex);
                     executionLogDetailsMapper.insertSelective(ex);
                 } else {
-                    ExecutionLogDetails ex = new ExecutionLogDetails();
                     BeanUtils.copyBean(ex, logs.get(0));
-                    if (ServiceConstants.RackHDTaskStatusEnum.failed.name().equalsIgnoreCase(taskObj.getString("state"))) {
-                        ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行失败！详情：" + taskObj.getString("error"));
-                    } else if (ServiceConstants.RackHDTaskStatusEnum.succeeded.name().equalsIgnoreCase(taskObj.getString("state"))) {
-                        ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行成功！");
-                    } else if (ServiceConstants.RackHDTaskStatusEnum.cancelled.name().equalsIgnoreCase(taskObj.getString("state"))) {
-                        ex.setOutPut("子任务:" + taskObj.getString("label") + "已取消");
-                    }
-
+                    setSubTaskOutput(taskObj, ex);
                     executionLogDetailsMapper.updateByPrimaryKeyWithBLOBs(ex);
                 }
             }
+        }
+    }
+
+    private void setSubTaskOutput(JSONObject taskObj, ExecutionLogDetails ex) {
+        if (ServiceConstants.RackHDTaskStatusEnum.failed.name().equalsIgnoreCase(taskObj.getString("state"))) {
+            ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行失败！详情：" + taskObj.getString("error"));
+        } else if (ServiceConstants.RackHDTaskStatusEnum.succeeded.name().equalsIgnoreCase(taskObj.getString("state"))) {
+            ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行成功！");
+        } else if (ServiceConstants.RackHDTaskStatusEnum.cancelled.name().equalsIgnoreCase(taskObj.getString("state"))) {
+            ex.setOutPut("子任务:" + taskObj.getString("label") + "已取消");
+        } else if (ServiceConstants.RackHDTaskStatusEnum.timeout.name().equalsIgnoreCase(taskObj.getString("state"))) {
+            ex.setOutPut("子任务:" + taskObj.getString("label") + "已超时");
+        } else {
+            ex.setOutPut("子任务:" + taskObj.getString("label") + " 已提交,等待执行...");
         }
     }
 }

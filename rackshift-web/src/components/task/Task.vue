@@ -214,7 +214,8 @@ export default {
         that.editDialogVisible = true;
         that.logs = res.data;
         if (that.logs && that.logs.length) {
-          if (that.logs[that.logs.length - 1].status != 'pending') {
+          let lastRackHDLog = that.logs[that.logs.length - 1];
+          if (lastRackHDLog.instanceId && lastRackHDLog.status != 'pending') {
             that.getData(function () {
               that.editObj = _.find(that.tableData, (l) => l.id == that.editObj.id);
             });
