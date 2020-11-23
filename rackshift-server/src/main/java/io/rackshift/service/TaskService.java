@@ -146,6 +146,7 @@ public class TaskService {
         TaskExample e = new TaskExample();
         e.createCriteria().andBareMetalIdEqualTo(bareMetalId).andStatusEqualTo(ServiceConstants.TaskStatusEnum.created.name());
         e.or().andBareMetalIdEqualTo(bareMetalId).andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
+        e.setOrderByClause("create_time desc");
         List<Task> tasks = taskMapper.selectByExample(e);
         return tasks.size() > 0 ? tasks.get(0).getId() : null;
     }

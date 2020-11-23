@@ -115,7 +115,6 @@ public abstract class AbstractHandler implements IStateHandler {
         taskService.update(task);
         changeStatus(event, LifeStatus.ready, false);
         executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), String.format("错误：event:%s:worflow:%ss,参数:%s,回滚状态至%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString(), LifeStatus.ready));
-        notifyWebSocket();
     }
 
     protected void beforeChange(LifeStatus curStatus) {
@@ -130,6 +129,7 @@ public abstract class AbstractHandler implements IStateHandler {
         }
         bareMetal.setStatus(status.name());
         bareMetalManager.update(bareMetal, true);
+        notifyWebSocket();
     }
 
     protected void notifyWebSocket() {

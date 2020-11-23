@@ -503,7 +503,7 @@ export default {
       logPoller: null,
       currentParamConfig: '',
       loadingList: false,
-      webSocket: null
+      websocket: null
     }
   },
   components: {
@@ -511,7 +511,11 @@ export default {
   },
   computed: {},
   mounted() {
-    this.getData();
+    if (!this.websocket) {
+      this.websocket = new WebSocketUtil();
+      this.websocket.openSocket('lifecycle', this.getData);
+      this.getData();
+    }
     this.getAllGraphDefinitions();
     console.log(this.$router.params);
   }
@@ -668,7 +672,7 @@ export default {
       }
       this.getData();
     },
-    getData(accurate) {
+    getData(accurate, callback) {
       this.loadingList = true;
       if (this.search) {
         if (!accurate)
@@ -682,8 +686,10 @@ export default {
       HttpUtil.post("/bare-metal/list/" + this.query.pageIndex + "/" + this.query.pageSize, this.queryVO, (res) => {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
-        WebSocketUtil.checkDoingThings(res.data.listObject, 'status', 'lifecycle', this.getData);
         this.loadingList = false;
+        if (callback) {
+          callback();
+        }
       });
     },
     handleSizeChange(val) {

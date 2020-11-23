@@ -180,6 +180,7 @@ export default {
       allOsVersion: [],
       allEndPoints: [],
       fileName: null,
+      websocket: null
     };
   },
   computed: {
@@ -188,9 +189,28 @@ export default {
     }
   },
   mounted() {
-    this.getData();
+    if (!this.websocket) {
+      this.websocket = new WebSocketUtil();
+      this.websocket.openSocket('taskLifecycle', this.getData);
+      this.getData();
+    }
   },
   methods: {
+    getLogs() {
+      let that = this;
+      HttpUtil.get("/task/logs?id=" + that.editObj.id, {}, (res) => {
+        that.editDialogVisible = true;
+        that.logs = res.data;
+        if (that.logs && that.logs.length) {
+          if (that.logs[that.logs.length - 1].status != 'pending') {
+            that.getData(function () {
+              that.editObj = _.find(that.tableData, (l) => l.id == that.editObj.id);
+            });
+            clearInterval(that.refreshPointer);
+          }
+        }
+      })
+    },
     // 获取 easy-mock 的模拟数据
     getData(callback) {
       this.loadingList = true;
@@ -198,7 +218,6 @@ export default {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
         this.loadingList = false;
-        WebSocketUtil.checkDoingThings(res.data.listObject, 'status', 'taskLifecycle', this.getData);
         if (callback) {
           callback();
         }
@@ -276,20 +295,7 @@ export default {
           that.editDialogVisible = true;
           that.logs = res.data;
           if (that.editObj.status == 'running') {
-            that.refreshPointer = setInterval(function () {
-              HttpUtil.get("/task/logs?id=" + that.editObj.id, {}, (res) => {
-                that.editDialogVisible = true;
-                that.logs = res.data;
-                if (that.logs && that.logs.length) {
-                  if (that.logs[that.logs.length - 1].status != 'pending') {
-                    that.getData(function () {
-                      that.editObj = _.find(that.tableData, (l) => l.id == that.editObj.id);
-                    });
-                    clearInterval(that.refreshPointer);
-                  }
-                }
-              })
-            }, 2000);
+            that.refreshPointer = setInterval(that.getLogs, 2000);
           }
         });
       }

@@ -32,7 +32,7 @@ export default {
       if (this.type == "edit") {
         return "el-button";
       } else if (this.type == "del") {
-        return "el-button--primary";
+        return "el-button--danger";
       } else if (this.type == "sync") {
         return "el-button--success";
       } else {

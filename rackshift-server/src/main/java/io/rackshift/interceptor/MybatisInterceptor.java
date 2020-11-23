@@ -76,7 +76,8 @@ public class MybatisInterceptor implements Interceptor {
             if (filed.getName().equals("id") && !(parameter instanceof User)) {
                 try {
                     filed.setAccessible(true);
-                    filed.set(parameter, UUIDUtil.newUUID());
+                    if (filed.get(parameter) == null)
+                        filed.set(parameter, UUIDUtil.newUUID());
                     setIdSuccess = true;
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
@@ -91,7 +92,8 @@ public class MybatisInterceptor implements Interceptor {
                 if (filed.getName().equals("id") && !(parameter instanceof User)) {
                     try {
                         filed.setAccessible(true);
-                        filed.set(parameter, UUIDUtil.newUUID());
+                        if (filed.get(parameter) == null)
+                            filed.set(parameter, UUIDUtil.newUUID());
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
