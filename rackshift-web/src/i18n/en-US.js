@@ -348,4 +348,5 @@ export default {
     "Discovery_Rule": "Discovery Rule",
     "username_or_id": "ID or Email",
     "welcome": "Welcome Come Back，Input UserName and Password to Login to   RackShift",
+    "no_more_logs": "No More Logs...",
 }

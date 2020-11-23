@@ -351,5 +351,6 @@ export default {
     "Discovery_Rule": "发现规则",
     "username_or_id": "ID 或邮箱",
     "welcome": "欢迎回来，请输入用户名和密码登录RackShift",
+    "no_more_logs": "无更多日志...",
 
 }
