@@ -133,7 +133,7 @@ body {
 
 .el-aside {
   color: #333;
-  /*width: 220px !important;*/
+  width: 220px !important;
   border-right: 1px solid #e0e0e0;
   z-index: 1;
 }
