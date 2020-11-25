@@ -207,7 +207,7 @@
       </el-drawer>
 
       <!--obm-->
-      <el-dialog :title="$t('obms')" :visible.sync="fillOutObms" width="40vw">
+      <el-dialog :title="$t('obms')" :visible.sync="fillOutObms" width="35vw" :close-on-click-modal="false">
         <el-form :model="form">
           <el-form-item :label="$t('ip')" :label-width="formLabelWidth">
             <el-input v-model="curObm.ip" autocomplete="off"></el-input>
@@ -228,7 +228,8 @@
       </el-dialog>
 
       <!--参数配置-->
-      <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="80vw">
+      <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="80vw"
+                 :close-on-click-modal="false">
         <keep-alive>
           <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
                      :is="currentWfParamTemplate"
@@ -257,7 +258,8 @@
           :wrapperClosable="false"
 
           :before-close="handleClose">
-        <Discovery class="bare-discovery" @back="discoveryVisible =false" @queryByRuleId="queryByRuleId"></Discovery>
+        <Discovery class="bare-discovery" @back="discoveryVisible =false" @queryByRuleId="queryByRuleId"
+                   ref="discoveryCom"></Discovery>
       </el-drawer>
 
       <!--详情页-->
@@ -543,6 +545,7 @@ export default {
     },
     openDiscover() {
       this.discoveryVisible = true;
+      this.$refs.discoveryCom.getData();
     },
     statusFilter(row) {
       if (row.status.indexOf("ing") == -1) {
