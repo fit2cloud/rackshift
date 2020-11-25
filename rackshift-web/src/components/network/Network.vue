@@ -34,6 +34,18 @@
           <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="left"
                            v-for="c in columns" :sortable="c.sort"></el-table-column>
 
+          <el-table-column :label="$t('dhcp_enable')" align="left">
+            <template slot-scope="scope">
+              {{ $t("enabled") }}
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="pxeEnable" :label="$t('pxe_enable')" align="left">
+            <template slot-scope="scope">
+              {{ getValidProText(scope.row.pxeEnable) }}
+            </template>
+          </el-table-column>
+
           <el-table-column prop="createTime" :label="$t('create_time')" align="left">
             <template slot-scope="scope">
               {{ scope.row.createTime | dateFormat }}
@@ -91,16 +103,6 @@
               <el-form-item :label="$t('netmask')" prop="netmask">
                 <el-input v-model="editObj.netmask" autocomplete="off"
                           :placeholder="$t('pls_input_netmask')"></el-input>
-              </el-form-item>
-
-              <el-form-item :label="$t('dhcp_enable')" prop="dhcpEnable">
-                <el-switch
-                    v-model="editObj.dhcpEnable"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949"
-                    @change="changeDHCP"
-                >
-                </el-switch>
               </el-form-item>
 
               <el-form-item :label="$t('pxe_enable')" prop="pxeEnable">
@@ -175,16 +177,6 @@ export default {
           label: this.$t('name'),
           prop: "name",
           sort: true
-        },
-        {
-          label: this.$t('dhcp_enable'),
-          prop: "dhcpEnable",
-          sort: false
-        },
-        {
-          label: this.$t('pxe_enable'),
-          prop: "pxeEnable",
-          sort: false
         }
       ],
       editDialogVisible: false,
@@ -210,11 +202,6 @@ export default {
         this.editObj.dhcpEnable = true;
       }
     },
-    changeDHCP(e) {
-      if (!this.editObj.dhcpEnable) {
-        this.editObj.pxeEnable = false;
-      }
-    },
     getAllEndPoints() {
       HttpUtil.get("/endpoint/getAllEndPoints", {}, (res) => {
         this.allEndPoints = res.data;
@@ -222,7 +209,7 @@ export default {
       });
     },
     // 获取 easy-mock 的模拟数据
-    getValidProText(row, column, cellValue, index) {
+    getValidProText(cellValue) {
       if (cellValue === true) {
         return this.$t("enabled");
       } else if (cellValue === false) {

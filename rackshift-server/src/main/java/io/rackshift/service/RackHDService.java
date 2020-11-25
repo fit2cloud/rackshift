@@ -564,8 +564,26 @@ public class RackHDService {
                     pd.setSize((int) Math.ceil(Integer.valueOf(pdObj.getString("Total Size").replace("MB", "").replace(" ", "")) / 1024 / 0.931) + " GB");
                     pd.setType("NO".equalsIgnoreCase(pdObj.getString("SSD")) ? "HDD" : "SSD");
                     pd.setManufactor(pdObj.getString("Vendor"));
-                    pd.setEnclosureId(Integer.valueOf(pdObj.getString("Reported Location").split("Enclosure")[1].split(",")[0].replace(" ", "")));
-                    pd.setDrive(pdObj.getString("Reported Location").split("Slot")[1].split("\\(")[0].replace(" ", ""));
+                    if (pdObj.containsKey("EnclosureId")) {
+                        pd.setEnclosureId(pdObj.getInteger("EnclosureId"));
+                    } else {
+                        if (pdObj.containsKey("Reported Location"))
+                            pd.setEnclosureId(Integer.valueOf(pdObj.getString("Reported Location").split("Enclosure")[1].split(",")[0].replace(" ", "")));
+                    }
+                    if (pdObj.containsKey("EnclosureId")) {
+                        pd.setEnclosureId(pdObj.getInteger("EnclosureId"));
+                    } else {
+                        if (pdObj.containsKey("Reported Location"))
+                            pd.setEnclosureId(Integer.valueOf(pdObj.getString("Reported Location").split("Enclosure")[1].split(",")[0].replace(" ", "")));
+                    }
+
+                    if (pdObj.containsKey("Slot")) {
+                        pd.setDrive(pdObj.getString("Slot"));
+                    } else {
+                        if (pdObj.containsKey("Reported Location"))
+                            pd.setDrive(pdObj.getString("Reported Location").split("Slot")[1].split("\\(")[0].replace(" ", ""));
+                    }
+
                     pd.setSyncTime(catalogObj.getDate("updatedAt").getTime());
                     disks.add(pd);
                 }

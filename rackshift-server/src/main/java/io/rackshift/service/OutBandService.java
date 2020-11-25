@@ -67,8 +67,6 @@ public class OutBandService {
         } else {
             bareMetalManager.update(bareMetal, false);
         }
-
-        template.convertAndSend("/topic/lifecycle", "");
     }
 
     public Object add(OutBandDTO queryVO) {

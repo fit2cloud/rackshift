@@ -668,6 +668,7 @@ export default {
         this.obmLoading = false;
         this.curObm = {};
         this.fillOutObms = false;
+        this.$message.success(this.$t('opt_success'));
         this.getData();
       }, (res) => {
         this.obmLoading = false;
