@@ -51,12 +51,17 @@ RackShift 是一款开源的裸金属服务器全生命周期管理平台，功�
 - 下载最新 Release 安装包，并且使用 tar -zxvf 解压进入解压后的 installer 目录
 - ./install.sh
 
+## 体验环境
+- http://rs.dahaia123.top:8080/ 账号密码可以加微信群或 QQ 群私聊群主获取
 ## 帮助文档
 - [帮助文档](https://rackshift.github.io/rackshift-docs-static/)
 
 ## 微信群
 
 <img src="https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-code20201126.jpg" width="300" height="300" align="middle" />
+
+## QQ 群
+- 693376431
 
 ## 致谢
 
