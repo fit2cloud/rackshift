@@ -42,7 +42,7 @@
 
           <el-table-column prop="pxeEnable" :label="$t('pxe_enable')" align="left">
             <template slot-scope="scope">
-              {{ getValidProText(scope.row.pxeEnable) }}
+              {{ getValidProText(null, null, scope.row.pxeEnable) }}
             </template>
           </el-table-column>
 
@@ -209,7 +209,7 @@ export default {
       });
     },
     // 获取 easy-mock 的模拟数据
-    getValidProText(cellValue) {
+    getValidProText(row, column, cellValue, index) {
       if (cellValue === true) {
         return this.$t("enabled");
       } else if (cellValue === false) {
