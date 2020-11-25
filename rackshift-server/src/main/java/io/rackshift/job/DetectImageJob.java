@@ -24,28 +24,32 @@ public class DetectImageJob {
 
     @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void run() {
-        if (new File(fileUploadBase).exists()) {
-            List<Image> imageList = imageService.list(new ImageDTO());
-            imageList.forEach(i -> {
+        try {
+            if (new File(fileUploadBase).exists()) {
+                List<Image> imageList = imageService.list(new ImageDTO());
+                imageList.forEach(i -> {
 
-                i.setStatus(ServiceConstants.ImageStatusEnum.detected.name());
-                if (StringUtils.isAnyBlank(i.getFilePath(), i.getMountPath())) {
-                    i.setStatus(ServiceConstants.ImageStatusEnum.error.name());
-                }
+                    i.setStatus(ServiceConstants.ImageStatusEnum.detected.name());
+                    if (StringUtils.isAnyBlank(i.getFilePath(), i.getMountPath())) {
+                        i.setStatus(ServiceConstants.ImageStatusEnum.error.name());
+                    }
 
-                if (!new File(i.getFilePath()).exists()) {
-                    LogUtil.error(String.format("image file %s not exists!", i.getFilePath()));
-                    i.setStatus(ServiceConstants.ImageStatusEnum.not_detected.name());
-                }
+                    if (!new File(i.getFilePath()).exists()) {
+                        LogUtil.error(String.format("image file %s not exists!", i.getFilePath()));
+                        i.setStatus(ServiceConstants.ImageStatusEnum.not_detected.name());
+                    }
 
-                if (!new File(i.getMountPath()).exists()) {
-                    LogUtil.error(String.format("image file %s not exists!", i.getMountPath()));
-                    i.setStatus(ServiceConstants.ImageStatusEnum.not_detected.name());
-                }
-                imageService.update(i);
-            });
-        } else {
-            LogUtil.error("fileUploadBase not exists!");
+                    if (!new File(i.getMountPath()).exists()) {
+                        LogUtil.error(String.format("image file %s not exists!", i.getMountPath()));
+                        i.setStatus(ServiceConstants.ImageStatusEnum.not_detected.name());
+                    }
+                    imageService.update(i);
+                });
+            } else {
+                LogUtil.error("fileUploadBase not exists!");
+            }
+        } catch (Exception e) {
+            LogUtil.error("同步镜像在位状态失败!");
         }
     }
 }

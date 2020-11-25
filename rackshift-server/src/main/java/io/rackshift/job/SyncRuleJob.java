@@ -19,31 +19,37 @@ public class SyncRuleJob {
     private BareMetalRuleMapper bareMetalRuleMapper;
 
     @Scheduled(fixedRate = 60 * 60 * 1000)
-    public void run() {
+    public boolean run() {
+
         BareMetalRuleExample e = new BareMetalRuleExample();
         List<BareMetalRule> rules = bareMetalRuleMapper.selectByExample(e);
 
-        rules.forEach(r -> {
-            String credentials = r.getCredentialParam();
-            if(StringUtils.isNotBlank(credentials)){
-                JSONArray paramsArr = JSONArray.parseArray(credentials);
-                String startIp , endIp, netMask;
-                startIp = r.getStartIp();
-                endIp = r.getEndIp();
-                netMask = r.getMask();
+        try {
+            rules.forEach(r -> {
+                String credentials = r.getCredentialParam();
+                if (StringUtils.isNotBlank(credentials)) {
+                    JSONArray paramsArr = JSONArray.parseArray(credentials);
+                    String startIp, endIp, netMask;
+                    startIp = r.getStartIp();
+                    endIp = r.getEndIp();
+                    netMask = r.getMask();
 
 
-                List<String> ips = IpUtil.getIpRange(startIp, endIp, netMask);
-                for (String ip : ips) {
+                    List<String> ips = IpUtil.getIpRange(startIp, endIp, netMask);
+                    for (String ip : ips) {
 
+                    }
+
+                    paramsArr.forEach(p -> {
+                        JSONObject param = (JSONObject) p;
+
+                    });
                 }
-
-                paramsArr.forEach(p->{
-                    JSONObject param = (JSONObject)p;
-
-                });
-            }
-        });
+            });
+            return true;
+        } catch (Exception e1) {
+            return false;
+        }
     }
 
 }

@@ -27,28 +27,33 @@ public class SyncRackJob {
 
     //    @Scheduled(fixedDelay = 1000)
     @Scheduled(fixedDelay = 300 * 1000)
-    public void run() {
-        List<MachineEntity> entities = new LinkedList<>();
-        JSONArray nodesArr = null;
+    public boolean run() {
+        try {
+            List<MachineEntity> entities = new LinkedList<>();
+            JSONArray nodesArr = null;
 
-        for (Endpoint endPoint : workflowConfig.getEndPoints()) {
+            for (Endpoint endPoint : workflowConfig.getEndPoints()) {
 
-            nodesArr = JSONArray.parseArray(RackHDHttpClientUtil.get("http://" + endPoint.getIp() + ":9090" + RackHDConstants.NODES_URL, null));
+                nodesArr = JSONArray.parseArray(RackHDHttpClientUtil.get("http://" + endPoint.getIp() + ":9090" + RackHDConstants.NODES_URL, null));
 
-            for (int i = 0; i < nodesArr.size(); i++) {
-                JSONObject nodeObj = nodesArr.getJSONObject(i);
-                String type = nodeObj.getString("type");
-                if ("compute".equalsIgnoreCase(type)) {
-                    MachineEntity en = rackHDService.getNodeEntity("http://" + endPoint.getIp() + ":9090", nodeObj.getString("id"), null);
-                    if (en != null) {
-                        en.setEndPoint(endPoint.getId());
-                        entities.add(en);
+                for (int i = 0; i < nodesArr.size(); i++) {
+                    JSONObject nodeObj = nodesArr.getJSONObject(i);
+                    String type = nodeObj.getString("type");
+                    if ("compute".equalsIgnoreCase(type)) {
+                        MachineEntity en = rackHDService.getNodeEntity("http://" + endPoint.getIp() + ":9090", nodeObj.getString("id"), null);
+                        if (en != null) {
+                            en.setEndPoint(endPoint.getId());
+                            entities.add(en);
+                        }
                     }
                 }
+                entities.forEach(e -> {
+                    bareMetalManager.saveOrUpdateEntity(e);
+                });
             }
-            entities.forEach(e -> {
-                bareMetalManager.saveOrUpdateEntity(e);
-            });
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

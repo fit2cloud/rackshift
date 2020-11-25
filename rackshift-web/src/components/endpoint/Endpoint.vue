@@ -63,6 +63,7 @@
 
               <RSButton @click="handleEdit(scope.row, 'edit')"></RSButton>
               <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
+              <RSButton @click="handleEdit(scope.row, 'sync')" type="sync" :tip="$t('sync')"></RSButton>
 
             </template>
           </el-table-column>
@@ -307,12 +308,15 @@ export default {
             this.getData();
           });
         })
-      } else {
-        this.editDialogVisible = true;
-        this.editType = type;
-        this.editObj = {
-          status: "1"
-        };
+      } else if (type == 'sync') {
+        HttpUtil.get("/endpoint/sync", {}, (res) => {
+          if (res.data) {
+            this.$message.success(this.$t('sync_success'));
+          } else {
+            this.$message.success(this.$t('sync_fail'));
+          }
+          this.getData();
+        });
       }
     },
     // 分页导航

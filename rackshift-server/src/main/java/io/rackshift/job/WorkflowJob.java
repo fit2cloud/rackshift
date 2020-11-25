@@ -14,6 +14,8 @@ import io.rackshift.strategy.statemachine.LifeEvent;
 import io.rackshift.strategy.statemachine.LifeEventType;
 import io.rackshift.strategy.statemachine.StateMachine;
 import io.rackshift.utils.BeanUtils;
+import io.rackshift.utils.ExceptionUtils;
+import io.rackshift.utils.LogUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -48,9 +50,15 @@ public class WorkflowJob {
      * 2.3 如果没有则创建运行任务
      */
     @Scheduled(fixedDelay = 1 * 30 * 1000)
-    public void run() {
-        updateRunningTask();
-        runCreatedTask();
+    public boolean run() {
+        try {
+            updateRunningTask();
+            runCreatedTask();
+        } catch (Exception e) {
+            LogUtil.error("执行任务失败！", ExceptionUtils.getExceptionDetail(e));
+            return false;
+        }
+        return true;
     }
 
     private void runCreatedTask() {

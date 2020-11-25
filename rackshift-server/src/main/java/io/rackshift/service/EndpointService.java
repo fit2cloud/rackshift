@@ -3,6 +3,8 @@ package io.rackshift.service;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.config.WorkflowConfig;
 import io.rackshift.constants.ServiceConstants;
+import io.rackshift.job.EndpointPoller;
+import io.rackshift.job.SyncRackJob;
 import io.rackshift.model.EndpointDTO;
 import io.rackshift.mybatis.domain.Endpoint;
 import io.rackshift.mybatis.domain.EndpointExample;
@@ -25,6 +27,10 @@ public class EndpointService {
     private ApplicationContext applicationContext;
     @Resource
     private WorkflowConfig workflowConfig;
+    @Resource
+    private SyncRackJob syncRackJob;
+    @Resource
+    private EndpointPoller endpointPoller;
 
     public Object add(EndpointDTO queryVO) {
 
@@ -116,5 +122,9 @@ public class EndpointService {
             return null;
         }
         return endpointMapper.selectByPrimaryKey(id);
+    }
+
+    public boolean sync() {
+        return syncRackJob.run() && endpointPoller.run();
     }
 }

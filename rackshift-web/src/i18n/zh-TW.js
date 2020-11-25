@@ -358,4 +358,6 @@ export default {
     "power_off": "關機",
     "power_pxe": "PXE 重啓",
     "power_reset": "硬重啓",
+    "sync_success": "同步成功",
+    "sync_fail": "同步失敗",
 }

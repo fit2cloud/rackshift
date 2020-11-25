@@ -356,4 +356,6 @@ export default {
     "power_off": "Power Off",
     "power_pxe": "PXE Reset",
     "power_reset": "Hard Power Reset",
+    "sync_success": "sync success",
+    "sync_fail": "sync fail",
 }
