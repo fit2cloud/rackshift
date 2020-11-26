@@ -358,4 +358,5 @@ export default {
     "power_reset": "Hard Power Reset",
     "sync_success": "sync success",
     "sync_fail": "sync fail",
+    "Executor": "Executor",
 }

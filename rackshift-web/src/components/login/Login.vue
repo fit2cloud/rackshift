@@ -170,6 +170,7 @@ export default {
   height: 560px;
   margin: calc((100vh - 560px) / 2) auto 0;
   background-color: #FFFFFF;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
 }
 
 .image {

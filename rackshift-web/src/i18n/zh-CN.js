@@ -43,7 +43,7 @@ export default {
     "add_workflow": "添加工作流",
     "network_card": "网卡",
     "endpoint": "代理节点",
-    "pls_select_bare_metal": "请选择裸金属服务器",
+    "pls_select_bare_metal": "请选择将执行工作流的裸金属服务器",
     "start_ip": "起始 IP",
     "edit_execution_log": "编辑部署日志",
     "pls_input_start_ip": "请输入开始ip",
@@ -361,5 +361,5 @@ export default {
     "power_reset": "硬重启",
     "sync_success": "同步成功",
     "sync_fail": "同步失败",
-
+    "Executor": "工作流执行器",
 }

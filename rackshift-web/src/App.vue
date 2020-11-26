@@ -336,4 +336,8 @@ a.github:hover {
   user-select: none;
   font-weight: 550;
 }
+
+.center {
+  text-align: center;
+}
 </style>
