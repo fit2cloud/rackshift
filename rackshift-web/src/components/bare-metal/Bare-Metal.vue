@@ -1,77 +1,81 @@
 <template>
   <el-tabs v-model="activeName" style="width:100vw;min-width: 1300px;">
-    <el-tab-pane :label="$t('bare_metal')" name="bare-metal">
+    <el-tab-pane :label="$t('Bare Metal Server')" name="bare-metal">
       <div class="machine-title2">
         <el-button-group class="batch-button">
           <el-button type="primary" icon="el-icon-delete" @click="delAllSelection">{{ $t('del') }}
           </el-button>
           <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
           <el-button type="primary" icon="el-icon-discover" @click="openDiscover">{{ $t('Discovery') }}</el-button>
-          <el-button type="primary" icon="el-icon-caret-right" @click="runWorkflow">{{ $t('Run') }}</el-button>
+          <el-button type="primary" icon="el-icon-caret-right" @click="openRunWorkflow">{{
+              $t('Workflow')
+            }}
+          </el-button>
         </el-button-group>
       </div>
-      <div id="control" style="display: flex;">
+      <!--      <div id="control" style="display: none;">-->
+      <!--        &lt;!&ndash;      <div id="control" style="display: flex;">&ndash;&gt;-->
 
-        <div id="workflow-selector" style="display: flex;">
-          <div id="select-workflow">
-            <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
-              {{ $t('Workflow') }}
-            </div>
-            <div class="run-splitter h25"></div>
-            <el-select v-model="wfRequest.workflow" filterable :placeholder="$t('please_select')"
-                       @change="getParamsTemplate">
-              <el-option
-                  v-for="g in supportedWorkflow"
-                  :label="g.friendlyName"
-                  :value="g.id"></el-option>
-            </el-select>
+      <!--        <div id="workflow-selector" style="display: flex;">-->
+      <!--          <div id="select-workflow">-->
+      <!--            <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">-->
+      <!--              {{ $t('Workflow') }}-->
+      <!--            </div>-->
+      <!--            <div class="run-splitter h25"></div>-->
+      <!--            <el-select v-model="wfRequest.workflow" filterable :placeholder="$t('please_select')"-->
+      <!--                       @change="getParamsTemplate">-->
+      <!--              <el-option-->
+      <!--                  v-for="g in supportedWorkflow"-->
+      <!--                  :label="$t(g.friendlyName)"-->
+      <!--                  :value="g.id"></el-option>-->
+      <!--            </el-select>-->
 
-            <el-button :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"
-                       @click="addToSelectedWorkflow"
-                       class="h50 ml10"><span
-                class="el-icon-circle-plus"></span>{{ $t('add_to_selected_wf_list') }}
-            </el-button>
-          </div>
-        </div>
+      <!--            <el-button :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"-->
+      <!--                       @click="addToSelectedWorkflow"-->
+      <!--                       class="h50 ml10"><span-->
+      <!--                class="el-icon-circle-plus"></span>{{ $t('add_to_selected_wf_list') }}-->
+      <!--            </el-button>-->
+      <!--          </div>-->
+      <!--        </div>-->
 
-        <div id="action-list">
-          <div class="el-icon-s-operation h25"
-               style="border-bottom: yellowgreen 1px solid;width: 100%;">
-            <el-badge :value="selectedWorkflow.length" class="item" type="primary" v-show="selectedWorkflow.length">
-              {{ $t('selected_workflows') }}
-            </el-badge>
-            <span v-show="selectedWorkflow.length == 0">
-              {{ $t('selected_workflows') }}
-              </span>
-          </div>
-          <div>
-            <el-card v-for="(w, $index) in selectedWorkflow" style="height:100%;">
-              <el-row>
-                <el-col :span="6">
-                  <el-button @click="deleteSelectedWorkflow($index)" class="h50 ml10"><span
-                      class="el-icon-remove"></span>{{ $t('del') }}
-                  </el-button>
-                </el-col>
+      <!--        <div id="action-list">-->
+      <!--          <div class="el-icon-s-operation h25"-->
+      <!--               style="border-bottom: yellowgreen 1px solid;width: 100%;">-->
+      <!--            <el-badge :value="selectedWorkflow.length" class="item" type="primary" v-show="selectedWorkflow.length">-->
+      <!--              {{ $t('selected_workflows') }}-->
+      <!--            </el-badge>-->
+      <!--            <span v-show="selectedWorkflow.length == 0">-->
+      <!--              {{ $t('selected_workflows') }}-->
+      <!--              </span>-->
+      <!--          </div>-->
+      <!--          <div>-->
+      <!--            <el-card v-for="(w, $index) in selectedWorkflow" style="height:100%;">-->
+      <!--              <el-row>-->
+      <!--                <el-col :span="6">-->
+      <!--                  <el-button @click="deleteSelectedWorkflow($index)" class="h50 ml10"><span-->
+      <!--                      class="el-icon-remove"></span>{{ $t('del') }}-->
+      <!--                  </el-button>-->
+      <!--                </el-col>-->
 
-                <el-col :span="10">
-                  {{ w.machineModel + ' ' + w.machineSn }}
-                  <br>
-                  {{ w.friendlyName }}
-                </el-col>
+      <!--                <el-col :span="10">-->
+      <!--                  {{ w.machineModel + ' ' + w.machineSn }}-->
+      <!--                  <br>-->
+      <!--                  {{ w.friendlyName }}-->
+      <!--                </el-col>-->
 
-                <el-col :span="8">
-                  <el-button @click="editWfParams($index)" v-if="w.settable">
-                    {{ $t('set_workflow_param') }}
-                  </el-button>
-                  <span v-if="!w.settable">
-                                {{ $t('no_nessary_to_set') }}
-                              </span>
-                </el-col>
-              </el-row>
-            </el-card>
-          </div>
-        </div>
-      </div>
+      <!--                <el-col :span="8">-->
+      <!--                  <el-button @click="editWfParams($index)" v-if="w.settable">-->
+      <!--                    {{ $t('set_workflow_param') }}-->
+      <!--                  </el-button>-->
+      <!--                  <span v-if="!w.settable">-->
+      <!--                    {{ $t('no_nessary_to_set') }}-->
+      <!--                   </span>-->
+      <!--                </el-col>-->
+      <!--              </el-row>-->
+      <!--            </el-card>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
 
       <el-table
           :data="tableData"
@@ -391,6 +395,107 @@
         </div>
       </drawer>
     </el-tab-pane>
+
+
+    <!-- 执行器 start -->
+    <drawer
+        :visible.sync="actionDrawer"
+        direction="btt"
+        :with-header="false"
+        size="70%"
+        :before-close="handleClose">
+      <el-divider>{{ $t('Executor') }}</el-divider>
+      <div id="control-drawer">
+
+        <div id="run-workflow">
+          <div class="el-icon-caret-right h25"
+               style="border-bottom: yellowgreen 1px solid;    width: 100%;">{{ $t('Run') }}
+          </div>
+          <div class="run-splitter h25"></div>
+          <div class="center">
+            <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
+            <!--                            <el-button class="el-icon-close h50"></el-button>-->
+          </div>
+        </div>
+
+        <div id="workflow-selector" style="display: flex;">
+          <div id="select-workflow">
+            <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+              {{ $t('Workflow') }}
+            </div>
+            <div class="run-splitter h25"></div>
+            <el-select v-model="wfRequest.workflow" filterable :placeholder="$t('please_select')"
+                       @change="getParamsTemplate">
+              <!--              <el-option-->
+              <!--                  v-for="g in supportedWorkflow"-->
+              <!--                  :label="$t(g.friendlyName)"-->
+              <!--                  :value="g.id"></el-option>-->
+
+              <el-option-group
+                  v-for="group in groupedSupportedWorkflow"
+                  :key="group.key"
+                  :label="$t(group.label)">
+                <el-option
+                    v-for="item in group.items"
+                    :label="$t(item.friendlyName)"
+                    :value="item.id">
+                </el-option>
+              </el-option-group>
+
+            </el-select>
+
+            <el-button :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"
+                       @click="addToSelectedWorkflow"
+                       class="h50 ml10"><span
+                class="el-icon-circle-plus"></span>{{ $t('add_to_selected_wf_list') }}
+            </el-button>
+          </div>
+        </div>
+
+        <div id="action-list">
+          <div class="el-icon-s-operation h25"
+               style="border-bottom: yellowgreen 1px solid;width: 100%;">
+            <el-badge :value="selectedWorkflow.length" class="item" type="primary" v-show="selectedWorkflow.length">
+              {{ $t('selected_workflows') }}
+            </el-badge>
+            <span v-show="selectedWorkflow.length == 0">
+              {{ $t('selected_workflows') }}
+              </span>
+          </div>
+          <div style="display: block;">
+            <el-card v-for="(w, $index) in selectedWorkflow" style="height:100%;">
+              <el-row>
+                <el-col :span="6">
+                  <el-button @click="deleteSelectedWorkflow($index)" class="h50 ml10"><span
+                      class="el-icon-remove"></span>{{ $t('del') }}
+                  </el-button>
+                </el-col>
+
+                <el-col :span="10">
+                  {{ w.machineModel + ' ' + w.machineSn }}
+                  <br>
+                  {{ w.friendlyName }}
+                </el-col>
+
+                <el-col :span="8">
+                  <el-button @click="editWfParams($index)" v-if="w.settable">
+                    {{ $t('set_workflow_param') }}
+                  </el-button>
+                  <span v-if="!w.settable">
+                    {{ $t('no_nessary_to_set') }}
+                   </span>
+                </el-col>
+              </el-row>
+            </el-card>
+          </div>
+        </div>
+
+
+      </div>
+
+    </drawer>
+    <!-- 执行器 end -->
+
   </el-tabs>
 </template>
 
@@ -410,6 +515,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      groupedSupportedWorkflow: [],
       discoveryVisible: false,
       search: null,
       fillWfParams: false,
@@ -463,6 +569,7 @@ export default {
         },
       ],
       detailDrawer: false,
+      actionDrawer: false,
       editType: 'edit',
       editObj: {
         name: null,
@@ -713,6 +820,7 @@ export default {
     },
     handleClose() {
       this.detailDrawer = false;
+      this.actionDrawer = false;
       this.discoveryVisible = false;
     },
     handleCloseExecutionLog() {
@@ -756,7 +864,7 @@ export default {
       }).then(() => {
         let ids = this.getSelectedIds();
         if (!ids || ids.length == 0) {
-          this.$message.error(this.$t('pls_select_bare_metal') + "!");
+          this.$message.error(this.$t('pls_select_') + this.$t('Bare Metal Server') + "!");
           return;
         }
         HttpUtil.post("/bare-metal/del", ids, (res) => {
@@ -804,8 +912,31 @@ export default {
           });
         }
         this.supportedWorkflow = res.data;
+        this.groupedSupportedWorkflow = this.groupWorkflow(res.data);
       });
     },
+    groupWorkflow(data) {
+      let map = _.groupBy(data, 'eventType');
+      let r = [];
+      let that = this;
+      Object.keys(map).forEach(o => {
+        r.push({
+              key: o,
+              label: that.$t(o),
+              items: map[o]
+            }
+        );
+      });
+      return r;
+    },
+    openRunWorkflow() {
+      if (!this.multipleSelection.length) {
+        this.$message.error(this.$t('pls_select_bare_metal') + "!");
+        return;
+      }
+      this.actionDrawer = true;
+    },
+
     runWorkflow() {
       if (!this.selectedWorkflow.length) {
         this.$message.error(this.$t('pls_select_workflow') + "!");
@@ -906,18 +1037,15 @@ export default {
             } else {
               that.$set(that, 'workflowParam', JSON.parse(paramTemplate.paramsTemplate));
               that.$set(that, 'extraParams', JSON.parse(paramTemplate.extraParams));
+              that.selectedWorkflow[that.selectedWorkflow.length - 1].params = JSON.parse(paramTemplate.paramsTemplate);
+              that.selectedWorkflow[that.selectedWorkflow.length - 1].extraParams = JSON.parse(paramTemplate.extraParams);
             }
-
-            that.selectedWorkflow[that.selectedWorkflow.length - 1].params = JSON.parse(paramTemplate.paramsTemplate);
-            that.selectedWorkflow[that.selectedWorkflow.length - 1].extraParams = JSON.parse(paramTemplate.extraParams);
           } else {
             that.selectedWorkflow[that.selectedWorkflow.length - 1].params = originWf.defaultParams;
             that.$set(that, 'workflowParam', originWf.defaultParams);
             that.$set(that, 'extraParams', null);
           }
         }
-        console.log("device : " + this.selectedWorkflow[this.selectedWorkflow.length - 1].params.options.defaults.networkDevices[0].device);
-        // that.$refs.multipleTable.clearSelection();
       }
     }
     ,
@@ -964,15 +1092,15 @@ export default {
 #action-list {
   border: solid #d7d2d2 1px;
   width: 100%;
-  height: 120px;
+  min-height: 120px;
   padding: 10px 10px 15px 10px;
   border-radius: 5px;
   margin: 0 10px;
-  overflow: auto;
+  /*overflow: auto;*/
 }
 
 .h25 {
-  height: 25%;
+  height: 30px;
 }
 
 #control {
@@ -983,6 +1111,16 @@ export default {
   padding-left: 10px;
   border-left: none;
 }
+
+#control-drawer {
+  display: flex;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  /*border: solid #d7d2d2 1px;*/
+  padding-left: 10px;
+  border-left: none;
+}
+
 
 .ml10 {
   margin-left: 10px;
@@ -1004,7 +1142,6 @@ export default {
 }
 
 .detail-pane {
-  overflow-x: scroll;
   color: #303133;
 }
 
