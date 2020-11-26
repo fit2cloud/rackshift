@@ -26,7 +26,7 @@ public class SyncRackJob {
     private WorkflowConfig workflowConfig;
 
     //    @Scheduled(fixedDelay = 1000)
-    @Scheduled(fixedDelay = 300 * 1000)
+    @Scheduled(fixedDelay = 120 * 1000)
     public boolean run() {
         try {
             List<MachineEntity> entities = new LinkedList<>();
