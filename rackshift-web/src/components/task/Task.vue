@@ -7,6 +7,7 @@
           <el-button-group class="batch-button">
             <el-button type="primary" icon="el-icon-delete" @click="delAllSelection">{{ $t('del') }}
             </el-button>
+            <el-button type="primary" icon="el-icon-refresh" @click="cancel()">{{ $t('cancel') }}</el-button>
             <el-button type="primary" icon="el-icon-refresh" @click="getData()">{{ $t('refresh') }}</el-button>
           </el-button-group>
         </div>
@@ -201,6 +202,16 @@ export default {
     }
   },
   methods: {
+    cancel() {
+      let ids = this.getSelectedIds();
+      HttpUtil.post("/task/cancel", ids, (res) => {
+        if (res.success) {
+          this.$message.success(this.$t('opt_success'));
+        } else {
+          this.$message.success(this.$t('opt_fail'));
+        }
+      })
+    },
     notify(msg) {
       this.getData();
       this.$notify({

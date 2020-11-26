@@ -50,7 +50,7 @@ const HttpUtil = {
         return axios.get(url, params);
     },
 
-    post: (url, data, resolve, reject) => {
+    post: (url, data, resolve, reject, errorHandler) => {
         axios.post(url, data, {
             headers: {
                 "Content-Type": "application/json"
@@ -69,7 +69,11 @@ const HttpUtil = {
                 }
             }
         ).catch((e) => {
-            MessageBox.alert(e);
+            if (errorHandler) {
+                errorHandler(e);
+            } else {
+                MessageBox.alert(e);
+            }
         });
     }
 }

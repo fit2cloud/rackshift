@@ -75,7 +75,7 @@ public class TaskService {
                 taskMapper.deleteByPrimaryKey(id);
                 return true;
             }
-            boolean r = rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()), task.getInstanceId());
+            boolean r = rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()));
             if (r) {
                 WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
                 requestDTO.setTaskId(task.getId());
@@ -175,5 +175,20 @@ public class TaskService {
 
     public static void main(String[] args) {
         new ArrayList<>().get(0);
+    }
+
+    public boolean cancel(String[] ids) {
+        if (ids == null || ids.length == 0) {
+            return false;
+        }
+        for (String id : ids) {
+            Task task = taskMapper.selectByPrimaryKey(id);
+            if (task != null && task.getBareMetalId() != null){
+                if (!rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

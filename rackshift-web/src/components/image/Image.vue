@@ -116,6 +116,7 @@
                 <el-upload
                     class="upload-demo"
                     drag
+                    :on-progress="canConfirm = false"
                     :on-success="afterUploadSuccess"
                     action="/image/upload"
                     style="margin-bottom: 20px;"
@@ -129,7 +130,7 @@
             </el-form>
             <div class="demo-drawer__footer">
               <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
-              <el-button type="primary" @click="confirmEdit" :loading="loading">{{
+              <el-button type="primary" @click="confirmEdit" :loading="loading" :disabled="!canConfirm">{{
                   loading ? $t('submitting') +
                       '...' : $t('confirm')
                 }}
@@ -170,6 +171,7 @@ export default {
   data() {
     return {
       activeName: 'image',
+      canConfirm: false,
       rules: {
         name: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
@@ -277,7 +279,6 @@ export default {
         this.pageTotal = res.data.itemCount;
         this.loadingList = false;
       });
-
     },
     getAllOsAndVersion() {
       HttpUtil.get("/rackhd/allOsAndVersion", {}, (res) => {
@@ -297,6 +298,7 @@ export default {
     add() {
       this.editDialogVisible = true;
       this.editType = 'add';
+      this.canConfirm = true;
     },
     confirmEdit() {
       this.validateResult = true;
@@ -314,6 +316,7 @@ export default {
       if (this.editType == 'edit') {
         HttpUtil.post("/image/update", this.editObj, (res) => {
           this.editDialogVisible = false;
+          this.canConfirm = true;
           this.$message.success(this.$t('edit_success'));
           this.getData();
           this.loading = false;
@@ -324,6 +327,11 @@ export default {
           this.$message.success(this.$t('add_success'));
           this.getData();
           this.loading = false;
+          this.canConfirm = true;
+        }, null, (e) => {
+          this.$message.error(this.$t('opt_fail'));
+          this.loading = false;
+          this.canConfirm = true;
         })
       }
     },
@@ -349,11 +357,14 @@ export default {
           if (res.success) {
             this.$message.success(this.$t('delete_success'));
             this.getData();
+            this.multipleSelection = [];
           } else {
             this.$message.success(this.$t('delete_fail'));
           }
+        }, null, (e) => {
+          this.$message.success(this.$t('delete_fail'));
         });
-        this.multipleSelection = [];
+
       });
     },
     // 编辑操作
@@ -389,6 +400,7 @@ export default {
     afterUploadSuccess(response) {
       this.editObj.originalName = response.originalName;
       this.editObj.filePath = response.filePath;
+      this.canConfirm = true;
     },
   }
 }

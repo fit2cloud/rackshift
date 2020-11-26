@@ -38,8 +38,8 @@ public class InspurMetalProvider extends AbstractMetalProvider {
         put("NF8480M4", new IMS8480M4RestSpider());
     }};
 
-    private static final String overviewUrl = "http://%s/rpc/getfruinfo.asp";
-    private static final String getCookieUrl = "http://%s/rpc/WEBSES/create.asp";
+    private static final String overviewUrl = "https://%s/rpc/getfruinfo.asp";
+    private static final String getCookieUrl = "https://%s/rpc/WEBSES/create.asp";
 
     private static Gson gson;
 

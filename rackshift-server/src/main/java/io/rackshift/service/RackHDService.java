@@ -797,7 +797,7 @@ public class RackHDService {
         return response.getReCode() <= RackHDConstants.ERROR_RE_CODE;
     }
 
-    public boolean cancelWorkflow(BareMetal bareMetal, String intanceId) {
+    public boolean cancelWorkflow(BareMetal bareMetal) {
         RackHDResponse response = RackHDHttpClientUtil.put(String.format(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()) + "/api/2.0/nodes/%s/workflows/action", bareMetal.getServerId()), "{\"command\": \"cancel\"}", null);
         return response.getReCode() <= RackHDConstants.ERROR_RE_CODE;
     }

@@ -11,6 +11,7 @@ import io.rackshift.mybatis.mapper.EndpointMapper;
 import io.rackshift.mybatis.mapper.ImageMapper;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.ProxyUtil;
+import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.util.UrlEncoded;
 import org.springframework.beans.factory.annotation.Value;
@@ -118,7 +119,9 @@ public class ImageService {
             if (!imageDTO.getOriginalName().endsWith("iso")) {
                 RSException.throwExceptions("i18n_file_must_be_iso");
             }
-
+            if (getEndpointUrl(imageDTO.getEndpointId()) == null) {
+                return true;
+            }
             String res = HttpFutureUtils.getHttp(String.format("http://" + getEndpointUrl(imageDTO.getEndpointId()) + ":8083/image/umount?filePath=%s&mountPath=%s", UrlEncoded.encodeString(imageDTO.getFilePath()), UrlEncoded.encodeString(imageDTO.getMountPath())), ProxyUtil.getHeaders());
             if (StringUtils.isNotBlank(res)) {
                 JSONObject rObj = JSONObject.parseObject(res);
@@ -131,7 +134,7 @@ public class ImageService {
         } catch (Exception e) {
             if (new File(imageDTO.getFilePath()).exists())
                 new File(imageDTO.getFilePath()).delete();
-            RSException.throwExceptions("i18n_file_upload_fail");
+            RSException.throwExceptions(Translator.get("i18n_file_unmount_fail"));
         }
         return false;
     }

@@ -56,4 +56,10 @@ public class TaskController {
         return ResultHolder.success(taskService.logs(id));
     }
 
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @RequestMapping("cancel")
+    public ResultHolder cancel(@RequestBody String[] ids) {
+        return ResultHolder.success(taskService.cancel(ids));
+    }
+
 }
