@@ -134,7 +134,7 @@ public class ImageService {
         } catch (Exception e) {
             if (new File(imageDTO.getFilePath()).exists())
                 new File(imageDTO.getFilePath()).delete();
-            RSException.throwExceptions(Translator.get("i18n_file_unmount_fail"));
+            return true;
         }
         return false;
     }
