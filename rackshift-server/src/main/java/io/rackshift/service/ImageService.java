@@ -1,6 +1,7 @@
 package io.rackshift.service;
 
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.constants.ServiceConstants;
 import io.rackshift.metal.sdk.util.HttpFutureUtils;
 import io.rackshift.model.ImageDTO;
 import io.rackshift.model.RSException;
@@ -11,7 +12,6 @@ import io.rackshift.mybatis.mapper.EndpointMapper;
 import io.rackshift.mybatis.mapper.ImageMapper;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.ProxyUtil;
-import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.util.UrlEncoded;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +36,7 @@ public class ImageService {
         Map<String, String> map = mount(queryVO);
         image.setUrl(map.get("url"));
         image.setMountPath(map.get("mountPath"));
+        image.setStatus(ServiceConstants.ImageStatusEnum.detected.name());
         imageMapper.insertSelective(image);
         return true;
     }
