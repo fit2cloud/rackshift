@@ -405,20 +405,23 @@
         size="70%"
         :before-close="handleClose">
       <el-divider>{{ $t('Executor') }}</el-divider>
+      <el-divider>{{ $t('selected') + ' ' }} <em class="selected-number">
+        {{ multipleSelection.length + ' ' }}</em>
+        {{ $t('tai') + $t('Bare Metal Server') }}
+      </el-divider>
       <div id="control-drawer">
 
-        <div id="run-workflow">
+        <div id="run-workflow" class="action-div">
           <div class="el-icon-caret-right h25"
                style="border-bottom: yellowgreen 1px solid;    width: 100%;">{{ $t('Run') }}
           </div>
           <div class="run-splitter h25"></div>
           <div class="center">
             <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
-            <!--                            <el-button class="el-icon-close h50"></el-button>-->
           </div>
         </div>
 
-        <div id="workflow-selector" style="display: flex;">
+        <div id="workflow-selector" class="action-div">
           <div id="select-workflow">
             <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
               {{ $t('Workflow') }}
@@ -426,11 +429,6 @@
             <div class="run-splitter h25"></div>
             <el-select v-model="wfRequest.workflow" filterable :placeholder="$t('please_select')"
                        @change="getParamsTemplate">
-              <!--              <el-option-->
-              <!--                  v-for="g in supportedWorkflow"-->
-              <!--                  :label="$t(g.friendlyName)"-->
-              <!--                  :value="g.id"></el-option>-->
-
               <el-option-group
                   v-for="group in groupedSupportedWorkflow"
                   :key="group.key"
@@ -489,7 +487,6 @@
             </el-card>
           </div>
         </div>
-
 
       </div>
 
@@ -859,14 +856,14 @@ export default {
       return ids;
     },
     delAllSelection() {
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$message.error(this.$t('pls_select_') + this.$t('Bare Metal Server') + "!");
+        return;
+      }
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
-        let ids = this.getSelectedIds();
-        if (!ids || ids.length == 0) {
-          this.$message.error(this.$t('pls_select_') + this.$t('Bare Metal Server') + "!");
-          return;
-        }
         HttpUtil.post("/bare-metal/del", ids, (res) => {
           this.$message.success(this.$t('delete_success'));
           this.getData();
@@ -1072,31 +1069,30 @@ export default {
   margin-right: 10px;
 }
 
-#run-workflow {
+.action-div {
   border: solid #d7d2d2 1px;
   height: 120px;
   padding: 10px 10px 15px 10px;
   border-radius: 5px;
+}
+
+#run-workflow {
   min-width: 120px;
 }
 
 #workflow-selector {
-  border: solid #d7d2d2 1px;
   min-width: 450px;
-  height: 120px;
-  padding: 10px 10px 15px 10px;
-  border-radius: 5px;
   margin-left: 10px;
 }
 
 #action-list {
-  border: solid #d7d2d2 1px;
   width: 100%;
+  margin: 0 10px;
+  /*overflow: auto;*/
+  border: solid #d7d2d2 1px;
   min-height: 120px;
   padding: 10px 10px 15px 10px;
   border-radius: 5px;
-  margin: 0 10px;
-  /*overflow: auto;*/
 }
 
 .h25 {
@@ -1170,5 +1166,10 @@ export default {
 
 .bare-discovery {
   padding: 20px;
+}
+
+.selected-number {
+  font-size: 17px;
+  color: red;
 }
 </style>

@@ -36,7 +36,6 @@ public class EndpointService {
 
         EndpointExample e = buildExample(queryVO);
         if (endpointMapper.selectByExample(e).stream().count() > 0) {
-
             return false;
         }
         e.clear();

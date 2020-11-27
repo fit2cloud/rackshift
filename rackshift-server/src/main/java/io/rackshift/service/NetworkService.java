@@ -95,9 +95,15 @@ public class NetworkService {
     public Object del(String id) {
 
         Network network = networkMapper.selectByPrimaryKey(id);
-        if (network == null) return false;
+        if (network == null) {
+            networkMapper.deleteByPrimaryKey(id);
+            return false;
+        }
         Endpoint endpoint = getEndpoint(network.getEndpointId());
-        if (endpoint == null) return false;
+        if (endpoint == null) {
+            networkMapper.deleteByPrimaryKey(id);
+            return false;
+        }
         String requesetStr = buildRequestStr(network);
 
         String res = HttpFutureUtils.postHttps("http://" + endpoint.getIp() + ":8083/dhcp/delDHCPConfig", requesetStr, contentTypeJSON, ProxyUtil.getHeaders());

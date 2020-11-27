@@ -50,23 +50,13 @@ const HttpUtil = {
         return axios.get(url, params);
     },
 
-    post: (url, data, resolve, reject, errorHandler) => {
+    post: (url, data, resolve, errorHandler) => {
         axios.post(url, data, {
             headers: {
                 "Content-Type": "application/json"
             }
         }).then((res) => {
-                if (res) {
-                    if (res.data.success) {
-                        resolve(res.data);
-                    } else {
-                        if (reject) {
-                            reject(res.data.message);
-                        } else {
-                            MessageBox.alert(res.data.message);
-                        }
-                    }
-                }
+                resolve(res.data);
             }
         ).catch((e) => {
             if (errorHandler) {

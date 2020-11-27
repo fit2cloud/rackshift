@@ -253,15 +253,15 @@ export default {
       return ids;
     },
     delAllSelection() {
+      const length = this.multipleSelection.length;
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$message.error(this.$t('pls_select_discovery-devices') + "!");
+        return;
+      }
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
-        const length = this.multipleSelection.length;
-        let ids = this.getSelectedIds();
-        if (!ids || ids.length == 0) {
-          this.$message.error(this.$t('pls_select_discovery-devices') + "!");
-          return;
-        }
         HttpUtil.post("/discovery-devices/del", ids, (res) => {
           if (res.success) {
             this.$message.success(this.$t('delete_success'));

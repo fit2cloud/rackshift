@@ -249,11 +249,11 @@ export default {
         })
       } else {
         HttpUtil.post("/endpoint/add", this.editObj, (res) => {
-          this.editDialogVisible = false;
           if (res.data) {
             this.$message.success(this.$t('add_success'));
+            this.editDialogVisible = false;
           } else {
-            this.$message.success(this.$t('add_fail'));
+            this.$message.error(this.$t('add_fail'));
           }
           this.getData();
           this.loading = false;
@@ -265,14 +265,14 @@ export default {
       this.multipleSelection = val;
     },
     delAllSelection() {
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$message.error(this.$t('pls_select_endpoint') + "!");
+        return;
+      }
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
-        let ids = this.getSelectedIds();
-        if (!ids || ids.length == 0) {
-          this.$message.error(this.$t('pls_select_endpoint') + "!");
-          return;
-        }
         HttpUtil.post("/endpoint/del", ids, (res) => {
           if (res.success) {
             this.$message.success(this.$t('delete_success'));
@@ -293,7 +293,6 @@ export default {
         this.editObj.brands = eval(this.editObj.brands);
         this.editObj.settable = eval(this.editObj.settable);
         // this.editObj.status = eval(this.editObj.status);
-        this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
 
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
@@ -317,6 +316,12 @@ export default {
           }
           this.getData();
         });
+      } else {
+        this.editDialogVisible = true;
+        this.editType = type;
+        this.editObj = {
+          status: "1"
+        };
       }
     },
     // 分页导航

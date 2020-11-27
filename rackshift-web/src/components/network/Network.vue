@@ -269,14 +269,14 @@ export default {
       this.multipleSelection = val;
     },
     delAllSelection() {
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$message.error(this.$t('pls_select_network') + "!");
+        return;
+      }
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
-        let ids = this.getSelectedIds();
-        if (!ids || ids.length == 0) {
-          this.$message.error(this.$t('pls_select_network') + "!");
-          return;
-        }
         HttpUtil.post("/network/del", ids, (res) => {
           this.$message.success(this.$t('delete_success'));
           this.getData();

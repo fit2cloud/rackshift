@@ -273,14 +273,14 @@ export default {
       return ids;
     },
     delAllSelection() {
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$message.error(this.$t('pls_select_task') + "!");
+        return;
+      }
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
-        let ids = this.getSelectedIds();
-        if (!ids || ids.length == 0) {
-          this.$message.error(this.$t('pls_select_task') + "!");
-          return;
-        }
         HttpUtil.post("/task/del", ids, (res) => {
           if (res.success) {
             this.$message.success(this.$t('delete_success'));

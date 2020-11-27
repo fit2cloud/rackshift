@@ -394,14 +394,14 @@ export default {
     }
     ,
     delAllSelection() {
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$message.error(this.$t('pls_select_discovery') + "!");
+        return;
+      }
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
-        let ids = this.getSelectedIds();
-        if (!ids || ids.length == 0) {
-          this.$message.error(this.$t('pls_select_discovery') + "!");
-          return;
-        }
         HttpUtil.post("/discovery/del", ids, (res) => {
           if (res.success) {
             this.$message.success(this.$t('delete_success'));
@@ -490,7 +490,7 @@ export default {
   border: 1px solid #EBEEF5;
   border-bottom: none;
   border-right: none;
-  padding: 12px 0;
+  padding: 12px 10px;
   min-width: 0;
   box-sizing: border-box;
   text-overflow: ellipsis;

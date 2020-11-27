@@ -29,10 +29,10 @@
           <el-table-column prop="friendlyName" :label="$t('friendly_name')" align="left">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">
-<!--                <el-link type="primary" target="_blank">-->
-                  <span style="display: block; word-break:keep-all;
+                <!--                <el-link type="primary" target="_blank">-->
+                <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.friendlyName }}</span>
-<!--                </el-link>-->
+                <!--                </el-link>-->
               </el-tooltip>
             </template>
 
@@ -45,10 +45,10 @@
           <el-table-column prop="eventType" :label="$t('event_type')" align="left">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="i18n(scope.row.eventType)" placement="right-end">
-<!--                <el-link type="primary" target="_blank">-->
-                  <span style="display: block; word-break:keep-all;
+                <!--                <el-link type="primary" target="_blank">-->
+                <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.eventType | eventFormat }}</span>
-<!--                </el-link>-->
+                <!--                </el-link>-->
               </el-tooltip>
             </template>
           </el-table-column>
@@ -94,9 +94,9 @@
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
-            <el-form :model="editObj" :label-position="labelPosition">
+            <el-form :model="editObj" :label-position="labelPosition" :rules="rules" ref="form">
 
-              <el-form-item :label="$t('injectable_mame')">
+              <el-form-item :label="$t('injectable_mame')" prop="injectableName">
                 <el-select filterable v-model="editObj.injectableName" :placeholder="$t('pls_select')"
                            :disabled="editObj.type == 'system'" v-on:change="changeFriendlyName">
                   <el-option
@@ -107,11 +107,11 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item :label="$t('friendly_name')">
+              <el-form-item :label="$t('friendly_name')" prop="friendlyName">
                 <el-input v-model="editObj.friendlyName" resize="100"></el-input>
               </el-form-item>
 
-              <el-form-item :label="$t('event_type')">
+              <el-form-item :label="$t('event_type')" prop="eventType">
                 <el-select v-model="editObj.eventType" :placeholder="$t('pls_select')"
                            :disabled="editObj.type == 'system'">
                   <el-option
@@ -121,7 +121,7 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('brands')">
+              <el-form-item :label="$t('brands')" prop="brands">
                 <el-select v-model="editObj.brands" :placeholder="$t('pls_select')" multiple>
                   <el-option
                       v-for="(item, key) in allBrands"
@@ -139,7 +139,7 @@
                 <el-input type="textarea" v-model="editObj.defaultParams" :rows="5"></el-input>
               </el-form-item>
 
-              <el-form-item :label="$t('status')" :disabled="editObj.type == 'system'">
+              <el-form-item :label="$t('status')" :disabled="editObj.type == 'system'" prop="status">
                 <el-switch v-model="editObj.status" active-value="enable"
                            inactive-value="disable"></el-switch>
               </el-form-item>
@@ -168,6 +168,7 @@
 import HttpUtil from "../../common/utils/HttpUtil"
 import Vue from "vue"
 import i18n from "@/i18n/i18n";
+import {requiredValidator, requiredSelectValidator} from "@/common/validator/CommonValidator";
 
 Vue.filter('eventFormat', function (name) {
   let allEventType = [];
@@ -186,6 +187,23 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      rules: {
+        injectableName: [
+          {validator: requiredSelectValidator, trigger: 'blur', vue: this},
+        ],
+        friendlyName: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        eventType: [
+          {validator: requiredSelectValidator, trigger: 'blur', vue: this},
+        ],
+        brands: [
+          {validator: requiredSelectValidator, trigger: 'blur', vue: this, name: this.$t('brands')},
+        ],
+        type: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ]
+      },
       activeName: 'workflow',
       query: {
         name: '',
@@ -306,6 +324,14 @@ export default {
       this.editDialogVisible = false;
     },
     confirmEdit() {
+      this.validateResult = true;
+      this.$refs.form.validate(f => {
+        if (!f) {
+          this.validateResult = false;
+        }
+      });
+      if (!this.validateResult) return;
+
       this.loading = true;
       this.editObj.brands = JSON.stringify(this.editObj.brands);
       if (this.editType == 'edit') {
@@ -318,10 +344,14 @@ export default {
         })
       } else {
         HttpUtil.post("/workflow/add", this.editObj, (res) => {
-          this.editDialogVisible = false;
-          this.$message.success(this.$t('add_success'));
-          this.getData();
-          this.loading = false;
+          if (res.success) {
+            this.editDialogVisible = false;
+            this.$message.success(this.$t('add_success'));
+            this.getData();
+            this.loading = false;
+          } else {
+            this.$message.error(this.$t('add_fail'));
+          }
         })
       }
     },
@@ -330,14 +360,14 @@ export default {
       this.multipleSelection = val;
     },
     delAllSelection() {
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$message.error(this.$t('pls_select_workflow') + "!");
+        return;
+      }
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
-        let ids = this.getSelectedIds();
-        if (!ids || ids.length == 0) {
-          this.$message.error(this.$t('pls_select_workflow') + "!");
-          return;
-        }
         HttpUtil.post("/workflow/del", ids, (res) => {
           this.$message.success(this.$t('opt_success'));
           this.getData();

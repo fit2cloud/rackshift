@@ -112,18 +112,20 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item>
+              <el-form-item :label="$t('image')">
                 <el-upload
                     class="upload-demo"
                     drag
-                    :on-progress="canConfirm = false"
+                    :before-upload="beforeUpload"
                     :on-success="afterUploadSuccess"
                     action="/image/upload"
                     style="margin-bottom: 20px;"
                 >
                   <i class="el-icon-upload"></i>
                   <div class="el-upload__text">{{ $t('drag_file_into_or') }}<em>{{ $t('click_to_upload') }}</em></div>
-                  <div class="el-upload__tip" slot="tip">{{ $t('only_iso_no_more_than_10g') }}</div>
+                  <div class="el-upload__tip" slot="tip">{{ $t('only_iso_no_more_than_10g') }}
+                    <em class="upload-tip">{{ $t('upload_success_submit') }}</em>
+                  </div>
                 </el-upload>
               </el-form-item>
 
@@ -132,7 +134,7 @@
               <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
               <el-button type="primary" @click="confirmEdit" :loading="loading" :disabled="!canConfirm">{{
                   loading ? $t('submitting') +
-                      '...' : $t('confirm')
+                      '...' : $t('SUBMIT')
                 }}
               </el-button>
             </div>
@@ -323,9 +325,13 @@ export default {
         })
       } else {
         HttpUtil.post("/image/add", this.editObj, (res) => {
-          this.editDialogVisible = false;
-          this.$message.success(this.$t('add_success'));
-          this.getData();
+          if (res.success) {
+            this.editDialogVisible = false;
+            this.$message.success(this.$t('add_success'));
+            this.getData();
+          } else {
+            this.$message.error(this.$t('upload') + this.$t('failed'));
+          }
           this.loading = false;
           this.canConfirm = true;
         }, null, (e) => {
@@ -345,14 +351,14 @@ export default {
       return ids;
     },
     delAllSelection() {
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$message.error(this.$t('pls_select_image') + "!");
+        return;
+      }
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
-        let ids = this.getSelectedIds();
-        if (!ids || ids.length == 0) {
-          this.$message.error(this.$t('pls_select_image') + "!");
-          return;
-        }
         HttpUtil.post("/image/del", ids, (res) => {
           if (res.success) {
             this.$message.success(this.$t('delete_success'));
@@ -361,7 +367,7 @@ export default {
           } else {
             this.$message.success(this.$t('delete_fail'));
           }
-        }, null, (e) => {
+        }, (e) => {
           this.$message.success(this.$t('delete_fail'));
         });
 
@@ -402,6 +408,10 @@ export default {
       this.editObj.filePath = response.filePath;
       this.canConfirm = true;
     },
+    beforeUpload(file) {
+      this.canConfirm = false;
+      return true;
+    },
   }
 }
 </script>
@@ -420,4 +430,9 @@ export default {
   margin-right: 10px;
 }
 
+.upload-tip {
+  color: #E95420;
+  font-style: normal;
+  font-size: 16px;
+}
 </style>

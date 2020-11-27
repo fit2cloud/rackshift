@@ -73,7 +73,7 @@ export default {
     "pls_select_image": "Please select an image",
     "obms": "Out-of-band information",
     "sync_time": "Sync time",
-    "confirm_to_del": "Confirm Delete",
+    "confirm_to_del": "Confirm Delete ?",
     "edit_discovery-devices": "Edit discovered devices",
     "edit_discovery": "Edit Discovery Rules",
     "pls_input_password": "Please enter a password",
@@ -359,4 +359,8 @@ export default {
     "sync_success": "sync success",
     "sync_fail": "sync fail",
     "Executor": "Executor",
+    "upload": "upload ",
+    "upload_success_submit": "Submit before uploaded",
+    "selected": "Selected",
+    "tai": "",
 }

@@ -193,7 +193,7 @@ export default {
           if (res.data) {
             this.$message.success(this.$t('add_success'));
           } else {
-            this.$message.success(this.$t('add_fail'));
+            this.$message.error(this.$t('add_fail'));
           }
           this.getData();
           this.loading = false;
@@ -205,14 +205,14 @@ export default {
       this.multipleSelection = val;
     },
     delAllSelection() {
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$message.error(this.$t('pls_select_system_parameter') + "!");
+        return;
+      }
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
-        let ids = this.getSelectedIds();
-        if (!ids || ids.length == 0) {
-          this.$message.error(this.$t('pls_select_system_parameter') + "!");
-          return;
-        }
         HttpUtil.post("/system_parameter/del", ids, (res) => {
           this.$message.success(this.$t('delete_success'));
           this.getData();

@@ -61,7 +61,7 @@ function phoneValidator(rule, value, callback) {
 }
 
 function requiredSelectValidator(rule, value, callback) {
-    if (value === '' || !value) {
+    if (value === '' || !value || !value.length) {
         if (rule.field == "userName") {
             callback(new Error(rule.vue.$t('pls_select_username')));
         }

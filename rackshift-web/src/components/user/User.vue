@@ -257,14 +257,14 @@ export default {
       return ids;
     },
     delAllSelection() {
+      let ids = this.getSelectedIds();
+      if (!ids || ids.length == 0) {
+        this.$message.error(this.$t('pls_select') + "!");
+        return;
+      }
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
-        let ids = this.getSelectedIds();
-        if (!ids || ids.length == 0) {
-          this.$message.error(this.$t('pls_select') + "!");
-          return;
-        }
         HttpUtil.post("/user/del", ids, (res) => {
           this.$message.success(this.$t('delete_success'));
           this.getData();
