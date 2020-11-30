@@ -43,7 +43,7 @@ public class StateMachine {
                 if (preTask == null || (preTask != null && endStatusList.contains(preTask.getStatus()))) {
                     task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
                     taskService.update(task);
-                    executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), String.format("开始执行:%s:worflow:%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
+                    executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), String.format("开始执行:%s:%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无")));
                     if (handlerMap.get(event.getEventType()) != null) {
                         handlerMap.get(event.getEventType()).handle(event);
                     } else {

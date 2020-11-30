@@ -161,15 +161,15 @@ public class WorkflowJob {
     private JSONArray orderedTask(JSONArray tasks) {
         JSONArray r = new JSONArray();
         tasks.forEach(t -> {
-            if (((JSONObject) t).containsKey("waitOn")) {
-                if (StringUtils.isBlank(((JSONObject) t).getString("waitOn"))) {
+            if (((JSONObject) t).containsKey("waitingOn")) {
+                if (((JSONObject) t).getJSONObject("waitingOn").size() == 0) {
                     r.add(t);
                 }
             }
         });
         while (r.size() != tasks.size()) {
             for (int i = 0; i < tasks.size(); i++) {
-                if (tasks.getJSONObject(i).getString("waitOn").equalsIgnoreCase(r.getJSONObject(r.size() - 1).getString("instanceId"))) {
+                if (tasks.getJSONObject(i).getJSONObject("waitingOn").keySet().contains(r.getJSONObject(r.size() - 1).getString("instanceId"))) {
                     r.add(tasks.getJSONObject(i));
                 }
             }

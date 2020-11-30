@@ -36,7 +36,7 @@ export default {
       } else if (this.type == "sync") {
         return "el-button--success";
       } else {
-        return "el-button--primary";
+        return "el-button";
       }
     },
     icon: function () {

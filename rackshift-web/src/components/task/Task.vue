@@ -23,17 +23,11 @@
         >
           <el-table-column type="selection" align="left"></el-table-column>
 
-
           <el-table-column prop="machineModel" :label="$t('Bare Metal Server')" align="left" :sortable="true">
             <template slot-scope="scope">
-              <!--              <span style="display: block; word-break:keep-all;-->
-              <!--  white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>-->
-
               <el-tooltip class="item" effect="dark" :content="scope.row.machineModel" placement="right-end">
-                <!--                <el-link type="primary" target="_blank">-->
                 <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>
-                <!--                </el-link>-->
               </el-tooltip>
             </template>
           </el-table-column>
@@ -44,10 +38,8 @@
           <el-table-column prop="friendlyName" :label="$t('Workflow')" align="left" :sortable="true" width="210">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">
-                <!--                <el-link type="primary" target="_blank">-->
                 <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.friendlyName }}</span>
-                <!--                </el-link>-->
               </el-tooltip>
             </template>
           </el-table-column>
@@ -96,7 +88,7 @@
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
-            <table class="detail-info" v-if="logs.length">
+            <table class="detail-info log" v-if="logs.length">
               <tr>
                 <td>{{ $t('create_time') }}</td>
                 <td>{{ $t('output') }}</td>
@@ -106,12 +98,13 @@
                 <td class="nowrap">{{ l.createTime | dateFormat }}</td>
                 <td>{{ l.outPut }}</td>
               </tr>
+
               <tr>
-                <td><i v-if="editObj.status == 'running' "
-                       class="el-icon-loading"></i></td>
+                <td><i v-if="editObj.status == 'running'" class="el-icon-loading"></i></td>
               </tr>
             </table>
-            <span v-else>{{ $t('no_more_logs') }}</span>
+
+            <span v-else class="mb10">{{ $t('no_more_logs') }}</span>
             <div class="demo-drawer__footer">
               <el-button @click="handleClose">{{ $t('close') }}</el-button>
             </div>
@@ -133,6 +126,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      refreshOne: false,
       refreshPointer: null,
       logs: [],
       activeName: 'task',
@@ -224,13 +218,23 @@ export default {
       HttpUtil.get("/task/logs?id=" + that.editObj.id, {}, (res) => {
         that.editDialogVisible = true;
         that.logs = res.data;
+
         if (that.logs && that.logs.length) {
           let lastRackHDLog = that.logs[that.logs.length - 1];
-          if (lastRackHDLog.instanceId && lastRackHDLog.status != 'pending') {
+
+          if (lastRackHDLog.status == 'START') {
+            if (!this.refreshOne) {
+              this.refreshOne = true;
+              that.getData(function () {
+                that.editObj = _.find(that.tableData, (l) => l.id == that.editObj.id);
+              });
+            }
+          }
+          if (lastRackHDLog.status == 'END') {
+            clearInterval(that.refreshPointer);
             that.getData(function () {
               that.editObj = _.find(that.tableData, (l) => l.id == that.editObj.id);
             });
-            clearInterval(that.refreshPointer);
           }
         }
       })
@@ -315,10 +319,11 @@ export default {
       } else if (type == 'view') {
         this.editObj = JSON.parse(JSON.stringify(row));
         const that = this;
+        this.refreshOne = false;
         HttpUtil.get("/task/logs?id=" + that.editObj.id, {}, (res) => {
           that.editDialogVisible = true;
           that.logs = res.data;
-          that.refreshPointer = setInterval(that.getLogs, 2000);
+          that.refreshPointer = setInterval(that.getLogs, 5000);
         });
       }
     },
@@ -354,6 +359,18 @@ export default {
 
 .nowrap {
   white-space: nowrap;
+}
+
+.mb10 {
+  margin-bottom: 10px;
+}
+
+.detail-info.log td {
+  padding: 5px;
+}
+
+.detail-info.log tr td:first-child {
+  vertical-align: top;
 }
 
 </style>
