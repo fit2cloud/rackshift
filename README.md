@@ -58,7 +58,7 @@ RackShift 是一款开源的裸金属服务器全生命周期管理平台，功�
 
 ## 微信群
 
-<img src="https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-code20201126.jpg" width="300" height="300" align="middle" />
+<img src="https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-2020-11-29.jpg" width="300" height="300" align="middle" />
 
 ## QQ 群
 - 693376431
