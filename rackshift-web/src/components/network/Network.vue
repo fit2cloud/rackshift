@@ -106,7 +106,17 @@
               </el-form-item>
 
               <el-form-item :label="$t('pxe_enable')" prop="pxeEnable">
+                <el-tooltip effect="dark" :content="pxeTips" v-if="!editObj.pxeEnable">
+                  <el-switch
+                      v-model="editObj.pxeEnable"
+                      active-color="#13ce66"
+                      @change="changePXE"
+                      inactive-color="#ff4949">
+                  </el-switch>
+                </el-tooltip>
+
                 <el-switch
+                    v-if="editObj.pxeEnable"
                     v-model="editObj.pxeEnable"
                     active-color="#13ce66"
                     @change="changePXE"
@@ -190,6 +200,7 @@ export default {
       allOsVersion: [],
       allEndPoints: [],
       loadingList: false,
+      pxeTips: "",
     };
   },
   mounted() {
@@ -200,7 +211,11 @@ export default {
     changePXE(e) {
       if (this.editObj.pxeEnable) {
         this.editObj.dhcpEnable = true;
+        this.pxeTips = null;
+      } else {
+        this.pxeTips = this.$t('pxe_open_tip');
       }
+
     },
     getAllEndPoints() {
       HttpUtil.get("/endpoint/getAllEndPoints", {}, (res) => {

@@ -365,4 +365,5 @@ export default {
     "tai": "",
     "power_text": "Only if correct OBM is set IPMI can read the power status",
     "machine_brand": "Brand",
+    "cancel_task_success": "Cancel success!wait until it refresh it‘s status",
 }

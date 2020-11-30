@@ -1,5 +1,4 @@
 // 将时间戳转日期格式的过滤器
-import HttpUtil from "@/common/utils/HttpUtil";
 
 let _ = require('lodash');
 

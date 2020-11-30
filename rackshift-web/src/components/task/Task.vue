@@ -200,7 +200,7 @@ export default {
       let ids = this.getSelectedIds();
       HttpUtil.post("/task/cancel", ids, (res) => {
         if (res.success) {
-          this.$message.success(this.$t('opt_success'));
+          this.$message.success(this.$t('cancel_task_success'));
         } else {
           this.$message.success(this.$t('opt_fail'));
         }
@@ -367,6 +367,7 @@ export default {
 
 .detail-info.log td {
   padding: 5px;
+  line-height: 18px;
 }
 
 .detail-info.log tr td:first-child {

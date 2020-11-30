@@ -368,4 +368,6 @@ export default {
     "tai": "台",
     "power_text": "只有配置了正确的带外信息才能通过 IPMI 获取电源状态",
     "machine_brand": "品牌",
+    "cancel_task_success": "取消任务成功！请等待任务自动结束！",
+    "pxe_open_tip": "该节点将会开启 DHCP PXE 功能，所有该网段的物理机 PXE 启动将会被 RackShift 代理 "
 }

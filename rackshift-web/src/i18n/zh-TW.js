@@ -367,5 +367,6 @@ export default {
     "tai": "台",
     "power_text": "衹有配置了正確的帶外信息才能通過 IPMI 獲取電源狀態",
     "machine_brand": "品牌",
+    "cancel_task_success": "取消任務成功！請等待任務自動結束！",
 
 }

@@ -659,7 +659,8 @@ export default {
     },
     openDiscover() {
       this.discoveryVisible = true;
-      this.$refs.discoveryCom.getData();
+      if (this.$refs.discoveryCom)
+        this.$refs.discoveryCom.getData();
     },
     statusFilter(row) {
       if (row.status.indexOf("ing") == -1) {

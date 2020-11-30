@@ -1,5 +1,3 @@
-import i18n from "@/i18n/i18n";
-
 export default {
     menus: [
         // {
@@ -107,7 +105,7 @@ export default {
                     "requireRole": "admin",
                     "order": "14",
                     "icon": "el-icon-user-solid",
-                }
+                },
                 // {
                 //     "name": "系统参数",
                 //     "router": "/system-parameter",
