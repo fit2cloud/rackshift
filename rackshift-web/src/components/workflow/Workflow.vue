@@ -1,5 +1,5 @@
 <template>
-  <el-tabs style="width:100vw;" v-model="activeName">
+  <el-tabs class="t100vw" v-model="activeName">
     <el-tab-pane :label="$t('Workflow')" name="workflow">
       <div class="container">
 
@@ -29,10 +29,8 @@
           <el-table-column prop="friendlyName" :label="$t('friendly_name')" align="left">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">
-                <!--                <el-link type="primary" target="_blank">-->
                 <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.friendlyName }}</span>
-                <!--                </el-link>-->
               </el-tooltip>
             </template>
 
@@ -45,10 +43,8 @@
           <el-table-column prop="eventType" :label="$t('event_type')" align="left">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="i18n(scope.row.eventType)" placement="right-end">
-                <!--                <el-link type="primary" target="_blank">-->
                 <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.eventType | eventFormat }}</span>
-                <!--                </el-link>-->
               </el-tooltip>
             </template>
           </el-table-column>
@@ -160,7 +156,6 @@
     </el-tab-pane>
   </el-tabs>
 
-
 </template>
 
 <script>
@@ -171,6 +166,9 @@ import i18n from "@/i18n/i18n";
 import {requiredValidator, requiredSelectValidator} from "@/common/validator/CommonValidator";
 
 Vue.filter('eventFormat', function (name) {
+  if (!name || name.length == 0) {
+    return "";
+  }
   let allEventType = [];
   if (!localStorage.getItem("allEventType")) {
     HttpUtil.get("workflow/listallEventType", null, (res) => {

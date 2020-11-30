@@ -340,4 +340,8 @@ a.github:hover {
 .center {
   text-align: center;
 }
+
+.t100vw {
+  width: 100vw;
+}
 </style>

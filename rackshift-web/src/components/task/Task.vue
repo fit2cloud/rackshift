@@ -1,5 +1,5 @@
 <template>
-  <el-tabs style="width:100vw;" v-model="activeName" @tab-click="refreshChildData">
+  <el-tabs class="t100vw" v-model="activeName" @tab-click="refreshChildData">
     <el-tab-pane :label="$t('Task')" name="task">
       <div class="container-task">
 
@@ -70,8 +70,8 @@
 
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
-              <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
               <RSButton @click="handleEdit(scope.row, 'view')" type="view" :tip="$t('view_log')"></RSButton>
+              <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
             </template>
           </el-table-column>
         </el-table>

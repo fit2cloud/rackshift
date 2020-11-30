@@ -75,7 +75,7 @@ public class SyncOutBandJob {
                             //同时更新物理机的mac地址到带外列表
                             o.setMac(p.getBmcMac());
                             outBandMapper.updateByPrimaryKey(o);
-                            updatePmStatusInfo(ipmiResult, p, account);
+                            updatePmStatusInfo(ipmiResult, p);
                             String nodeId = p.getServerId();
                             if (StringUtils.isBlank(nodeId)) {
                                 return;
@@ -94,12 +94,12 @@ public class SyncOutBandJob {
         o.setStatus(outBandStatus);
         outBandMapper.updateByPrimaryKeySelective(o);
         pms.stream().forEach(p -> {
-            updatePmStatusInfo(RackHDConstants.PM_POWER_UNKNOWN, p, account);
+            updatePmStatusInfo(RackHDConstants.PM_POWER_UNKNOWN, p);
         });
         return;
     }
 
-    private void updatePmStatusInfo(String ipmiResult, BareMetal machine, IPMIUtil.Account account) {
+    private void updatePmStatusInfo(String ipmiResult, BareMetal machine) {
         //返回结果一般是 Chassis power on/off
         if (StringUtils.isNotBlank(ipmiResult) && ipmiResult.contains(RackHDConstants.PM_POWER_ON)) {
             machine.setPower(RackHDConstants.PM_POWER_ON);

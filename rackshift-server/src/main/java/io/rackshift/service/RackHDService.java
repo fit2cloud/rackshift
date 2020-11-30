@@ -39,6 +39,8 @@ public class RackHDService {
     private String runMode;
     @Resource
     private EndpointMapper endpointMapper;
+    @Resource
+    private OutBandService outBandService;
 
     private JSONArray getCatalogs(String nodeId) {
         JSONArray arr = new JSONArray();
@@ -750,8 +752,27 @@ public class RackHDService {
             physicalMachine.setIpArray(jsonArray.toString());
         }
         //新发现的一律设置为未知 只有填写好带外信息 能定时获取到状态到才有该字段
-        physicalMachine.setPower(RackHDConstants.PM_POWER_UNKNOWN);
+        physicalMachine.setPower(getPmPower(machineEntity.getBmcIp()));
         return physicalMachine;
+    }
+
+    private String getPmPower(String bmcIp) {
+        OutBand o = outBandService.getByIp(bmcIp);
+        if (o != null) {
+            IPMIUtil.Account account = new IPMIUtil.Account(o.getIp(), o.getUserName(), o.getPwd());
+            String ipmiResult = null;
+            try {
+                ipmiResult = IPMIUtil.exeCommand(account, "power status");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (StringUtils.isNotBlank(ipmiResult) && ipmiResult.contains(RackHDConstants.PM_POWER_ON)) {
+                return RackHDConstants.PM_POWER_ON;
+            } else if (StringUtils.isNotBlank(ipmiResult) && ipmiResult.contains(RackHDConstants.PM_POWER_OFF)) {
+                return RackHDConstants.PM_POWER_OFF;
+            }
+        }
+        return RackHDConstants.PM_POWER_UNKNOWN;
     }
 
     public boolean postWorkflow(String url, String nodeId, String workflow, JSONObject param) {

@@ -187,7 +187,7 @@ export default {
     "pls_select_system_parameter": "Please select the system rameter",
     "os_version": "OS version",
     "execution_log": "Deployment Log",
-    "machine_model": "Machine Model",
+    "machine_model": "Machine Brand/Model",
     "machine_sn": "Serial Number",
     "PENDING": "Syncing",
     "new-password": "New Password",
@@ -363,4 +363,6 @@ export default {
     "upload_success_submit": "Submit before uploaded",
     "selected": "Selected",
     "tai": "",
+    "power_text": "Only if correct OBM is set IPMI can read the power status",
+    "machine_brand": "Brand",
 }

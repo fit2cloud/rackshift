@@ -104,6 +104,7 @@ public class BareMetalManager {
                 if (LifeStatus.discovering.name().equalsIgnoreCase(dbBareMetal.getStatus()) || LifeStatus.provisioning.name().equalsIgnoreCase(dbBareMetal.getStatus()) || LifeStatus.deploying.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
                     bareMetal.setStatus(null);
                 }
+                bareMetal.setPower(null);
                 update(bareMetal, false);
             }
             saveOrUpdateHardWare(e);

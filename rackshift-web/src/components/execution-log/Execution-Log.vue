@@ -1,6 +1,6 @@
 <template>
 
-  <el-tabs style="width:100vw;" v-model="activeName">
+  <el-tabs class="t100vw" v-model="activeName">
     <el-tab-pane :label="$t('ExecutionLog')" name="execution-log">
       <div class="container">
 

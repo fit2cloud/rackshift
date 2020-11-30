@@ -105,8 +105,6 @@ public abstract class AbstractHandler implements IStateHandler {
                     workflowRequestDTO.setParams(param);
                 }
             }
-        } else {
-            executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), String.format("无需处理参数..."));
         }
     }
 

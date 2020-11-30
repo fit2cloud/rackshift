@@ -133,14 +133,13 @@ public class WorkflowJob {
     private void writeDetailLog(Endpoint endpoint, Task task) {
         JSONObject runningWorkflow = rackHDService.getWorkflowById(endpoint, task.getInstanceId());
         if (runningWorkflow.containsKey("tasks")) {
-            JSONArray tasks = runningWorkflow.getJSONArray("tasks");
+            JSONArray tasks = orderedTask(runningWorkflow.getJSONArray("tasks"));
             for (int i = 0; i < tasks.size(); i++) {
                 JSONObject taskObj = tasks.getJSONObject(i);
                 ExecutionLogDetailsExample e = new ExecutionLogDetailsExample();
                 e.createCriteria().andInstanceIdEqualTo(taskObj.getString("instanceId"));
                 List<ExecutionLogDetails> logs = executionLogDetailsMapper.selectByExampleWithBLOBs(e);
                 ExecutionLogDetails ex = new ExecutionLogDetails();
-
 
                 if (logs.size() == 0) {
                     ex.setBareMetalId(task.getBareMetalId());
@@ -159,9 +158,32 @@ public class WorkflowJob {
         }
     }
 
+    private JSONArray orderedTask(JSONArray tasks) {
+        JSONArray r = new JSONArray();
+        tasks.forEach(t -> {
+            if (((JSONObject) t).containsKey("waitOn")) {
+                if (StringUtils.isBlank(((JSONObject) t).getString("waitOn"))) {
+                    r.add(t);
+                }
+            }
+        });
+        while (r.size() != tasks.size()) {
+            for (int i = 0; i < tasks.size(); i++) {
+                if (tasks.getJSONObject(i).getString("waitOn").equalsIgnoreCase(r.getJSONObject(r.size() - 1).getString("instanceId"))) {
+                    r.add(tasks.getJSONObject(i));
+                }
+            }
+        }
+
+        return r;
+    }
+
     private void setSubTaskOutput(JSONObject taskObj, ExecutionLogDetails ex) {
         if (ServiceConstants.RackHDTaskStatusEnum.failed.name().equalsIgnoreCase(taskObj.getString("state"))) {
-            ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行失败！详情：" + taskObj.getString("error"));
+            if (StringUtils.isNotBlank(taskObj.getString("error")))
+                ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行失败！详情：" + taskObj.getString("error"));
+            else
+                ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行失败！");
         } else if (ServiceConstants.RackHDTaskStatusEnum.succeeded.name().equalsIgnoreCase(taskObj.getString("state"))) {
             ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行成功！");
         } else if (ServiceConstants.RackHDTaskStatusEnum.cancelled.name().equalsIgnoreCase(taskObj.getString("state"))) {

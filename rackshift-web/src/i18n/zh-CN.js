@@ -187,7 +187,7 @@ export default {
     "pls_select_system_parameter": "请选择系统参数",
     "os_version": "OS 版本",
     "execution_log": "部署日志",
-    "machine_model": "机器型号",
+    "machine_model": "机器品牌/型号",
     "machine_sn": "机器序列号",
     "PENDING": "同步中",
     "new-password": "新密码",
@@ -366,4 +366,6 @@ export default {
     "upload_success_submit": "请等待上传成功之后再点击提交按钮",
     "selected": "已选择",
     "tai": "台",
+    "power_text": "只有配置了正确的带外信息才能通过 IPMI 获取电源状态",
+    "machine_brand": "品牌",
 }

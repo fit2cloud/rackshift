@@ -115,4 +115,11 @@ public class OutBandService {
     private OutBandExample buildExample(OutBandDTO queryVO) {
         return new OutBandExample();
     }
+
+    public OutBand getByIp(String ip) {
+        OutBandExample e = new OutBandExample();
+        e.createCriteria().andIpEqualTo(ip);
+        List<OutBand> outBands = outBandMapper.selectByExample(e);
+        return outBands.size() > 0 ? outBands.get(0) : null;
+    }
 }

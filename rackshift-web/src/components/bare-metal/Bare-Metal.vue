@@ -139,7 +139,7 @@
 
         <el-table-column prop="status" :label="$t('power')" align="left">
           <template slot-scope="scope">
-            <span v-html="powerFilter(scope.row.power)"></span>
+            <PowerStatus :content="$t('power_text')" :status="scope.row.power"></PowerStatus>
           </template>
         </el-table-column>
 
@@ -504,6 +504,7 @@ import Discovery from "../discovery/Discovery"
 import Vue from "vue"
 import i18n from "@/i18n/i18n";
 import {WebSocketUtil} from "@/common/utils/WebSocket";
+import PowerStatus from '../../common/powerstatus/Power-Status'
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -613,7 +614,7 @@ export default {
     }
   },
   components: {
-    OBM, Discovery
+    OBM, Discovery, PowerStatus
   },
   computed: {},
   destroyed() {
@@ -645,6 +646,9 @@ export default {
       }
     },
     powerFilter(status) {
+      if ("unknown" == status) {
+        return "<i class='el-icon-question'>" + this.$t(status) + "</i>";
+      }
       return this.$t(status);
     },
     openDiscover() {

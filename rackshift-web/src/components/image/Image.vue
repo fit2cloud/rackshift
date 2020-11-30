@@ -1,5 +1,5 @@
 <template>
-  <el-tabs style="width:100vw;" v-model="activeName">
+  <el-tabs class="t100vw" v-model="activeName">
     <el-tab-pane :label="$t('image')" name="image">
       <div class="container">
 
