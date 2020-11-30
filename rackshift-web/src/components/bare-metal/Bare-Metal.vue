@@ -137,7 +137,10 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="status" :label="$t('power')" align="left">
+        <el-table-column prop="status" :label="$t('power')" align="left"
+                         :filters="[{ text: $t('power_on'), value: 'on' }, { text: $t('power_off'), value: 'off' }, { text: $t('unknown'), value: 'unknown' }]"
+                         :filter-method="filterPower"
+                         filter-placement="bottom-end" l>
           <template slot-scope="scope">
             <PowerStatus :content="$t('power_text')" :status="scope.row.power"></PowerStatus>
           </template>
@@ -632,6 +635,9 @@ export default {
   }
   ,
   methods: {
+    filterPower(tag, row) {
+      return row.power == tag;
+    },
     notify(msg) {
       this.getData();
       this.$notify({
