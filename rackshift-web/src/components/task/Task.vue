@@ -191,6 +191,12 @@ export default {
     if (this.websocket) {
       this.websocket.close();
     }
+    if (this.refreshTaskPointer) {
+      clearInterval(this.refreshTaskPointer);
+    }
+    if (this.refreshSubTaskPointer) {
+      clearInterval(this.refreshSubTaskPointer);
+    }
   },
   mounted() {
     if (!this.websocket) {
