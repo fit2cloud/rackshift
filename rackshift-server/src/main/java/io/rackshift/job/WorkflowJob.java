@@ -100,7 +100,7 @@ public class WorkflowJob {
                 //更新日志
                 writeDetailLog(endpoint, task);
                 //运行结束
-                if (!ServiceConstants.TaskStatusEnum.running.name().equals(status)) {
+                if (StringUtils.isNotBlank(status) && !ServiceConstants.TaskStatusEnum.running.name().equals(status)) {
                     WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
                     requestDTO.setTaskId(task.getId());
                     if (ServiceConstants.TaskStatusEnum.cancelled.name().equals(status) || ServiceConstants.TaskStatusEnum.failed.name().equals(status)) {
