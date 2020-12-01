@@ -257,8 +257,15 @@ export default {
           callback();
         }
 
+        let that = this;
         if (_.find(res.data.listObject, (o) => o.status == 'running' || o.status == 'created')) {
-          this.refreshTaskPointer = setInterval(this.getDataNoLoading, 3000);
+          if (!that.refreshTaskPointer) {
+            that.refreshTaskPointer = setInterval(that.getDataNoLoading, 3000);
+          }
+        } else {
+          if (this.refreshTaskPointer) {
+            clearInterval(this.refreshTaskPointer);
+          }
         }
       });
     },
@@ -267,7 +274,7 @@ export default {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
         if (!_.find(res.data.listObject, (o) => o.status == 'running' || o.status == 'created')) {
-          if (!this.refreshTaskPointer) {
+          if (this.refreshTaskPointer) {
             clearInterval(this.refreshTaskPointer);
           }
         }
