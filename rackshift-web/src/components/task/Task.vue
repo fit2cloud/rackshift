@@ -387,6 +387,7 @@ export default {
 }
 
 .mb10 {
+  display: block;
   margin-bottom: 10px;
 }
 
