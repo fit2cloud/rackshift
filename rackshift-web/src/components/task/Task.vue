@@ -273,9 +273,10 @@ export default {
       HttpUtil.post("/task/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
+        let that = this;
         if (!_.find(res.data.listObject, (o) => o.status == 'running' || o.status == 'created')) {
-          if (this.refreshTaskPointer) {
-            clearInterval(this.refreshTaskPointer);
+          if (that.refreshTaskPointer) {
+            clearInterval(that.refreshTaskPointer);
           }
         }
         if (callback) {
