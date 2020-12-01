@@ -250,21 +250,21 @@ export default {
     getData(callback) {
       this.loadingList = true;
       HttpUtil.post("/task/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
-        this.tableData = res.data.listObject;
-        this.pageTotal = res.data.itemCount;
-        this.loadingList = false;
+        let that = this;
+        that.tableData = res.data.listObject;
+        that.pageTotal = res.data.itemCount;
+        that.loadingList = false;
         if (callback) {
           callback();
         }
 
-        let that = this;
         if (_.find(res.data.listObject, (o) => o.status == 'running' || o.status == 'created')) {
           if (!that.refreshTaskPointer) {
             that.refreshTaskPointer = setInterval(that.getDataNoLoading, 3000);
           }
         } else {
-          if (this.refreshTaskPointer) {
-            clearInterval(this.refreshTaskPointer);
+          if (that.refreshTaskPointer) {
+            clearInterval(that.refreshTaskPointer);
           }
         }
       });
