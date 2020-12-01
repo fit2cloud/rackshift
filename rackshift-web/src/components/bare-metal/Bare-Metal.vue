@@ -1019,6 +1019,7 @@ export default {
 
 #run-workflow {
   min-width: 120px;
+  margin-right: 20px;
 }
 
 #workflow-selector {
