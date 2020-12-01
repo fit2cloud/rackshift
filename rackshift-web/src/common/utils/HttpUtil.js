@@ -2,26 +2,33 @@ import axios from 'axios'
 import {MessageBox} from 'element-ui';
 import i18n from "@/i18n/i18n";
 
+function LoginError(message) {
+    this.message = message;
+    this.name = 'LoginError';
+    Error.captureStackTrace(this, LoginError);
+}
+
+LoginError.prototype = new Error;
+LoginError.prototype.constructor = LoginError;
+
+function loginFail() {
+    MessageBox.alert(i18n.t('login_timeout'), i18n.t('tips'), {
+        confirmButtonText: i18n.t('confirm'),
+        callback: action => {
+            localStorage.removeItem("login");
+            window.location.href = "/";
+        }
+    });
+}
+
 axios.interceptors.response.use(function (response) {
-    if (JSON.stringify(response.data).indexOf('Authentication Status Invalid') != -1) {
-        MessageBox.alert(i18n.t('login_timeout'), i18n.t('tips'), {
-            confirmButtonText: i18n.t('confirm'),
-            callback: action => {
-                localStorage.removeItem("login");
-                window.location.href = "/";
-            }
-        });
+    if (response && response.data && typeof response.data == 'string' && response.data.indexOf("Authentication Status Invalid") != -1) {
+        throw new LoginError("login time out");
     }
     return response;
 }, function (error) {
-    if (JSON.stringify(error.response).indexOf('Authentication Status Invalid') != -1) {
-        MessageBox.alert(i18n.t('login_timeout'), i18n.t('tips'), {
-            confirmButtonText: i18n.t('confirm'),
-            callback: action => {
-                localStorage.removeItem("login");
-                window.location.href = "/";
-            }
-        });
+    if (error.response.data && error.response.data.indexOf('Authentication Status Invalid') != -1) {
+        throw new LoginError("login time out");
     } else {
         return Promise.reject(error);
     }
@@ -42,7 +49,11 @@ const HttpUtil = {
                 }
             }
         }).catch((e) => {
-            MessageBox.alert(e);
+            if (LoginError.prototype.isPrototypeOf(e)) {
+                loginFail();
+            } else {
+                MessageBox.alert(e);
+            }
         });
     },
 
@@ -62,7 +73,11 @@ const HttpUtil = {
             if (errorHandler) {
                 errorHandler(e);
             } else {
-                MessageBox.alert(e);
+                if (LoginError.prototype.isPrototypeOf(e)) {
+                    loginFail();
+                } else {
+                    MessageBox.alert(e);
+                }
             }
         });
     }

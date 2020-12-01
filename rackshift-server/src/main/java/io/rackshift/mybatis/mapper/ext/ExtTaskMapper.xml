@@ -16,6 +16,9 @@
         <result column="friendly_name" jdbcType="VARCHAR" property="friendlyName"/>
         <result column="params" jdbcType="LONGVARCHAR" property="params"/>
         <result column="extParams" jdbcType="LONGVARCHAR" property="extparams"/>
+        <result column="success_count" jdbcType="VARCHAR" property="successCount"/>
+        <result column="total_count" jdbcType="VARCHAR" property="totalCount"/>
+        <result column="percent" jdbcType="VARCHAR" property="percent"/>
     </resultMap>
 
     <select id="list" parameterType="io.rackshift.model.TaskDTO" resultMap="BaseResultMap">
@@ -23,7 +26,16 @@
         task.*,
         bare_metal.machine_model,
         bare_metal.machine_sn,
-        workflow.friendly_name
+        workflow.friendly_name,
+        ifnull((select count(*) from execution_log_details eld where eld.log_id = task.id and eld.status = 'succeeded'
+        and instance_id is not null), 0) success_count,
+        ifnull((select count(*) from execution_log_details eld where eld.log_id = task.id and instance_id is not
+        null),0)
+        total_count,
+        ifnull((select count(*) from execution_log_details eld where eld.log_id = task.id and eld.status = 'succeeded'
+        and instance_id is not null) / (select count(*) from execution_log_details eld where eld.log_id = task.id and
+        instance_id is not null), 0)
+        percent
         from task
         left join bare_metal on task.bare_metal_id = bare_metal.id
         left join workflow on task.work_flow_id = workflow.injectable_name

@@ -229,7 +229,7 @@ export default {
     "pls_input_name": "请输入名称",
     "pls_select_discovery-devices": "请选择已发现设备",
     "dhcp_enable": "是否开启 DHCP",
-    "injectable_name": "RackHD 数据库名称",
+    "injectable_name": "工作流模板",
     "proc_name": "处理器型号",
     "no_nessary_to_set": "无参数设置",
     "raid": "RAID级别",
@@ -251,7 +251,6 @@ export default {
     "provisioning": "准备中",
     "allocated": "已分配",
     "friendly_name": "名称",
-    "injectable_mame": "RackHD 数据库名称",
     "os": "OS",
     "opt_success": "操作成功",
     "nic_detail": "网卡详情",
@@ -354,7 +353,7 @@ export default {
     "no_more_logs": "无更多日志...",
     "about": "关于",
     "about_us": "关于",
-    "server_message": "服务器消息",
+    "server_message": "工作流消息",
     "power_on": "开机",
     "power_off": "关机",
     "power_pxe": "PXE 重启",
@@ -369,5 +368,7 @@ export default {
     "power_text": "只有配置了正确的带外信息才能通过 IPMI 获取电源状态",
     "machine_brand": "品牌",
     "cancel_task_success": "取消任务成功！请等待任务自动结束！",
-    "pxe_open_tip": "该节点将会开启 DHCP PXE 功能，所有该网段的物理机 PXE 启动将会被 RackShift 代理 "
+    "pxe_open_tip": "该节点将会开启 DHCP PXE 功能，所有该网段的物理机 PXE 启动将会被 RackShift 代理 ",
+    "add_protocol_param": "添加一个探测参数",
+    "IPMI+Rest": "IPMI 带外控制卡"
 }

@@ -114,10 +114,19 @@ export default {
             userName: this.ruleForm.userName,
             password: this.ruleForm.password
           }, (res) => {
-            localStorage.setItem('login', true);
-            localStorage.setItem('user', JSON.stringify(res.data));
-            localStorage.setItem('first', true);
-            window.location.href = "/";
+            if (res.success) {
+              localStorage.setItem('login', true);
+              localStorage.setItem('user', JSON.stringify(res.data));
+              localStorage.setItem('first', true);
+              window.location.href = "/";
+            } else {
+              let msg = res.message;
+              if (msg && msg.indexOf('Authentication failed for token submission') != -1) {
+                this.$message.error(this.$t('username_pwd_error_login_fail'));
+              } else {
+                this.$message.error(this.$t('login_fail'));
+              }
+            }
           }, (msg) => {
             if (msg && msg.indexOf('Authentication failed for token submission') != -1) {
               this.$message.error(this.$t('username_pwd_error_login_fail'));

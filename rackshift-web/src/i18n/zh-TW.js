@@ -229,7 +229,7 @@ export default {
     "pls_input_name": "請輸入名稱",
     "pls_select_discovery-devices": "請選擇已發現設備",
     "dhcp_enable": "是否開啟 DHCP",
-    "injectable_name": "RackHD 數據庫名稱",
+    "injectable_name": "工作流模板",
     "proc_name": "處理器型號",
     "no_nessary_to_set": "無慘數設置",
     "raid": "Raid 級別",
@@ -251,7 +251,6 @@ export default {
     "provisioning": "準備中",
     "allocated": "已分配",
     "friendly_name": "名稱",
-    "injectable_mame": "RackHD 數據庫名稱",
     "os": "OS",
     "opt_success": "操作成功",
     "nic_detail": "網卡詳情",
@@ -353,7 +352,7 @@ export default {
     "no_more_logs": "無更多日志...",
     "about": "關於",
     "about_us": "關於",
-    "server_message": "服務器消息",
+    "server_message": "工作流消息",
     "power_on": "開機",
     "power_off": "關機",
     "power_pxe": "PXE 重啓",
@@ -368,5 +367,7 @@ export default {
     "power_text": "衹有配置了正確的帶外信息才能通過 IPMI 獲取電源狀態",
     "machine_brand": "品牌",
     "cancel_task_success": "取消任務成功！請等待任務自動結束！",
+    "add_protocol_param": "添加一個探測參數",
+    "IPMI+Rest": "IPMI 帶外控制卡"
 
 }

@@ -118,7 +118,7 @@
                 <tr v-for="(p, $index) in editObj.credentialParam">
                   <td>
                     <el-select v-model="p.protocol">
-                      <el-option v-for="pro in protocols" :value="pro.name" :label="pro.name">
+                      <el-option v-for="pro in protocols" :value="pro.name" :label="$t(pro.name)">
                       </el-option>
                     </el-select>
                   </td>

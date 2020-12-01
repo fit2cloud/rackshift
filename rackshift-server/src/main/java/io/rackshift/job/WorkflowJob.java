@@ -193,5 +193,6 @@ public class WorkflowJob {
         } else {
             ex.setOutPut("子任务:" + taskObj.getString("label") + " 已提交,等待执行...");
         }
+        ex.setStatus(taskObj.getString("state"));
     }
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span :class="{ green : status == 'on', red : status == 'off'}">
+    <span :class="{ green : status == 'on', red : status == 'off', grey : status == 'unknown'}">
     {{ $t(status) }}
     </span>
     <el-tooltip class="dark" :content="content">
@@ -15,10 +15,17 @@ export default {
 </script>
 <style>
 .red {
+  font-weight: 500;
   color: red;
 }
 
 .green {
-  color: greenyellow;
+  font-weight: 500;
+  color: #55BA23;
+}
+
+.grey {
+  font-weight: 500;
+  color: #424342;
 }
 </style>

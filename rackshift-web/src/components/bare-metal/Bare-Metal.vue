@@ -13,69 +13,6 @@
           </el-button>
         </el-button-group>
       </div>
-      <!--      <div id="control" style="display: none;">-->
-      <!--        &lt;!&ndash;      <div id="control" style="display: flex;">&ndash;&gt;-->
-
-      <!--        <div id="workflow-selector" style="display: flex;">-->
-      <!--          <div id="select-workflow">-->
-      <!--            <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">-->
-      <!--              {{ $t('Workflow') }}-->
-      <!--            </div>-->
-      <!--            <div class="run-splitter h25"></div>-->
-      <!--            <el-select v-model="wfRequest.workflow" filterable :placeholder="$t('please_select')"-->
-      <!--                       @change="getParamsTemplate">-->
-      <!--              <el-option-->
-      <!--                  v-for="g in supportedWorkflow"-->
-      <!--                  :label="$t(g.friendlyName)"-->
-      <!--                  :value="g.id"></el-option>-->
-      <!--            </el-select>-->
-
-      <!--            <el-button :disabled="this.multipleSelection.length == 0 || !wfRequest.workflow"-->
-      <!--                       @click="addToSelectedWorkflow"-->
-      <!--                       class="h50 ml10"><span-->
-      <!--                class="el-icon-circle-plus"></span>{{ $t('add_to_selected_wf_list') }}-->
-      <!--            </el-button>-->
-      <!--          </div>-->
-      <!--        </div>-->
-
-      <!--        <div id="action-list">-->
-      <!--          <div class="el-icon-s-operation h25"-->
-      <!--               style="border-bottom: yellowgreen 1px solid;width: 100%;">-->
-      <!--            <el-badge :value="selectedWorkflow.length" class="item" type="primary" v-show="selectedWorkflow.length">-->
-      <!--              {{ $t('selected_workflows') }}-->
-      <!--            </el-badge>-->
-      <!--            <span v-show="selectedWorkflow.length == 0">-->
-      <!--              {{ $t('selected_workflows') }}-->
-      <!--              </span>-->
-      <!--          </div>-->
-      <!--          <div>-->
-      <!--            <el-card v-for="(w, $index) in selectedWorkflow" style="height:100%;">-->
-      <!--              <el-row>-->
-      <!--                <el-col :span="6">-->
-      <!--                  <el-button @click="deleteSelectedWorkflow($index)" class="h50 ml10"><span-->
-      <!--                      class="el-icon-remove"></span>{{ $t('del') }}-->
-      <!--                  </el-button>-->
-      <!--                </el-col>-->
-
-      <!--                <el-col :span="10">-->
-      <!--                  {{ w.machineModel + ' ' + w.machineSn }}-->
-      <!--                  <br>-->
-      <!--                  {{ w.friendlyName }}-->
-      <!--                </el-col>-->
-
-      <!--                <el-col :span="8">-->
-      <!--                  <el-button @click="editWfParams($index)" v-if="w.settable">-->
-      <!--                    {{ $t('set_workflow_param') }}-->
-      <!--                  </el-button>-->
-      <!--                  <span v-if="!w.settable">-->
-      <!--                    {{ $t('no_nessary_to_set') }}-->
-      <!--                   </span>-->
-      <!--                </el-col>-->
-      <!--              </el-row>-->
-      <!--            </el-card>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--      </div>-->
 
       <el-table
           :data="tableData"
@@ -159,13 +96,13 @@
                 {{ $t('opt') }}<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click.native="power('on', scope.row)">{{ $t('poweron') }}
+                <el-dropdown-item @click.native="power('on', scope.row)">{{ $t('power_on') }}
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="power('off', scope.row)">{{ $t('poweroff') }}
+                <el-dropdown-item @click.native="power('off', scope.row)">{{ $t('power_off') }}
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="power('reset', scope.row)">{{ $t('reset') }}
+                <el-dropdown-item @click.native="power('reset', scope.row)">{{ $t('power_reset') }}
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('pxeboot') }}
+                <el-dropdown-item @click.native="power('pxe', scope.row)">{{ $t('power_pxe') }}
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="fillOBM(scope.row)"> {{ $t('OBM') + $t('info') }}
                 </el-dropdown-item>
@@ -414,16 +351,6 @@
       </el-divider>
       <div id="control-drawer">
 
-        <div id="run-workflow" class="action-div">
-          <div class="el-icon-caret-right h25"
-               style="border-bottom: yellowgreen 1px solid;    width: 100%;">{{ $t('Run') }}
-          </div>
-          <div class="run-splitter h25"></div>
-          <div class="center">
-            <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
-          </div>
-        </div>
-
         <div id="workflow-selector" class="action-div">
           <div id="select-workflow">
             <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
@@ -491,6 +418,15 @@
           </div>
         </div>
 
+        <div id="run-workflow" class="action-div">
+          <div class="el-icon-caret-right h25"
+               style="border-bottom: yellowgreen 1px solid;    width: 100%;">{{ $t('Run') }}
+          </div>
+          <div class="run-splitter h25"></div>
+          <div class="center">
+            <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
+          </div>
+        </div>
       </div>
 
     </drawer>
@@ -537,7 +473,7 @@ export default {
       multipleSelection: [],
       delList: [],
       editVisible: false,
-      formLabelWidth: '80px',
+      formLabelWidth: '90px',
       pageTotal: 0,
       loading: false,
       columns: [
@@ -651,12 +587,6 @@ export default {
         this.getData(true);
       }
     },
-    powerFilter(status) {
-      if ("unknown" == status) {
-        return "<i class='el-icon-question'>" + this.$t(status) + "</i>";
-      }
-      return this.$t(status);
-    },
     openDiscover() {
       this.discoveryVisible = true;
       if (this.$refs.discoveryCom)
@@ -665,15 +595,15 @@ export default {
     statusFilter(row) {
       if (row.status.indexOf("ing") == -1) {
         if (row.serverId)
-          return '<span style="display: inline-block;">' +
-              this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i><br>'
-              + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
+          return '<span style="display: inline-block;white-space: nowrap;">' +
+              this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i><br>'
+              + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
         else
-          return '<span style="display: inline-block;">' +
+          return '<span style="display: inline-block;white-space: nowrap;">' +
               this.$t('PXE') + ' ' + this.$t('status') + '<i class="el-icon-close" style="margin-left:5px;color: red;"></i><br>'
-              + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:greenyellow;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
+              + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
       } else {
-        return '<span style="display: inline-block;">' +
+        return '<span style="display: inline-block;white-space: nowrap;">' +
             this.$t('PXE') + ' ' + this.$t(row.status) + '<br>';
       }
     },

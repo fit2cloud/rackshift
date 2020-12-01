@@ -28,10 +28,10 @@
 
           <el-table-column prop="friendlyName" :label="$t('friendly_name')" align="left">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">
-                <span style="display: block; word-break:keep-all;
+              <!--              <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">-->
+              <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.friendlyName }}</span>
-              </el-tooltip>
+              <!--              </el-tooltip>-->
             </template>
 
           </el-table-column>
@@ -42,10 +42,10 @@
 
           <el-table-column prop="eventType" :label="$t('event_type')" align="left">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :content="i18n(scope.row.eventType)" placement="right-end">
-                <span style="display: block; word-break:keep-all;
+              <!--              <el-tooltip class="item" effect="dark" :content="i18n(scope.row.eventType)" placement="right-end">-->
+              <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.eventType | eventFormat }}</span>
-              </el-tooltip>
+              <!--              </el-tooltip>-->
             </template>
           </el-table-column>
 
@@ -92,7 +92,7 @@
           <div class="demo-drawer__content">
             <el-form :model="editObj" :label-position="labelPosition" :rules="rules" ref="form">
 
-              <el-form-item :label="$t('injectable_mame')" prop="injectableName">
+              <el-form-item :label="$t('injectable_name')" prop="injectableName">
                 <el-select filterable v-model="editObj.injectableName" :placeholder="$t('pls_select')"
                            :disabled="editObj.type == 'system'" v-on:change="changeFriendlyName">
                   <el-option
@@ -163,7 +163,7 @@
 import HttpUtil from "../../common/utils/HttpUtil"
 import Vue from "vue"
 import i18n from "@/i18n/i18n";
-import {requiredValidator, requiredSelectValidator} from "@/common/validator/CommonValidator";
+import {requiredSelectValidator, requiredValidator} from "@/common/validator/CommonValidator";
 
 Vue.filter('eventFormat', function (name) {
   if (!name || name.length == 0) {

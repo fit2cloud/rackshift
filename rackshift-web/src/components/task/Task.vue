@@ -25,10 +25,10 @@
 
           <el-table-column prop="machineModel" :label="$t('Bare Metal Server')" align="left" :sortable="true">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :content="scope.row.machineModel" placement="right-end">
-                <span style="display: block; word-break:keep-all;
+              <!--              <el-tooltip class="item" effect="dark" :content="scope.row.machineModel" placement="right-end">-->
+              <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>
-              </el-tooltip>
+              <!--              </el-tooltip>-->
             </template>
           </el-table-column>
 
@@ -37,10 +37,10 @@
 
           <el-table-column prop="friendlyName" :label="$t('Workflow')" align="left" :sortable="true" width="210">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">
-                <span style="display: block; word-break:keep-all;
+              <!--              <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">-->
+              <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.friendlyName }}</span>
-              </el-tooltip>
+              <!--              </el-tooltip>-->
             </template>
           </el-table-column>
 
@@ -51,6 +51,9 @@
             <template slot-scope="scope">
               <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
               <span style="margin-left: 10px">{{ $t(scope.row.status) }}</span>
+              <span class="percent" v-if="scope.row.status.indexOf('ing') != -1 && scope.row.totalCount != 0">{{
+                  scope.row.successCount + '/' + scope.row.totalCount
+                }}</span>
             </template>
           </el-table-column>
 
@@ -127,7 +130,8 @@ export default {
   data() {
     return {
       refreshOne: false,
-      refreshPointer: null,
+      refreshSubTaskPointer: null,
+      refreshTaskPointer: null,
       logs: [],
       activeName: 'task',
       rules: {
@@ -221,7 +225,10 @@ export default {
 
         if (that.logs && that.logs.length) {
           let lastRackHDLog = that.logs[that.logs.length - 1];
-
+          HttpUtil.post("/task/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
+            this.tableData = res.data.listObject;
+            this.pageTotal = res.data.itemCount;
+          });
           if (lastRackHDLog.status == 'START') {
             if (!this.refreshOne) {
               this.refreshOne = true;
@@ -231,7 +238,7 @@ export default {
             }
           }
           if (lastRackHDLog.status == 'END') {
-            clearInterval(that.refreshPointer);
+            clearInterval(that.refreshSubTaskPointer);
             that.getData(function () {
               that.editObj = _.find(that.tableData, (l) => l.id == that.editObj.id);
             });
@@ -249,6 +256,24 @@ export default {
         if (callback) {
           callback();
         }
+
+        if (_.find(res.data.listObject, (o) => o.status == 'running' || o.status == 'created')) {
+          this.refreshTaskPointer = setInterval(this.getDataNoLoading, 3000);
+        }
+      });
+    },
+    getDataNoLoading(callback) {
+      HttpUtil.post("/task/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
+        this.tableData = res.data.listObject;
+        this.pageTotal = res.data.itemCount;
+        if (!_.find(res.data.listObject, (o) => o.status == 'running' || o.status == 'created')) {
+          if (!this.refreshTaskPointer) {
+            clearInterval(this.refreshTaskPointer);
+          }
+        }
+        if (callback) {
+          callback();
+        }
       });
     },
     refreshChildData() {
@@ -259,7 +284,7 @@ export default {
     },
     handleClose() {
       this.editDialogVisible = false;
-      window.clearInterval(this.refreshPointer);
+      window.clearInterval(this.refreshSubTaskPointer);
     },
     add() {
       this.editDialogVisible = true;
@@ -323,7 +348,7 @@ export default {
         HttpUtil.get("/task/logs?id=" + that.editObj.id, {}, (res) => {
           that.editDialogVisible = true;
           that.logs = res.data;
-          that.refreshPointer = setInterval(that.getLogs, 5000);
+          that.refreshSubTaskPointer = setInterval(that.getLogs, 5000);
         });
       }
     },
@@ -374,4 +399,7 @@ export default {
   vertical-align: top;
 }
 
+.percent {
+  margin-left: 3px;
+}
 </style>
