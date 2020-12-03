@@ -47,7 +47,7 @@ export default {
       dialogVisible: false,
       githubUrl: 'https://github.com/rackshift/rackshift',
       websiteUrl: 'https://metersphere.io',
-      version: '1.2.0'
+      version: '1.2.1'
     }
   },
   created() {
