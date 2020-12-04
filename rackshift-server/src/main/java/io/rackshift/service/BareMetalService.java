@@ -84,6 +84,12 @@ public class BareMetalService {
         if (!(resultHolder = ipmiHandlerDecorator.execute(opt, account, pm, outBands.get(0))).isSuccess()) {
             ResultHolder.error(resultHolder.getMessage());
         }
+
+        if ("pxe".equalsIgnoreCase(opt)) {
+            pm.setStatus(LifeStatus.discovering.name());
+        }
+        bareMetalManager.update(pm, true);
+
         return ResultHolder.success("");
     }
 
