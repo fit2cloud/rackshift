@@ -3,6 +3,7 @@ package io.rackshift.job.model;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.PluginConstants;
+import io.rackshift.constants.RackHDConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.metal.sdk.IMetalProvider;
@@ -13,10 +14,7 @@ import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.BareMetalRuleMapper;
 import io.rackshift.service.OutBandService;
-import io.rackshift.utils.BeanUtils;
-import io.rackshift.utils.ExceptionUtils;
-import io.rackshift.utils.IpUtil;
-import io.rackshift.utils.LogUtil;
+import io.rackshift.utils.*;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 import org.apache.commons.lang3.StringUtils;
@@ -134,15 +132,15 @@ public class DiscoveryTask extends Thread {
                                 outBandService.saveOrUpdate(o);
                             }
                         } else {
-                            LogUtil.info("探测裸金属失败！" + JSONObject.toJSONString(request));
+                            LogUtil.info("使用插件探测裸金属失败！" + JSONObject.toJSONString(request));
+                            onlyExtractIPMI(request, bareMetalRule);
                         }
                     }
                 }
             }
             bareMetalRule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.SUCCESS.name());
 
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             bareMetalRule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.ERROR.name());
             LogUtil.error(String.format("嗅探发生异常:%s", ExceptionUtils.getExceptionDetail(e)));
         }
@@ -153,6 +151,45 @@ public class DiscoveryTask extends Thread {
             countDownLatch.countDown();
         }
 
+    }
+
+    private void onlyExtractIPMI(ProtocolRequest request, BareMetalRule bareMetalRule) throws Exception {
+        IPMIUtil.Account account = IPMIUtil.Account.build(request.getHost(), request.getUserName(), request.getPwd());
+        //获取通用硬件信息
+        String commandResult = IPMIUtil.exeCommand(account, "fru");
+        JSONObject fruObj = IPMIUtil.transform(commandResult);
+        //获取bmc网卡信息
+        String bmcResult = IPMIUtil.exeCommand(account, "lan print");
+        JSONObject lanObj = IPMIUtil.transform(bmcResult);
+
+        String powerResult = IPMIUtil.exeCommand(account, "power status");
+
+        String machineBrand = fruObj.getString("Product Manufacturer");
+        String machineSn = fruObj.getString("Product Serial");
+        String name = machineBrand + " " + fruObj.getString("Product Name");
+
+        BareMetal physicalMachine = new BareMetal();
+        physicalMachine.setMachineModel(name);
+        physicalMachine.setId(UUIDUtil.newUUID());
+        if (powerResult.contains(RackHDConstants.PM_POWER_ON)) {
+            physicalMachine.setPower(RackHDConstants.PM_POWER_ON);
+        } else if (powerResult.contains(RackHDConstants.PM_POWER_OFF)) {
+            physicalMachine.setPower(RackHDConstants.PM_POWER_OFF);
+        } else {
+            physicalMachine.setPower(RackHDConstants.PM_POWER_UNKNOWN);
+        }
+        physicalMachine.setManagementIp(account.getHost());
+        physicalMachine.setMachineSn(machineSn);
+        physicalMachine.setMachineModel(fruObj.getString("Product Name"));
+        if ("DELL".equalsIgnoreCase(machineBrand)) {
+            physicalMachine.setMachineModel(fruObj.getString("Board Product"));
+        }
+        physicalMachine.setMachineBrand(machineBrand);
+        physicalMachine.setBmcMac(lanObj.getString("MAC Address"));
+        physicalMachine.setRuleId(bareMetalRule.getId());
+        //插入ipmi发现的物理机之前 再次用序列号查询一次 没有重复的才能插入
+        physicalMachine.setProviderId("");
+        bareMetalManager.addToBareMetal(physicalMachine);
     }
 
     private MachineEntity convert(io.rackshift.metal.sdk.model.MachineEntity machineEntity) {
