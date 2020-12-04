@@ -110,10 +110,17 @@ public class DiscoveryTask extends Thread {
                         MachineEntity entity = null;
                         //使用不同的协议去测试爬取硬件信息
                         request.setHost(ip);
-                        if (ServiceConstants.SNMP.equalsIgnoreCase(request.getProtocol())) {
-                            entity = convert(iMetalProvider.getMachineEntityThroughSNMP(JSONObject.toJSONString(request)));
-                        } else {
-                            entity = convert(iMetalProvider.getMachineEntity(JSONObject.toJSONString(request)));
+                        try {
+                            if (ServiceConstants.SNMP.equalsIgnoreCase(request.getProtocol())) {
+                                entity = convert(iMetalProvider.getMachineEntityThroughSNMP(JSONObject.toJSONString(request)));
+                            } else {
+                                entity = convert(iMetalProvider.getMachineEntity(JSONObject.toJSONString(request)));
+                            }
+                        } catch (Exception e) {
+                            LogUtil.info("爬虫抓取硬件信息失败！" + ExceptionUtils.getExceptionDetail(e));
+                            if (ServiceConstants.IPMI_Rest.equalsIgnoreCase(request.getProtocol())) {
+                                onlyExtractIPMI(request, bareMetalRule);
+                            }
                         }
                         if (entity != null) {
                             entity.setProviderId(iMetalProvider.getName());
@@ -133,9 +140,6 @@ public class DiscoveryTask extends Thread {
                             }
                         } else {
                             LogUtil.info("使用插件探测裸金属失败！" + JSONObject.toJSONString(request));
-                            if (ServiceConstants.IPMI_Rest.equalsIgnoreCase(request.getProtocol())) {
-                                onlyExtractIPMI(request, bareMetalRule);
-                            }
                         }
                     }
                 }
