@@ -366,11 +366,20 @@ export default {
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
+        this.loadingList = true;
         HttpUtil.post("/workflow/del", ids, (res) => {
-          this.$message.success(this.$t('opt_success'));
-          this.getData();
+          if (res.success) {
+            this.$message.success(this.$t('delete_success'));
+            this.getData();
+            this.multipleSelection = [];
+            this.loadingList = false;
+          } else {
+            this.$message.success(this.$t('delete_fail'));
+          }
+        }, (e) => {
+          this.$message.success(this.$t('delete_fail'));
+          this.loadingList = false;
         });
-        this.multipleSelection = [];
       });
     },
     // 编辑操作
@@ -388,9 +397,14 @@ export default {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
+          this.loadingList = true;
           HttpUtil.get("/workflow/del/" + row.id, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
+            this.loadingList = false;
+          }, (res) => {
+            this.$message.error(this.$t('delete_fail!'));
+            this.loadingList = false;
           });
         })
       } else {

@@ -42,7 +42,7 @@ export default {
     "add_outband": "添加带外",
     "add_workflow": "添加工作流",
     "network_card": "网卡",
-    "endpoint": "代理节点",
+    "endpoint": "节点",
     "pls_select_bare_metal": "请选择将执行工作流的裸金属服务器",
     "start_ip": "起始 IP",
     "edit_execution_log": "编辑部署日志",
@@ -370,5 +370,6 @@ export default {
     "cancel_task_success": "取消任务成功！请等待任务自动结束！",
     "pxe_open_tip": "该节点将会开启 DHCP PXE 功能，所有该网段的物理机 PXE 启动将会被 RackShift 代理 ",
     "add_protocol_param": "添加一个探测参数",
-    "IPMI+Rest": "IPMI 带外控制卡"
+    "IPMI+Rest": "IPMI 带外控制卡",
+    "workflow_submitted": "工作流已下发，请到任务页面查看执行日志"
 }

@@ -25,14 +25,15 @@
             @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" align="left"></el-table-column>
+
+          <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="left"
+                           v-for="c in columns" :sortable="c.sort"></el-table-column>
+
           <el-table-column prop="endpointId" :label="$t('endpoint')" align="left">
             <template slot-scope="scope">
               {{ scope.row.endpointId | endpointFormat }}
             </template>
           </el-table-column>
-
-          <el-table-column :prop="c.prop" :formatter="getValidProText" :label="c.label" align="left"
-                           v-for="c in columns" :sortable="c.sort"></el-table-column>
 
           <el-table-column :label="$t('dhcp_enable')" align="left">
             <template slot-scope="scope">
@@ -292,11 +293,20 @@ export default {
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
+        this.loadingList = true;
         HttpUtil.post("/network/del", ids, (res) => {
-          this.$message.success(this.$t('delete_success'));
-          this.getData();
+          if (res.success) {
+            this.$message.success(this.$t('delete_success'));
+            this.getData();
+            this.multipleSelection = [];
+            this.loadingList = false;
+          } else {
+            this.$message.success(this.$t('delete_fail'));
+          }
+        }, (e) => {
+          this.$message.success(this.$t('delete_fail'));
+          this.loadingList = false;
         });
-        this.multipleSelection = [];
       });
     },
     // 编辑操作

@@ -131,6 +131,8 @@ public class ImageService {
                 } else {
                     RSException.throwExceptions(rObj.getString("msg"));
                 }
+            } else {
+                return true;
             }
         } catch (Exception e) {
             if (new File(imageDTO.getFilePath()).exists())

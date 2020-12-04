@@ -368,6 +368,6 @@ export default {
     "machine_brand": "品牌",
     "cancel_task_success": "取消任務成功！請等待任務自動結束！",
     "add_protocol_param": "添加一個探測參數",
-    "IPMI+Rest": "IPMI 帶外控制卡"
-
+    "IPMI+Rest": "IPMI 帶外控制卡",
+    "workflow_submitted": "工作流已下發，請到任務頁面查看執行日志"
 }

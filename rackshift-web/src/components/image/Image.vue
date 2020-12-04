@@ -25,15 +25,16 @@
             @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" align="left"></el-table-column>
-          <el-table-column prop="endpointId" :label="$t('endpoint')" align="left">
-            <template slot-scope="scope">
-              {{ scope.row.endpointId | endpointFormat }}
-            </template>
-          </el-table-column>
 
           <el-table-column prop="name" :label="$t('name')" align="left">
             <template slot-scope="scope">
               {{ scope.row.name }}
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="endpointId" :label="$t('endpoint')" align="left">
+            <template slot-scope="scope">
+              {{ scope.row.endpointId | endpointFormat }}
             </template>
           </el-table-column>
 
@@ -359,16 +360,19 @@ export default {
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
+        this.loadingList = true;
         HttpUtil.post("/image/del", ids, (res) => {
           if (res.success) {
             this.$message.success(this.$t('delete_success'));
             this.getData();
             this.multipleSelection = [];
+            this.loadingList = false;
           } else {
             this.$message.success(this.$t('delete_fail'));
           }
         }, (e) => {
           this.$message.success(this.$t('delete_fail'));
+          this.loadingList = false;
         });
 
       });
@@ -384,9 +388,14 @@ export default {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
+          this.loadingList = true;
           HttpUtil.get("/image/del/" + row.id, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
+            this.loadingList = false;
+          }, (res) => {
+            this.$message.error(this.$t('delete_fail!'));
+            this.loadingList = false;
           });
         })
       } else {
@@ -431,8 +440,7 @@ export default {
 }
 
 .upload-tip {
-  color: #E95420;
+  color: red;
   font-style: normal;
-  font-size: 16px;
 }
 </style>

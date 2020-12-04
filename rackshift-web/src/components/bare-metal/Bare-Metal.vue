@@ -805,12 +805,21 @@ export default {
       this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
+        this.loadingList = true;
         HttpUtil.post("/bare-metal/del", ids, (res) => {
-          this.$message.success(this.$t('delete_success'));
-          this.getData();
+          if (res.success) {
+            this.$message.success(this.$t('delete_success'));
+            this.getData();
+            this.multipleSelection = [];
+            this.loadingList = false;
+          } else {
+            this.$message.success(this.$t('delete_fail'));
+          }
+        }, (e) => {
+          this.$message.success(this.$t('delete_fail'));
+          this.loadingList = false;
         });
-        this.multipleSelection = [];
-      });
+      })
     },
     // 编辑操作
     handleEdit(row, type) {
@@ -834,12 +843,14 @@ export default {
         this.editType = type;
         this.editObj = {};
       }
-    },
+    }
+    ,
     // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
       this.getData();
-    },
+    }
+    ,
     getAllGraphDefinitions(name) {
       HttpUtil.get("/workflow/listall", {name: name}, (res) => {
         if (res.data && res.data.length > 0) {
@@ -852,7 +863,8 @@ export default {
         this.supportedWorkflow = res.data;
         this.groupedSupportedWorkflow = this.groupWorkflow(res.data);
       });
-    },
+    }
+    ,
     groupWorkflow(data) {
       let map = _.groupBy(data, 'eventType');
       let r = [];
@@ -866,14 +878,16 @@ export default {
         );
       });
       return r;
-    },
+    }
+    ,
     openRunWorkflow() {
       if (!this.multipleSelection.length) {
         this.$message.error(this.$t('pls_select_bare_metal') + "!");
         return;
       }
       this.actionDrawer = true;
-    },
+    }
+    ,
 
     runWorkflow() {
       if (!this.selectedWorkflow.length) {
@@ -900,10 +914,16 @@ export default {
         return;
       }
       HttpUtil.post("/workflow/run", reqList, (res) => {
-        this.selectedWorkflow = [];
-        this.getData();
+        if (res.success) {
+          this.selectedWorkflow = [];
+          this.$notify({
+            title: this.$t('server_message'),
+            message: this.$t('workflow_submitted'),
+          });
+        }
       });
-    },
+    }
+    ,
     getWorkflowById() {
       return _.find(this.supportedWorkflow, (o) => o.id == this.wfRequest.workflow);
     }
@@ -930,7 +950,8 @@ export default {
 
         this.paramComponent[workflowParam.componentId] = comPointer;
       }
-    },
+    }
+    ,
     addToSelectedWorkflow() {
       let that = this;
       if (that.getWorkflowById().injectableName) {
@@ -991,7 +1012,8 @@ export default {
       if (this.$refs.currentWfParamTemplate)
         this.$refs.currentWfParamTemplate.$destroy(true);
       this.selectedWorkflow.splice(index, 1);
-    },
+    }
+    ,
   }
 }
 </script>

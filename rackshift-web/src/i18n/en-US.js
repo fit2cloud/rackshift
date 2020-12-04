@@ -366,5 +366,6 @@ export default {
     "machine_brand": "Brand",
     "cancel_task_success": "Cancel success!wait until it refresh it‘s status",
     "add_protocol_param": "Add protocol param",
-    "IPMI+Rest": "IPMI with BMC"
+    "IPMI+Rest": "IPMI with BMC",
+    "workflow_submitted": "workflow submitted , please open Task page to view "
 }

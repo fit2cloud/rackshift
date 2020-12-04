@@ -23,6 +23,13 @@
         >
           <el-table-column type="selection" align="left"></el-table-column>
 
+
+          <el-table-column prop="id" :label="$t('id')" align="left" :sortable="true">
+            <template slot-scope="scope">
+              <span style="white-space: nowrap;">{{ scope.row.id }}</span>
+            </template>
+          </el-table-column>
+
           <el-table-column prop="machineModel" :label="$t('Bare Metal Server')" align="left" :sortable="true">
             <template slot-scope="scope">
               <!--              <el-tooltip class="item" effect="dark" :content="scope.row.machineModel" placement="right-end">-->
@@ -37,10 +44,8 @@
 
           <el-table-column prop="friendlyName" :label="$t('Workflow')" align="left" :sortable="true" width="210">
             <template slot-scope="scope">
-              <!--              <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">-->
               <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.friendlyName }}</span>
-              <!--              </el-tooltip>-->
             </template>
           </el-table-column>
 
@@ -59,7 +64,7 @@
 
           <el-table-column prop="createTime" :label="$t('create_time')" align="left">
             <template slot-scope="scope">
-              {{ scope.row.createTime | dateFormat }}
+              <span style="white-space: nowrap;">{{ scope.row.createTime | dateFormat }}</span>
             </template>
           </el-table-column>
 
