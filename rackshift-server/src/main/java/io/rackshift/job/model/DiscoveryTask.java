@@ -198,6 +198,16 @@ public class DiscoveryTask extends Thread {
         physicalMachine.setProviderId("");
         physicalMachine.setStatus(LifeStatus.onrack.name());
         bareMetalManager.addToBareMetal(physicalMachine);
+
+        saveOutBand(account);
+    }
+
+    private void saveOutBand(IPMIUtil.Account account) {
+        OutBand o = new OutBand();
+        o.setIp(account.getHost());
+        o.setUserName(account.getUserName());
+        o.setPwd(account.getPwd());
+        outBandService.saveOrUpdate(o);
     }
 
     private MachineEntity convert(io.rackshift.metal.sdk.model.MachineEntity machineEntity) {

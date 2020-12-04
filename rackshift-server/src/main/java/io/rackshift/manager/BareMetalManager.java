@@ -101,20 +101,31 @@ public class BareMetalManager {
             if (dbBareMetal == null) {
                 bareMetalMapper.insertSelective(bareMetal);
             } else {
+                boolean changeStatus = false;
                 if (LifeStatus.provisioning.name().equalsIgnoreCase(dbBareMetal.getStatus()) || LifeStatus.deploying.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
                     bareMetal.setStatus(null);
                 }
                 if (LifeStatus.discovering.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
                     bareMetal.setStatus(LifeStatus.ready.name());
+                    changeStatus = true;
+                    //第一次发现已经完毕 同步带外账号至 RackHD
+                    syncOutBand(bareMetal);
                 }
                 bareMetal.setPower(null);
-                update(bareMetal, false);
+                update(bareMetal, changeStatus);
             }
             saveOrUpdateHardWare(e);
         } catch (Exception ex) {
             LogUtil.error("转换rack实体出错！" + ExceptionUtils.getExceptionDetail(ex));
         }
         return bareMetal;
+    }
+
+    private void syncOutBand(BareMetal bareMetal) {
+        List<OutBand> olist = outBandManager.getByBareMetalId(bareMetal.getId());
+        if (olist.size() > 0) {
+            rackHDService.createOrUpdateObm(olist.get(0), bareMetal);
+        }
     }
 
     private void saveOrUpdateHardWare(MachineEntity e) {

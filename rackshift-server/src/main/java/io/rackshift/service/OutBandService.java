@@ -50,23 +50,9 @@ public class OutBandService {
     }
 
     public void fillOBMS(String bareMetalId, OutBand outBand) {
-
         BareMetal bareMetal = bareMetalManager.getBareMetalById(bareMetalId);
-        String curStatus = bareMetal.getStatus();
-
-        boolean result = rackHDService.createOrUpdateObm(outBand, bareMetal);
-        if (result) {
-            outBandService.saveOrUpdate(outBand);
-        } else {
-            RSException.throwExceptions(Translator.get("i18n_state_error"));
-        }
-
-        if (LifeStatus.onrack.name().equals(curStatus)) {
-            bareMetal.setStatus(LifeStatus.ready.name());
-            bareMetalManager.update(bareMetal, true);
-        } else {
-            bareMetalManager.update(bareMetal, false);
-        }
+        rackHDService.createOrUpdateObm(outBand, bareMetal);
+        outBandService.saveOrUpdate(outBand);
     }
 
     public Object add(OutBandDTO queryVO) {
