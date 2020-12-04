@@ -14,6 +14,7 @@ import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.BareMetalRuleMapper;
 import io.rackshift.service.OutBandService;
+import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.*;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
@@ -195,6 +196,7 @@ public class DiscoveryTask extends Thread {
         physicalMachine.setRuleId(bareMetalRule.getId());
         //插入ipmi发现的物理机之前 再次用序列号查询一次 没有重复的才能插入
         physicalMachine.setProviderId("");
+        physicalMachine.setStatus(LifeStatus.onrack.name());
         bareMetalManager.addToBareMetal(physicalMachine);
     }
 

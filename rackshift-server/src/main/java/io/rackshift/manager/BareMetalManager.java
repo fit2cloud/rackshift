@@ -101,8 +101,11 @@ public class BareMetalManager {
             if (dbBareMetal == null) {
                 bareMetalMapper.insertSelective(bareMetal);
             } else {
-                if (LifeStatus.discovering.name().equalsIgnoreCase(dbBareMetal.getStatus()) || LifeStatus.provisioning.name().equalsIgnoreCase(dbBareMetal.getStatus()) || LifeStatus.deploying.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
+                if (LifeStatus.provisioning.name().equalsIgnoreCase(dbBareMetal.getStatus()) || LifeStatus.deploying.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
                     bareMetal.setStatus(null);
+                }
+                if (LifeStatus.discovering.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
+                    bareMetal.setStatus(LifeStatus.ready.name());
                 }
                 bareMetal.setPower(null);
                 update(bareMetal, false);

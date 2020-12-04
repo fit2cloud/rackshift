@@ -369,5 +369,6 @@ export default {
     "cancel_task_success": "取消任務成功！請等待任務自動結束！",
     "add_protocol_param": "添加一個探測參數",
     "IPMI+Rest": "IPMI 帶外控制卡",
-    "workflow_submitted": "工作流已下發，請到任務頁面查看執行日志"
+    "workflow_submitted": "工作流已下發，請到任務頁面查看執行日志",
+    "opt_fail_pxe": "操作失敗！請先 PXE 啓動機器等待物理機走完發現流程补充完整信息之后再補充帶外信息",
 }

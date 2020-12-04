@@ -371,5 +371,6 @@ export default {
     "pxe_open_tip": "该节点将会开启 DHCP PXE 功能，所有该网段的物理机 PXE 启动将会被 RackShift 代理 ",
     "add_protocol_param": "添加一个探测参数",
     "IPMI+Rest": "IPMI 带外控制卡",
-    "workflow_submitted": "工作流已下发，请到任务页面查看执行日志"
+    "workflow_submitted": "工作流已下发，请到任务页面查看执行日志",
+    "opt_fail_pxe": "操作失败！请先 PXE 启动机器等待物理机走完发现流程补充完整信息之后再补充带外信息",
 }

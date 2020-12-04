@@ -367,5 +367,6 @@ export default {
     "cancel_task_success": "Cancel success!wait until it refresh it‘s status",
     "add_protocol_param": "Add protocol param",
     "IPMI+Rest": "IPMI with BMC",
-    "workflow_submitted": "workflow submitted , please open Task page to view "
+    "workflow_submitted": "workflow submitted , please open Task page to view ",
+    "opt_fail_pxe": "please PXE first till full hardware info is discovered "
 }

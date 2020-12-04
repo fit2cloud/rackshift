@@ -710,11 +710,15 @@ export default {
         return;
       }
       HttpUtil.post("/outband/save?bareMetalId=" + this.curObm.bareMetalId, this.curObm, (res) => {
-        this.obmLoading = false;
-        this.curObm = {};
-        this.fillOutObms = false;
-        this.$message.success(this.$t('opt_success'));
-        this.getData();
+        if (res.success) {
+          this.obmLoading = false;
+          this.curObm = {};
+          this.fillOutObms = false;
+          this.$message.success(this.$t('opt_success'));
+          this.getData();
+        } else {
+          this.$alert.error(this.$t('opt_fail_pxe'));
+        }
       }, (res) => {
         this.obmLoading = false;
       });
