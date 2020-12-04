@@ -13,26 +13,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - uses: actions/setup-node@v2-beta
-      with:
-        node-version: '12'
-        check-latest: true
-    - name: Build with Maven
-      run: |
-        cd ./rackshift-web
-        npm install
-        npm run build
-        rm -rf ../rackshift-server/src/main/resources/static
-        mkdir -p ../rackshift-server/src/main/resources/static
-        cp -r ./dist/* ../rackshift-server/src/main/resources/static
-        cd ../
-        mvn clean install -DskipTests
-        cd ./rackshift-server
-        sudo docker build -t rackshift/rackshift:actions .
-        sudo docker login --username=${{secrets.DH_USERNAME}} --password=${{ secrets.DH_PWD }}
-        sudo docker push rackshift/rackshift:actions
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: '12'
+          check-latest: true
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build with Maven
+        run: |
+          cd ./rackshift-web
+          npm install
+          npm run build
+          rm -rf ../rackshift-server/src/main/resources/static
+          mkdir -p ../rackshift-server/src/main/resources/static
+          cp -r ./dist/* ../rackshift-server/src/main/resources/static
+          cd ../
+          mvn clean install -DskipTests
+          cd ./rackshift-server
+          sudo docker build -t rackshift/rackshift:actions .
+          sudo docker login --username=${{secrets.DH_USERNAME}} --password=${{ secrets.DH_PWD }}
+          sudo docker push rackshift/rackshift:actions
