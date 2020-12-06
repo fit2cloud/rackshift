@@ -1,21 +1,24 @@
 # RackShift
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2d7d7a82829e4e4e80c0f2a9aa2397ca)](https://app.codacy.com/manual/rackshift/rackshift?utm_source=github.com&utm_medium=referral&utm_content=rackshift/rackshift&utm_campaign=Badge_Grade_Dashboard)
+| Developer Wanted                                                                                             |
+| ------------------------------------------------------------------------------------------------------------ |
+| 我们正在寻找开发者，欢迎加入我们共同打造更好用、更强大的 RackShift。联系我们： [dahai.zhang@fit2cloud.com](mailto:dahai.zhang@fit2cloud.com) |
 
-RackShift 是一款开源的裸金属服务器全生命周期管理平台，功能覆盖裸金属（物理机）的上架、RAID 配置、固件升级、操作系统安装、中间件部署等。RackShift 基于 RackHD 实现，提供可视化的 Web UI，支持世面上主流服务器品牌如浪潮、戴尔、华为、联想、惠普等。
+RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖裸金属服务器的发现、带外管理、系统安装（包含 RAID 配置）等。RackShift 基于任务工作流，提供可视化的 WebUI，支持市面上主流 X86 物理服务器品牌，如浪潮、戴尔、华为、联想、惠普等。
 
 ![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs8.jpg)
 
 ## 解决的问题
-- 大规模网络环境下裸金属设备的自动发现；
-- 批量装机、RAID配置和固件更新；
-- 裸金属云化、自服务化，快速构建企业的基础设施。
+- 各种网络环境下裸金属服务器的自动、手动发现；
+- 裸金属服务器的带外控制管理，包括开关机、重启、配置 PXE 等；
+- 裸金属服务器批量装机、RAID配置和固件更新。
 
 ## 技术优势
   
-- 全生命周期: 能够覆盖裸金属从发现、上架、部署到运维的全生命周期管理；
-- 自动化：基于 PXE 或者带外协议实现工作流自动化，解放机房运维人员；
-- 易操作: 可视化操作界面，易于操作和管理。
+- 全生命周期: 能够覆盖裸金属从发现、配置、装机、重置的全生命周期管理；
+- 自动化：基于 PXE 或者带外协议实现远程自动化，解放机房运维人员；
+- 易操作: 浏览器可视化操作界面，易于操作和管理。
 
 ## 功能列表
 
@@ -23,7 +26,7 @@ RackShift 是一款开源的裸金属服务器全生命周期管理平台，功�
 
 详细的版本规划请参考 [版本路线图](https://github.com/rackshift/rackshift/blob/master/ROADMAP.md)  
 
-如果您想进一步了解目前的开发情况请看
+如果您想进一步了解目前的开发进度请查看
 [开发进度](https://trello.com/b/rEE3zYaF/rackshift)  
 
 ## 技术架构
@@ -31,14 +34,14 @@ RackShift 是一款开源的裸金属服务器全生命周期管理平台，功�
 
 组件说明：
 
-- RackShift-Web： 基于 VUE2.6.11 开发的单页应用；
-- RackShift-Server： 基于 SSM 的 SpringBoot 应用，对 RackHD 的操作进行更高的抽象并且控制与 RackHD API的交互，控制 RackShift-Proxy 节点，与 RackShift-WEB 一并打包成一个应用部署；
-- RackShift-Proxy： 可单独与 RackHD 模块部署，主要用于主节点控制客户节点进行注入镜像下发，DHCP 配置，远程 KVM 等等；
-- RackHD： DELL EMC 开源的裸金属供应软件，现已停止维护；
-- Mysql：RackShift-Server 主要运行数据的存储区；
+- RackShift-Web： RackShift 前端界面，基于 VUE2.6.11 开发的单页应用；
+- RackShift-Server： RackShift 后台服务，基于 SpringBoot 框架，对底层管理裸金属服务器能力进行更高层的抽象；
+- RackShift-Proxy： 用于控制注入镜像下发，DHCP 配置，远程 KVM 等等；
+- RackHD： EMC 开源的裸金属管理软件，现已停止维护，RackShift 项目对其进行了大量优化和集成；
+- MySQL：RackShift-Server 主要运行数据的存储区；
 - Mongo：RackHD 与 RackShift-Server 的运行数据存储区；
-- RabbitMQ: 各组件之间通信的中间件；
-- DockerEngine：各组件都是以 Docker 容器运行在节点计算机。
+- RabbitMQ: 各组件之间通信中间件；
+- DockerEngine：各组件的容器运行时。
 
 ## 组件调用关系
 ![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-call2.jpg)
@@ -53,7 +56,7 @@ RackShift 是一款开源的裸金属服务器全生命周期管理平台，功�
 
 仅需两步快速安装 RackShift：
 
- * 准备一台不小于 8 G内存且可以访问互联网的 64位 Linux 主机；
+ * 准备一台不小于 8G 内存，50G 硬盘且可以访问互联网的 64位 Linux 主机；
  * 以 root 用户执行如下命令一键安装 RackShift。
 ```sh
 curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh | sh
@@ -73,7 +76,7 @@ curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_
 
 ## 致谢
 
--  [RackHD](https://rackhd.github.io/)：感谢 RackHD 提供的底层实现；
--  [MAAS](https://maas.io/)：感谢 MAAS 提供的生命周期纳管思路；
--  [Digital Rebar](https://rackn.com/rebar/)：感谢 Digital Rebar 提供的操作方式和 UI 参考；
--  [Element](https://element.eleme.cn/#/)：感谢 Element 提供的优秀组件库。
+-  [RackHD](https://rackhd.github.io/)：RackShift 集成和参考了 RackHD 提供的裸金属服务器管理能力和思路；
+-  [MAAS](https://maas.io/)：RackShift 参考了 MAAS 提供的裸金属生命周期纳管思路；
+-  [Digital Rebar](https://rackn.com/rebar/)：RackShift 参考了 Digital Rebar 提供的操作方式和 UI 参考；
+-  [Element](https://element.eleme.cn/#/)：RackShift 使用 Element 提供的优秀前端组件库。
