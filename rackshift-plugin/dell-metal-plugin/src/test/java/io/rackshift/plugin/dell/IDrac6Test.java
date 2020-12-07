@@ -1,12 +1,12 @@
 package io.rackshift.plugin.dell;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import io.rackshift.metal.sdk.model.*;
 import io.rackshift.metal.sdk.util.DiskUtils;
 import io.rackshift.plugin.dell.model.DellCpuDTO;
 import io.rackshift.plugin.dell.model.DellMemoryDTO;
 import io.rackshift.plugin.dell.utils.IDrac6RestSpider;
-import com.google.gson.Gson;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

@@ -1,8 +1,8 @@
 package io.rackshift.metal.sdk.util;
 
 import com.alibaba.fastjson.JSONObject;
-import io.rackshift.metal.sdk.model.request.IPMIRequest;
 import com.google.gson.Gson;
+import io.rackshift.metal.sdk.model.request.IPMIRequest;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;

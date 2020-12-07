@@ -2,8 +2,9 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.Workflow;
 import io.rackshift.mybatis.domain.WorkflowExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface WorkflowMapper {
     long countByExample(WorkflowExample example);

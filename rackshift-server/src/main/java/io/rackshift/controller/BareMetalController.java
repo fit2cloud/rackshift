@@ -8,8 +8,6 @@ import io.rackshift.model.ResultHolder;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.service.BareMetalService;
 import io.rackshift.utils.PageUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;

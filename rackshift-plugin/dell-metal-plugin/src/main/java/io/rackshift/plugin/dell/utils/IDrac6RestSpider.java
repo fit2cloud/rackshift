@@ -2,12 +2,12 @@ package io.rackshift.plugin.dell.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.rackshift.metal.sdk.MetalPluginException;
-import io.rackshift.plugin.dell.model.DellCpuDTO;
-import io.rackshift.plugin.dell.model.DellMemoryDTO;
 import com.google.gson.Gson;
+import io.rackshift.metal.sdk.MetalPluginException;
 import io.rackshift.metal.sdk.model.*;
 import io.rackshift.metal.sdk.util.*;
+import io.rackshift.plugin.dell.model.DellCpuDTO;
+import io.rackshift.plugin.dell.model.DellMemoryDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;

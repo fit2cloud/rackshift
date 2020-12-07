@@ -2,8 +2,9 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.domain.OutBandExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface OutBandMapper {
     long countByExample(OutBandExample example);

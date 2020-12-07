@@ -2,8 +2,9 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.OperationLog;
 import io.rackshift.mybatis.domain.OperationLogExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface OperationLogMapper {
     long countByExample(OperationLogExample example);

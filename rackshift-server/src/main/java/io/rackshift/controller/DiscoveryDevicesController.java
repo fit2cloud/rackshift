@@ -6,7 +6,6 @@ import io.rackshift.constants.AuthorizationConstants;
 import io.rackshift.model.BareMetalDTO;
 import io.rackshift.model.DiscoveryDevicesDTO;
 import io.rackshift.model.ResultHolder;
-import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.service.DiscoveryDevicesService;
 import io.rackshift.utils.PageUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;

@@ -11,8 +11,6 @@ import io.rackshift.mybatis.domain.Task;
 import io.rackshift.service.RackHDService;
 import io.rackshift.service.TaskService;
 import io.rackshift.strategy.statemachine.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import javax.annotation.Resource;
 

@@ -2,8 +2,9 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.User;
 import io.rackshift.mybatis.domain.UserExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface UserMapper {
     long countByExample(UserExample example);

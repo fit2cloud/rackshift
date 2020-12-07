@@ -3,7 +3,6 @@ package io.rackshift.security;
 import io.rackshift.constants.AuthorizationConstants;
 import io.rackshift.model.RSException;
 import io.rackshift.model.UserDTO;
-import io.rackshift.mybatis.domain.Role;
 import io.rackshift.mybatis.mapper.UserMapper;
 import io.rackshift.service.UserService;
 import io.rackshift.utils.Translator;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ShiroDBRealm extends AuthorizingRealm {
 

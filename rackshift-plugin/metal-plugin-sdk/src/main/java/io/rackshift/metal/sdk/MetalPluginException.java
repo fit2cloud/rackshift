@@ -1,7 +1,8 @@
 package io.rackshift.metal.sdk;
 
 import java.util.Random;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 
 public class MetalPluginException extends RuntimeException {
 

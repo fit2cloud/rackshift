@@ -2,8 +2,9 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.Ip;
 import io.rackshift.mybatis.domain.IpExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface IpMapper {
     long countByExample(IpExample example);

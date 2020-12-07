@@ -1,7 +1,8 @@
 package io.rackshift.mybatis.domain;
 
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 
 @Data
 public class Cpu implements Serializable {

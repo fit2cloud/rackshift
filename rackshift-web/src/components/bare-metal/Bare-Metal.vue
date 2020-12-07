@@ -437,7 +437,7 @@
 
 <script>
 import HttpUtil from "../../common/utils/HttpUtil";
-import {isAnyBlank, toLine} from "../../common/utils/CommonUtil";
+import {isAnyBlank} from "../../common/utils/CommonUtil";
 import OBM from "../obm/Obm"
 import Discovery from "../discovery/Discovery"
 import Vue from "vue"

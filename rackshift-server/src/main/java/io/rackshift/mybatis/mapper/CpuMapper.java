@@ -2,8 +2,9 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.Cpu;
 import io.rackshift.mybatis.domain.CpuExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface CpuMapper {
     long countByExample(CpuExample example);

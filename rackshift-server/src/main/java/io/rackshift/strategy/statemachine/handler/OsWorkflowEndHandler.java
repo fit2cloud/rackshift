@@ -8,8 +8,6 @@ import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.service.TaskService;
 import io.rackshift.strategy.statemachine.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import javax.annotation.Resource;
 

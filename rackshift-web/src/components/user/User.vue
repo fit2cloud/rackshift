@@ -117,7 +117,7 @@
 
 <script>
 import HttpUtil from "../../common/utils/HttpUtil";
-import {requiredValidator, phoneValidator, emailValidator} from "@/common/validator/CommonValidator";
+import {emailValidator, phoneValidator, requiredValidator} from "@/common/validator/CommonValidator";
 
 let _ = require('lodash');
 export default {

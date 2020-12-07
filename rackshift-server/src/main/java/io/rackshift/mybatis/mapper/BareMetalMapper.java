@@ -2,8 +2,9 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.BareMetalExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface BareMetalMapper {
     long countByExample(BareMetalExample example);

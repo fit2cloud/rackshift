@@ -2,8 +2,9 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.DiscoveryDevices;
 import io.rackshift.mybatis.domain.DiscoveryDevicesExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface DiscoveryDevicesMapper {
     long countByExample(DiscoveryDevicesExample example);

@@ -1,5 +1,6 @@
 package io.rackshift.metal.sdk;
 
+import com.google.gson.Gson;
 import io.rackshift.metal.sdk.constants.BareMetalConstants;
 import io.rackshift.metal.sdk.model.Metric;
 import io.rackshift.metal.sdk.model.PluginResult;
@@ -9,7 +10,6 @@ import io.rackshift.metal.sdk.model.request.IPMIResetPwdRequest;
 import io.rackshift.metal.sdk.model.request.IPMISnmpRequest;
 import io.rackshift.metal.sdk.util.IPMIUtils;
 import io.rackshift.metal.sdk.util.IpUtil;
-import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -10,11 +10,9 @@ import io.rackshift.mybatis.domain.Network;
 import io.rackshift.service.NetworkService;
 import io.rackshift.utils.ProxyUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.net.Inet4Address;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;

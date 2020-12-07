@@ -1,6 +1,5 @@
 package io.rackshift.metal.sdk.constants;
 
-import java.util.List;
 import java.util.regex.Pattern;
 
 public class BareMetalConstants {

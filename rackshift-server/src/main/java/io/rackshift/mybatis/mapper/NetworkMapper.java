@@ -2,8 +2,9 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.Network;
 import io.rackshift.mybatis.domain.NetworkExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface NetworkMapper {
     long countByExample(NetworkExample example);

@@ -14,7 +14,10 @@ import org.snmp4j.util.TreeUtils;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class SnmpWorker implements Closeable {
     private Logger logger = LoggerFactory.getLogger(SnmpWorker.class);

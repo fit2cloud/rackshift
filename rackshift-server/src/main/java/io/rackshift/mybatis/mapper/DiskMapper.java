@@ -2,8 +2,9 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.Disk;
 import io.rackshift.mybatis.domain.DiskExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface DiskMapper {
     long countByExample(DiskExample example);

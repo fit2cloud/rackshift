@@ -1,10 +1,10 @@
 package io.rackshift.plugin.dell;
 
+import com.google.gson.Gson;
 import io.rackshift.metal.sdk.IMetalProvider;
 import io.rackshift.metal.sdk.model.request.IPMISnmpRequest;
 import io.rackshift.plugin.dell.utils.IDrac7RestSpider;
 import io.rackshift.plugin.dell.utils.IDrac8RestSpider;
-import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -2,8 +2,9 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.Memory;
 import io.rackshift.mybatis.domain.MemoryExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface MemoryMapper {
     long countByExample(MemoryExample example);

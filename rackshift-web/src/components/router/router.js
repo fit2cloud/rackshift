@@ -43,7 +43,7 @@ VueRouter.prototype.push = function push(location) {
 
 router.beforeEach((to, from, next) => {
     if (to.path != '/login') {
-        if (localStorage.getItem('login') == "true") {
+        if (localStorage.getItem('login') === "true") {
             next();
         } else {
             router.push("login");

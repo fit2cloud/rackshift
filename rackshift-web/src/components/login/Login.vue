@@ -89,7 +89,7 @@ export default {
     };
   },
   beforeCreate() {
-    if (localStorage.getItem("login") == "true") {
+    if (localStorage.getItem("login") === "true") {
       this.$router.push("index");
     }
   },

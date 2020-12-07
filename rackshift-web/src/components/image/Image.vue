@@ -165,8 +165,7 @@
 <script>
 
 import HttpUtil from "../../common/utils/HttpUtil"
-import {requiredValidator, requiredSelectValidator} from "@/common/validator/CommonValidator";
-import i18n from "@/i18n/i18n";
+import {requiredSelectValidator, requiredValidator} from "@/common/validator/CommonValidator";
 
 let _ = require('lodash');
 

@@ -3,8 +3,9 @@ package io.rackshift.mybatis.mapper;
 import io.rackshift.mybatis.domain.WorkflowParamTemplates;
 import io.rackshift.mybatis.domain.WorkflowParamTemplatesExample;
 import io.rackshift.mybatis.domain.WorkflowParamTemplatesWithBLOBs;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface WorkflowParamTemplatesMapper {
     long countByExample(WorkflowParamTemplatesExample example);

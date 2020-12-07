@@ -83,17 +83,15 @@ import ElementUI, {
     Upload
 } from 'element-ui';
 import RSButton from './common/button/rsbutton/index';
+import icon from './common/front/icon'
+import RSDrawer from './common/front/mydrawer/index'
+import '../theme/index.css'
 
 Vue.use(RSButton);
 
-import icon from './common/front/icon'
-
 Vue.use(icon);
-import RSDrawer from './common/front/mydrawer/index'
 
 Vue.use(RSDrawer);
-
-import '../theme/index.css'
 
 Vue.filter('dateFormat', dateFormat);
 Vue.filter('brandsFormat', brandsFormat);

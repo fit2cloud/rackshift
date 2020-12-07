@@ -3,7 +3,6 @@ package io.rackshift.controller;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.model.RSException;
 import io.rackshift.model.ResultHolder;
-import io.rackshift.utils.SessionUtil;
 import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;

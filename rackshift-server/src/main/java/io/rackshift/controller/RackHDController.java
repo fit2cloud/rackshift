@@ -1,7 +1,6 @@
 package io.rackshift.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import io.rackshift.model.ResultHolder;
 import io.rackshift.service.RackHDService;
 import org.springframework.web.bind.annotation.PathVariable;

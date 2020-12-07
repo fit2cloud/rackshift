@@ -158,8 +158,7 @@
 <script>
 
 import HttpUtil from "../../common/utils/HttpUtil"
-import {requiredValidator, ipValidator} from "@/common/validator/CommonValidator";
-import {WebSocketUtil} from "@/common/utils/WebSocket";
+import {ipValidator, requiredValidator} from "@/common/validator/CommonValidator";
 import Devices from "../discovery-devices/Discovery-devices"
 
 let _ = require('lodash');

@@ -8,7 +8,10 @@ import io.rackshift.model.ResultHolder;
 import io.rackshift.service.EndpointService;
 import io.rackshift.utils.PageUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 

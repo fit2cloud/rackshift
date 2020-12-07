@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Inventory xmlns:fo="http://www.w3.org/1999/XSL/Format" version="2.0">
+<Inventory version="2.0">
     <Component Classname="DCIM_CPUView" Key="CPU.Socket.1">
         <PROPERTY NAME="Model" TYPE="string">
             <VALUE>Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz</VALUE>

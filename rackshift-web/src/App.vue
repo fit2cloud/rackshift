@@ -63,7 +63,7 @@ export default {
     return {
       aboutUsVisible: false,
       menus: menu.menus,
-      login: localStorage.getItem("login") == "true",
+      login: localStorage.getItem("login") === "true",
       user: JSON.parse(localStorage.getItem("user")),
       squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
     };

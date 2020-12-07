@@ -2,8 +2,9 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.Endpoint;
 import io.rackshift.mybatis.domain.EndpointExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface EndpointMapper {
     long countByExample(EndpointExample example);

@@ -8,7 +8,7 @@
       class="main-header-menu"
       mode="horizontal"
   >
-    <el-dialog :title="$t('change_pwd')" :visible.sync="change_pwd" :append-to-body="true" width="35vw"
+    <el-dialog :title="$t('change_pwd')" :visible.sync="changePwd" :append-to-body="true" width="35vw"
                :close-on-click-modal="false">
       <el-form :model="editObj" :rules="rules" ref="editForm" label-position="right">
         <el-form-item :label="$t('origin-password')" prop="originPwd" label-width="5vw">
@@ -24,7 +24,7 @@
       </el-form>
       <template v-slot:footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="change_pwd=false">{{ $t('cancel') }}</el-button>
+          <el-button type="primary" @click="changePwd=false">{{ $t('cancel') }}</el-button>
           <el-button type="primary" @click="change">{{ $t('confirm') }}</el-button>
         </div>
       </template>
@@ -49,7 +49,7 @@ export default {
   components: {AboutUs},
   data() {
     return {
-      change_pwd: false,
+      changePwd: false,
       editObj: {},
       aboutUsVisible: false,
       language: null,
@@ -57,7 +57,7 @@ export default {
       languages: [
         {
           name: 'change_pwd',
-          value: 'change_pwd',
+          value: 'changePwd',
           index: '1'
         },
         {
@@ -102,8 +102,8 @@ export default {
     clicked: function (command) {
       if ('logout' == command) {
         this.logout();
-      } else if ('change_pwd' == command) {
-        this.change_pwd = true;
+      } else if ('changePwd' == command) {
+        this.changePwd = true;
       } else if ('about' == command) {
         this.aboutUsVisible = true;
         this.$emit('about');

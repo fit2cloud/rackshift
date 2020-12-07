@@ -2,6 +2,7 @@ package io.rackshift.plugin.dell.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import io.rackshift.metal.sdk.MetalPluginException;
 import io.rackshift.metal.sdk.model.*;
 import io.rackshift.metal.sdk.util.DiskUtils;
@@ -14,7 +15,6 @@ import io.rackshift.plugin.dell.model.DellPdDTO;
 import io.rackshift.plugin.dell.model.idrac7.DellIDrac7CpuDTO;
 import io.rackshift.plugin.dell.model.idrac7.DellIDrac7DiskDTO;
 import io.rackshift.plugin.dell.model.idrac7.DellIDrac7MemoryDTO;
-import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
