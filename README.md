@@ -69,7 +69,7 @@ curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_
 
 ## 微信群
 
-<img src="https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-2020-11-29.jpg" width="300" height="300" align="middle" />
+<img src="https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-12-07.jpg" width="300" height="300" align="middle" />
 
 ## QQ 群
 - 693376431
