@@ -452,6 +452,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      accurate: false,
       groupedSupportedWorkflow: [],
       discoveryVisible: false,
       search: null,
@@ -584,7 +585,7 @@ export default {
     queryByRuleId(e) {
       if (e) {
         this.search = e;
-        this.getData(true);
+        this.getAccurateData();
       }
     },
     openDiscover() {
@@ -742,14 +743,10 @@ export default {
       }
       this.getData();
     },
-    getData(accurate, callback) {
+    getData() {
       this.loadingList = true;
       if (this.search) {
-        if (!accurate)
-          this.queryVO.searchKey = '%' + this.search + '%';
-        else
-          this.queryVO.searchKey = this.search;
-
+        this.queryVO.searchKey = '%' + this.search + '%';
       } else {
         this.queryVO.searchKey = null;
       }
@@ -757,9 +754,19 @@ export default {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
         this.loadingList = false;
-        if (callback) {
-          callback();
-        }
+      });
+    },
+    getAccurateData() {
+      this.loadingList = true;
+      if (this.search) {
+        this.queryVO.searchKey = this.search;
+      } else {
+        this.queryVO.searchKey = null;
+      }
+      HttpUtil.post("/bare-metal/list/" + this.query.pageIndex + "/" + this.query.pageSize, this.queryVO, (res) => {
+        this.tableData = res.data.listObject;
+        this.pageTotal = res.data.itemCount;
+        this.loadingList = false;
       });
     },
     handleSizeChange(val) {
