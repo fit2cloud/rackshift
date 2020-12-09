@@ -7,7 +7,7 @@
 
 RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖裸金属服务器的发现、带外管理、系统安装（包含 RAID 配置）等。RackShift 基于任务工作流，提供可视化的 WebUI，支持市面上主流 X86 物理服务器品牌，如浪潮、戴尔、华为、联想、惠普等。
 
-![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs8.jpg)
+![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-main.png)
 
 ## 解决的问题
 - 各种网络环境下裸金属服务器的自动、手动发现；
@@ -69,7 +69,7 @@ curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_
 
 ## 微信群
 
-<img src="https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-2020-11-29.jpg" width="300" height="300" align="middle" />
+<img src="https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-12-07.jpg" width="300" height="300" align="middle" />
 
 ## QQ 群
 - 693376431
