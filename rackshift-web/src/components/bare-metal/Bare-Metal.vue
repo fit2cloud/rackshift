@@ -88,7 +88,7 @@
             <el-input
                 v-model="search"
                 size="mini"
-                :placeholder="$t('input_key_search')" v-on:change="getData"/>
+                :placeholder="$t('input_key_search')" v-on:change="getData()"/>
           </template>
           <template slot-scope="scope">
             <el-dropdown>
@@ -585,7 +585,7 @@ export default {
     queryByRuleId(e) {
       if (e) {
         this.search = e;
-        this.getAccurateData();
+        this.data(true);
       }
     },
     openDiscover() {
@@ -743,23 +743,13 @@ export default {
       }
       this.getData();
     },
-    getData() {
+    getData(accurate) {
       this.loadingList = true;
       if (this.search) {
         this.queryVO.searchKey = '%' + this.search + '%';
-      } else {
-        this.queryVO.searchKey = null;
-      }
-      HttpUtil.post("/bare-metal/list/" + this.query.pageIndex + "/" + this.query.pageSize, this.queryVO, (res) => {
-        this.tableData = res.data.listObject;
-        this.pageTotal = res.data.itemCount;
-        this.loadingList = false;
-      });
-    },
-    getAccurateData() {
-      this.loadingList = true;
-      if (this.search) {
-        this.queryVO.searchKey = this.search;
+        if (accurate) {
+          this.queryVO.searchKey = this.search;
+        }
       } else {
         this.queryVO.searchKey = null;
       }
