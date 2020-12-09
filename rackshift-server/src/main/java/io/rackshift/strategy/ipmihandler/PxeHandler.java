@@ -31,7 +31,7 @@ public class PxeHandler extends CommandHandler implements IPMIHandlerInterface {
                 return ResultHolder.success("");
             } else if (commandResult.contains(RackHDConstants.PM_POWER_OFF) || commandResult.contains("Off")) {
                 IPMIUtil.exeCommand(account, "chassis bootdev pxe");
-                IPMIUtil.exeCommand(account, "power recycle");
+                IPMIUtil.exeCommand(account, "power on");
                 return ResultHolder.success("");
             }
 

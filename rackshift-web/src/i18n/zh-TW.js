@@ -51,7 +51,7 @@ export default {
     "sn": "序列號",
     "close": "關閉",
     "email": "郵箱",
-    "discovering": "信息搜集中",
+    "discovering": "發現中",
     "brands": "支持的品牌",
     "validate_error": "慘數校驗錯誤",
     "SUCCESS": "成功",

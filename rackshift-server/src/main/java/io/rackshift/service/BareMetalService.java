@@ -82,7 +82,7 @@ public class BareMetalService {
         IPMIUtil.Account account = IPMIUtil.Account.build(outBands.get(0));
         ResultHolder resultHolder = null;
         if (!(resultHolder = ipmiHandlerDecorator.execute(opt, account, pm, outBands.get(0))).isSuccess()) {
-            resultHolder.error(resultHolder.getMessage());
+            return resultHolder.error(resultHolder.getMessage());
         }
 
         if ("pxe".equalsIgnoreCase(opt)) {

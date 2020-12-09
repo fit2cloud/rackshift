@@ -123,7 +123,8 @@ export default {
         if (res.data) {
           this.$message.success(this.$t('opt_success'));
           this.editObj = {};
-          this.change_pwd = false;
+          this.changePwd = false;
+          this.logout();
         } else {
           this.$message.error(this.$t('opt_fail'));
         }

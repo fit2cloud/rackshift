@@ -594,7 +594,7 @@ export default {
     },
     statusFilter(row) {
       if (row.status.indexOf("ing") == -1) {
-        if (row.serverId) bwvzz
+        if (row.serverId)
           return '<span style="display: inline-block;white-space: nowrap;">' +
               this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i><br>'
               + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 && row.status != 'onrack' ? '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
@@ -662,12 +662,18 @@ export default {
       this.$confirm(this.$t('confirm') + this.$t('power_' + opt) + '?', this.$t('tips'), {
         type: "warning"
       }).then(() => {
+        let that = this;
+        that.loadingList = true;
         HttpUtil.get("/bare-metal/power/" + row.id + "/" + opt, null, (res) => {
           if (res.success) {
             this.$message.success(this.$t('success'));
           } else {
             this.$message.error(this.$t('error'));
           }
+          that.loadingList = true;
+        }, (msg) => {
+          that.$alert(msg);
+          that.loadingList = false;
         });
       });
     },
