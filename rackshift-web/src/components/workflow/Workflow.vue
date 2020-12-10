@@ -30,7 +30,7 @@
             <template slot-scope="scope">
               <!--              <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">-->
               <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ scope.row.friendlyName }}</span>
+  white-space:nowrap;overflow: hidden">{{ $t(scope.row.friendlyName) }}</span>
               <!--              </el-tooltip>-->
             </template>
 
@@ -178,7 +178,7 @@ Vue.filter('eventFormat', function (name) {
   } else {
     allEventType = JSON.parse(localStorage.getItem("allEventType"));
   }
-  return _.find(allEventType, (t) => t.value == name).name;
+  return i18n.t(_.find(allEventType, (t) => t.value == name).name);
 });
 
 let _ = require('lodash');
@@ -390,8 +390,7 @@ export default {
         this.editObj = JSON.parse(JSON.stringify(row));
         this.editObj.brands = eval(this.editObj.brands);
         this.editObj.settable = eval(this.editObj.settable);
-        // this.editObj.status = eval(this.editObj.status);
-        this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
+        this.editObj.friendlyName = this.$t(this.editObj.friendlyName);
 
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {

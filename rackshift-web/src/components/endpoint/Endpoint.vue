@@ -26,8 +26,11 @@
         >
           <el-table-column type="selection" align="left"></el-table-column>
 
-          <el-table-column :prop="c.prop" :label="c.label" align="left"
-                           v-for="c in columns" :sortable="c.sort"></el-table-column>
+          <el-table-column prop="name" :label="$t('name')" align="left">
+            <template slot-scope="scope">
+              {{ $t(scope.row.name) }}
+            </template>
+          </el-table-column>
 
           <el-table-column prop="type" :label="$t('type')" align="left">
             <template slot-scope="scope">
@@ -98,7 +101,7 @@
               <el-form-item :label="$t('type')" prop="type">
 
                 <el-select v-model="editObj.type">
-                  <el-option v-for="t in allEndPointType" :label="t.name" :value="t.value"></el-option>
+                  <el-option v-for="t in allEndPointType" :label="$t(t.name)" :value="t.value"></el-option>
                 </el-select>
               </el-form-item>
 
@@ -129,6 +132,7 @@
 import HttpUtil from "../../common/utils/HttpUtil"
 import Vue from 'vue'
 import {ipValidator, requiredValidator} from "@/common/validator/CommonValidator";
+import i18n from "@/i18n/i18n";
 
 let _ = require('lodash');
 
@@ -142,7 +146,7 @@ Vue.filter('endpointType', function (type) {
   } else {
     allTypes = JSON.parse(localStorage.getItem("allEndpointTypes"));
   }
-  return _.find(allTypes, (t) => t.value == type).name;
+  return i18n.t(_.find(allTypes, (t) => t.value == type).name);
 });
 export default {
   data() {
@@ -173,13 +177,6 @@ export default {
       idx: -1,
       id: -1,
       loading: false,
-      columns: [
-        {
-          label: this.$t('name'),
-          prop: "name",
-          sort: true
-        },
-      ],
       editDialogVisible: false,
       editType: 'edit',
       editObj: {

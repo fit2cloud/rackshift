@@ -65,6 +65,7 @@ public class StateMachine {
         requestDTO.setTaskId(task.getId());
         requestDTO.setWorkflowName(task.getWorkFlowId());
         requestDTO.setParams(JSONObject.parseObject(Optional.ofNullable(task.getParams()).orElse("{}")));
+        requestDTO.setExtraParams(JSONObject.parseObject(Optional.ofNullable(task.getExtparams()).orElse("{}")));
         return LifeEvent.builder().withEventType(type).withWorkflowRequestDTO(requestDTO);
     }
 

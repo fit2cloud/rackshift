@@ -368,5 +368,26 @@ export default {
     "add_protocol_param": "Add protocol param",
     "IPMI+Rest": "IPMI with BMC",
     "workflow_submitted": "workflow submitted , please open Task page to view ",
-    "opt_fail_pxe": "please PXE first till full hardware info is discovered "
+    "opt_fail_pxe": "please PXE first till full hardware info is discovered ",
+
+    "安装Centos7 64位版": "Install Centos7 64",
+    "创建HPE服务器磁盘Raid虚拟磁盘": "Create HPE RAID",
+    "搜集HPE服务器磁盘Raid信息": "Catalog HPE RAID",
+    "清空HPE服务器磁盘和Raid信息": "Erase HPE RAID",
+
+    "创建Inspur服务器磁盘Raid虚拟磁盘": "Create Inspur RAID",
+    "清空Inspur服务器磁盘和Raid信息": "Erase Inspur RAID",
+    "搜集Inspur服务器磁盘Raid信息": "Catalog Inspur RAID",
+
+    "创建Dell服务器磁盘Raid虚拟磁盘": "Create Dell RAID",
+    "清空Dell服务器磁盘和Raid信息": "Erase Dell RAID",
+    "搜集Dell服务器磁盘Raid信息": "Catalog Dell RAID",
+    "安装 RedHat7 64位版": "Install RedHat7 64",
+
+    "下发安装系统workflow": "Install OS Workflow",
+    "下发通用workflow": "Normal Workflow",
+    "主节点": "Main Endpoint",
+    "从节点": "Slave Endpoint"
+
+
 }

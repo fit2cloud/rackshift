@@ -45,7 +45,7 @@
           <el-table-column prop="friendlyName" :label="$t('Workflow')" align="left" :sortable="true" width="210">
             <template slot-scope="scope">
               <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ scope.row.friendlyName }}</span>
+  white-space:nowrap;overflow: hidden">{{ $t(scope.row.friendlyName) }}</span>
             </template>
           </el-table-column>
 

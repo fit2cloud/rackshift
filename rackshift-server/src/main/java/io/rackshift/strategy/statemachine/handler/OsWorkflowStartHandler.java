@@ -46,8 +46,6 @@ public class OsWorkflowStartHandler extends AbstractHandler {
             if (extraParams.containsKey("customPartition") && !extraParams.getBoolean("customPartition")) {
                 removePartitions(params);
             }
-
-
         }
 
         String workflowId = rackHDService.postWorkflowNoWait(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);

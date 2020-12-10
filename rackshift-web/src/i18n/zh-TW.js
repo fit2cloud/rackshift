@@ -371,4 +371,24 @@ export default {
     "IPMI+Rest": "IPMI 帶外控制卡",
     "workflow_submitted": "工作流已下發，請到任務頁面查看執行日志",
     "opt_fail_pxe": "操作失敗！請先 PXE 啓動機器等待物理機走完發現流程补充完整信息之后再補充帶外信息",
+
+    "安装Centos7 64位版": "安裝 Centos7 64位版",
+    "创建HPE服务器磁盘Raid虚拟磁盘": "創建 HPE 服務器 RAID",
+    "搜集HPE服务器磁盘Raid信息": "搜集 HPE 服務器 RAID",
+    "清空HPE服务器磁盘和Raid信息": "清空 HPE 服務器 RAID",
+
+    "创建Inspur服务器磁盘Raid虚拟磁盘": "創建 Inspur 服務器 RAID",
+    "清空Inspur服务器磁盘和Raid信息": "清空 Inspur 服務器 RAID",
+    "搜集Inspur服务器磁盘Raid信息": "搜集 Inspur 服務器 RAID",
+
+    "创建Dell服务器磁盘Raid虚拟磁盘": "創建 Dell 服務器 RAID",
+    "清空Dell服务器磁盘和Raid信息": "清空 Dell 服務器 RAID",
+    "搜集Dell服务器磁盘Raid信息": "搜集 Dell 服務器 RAID",
+    "安装 RedHat7 64位版": "安裝 RedHat7 64位版",
+
+    "下发安装系统workflow": "安裝系統 workflow 事件",
+    "下发通用workflow": "通用 workflow 事件",
+    "主节点": "主節點",
+    "从节点": "從節點"
+
 }

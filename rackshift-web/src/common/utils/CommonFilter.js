@@ -1,6 +1,7 @@
 // 将时间戳转日期格式的过滤器
 
 let _ = require('lodash');
+import i18n from "@/i18n/i18n";
 
 function dateFormat(dataStr) {
     var time = new Date(dataStr);
@@ -34,7 +35,7 @@ function brandsFormat(brands) {
 }
 
 function endpointFormat(endpointId) {
-    return _.find(JSON.parse(localStorage.getItem("allEndPoints", (o) => o.id == endpointId))).name;
+    return i18n.t(_.find(JSON.parse(localStorage.getItem("allEndPoints", (o) => o.id == endpointId))).name);
 }
 
 export {dateFormat, brandsFormat, endpointFormat}
