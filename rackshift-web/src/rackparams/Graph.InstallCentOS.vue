@@ -19,7 +19,7 @@
 
           <el-form-item :label="$t('custom_partition')">
             <el-switch
-                v-model="showPartition">
+                v-model="extraParams.customPartition">
             </el-switch>
             <table class="detail-info" style="float: left;margin-top:20px;" v-show="showPartition">
               <thead>

@@ -40,8 +40,14 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         }
         if (extraParams != null) {
             if (extraParams.containsKey("unit") && "GB".equalsIgnoreCase(extraParams.getString("unit"))) {
-                params = setPartitionSize(params);
+                setPartitionSize(params);
             }
+
+            if (extraParams.containsKey("customPartition") && !extraParams.getBoolean("customPartition")) {
+                removePartitions(params);
+            }
+
+
         }
 
         String workflowId = rackHDService.postWorkflowNoWait(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
@@ -51,7 +57,11 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         changeStatus(event, LifeStatus.deploying, true);
     }
 
-    private JSONObject setPartitionSize(JSONObject params) {
+    private void removePartitions(JSONObject params) {
+        params.getJSONObject("options").getJSONObject("defaults").remove("installPartitions");
+    }
+
+    private void setPartitionSize(JSONObject params) {
         JSONObject options = params.getJSONObject("options");
         JSONObject defaults = options.getJSONObject("defaults");
         JSONArray partitions = defaults.getJSONArray("installPartitions");
@@ -65,7 +75,6 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         defaults.put("installPartitions", partitions);
         options.put("defaults", defaults);
         params.put("options", options);
-        return params;
     }
 
 }

@@ -154,4 +154,11 @@ public class BareMetalService {
         bareMetalManager.addToBareMetal(bareMetal);
         return true;
     }
+
+    public ResultHolder powerBatch(String[] ids, String power) {
+        for (String id : ids) {
+            power(id, power);
+        }
+        return ResultHolder.success("");
+    }
 }

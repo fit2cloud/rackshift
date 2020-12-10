@@ -11,6 +11,22 @@
               $t('Workflow')
             }}
           </el-button>
+
+          <el-dropdown>
+            <el-button type="primary">
+              {{ $t('opt') }}<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="powerBatch('on')">{{ $t('power_on') }}
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="powerBatch('off')">{{ $t('power_off') }}
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="powerBatch('reset')">{{ $t('power_reset') }}
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="powerBatch('pxe')">{{ $t('power_pxe') }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </el-button-group>
       </div>
 
@@ -444,6 +460,7 @@ import Vue from "vue"
 import i18n from "@/i18n/i18n";
 import {WebSocketUtil} from "@/common/utils/WebSocket";
 import PowerStatus from '../../common/powerstatus/Power-Status'
+import {MessageBox} from "element-ui";
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -671,7 +688,31 @@ export default {
           } else {
             this.$message.error(this.$t('error'));
           }
-          that.loadingList = true;
+          that.loadingList = false;
+        }, (msg) => {
+          that.$alert(msg);
+          that.loadingList = false;
+        });
+      });
+    },
+    powerBatch(opt,) {
+      this.$confirm(this.$t('confirm') + this.$t('power_' + opt) + '?', this.$t('tips'), {
+        type: "warning"
+      }).then(() => {
+        let that = this;
+        let ids = that.getSelectedIds();
+        if (!ids.length) {
+          this.$message.error(this.$t('pls_select_') + this.$t('Bare Metal Server') + "!");
+          return;
+        }
+        that.loadingList = true;
+        HttpUtil.post("/bare-metal/power/" + opt, ids, (res) => {
+          if (res.success) {
+            this.$message.success(this.$t('success'));
+          } else {
+            this.$message.error(res.message);
+          }
+          that.loadingList = false;
         }, (msg) => {
           that.$alert(msg);
           that.loadingList = false;

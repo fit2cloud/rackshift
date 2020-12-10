@@ -33,6 +33,11 @@ public class BareMetalController {
         return bareMetalService.power(id, power);
     }
 
+    @RequestMapping("/power/{power}")
+    public ResultHolder powerBatch(@RequestBody String[] ids, @PathVariable String power) {
+        return bareMetalService.powerBatch(ids, power);
+    }
+
     @RequestMapping("/hardwares/{bareId}")
     public ResultHolder hardwares(@PathVariable String bareId) {
         return bareMetalService.hardwares(bareId);
