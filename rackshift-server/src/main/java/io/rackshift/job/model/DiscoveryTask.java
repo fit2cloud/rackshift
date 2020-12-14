@@ -137,6 +137,7 @@ public class DiscoveryTask extends Thread {
                                 o.setIp(ip);
                                 o.setUserName(request.getUserName());
                                 o.setPwd(request.getPwd());
+
                                 outBandService.saveOrUpdate(o);
                             }
                         } else {
@@ -187,9 +188,8 @@ public class DiscoveryTask extends Thread {
         }
         physicalMachine.setManagementIp(account.getHost());
         physicalMachine.setMachineSn(machineSn);
-        physicalMachine.setMachineModel(fruObj.getString("Product Name"));
-        if ("DELL".equalsIgnoreCase(machineBrand)) {
-            physicalMachine.setMachineModel(fruObj.getString("Board Product"));
+        if (PluginConstants.DELL.equalsIgnoreCase(machineBrand)) {
+            physicalMachine.setMachineModel(PluginConstants.DELL + " " + fruObj.getString("Board Product"));
         }
         physicalMachine.setMachineBrand(machineBrand);
         physicalMachine.setBmcMac(lanObj.getString("MAC Address"));
@@ -199,12 +199,13 @@ public class DiscoveryTask extends Thread {
         physicalMachine.setStatus(LifeStatus.onrack.name());
         bareMetalManager.addToBareMetal(physicalMachine);
 
-        saveOutBand(account);
+        saveOutBand(account, physicalMachine);
     }
 
-    private void saveOutBand(IPMIUtil.Account account) {
+    private void saveOutBand(IPMIUtil.Account account, BareMetal bareMetal) {
         OutBand o = new OutBand();
         o.setIp(account.getHost());
+        o.setBareMetalId(bareMetal.getId());
         o.setUserName(account.getUserName());
         o.setPwd(account.getPwd());
         outBandService.saveOrUpdate(o);
