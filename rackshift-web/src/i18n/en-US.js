@@ -36,7 +36,7 @@ export default {
     "drive": "Slot Number",
     "param_value": "param value",
     "role": "role",
-    "user_name": "Use a name",
+    "user_name": "UserName",
     "bare_metal": "Bare Metal",
     "pls_input_vlan_id": "Please enter vlanId",
     "add_outband": "Add Outband",
@@ -130,7 +130,7 @@ export default {
     "time": "Time",
     "ip_addr": "IP address",
     "gateway": "Gateway",
-    "username": "Use a name",
+    "username": "UserName",
     "fanti": "Traditional",
     "pls_input_pwd": "Please enter the password",
     "edit_network": "Edit Network Case",
@@ -387,7 +387,8 @@ export default {
     "下发安装系统workflow": "Install OS Workflow",
     "下发通用workflow": "Normal Workflow",
     "主节点": "Main Endpoint",
-    "从节点": "Slave Endpoint"
+    "从节点": "Slave Endpoint",
+    "version": "Version"
 
 
 }

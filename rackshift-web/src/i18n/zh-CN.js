@@ -391,5 +391,6 @@ export default {
     "下发安装系统workflow": "安装系统 workflow 事件",
     "下发通用workflow": "通用 workflow 事件",
     "主节点": "主节点",
-    "从节点": "从节点"
+    "从节点": "从节点",
+    "version": "版本"
 }

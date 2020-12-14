@@ -52,12 +52,12 @@
 
           <el-table-column prop="status" :label="$t('status')" align="left">
             <template slot-scope="scope">
-          <span v-if="scope.row.status == 'Online'" style="color:#55BA23;font-weight: 500;">
-            Online
-          </span>
-              <span v-if="scope.row.status == 'Offline'" style="color:#909399;font-weight: 500;">
-            Offline
-          </span>
+              <span v-if="scope.row.status == 'Online'" class="green">
+                Online
+              </span>
+              <span v-if="scope.row.status == 'Offline'" class="grey">
+                Offline
+              </span>
             </template>
           </el-table-column>
 

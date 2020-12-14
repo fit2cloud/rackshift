@@ -10,14 +10,14 @@
     <!--          <img class="logo" src="../../assets/rackshift-01.png"/>-->
     <!--        </el-link>-->
     <!--        <el-link class="url" :href="websiteUrl" target="_blank">-->
-    <!--          <span>{{websiteUrl}}</span>-->
+    <!--          <span>{{ websiteUrl }}</span>-->
     <!--        </el-link>-->
     <!--      </el-col>-->
     <!--    </el-row>-->
 
     <el-row>
       <el-col>
-        <div class="github">
+        <div class="github-pic">
           <el-link :underline="false" :href="githubUrl" target="_blank">
             <font-awesome-icon class="github-icon" :icon="['fab', 'github-square']"/>
           </el-link>
@@ -30,7 +30,7 @@
 
     <el-row>
       <el-col class="version">
-        <span>版本:</span> &nbsp;
+        <span>{{ $t('version') }}:</span> &nbsp;
         <span>{{ version }}</span>
       </el-col>
     </el-row>
@@ -46,7 +46,7 @@ export default {
     return {
       dialogVisible: false,
       githubUrl: 'https://github.com/rackshift/rackshift',
-      websiteUrl: 'https://metersphere.io',
+      websiteUrl: 'https://rackshift.io',
       version: '1.2.1'
     }
   },
@@ -83,7 +83,7 @@ export default {
   margin-left: 5px;
 }
 
-.github {
+.github-pic {
   height: 30px;
   width: 30px;
   line-height: 30px;

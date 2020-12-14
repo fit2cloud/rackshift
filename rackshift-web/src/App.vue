@@ -344,4 +344,19 @@ a.github:hover {
 .t100vw {
   width: 100vw;
 }
+
+.red {
+  font-weight: 500;
+  color: red;
+}
+
+.green {
+  font-weight: 500;
+  color: #55BA23;
+}
+
+.grey {
+  font-weight: 500;
+  color: #424342;
+}
 </style>

@@ -389,6 +389,7 @@ export default {
     "下发安装系统workflow": "安裝系統 workflow 事件",
     "下发通用workflow": "通用 workflow 事件",
     "主节点": "主節點",
-    "从节点": "從節點"
+    "从节点": "從節點",
+    "version": "版本"
 
 }
