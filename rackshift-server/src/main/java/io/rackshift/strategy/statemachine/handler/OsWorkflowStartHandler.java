@@ -43,7 +43,7 @@ public class OsWorkflowStartHandler extends AbstractHandler {
                 setPartitionSize(params);
             }
 
-            if (extraParams.containsKey("customPartition") && !extraParams.getBoolean("customPartition")) {
+            if (!extraParams.containsKey("customPartition") || (extraParams.containsKey("customPartition") && !extraParams.getBoolean("customPartition"))) {
                 removePartitions(params);
             }
         }
