@@ -157,7 +157,7 @@ public class RackHDService {
             //对应的执行任务的id
             RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + getInstallWorkFlow(os), nodeId), raidAndInstallOsPayLoad);
             if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
-                throw new RuntimeException("装机失败!" + response.getData());
+                throw new RuntimeException(String.format("装机失败!%s", response.getData()));
             }
             String workflowId = (JSONObject.parseObject(response.getData())).getString("instanceId");
             WorkflowResponse workflowResponse = getWorkflowResponse(url, workflowId);
@@ -166,7 +166,7 @@ public class RackHDService {
                 throw new RuntimeException("装机失败!");
             }
         } catch (Exception e) {
-            throw new RuntimeException("装机失败！" + ExceptionUtils.getExceptionDetail(e));
+            throw new RuntimeException(String.format("装机失败！%s", ExceptionUtils.getExceptionDetail(e)));
         }
         return true;
     }
@@ -183,7 +183,7 @@ public class RackHDService {
         IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(pm.getMachineBrand()));
         RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + iMetalProvider.getRaidWorkFlow(), pm.getServerId()), raidPayload);
         if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
-            throw new RuntimeException("做RAID失败!" + response.getData());
+            throw new RuntimeException(String.format("做RAID失败!%s", response.getData()));
         }
         try {
             //对应的执行任务的id
@@ -195,7 +195,7 @@ public class RackHDService {
                 throw new RuntimeException("安装OS失败！");
             }
         } catch (Exception e) {
-            throw new RuntimeException("安装OS失败！" + ExceptionUtils.getExceptionDetail(e));
+            throw new RuntimeException(String.format("安装OS失败！%s", ExceptionUtils.getExceptionDetail(e)));
         }
         return true;
     }
@@ -214,7 +214,7 @@ public class RackHDService {
             IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(physicalMachine.getMachineBrand()));
             RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + iMetalProvider.getRaidWorkFlow(), nodeId), raidPayload);
             if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
-                throw new RuntimeException("做RAID失败!" + response.getData());
+                throw new RuntimeException(String.format("做RAID失败!%s", response.getData()));
             }
             String workflowId = (JSONObject.parseObject(response.getData())).getString("instanceId");
             WorkflowResponse workflowResponse = getWorkflowResponse(url, workflowId);
@@ -223,7 +223,7 @@ public class RackHDService {
                 throw new RuntimeException("做RAID失败!");
             }
         } catch (Exception e) {
-            throw new RuntimeException("做RAID失败!" + ExceptionUtils.getExceptionDetail(e));
+            throw new RuntimeException(String.format("做RAID失败!%s", ExceptionUtils.getExceptionDetail(e)));
         }
         return true;
     }

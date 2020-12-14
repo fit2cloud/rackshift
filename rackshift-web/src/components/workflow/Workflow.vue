@@ -104,7 +104,7 @@
               </el-form-item>
 
               <el-form-item :label="$t('friendly_name')" prop="friendlyName">
-                  <el-input v-model="editObj.friendlyName"></el-input>
+                <el-input v-model="editObj.friendlyName"></el-input>
               </el-form-item>
 
               <el-form-item :label="$t('event_type')" prop="eventType">
@@ -324,7 +324,7 @@ export default {
     },
     confirmEdit() {
       this.validateResult = true;
-      this.$refs.form.validate(f => {
+      this.$refs.form.validate((f) => {
         if (!f) {
           this.validateResult = false;
         }

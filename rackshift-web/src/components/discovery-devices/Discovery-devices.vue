@@ -216,7 +216,7 @@ export default {
     },
     confirmEdit() {
       this.validateResult = true;
-      this.$refs.form.validate(f => {
+      this.$refs.form.validate((f) => {
         if (!f) {
           this.validateResult = false;
         }

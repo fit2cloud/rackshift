@@ -5,7 +5,7 @@ function isAnyBlank() {
     if (arguments && arguments.length > 0) {
         for (let i = 0; i < arguments.length; i++) {
             if (!arguments[i] || (arguments[i] && (arguments[i] == "" || arguments[i].length == 0))) {
-                isBlank =  true;
+                isBlank = true;
             }
         }
     }

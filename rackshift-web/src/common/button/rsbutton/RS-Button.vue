@@ -28,7 +28,7 @@ export default {
     },
   },
   computed: {
-    typeClass: function () {
+    typeClass() {
       if (this.type == "edit") {
         return "el-button";
       } else if (this.type == "del") {
@@ -39,7 +39,7 @@ export default {
         return "el-button";
       }
     },
-    icon: function () {
+    icon() {
       if (this.type == "edit") {
         return "el-icon-edit";
       } else if (this.type == "del") {

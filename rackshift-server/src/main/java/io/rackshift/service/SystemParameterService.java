@@ -8,7 +8,6 @@ import io.rackshift.mybatis.domain.SystemParameterExample;
 import io.rackshift.mybatis.mapper.SystemParameterMapper;
 import io.rackshift.utils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,8 +19,6 @@ import java.util.stream.Collectors;
 public class SystemParameterService {
     @Resource
     private SystemParameterMapper systemParameterMapper;
-    @Resource
-    private ApplicationContext applicationContext;
 
     public Object add(SystemParameterDTO queryVO) {
 
