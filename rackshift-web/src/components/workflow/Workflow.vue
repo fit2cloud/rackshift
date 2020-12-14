@@ -90,7 +90,7 @@
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
-            <el-form :model="editObj" :label-position="labelPosition" :rules="rules" ref="form">
+            <el-form :model="editObj" :label-position="labelPosition" :rules="rules" ref="form" label-width="80px">
 
               <el-form-item :label="$t('injectable_name')" prop="injectableName">
                 <el-select filterable v-model="editObj.injectableName" :placeholder="$t('pls_select')"
@@ -104,7 +104,7 @@
               </el-form-item>
 
               <el-form-item :label="$t('friendly_name')" prop="friendlyName">
-                <el-input v-model="editObj.friendlyName" resize="100"></el-input>
+                  <el-input v-model="editObj.friendlyName"></el-input>
               </el-form-item>
 
               <el-form-item :label="$t('event_type')" prop="eventType">
@@ -117,6 +117,7 @@
                   </el-option>
                 </el-select>
               </el-form-item>
+
               <el-form-item :label="$t('brands')" prop="brands">
                 <el-select v-model="editObj.brands" :placeholder="$t('pls_select')" multiple>
                   <el-option

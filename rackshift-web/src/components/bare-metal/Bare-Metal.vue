@@ -369,7 +369,7 @@
 
         <div id="workflow-selector" class="action-div">
           <div id="select-workflow">
-            <div class="el-icon-menu h25" style="border-bottom: yellowgreen 1px solid;    width: 100%;">
+            <div class="el-icon-menu h25 workflow-div workflow-div">
               {{ $t('Workflow') }}
             </div>
             <div class="run-splitter h25"></div>
@@ -397,8 +397,7 @@
         </div>
 
         <div id="action-list">
-          <div class="el-icon-s-operation h25"
-               style="border-bottom: yellowgreen 1px solid;width: 100%;">
+          <div class="el-icon-s-operation h25 workflow-div">
             <el-badge :value="selectedWorkflow.length" class="item" type="primary" v-show="selectedWorkflow.length">
               {{ $t('selected_workflows') }}
             </el-badge>
@@ -435,8 +434,7 @@
         </div>
 
         <div id="run-workflow" class="action-div">
-          <div class="el-icon-caret-right h25"
-               style="border-bottom: yellowgreen 1px solid;    width: 100%;">{{ $t('Run') }}
+          <div class="el-icon-caret-right h25 workflow-div">{{ $t('Run') }}
           </div>
           <div class="run-splitter h25"></div>
           <div class="center">
@@ -460,7 +458,6 @@ import Vue from "vue"
 import i18n from "@/i18n/i18n";
 import {WebSocketUtil} from "@/common/utils/WebSocket";
 import PowerStatus from '../../common/powerstatus/Power-Status'
-import {MessageBox} from "element-ui";
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -1183,5 +1180,10 @@ export default {
 .selected-number {
   font-size: 17px;
   color: red;
+}
+
+.workflow-div {
+  border-bottom: yellowgreen 1px solid;
+  width: 100%;
 }
 </style>
