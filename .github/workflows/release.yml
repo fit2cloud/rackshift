@@ -1,0 +1,90 @@
+name: upload release asset
+
+on:
+  create:
+    tag:
+      - "v*"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create Release File To Upload
+        id: create_release_file
+        env:
+          RELEASE_VERSION: ${{github.ref}}
+        run: |
+          git clone https://github.com/rackshift/rackshift-installer.git
+          cd rackshift-installer
+          rm -rf docker .git
+          cd ..
+          chmod +x rackshift-installer/installer/install.sh
+          version=`echo $RELEASE_VERSION | tr 'a-z' 'A-Z' | tr -d 'REFS/TAGS/'`
+          filename=rackshift-release$version
+          mv rackshift-installer $filename
+          tar -czvf $filename.tar.gz $filename
+          echo "::set-output name=VERSION::$(echo $version)"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
+          prerelease: false
+          body: |
+            # 快速开始
+            仅需两步快速安装 RackShift：
+
+             * 准备一台不小于 8 G内存且可以访问互联网的 64位 Linux 主机；
+             * 以 root 用户执行如下命令一键安装 RackShift。
+            ```sh
+            curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh | sh
+            ```
+
+            产品文档
+            点击 [完整文档](https://rackshift.github.io/rackshift-docs-static/) 查看完整的安装和使用文档
+            离线安装包
+            - 百度网盘下载链接: https://pan.baidu.com/s/1bUnEWsvARb8b2iN9u1cwig 提取码: jxh7
+
+            # 新增功能
+             - 任务列表可以显示执行进度的比例
+             - 在线/离线一键安装/升级包
+
+            # 功能优化
+            - 重构执行工作流页面
+            - 物理机电源状态展示优化
+            - 修改密码页面调整
+            - 子网页面各项细节调整友好提示
+
+            # Bug 修复
+            - 修复删除 endpoint 为空的镜像报错的问题
+            - 修复任务页面接口不停刷新的问题
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./rackshift-release${{ steps.create_release_file.outputs.VERSION }}.tar.gz
+          asset_name: rackshift-release${{ steps.create_release_file.outputs.VERSION }}.tar.gz
+          asset_content_type: application/zip
+
+      - name: Upload Quick Start Script
+        id: upload-release-quick-start-shell
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./rackshift-release${{ steps.create_release_file.outputs.VERSION }}/installer/quick_start.sh
+          asset_name: quick_start.sh
+          asset_content_type: application/text
