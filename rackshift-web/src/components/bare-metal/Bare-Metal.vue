@@ -682,6 +682,7 @@ export default {
         HttpUtil.get("/bare-metal/power/" + row.id + "/" + opt, null, (res) => {
           if (res.success) {
             this.$message.success(this.$t('success'));
+            this.getData();
           } else {
             this.$message.error(this.$t('error'));
           }

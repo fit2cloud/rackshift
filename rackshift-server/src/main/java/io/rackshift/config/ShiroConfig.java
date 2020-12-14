@@ -113,7 +113,7 @@ public class ShiroConfig {
     public SessionManager sessionManager(MemoryConstrainedCacheManager memoryConstrainedCacheManager) {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setSessionIdUrlRewritingEnabled(false);
-        sessionManager.setGlobalSessionTimeout(1800000L);
+        sessionManager.setGlobalSessionTimeout(3600000L);
         sessionManager.setDeleteInvalidSessions(true);
         sessionManager.setSessionValidationSchedulerEnabled(true);
         SimpleCookie sessionIdCookie = new SimpleCookie();
