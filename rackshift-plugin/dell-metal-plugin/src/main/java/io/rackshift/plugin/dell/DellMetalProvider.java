@@ -25,10 +25,6 @@ import static io.rackshift.metal.sdk.constants.RackHDConstants.workflowPostUrl;
 @MetalPlugin
 public class DellMetalProvider extends AbstractMetalProvider {
 
-    public DellMetalProvider() {
-        super.name = "dell-metal-plugin";
-    }
-
     private static final String temperatureLocal = "1.3.6.1.4.1.674.10892.5.4.700.20.1.8";
     private static final String temperatureValue = "1.3.6.1.4.1.674.10892.5.4.700.20.1.6";
     private static final String powerStatusLocal = "1.3.6.1.4.1.674.10892.5.4.600.12.1.5";
@@ -39,6 +35,10 @@ public class DellMetalProvider extends AbstractMetalProvider {
     private IDrac8RestSpider iDrac8RestSpider = new IDrac8RestSpider();
     private IDrac6RestSpider iDrac6RestSpider = new IDrac6RestSpider();
     private IDrac6NewRestSpider iDrac6NewRestSpider = new IDrac6NewRestSpider();
+    public DellMetalProvider() {
+        super.name = "dell-metal-plugin";
+    }
+
 
     @Override
     public Map<String, String> getHeader(String ip) {

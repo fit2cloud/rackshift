@@ -29,10 +29,6 @@ import static io.rackshift.metal.sdk.constants.RackHDConstants.workflowPostUrl;
 @MetalPlugin
 public class InspurMetalProvider extends AbstractMetalProvider {
 
-    public InspurMetalProvider() {
-        super.name = "inspur-metal-plugin";
-    }
-
     private static Map<String, IMSRestApi> spiderMap = new HashMap() {{
         put("NF5280M4", new IMS5280M4RestSpider());
         put("NF8480M4", new IMS8480M4RestSpider());
@@ -49,6 +45,10 @@ public class InspurMetalProvider extends AbstractMetalProvider {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public InspurMetalProvider() {
+        super.name = "inspur-metal-plugin";
     }
 
     @Override

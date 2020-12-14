@@ -32,9 +32,6 @@ import static io.rackshift.metal.sdk.constants.RackHDConstants.workflowPostUrl;
 @MetalPlugin
 public class HpMetalProvider extends AbstractMetalProvider {
 
-    public HpMetalProvider() {
-        super.name = "hp-metal-plugin";
-    }
 
     private static final String loginUrl = "https://%s/json/login_session";
     private static final String overviewUrl = "https://%s/json/overview";
@@ -96,6 +93,11 @@ public class HpMetalProvider extends AbstractMetalProvider {
                 "    \"session_key\": \"c28329e9896ddb3a76ec5612e49ecacb\"\n" +
                 "}");
     }
+
+    public HpMetalProvider() {
+        super.name = "hp-metal-plugin";
+    }
+
 
     @Override
     public Map<String, String> getHeader(String ip) {
@@ -320,7 +322,7 @@ public class HpMetalProvider extends AbstractMetalProvider {
             JSONObject c = createRaid.getJSONArray("raidList").getJSONObject(i);
             JSONObject raidConfigObj = new JSONObject();
             raidConfigObj.put("type", getValidRaidType(c.getString("type")));
-            raidConfigObj.put("drives", c.getJSONArray("drives").stream().map(s->(String)s).sorted().collect(Collectors.joining(",")));
+            raidConfigObj.put("drives", c.getJSONArray("drives").stream().map(s -> (String) s).sorted().collect(Collectors.joining(",")));
             raidList.add(raidConfigObj);
         }
         createRaid.put("raidList", raidList);

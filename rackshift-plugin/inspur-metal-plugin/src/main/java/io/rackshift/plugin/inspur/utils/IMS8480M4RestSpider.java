@@ -23,11 +23,6 @@ public class IMS8480M4RestSpider extends AbstractIMSRestApi {
     private static final String getBMCUrl = "http://%s/rpc/getalllancfg.asp";
     private static final String getHWUrl = "http://%s/rpc/getHWInfo.asp";
 
-    private static final String getCPUUrl = "http://%s/rpc/getcpuinfo.asp";
-    private static final String getMemoryUrl = "http://%s/rpc/getmeminfo.asp";
-    //    private static final String getDiskUrl = "http://%s/rpc/WEBSES/create.asp";
-    private static final String getNetWorkUrl = "http://%s/rpc/getmacinfo.asp";
-
     @Override
     public boolean login(String ip, String userName, String password) {
         try {

@@ -61,7 +61,7 @@ public class SyncOutBandJob {
 
                     //ip存在但是账号密码为空
                     if (StringUtils.isAnyBlank(account.getHost(), account.getUserName(), account.getPwd())) {
-                        setStatusBeforeIPMI(o, account, pms, RackHDConstants.PM_OUT_BAND_UNKNOW);
+                        setStatusBeforeIPMI(o, pms, RackHDConstants.PM_OUT_BAND_UNKNOW);
                         return;
                     }
 
@@ -84,13 +84,13 @@ public class SyncOutBandJob {
                         });
                     }
                 } catch (Exception e) {
-                    setStatusBeforeIPMI(o, account, pms, RackHDConstants.PM_OUT_BAND_OFF);
+                    setStatusBeforeIPMI(o, pms, RackHDConstants.PM_OUT_BAND_OFF);
                 }
             });
         }
     }
 
-    private void setStatusBeforeIPMI(OutBand o, IPMIUtil.Account account, List<BareMetal> pms, String outBandStatus) {
+    private void setStatusBeforeIPMI(OutBand o,     List<BareMetal> pms, String outBandStatus) {
         o.setStatus(outBandStatus);
         outBandMapper.updateByPrimaryKeySelective(o);
         pms.stream().forEach(p -> {

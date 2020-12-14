@@ -50,26 +50,11 @@ public class BareMetalService {
     public ResultHolder power(String id, String opt) {
 
         BareMetal pm = bareMetalManager.getBareMetalById(id);
-//        if (pm == null || StringUtils.isBlank(pm.getServerId())) {
-//            throw new RuntimeException("物理机不存在！或者RackHD nodeid没有设置！");
-//        }
-//
+
         if (pm == null) {
             throw new RuntimeException("物理机不存在！或者RackHD nodeid没有设置！");
         }
 
-        /**1.获取对应物理的RackHD地址和验证信息 执行RESTfull调用
-         * 2.RackHD的nodeId直接执行workflow
-         **/
-//        String discoveryId = pm.getRuleId();
-//        BareMetalRule rule = physicalMachineRuleMapper.selectByPrimaryKey(discoveryId);
-//        if (rule == null) {
-//            throw new RuntimeException("物理机发现规则不存在！");
-//        }
-//        String url = JSONObject.parseObject(rule.getCredentialParam()).getString("rackHost");
-//        if (url.endsWith("/")) {
-//            url = url.substring(0, url.length() - 1);
-//        }
         //改用IPMI直接开关机重启
         OutBandExample outbandExample = new OutBandExample();
         outbandExample.createCriteria().andIpEqualTo(pm.getManagementIp());
