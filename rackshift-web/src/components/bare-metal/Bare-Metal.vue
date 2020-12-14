@@ -612,11 +612,11 @@ export default {
         if (row.serverId)
           return '<span style="display: inline-block;white-space: nowrap;">' +
               this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i><br>'
-              + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 && row.status != 'onrack' ? '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
+              + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
         else
           return '<span style="display: inline-block;white-space: nowrap;">' +
               this.$t('PXE') + ' ' + this.$t('status') + '<i class="el-icon-close" style="margin-left:5px;color: red;"></i><br>'
-              + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 && row.status != 'onrack' ? '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
+              + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
       } else {
         return '<span style="display: inline-block;white-space: nowrap;">' +
             this.$t('PXE') + ' ' + this.$t(row.status) + '<br>';

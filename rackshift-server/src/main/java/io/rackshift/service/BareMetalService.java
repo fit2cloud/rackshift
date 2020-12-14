@@ -57,7 +57,7 @@ public class BareMetalService {
 
         //改用IPMI直接开关机重启
         OutBandExample outbandExample = new OutBandExample();
-        outbandExample.createCriteria().andIpEqualTo(pm.getManagementIp());
+        outbandExample.createCriteria().andBareMetalIdEqualTo(id);
 
         List<OutBand> outBands = outBandMapper.selectByExample(outbandExample);
         if (outBands.size() < 1) {
@@ -70,7 +70,7 @@ public class BareMetalService {
             return resultHolder.error(resultHolder.getMessage());
         }
 
-        if ("pxe".equalsIgnoreCase(opt)) {
+        if ("pxe".equalsIgnoreCase(opt) && LifeStatus.onrack.name().equalsIgnoreCase(pm.getStatus())) {
             pm.setStatus(LifeStatus.discovering.name());
             bareMetalManager.update(pm, true);
         }
