@@ -112,6 +112,7 @@ public class BareMetalManager {
                     syncOutBand(bareMetal);
                 }
                 bareMetal.setPower(null);
+                bareMetal.setRuleId(null);
                 update(bareMetal, changeStatus);
             }
             saveOrUpdateHardWare(e);
