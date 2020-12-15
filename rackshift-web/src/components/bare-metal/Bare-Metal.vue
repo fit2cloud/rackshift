@@ -102,7 +102,7 @@
         <el-table-column prop="" :label="$t('opt')" align="left">
           <template slot="header" slot-scope="scope">
             <el-input
-                v-model="search"
+                v-model="queryVO.searchKey"
                 size="mini"
                 :placeholder="$t('input_key_search')" v-on:change="getData()"/>
           </template>
@@ -469,7 +469,6 @@ export default {
       accurate: false,
       groupedSupportedWorkflow: [],
       discoveryVisible: false,
-      search: null,
       fillWfParams: false,
       executionLogDrawer: false,
       activeName: 'bare-metal',
@@ -559,7 +558,7 @@ export default {
       currentWfParamTemplate: {},
       editWorkflowIndex: -1,
       queryVO: {
-        searchKey: this.search
+        searchKey: null
       },
       logPoller: null,
       currentParamConfig: '',
@@ -598,8 +597,8 @@ export default {
     },
     queryByRuleId(e) {
       if (e) {
-        this.search = e;
-        this.getData(true);
+        this.queryVO.searchKey = e;
+        this.getData();
       }
     },
     openDiscover() {
@@ -773,25 +772,14 @@ export default {
       console.log(val);
       console.log(val.order);
       if (val.order) {
-        this.queryVO = {
-          searchKey: '%' + this.search + '%',
-          sort: val.prop + " " + val.order.replace("ending", "")
-        }
+        this.queryVO.sort = val.prop + " " + val.order.replace("ending", "");
       } else {
         delete this.queryVO.sort;
       }
       this.getData();
     },
-    getData(accurate) {
+    getData() {
       this.loadingList = true;
-      if (this.search) {
-        this.queryVO.searchKey = '%' + this.search + '%';
-        if (accurate) {
-          this.queryVO.searchKey = this.search;
-        }
-      } else {
-        this.queryVO.searchKey = null;
-      }
       HttpUtil.post("/bare-metal/list/" + this.query.pageIndex + "/" + this.query.pageSize, this.queryVO, (res) => {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
