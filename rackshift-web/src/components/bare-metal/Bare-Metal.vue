@@ -599,7 +599,7 @@ export default {
     queryByRuleId(e) {
       if (e) {
         this.search = e;
-        this.data(true);
+        this.getData(true);
       }
     },
     openDiscover() {
