@@ -23,7 +23,7 @@ jobs:
           cd ..
           chmod +x rackshift-installer/installer/install.sh
           version=`echo $RELEASE_VERSION | tr 'a-z' 'A-Z' | tr -d 'REFS/TAGS/'`
-          filename=rackshift-release$version
+          filename=rackshift$version
           mv rackshift-installer $filename
           tar -czvf $filename.tar.gz $filename
           echo "::set-output name=VERSION::$(echo $version)"
@@ -77,8 +77,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./rackshift-release${{ steps.create_release_file.outputs.VERSION }}.tar.gz
-          asset_name: rackshift-release${{ steps.create_release_file.outputs.VERSION }}.tar.gz
+          asset_path: ./rackshift${{ steps.create_release_file.outputs.VERSION }}.tar.gz
+          asset_name: rackshift${{ steps.create_release_file.outputs.VERSION }}.tar.gz
           asset_content_type: application/zip
 
       - name: Upload Quick Start Script
@@ -88,6 +88,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./rackshift-release${{ steps.create_release_file.outputs.VERSION }}/installer/quick_start.sh
+          asset_path: ./rackshift${{ steps.create_release_file.outputs.VERSION }}/installer/quick_start.sh
           asset_name: quick_start.sh
           asset_content_type: application/text
