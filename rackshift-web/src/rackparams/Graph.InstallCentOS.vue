@@ -21,7 +21,7 @@
             <el-switch
                 v-model="extraParams.customPartition">
             </el-switch>
-            <table class="detail-info" style="float: left;margin-top:20px;" v-show="showPartition">
+            <table class="detail-info" style="float: left;margin-top:20px;" v-show="extraParams.customPartition">
               <thead>
               <tr>
                 <th>{{ $t('mount_point') }}</th>
@@ -261,7 +261,6 @@ export default {
       ],
       fsType: ['ext3', 'ext4', 'swap', 'xfs', 'biosboot'],
       validateResult: false,
-      showPartition: false
     };
   },
   mounted() {
