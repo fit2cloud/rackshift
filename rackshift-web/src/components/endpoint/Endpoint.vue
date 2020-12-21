@@ -91,23 +91,23 @@
             direction="rtl"
             :before-close="handleClose">
           <div class="demo-drawer__content">
-            <el-form :model="editObj" labelPosition="top" :rules="rules" ref="editForm">
+            <el-form :model="editObj" labelPosition="top" :rules="rules" ref="editForm" label-width="80px">
 
               <el-form-item :label="$t('name')" prop="name">
                 <el-input v-model="editObj.name" autocomplete="off"
-                          :placeholder="$t('pls_input_param_value')"></el-input>
+                          :placeholder="$t('pls_input_param_value')" class="input-element"></el-input>
               </el-form-item>
 
               <el-form-item :label="$t('type')" prop="type">
 
-                <el-select v-model="editObj.type">
+                <el-select v-model="editObj.type" class="input-element">
                   <el-option v-for="t in allEndPointType" :label="$t(t.name)" :value="t.value"></el-option>
                 </el-select>
               </el-form-item>
 
               <el-form-item :label="$t('ip')" prop="ip">
                 <el-input v-model="editObj.ip" autocomplete="off"
-                          :placeholder="$t('pls_input_param_value')"></el-input>
+                          :placeholder="$t('pls_input_param_value')" class="input-element"></el-input>
               </el-form-item>
 
             </el-form>

@@ -82,7 +82,6 @@
           :title="editType == 'edit' ? $t('edit_discovery') : $t('add_discovery')"
           :visible.sync="editDialogVisible"
           direction="rtl"
-          size="40%"
           :modal=true
           :wrapperClosable="false"
           :appendToBody="true"

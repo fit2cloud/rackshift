@@ -82,7 +82,6 @@
             :title="editType == 'edit' ? $t('edit_image') : $t('add_image')"
             :visible.sync="editDialogVisible"
             direction="rtl"
-            size="40%"
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
@@ -93,7 +92,7 @@
               </el-form-item>
 
               <el-form-item :label="$t('os')" prop="os">
-                <el-select v-model="editObj.os" :placeholder="$t('pls_select')" v-on:change="changeOsVersion">
+                <el-select v-model="editObj.os" :placeholder="$t('pls_select')" v-on:change="changeOsVersion" class="input-element">
                   <el-option
                       v-for="(item, key) in allOs"
                       :key="item.id"
@@ -103,7 +102,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('os_version')" prop="osVersion">
-                <el-select v-model="editObj.osVersion" :placeholder="$t('pls_input_os_version')">
+                <el-select v-model="editObj.osVersion" :placeholder="$t('pls_input_os_version')" class="input-element">
                   <el-option
                       v-for="(item, key) in allOsVersion"
                       :key="item.name"

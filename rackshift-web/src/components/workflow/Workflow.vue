@@ -86,7 +86,6 @@
             :title="editType == 'edit' ? $t('edit_workflow') : $t('add_workflow')"
             :visible.sync="editDialogVisible"
             direction="rtl"
-            size="50%"
             :wrapperClosable="false"
             :before-close="handleClose">
           <div class="demo-drawer__content">
@@ -94,7 +93,7 @@
 
               <el-form-item :label="$t('injectable_name')" prop="injectableName">
                 <el-select filterable v-model="editObj.injectableName" :placeholder="$t('pls_select')"
-                           :disabled="editObj.type == 'system'" v-on:change="changeFriendlyName">
+                           :disabled="editObj.type == 'system'" v-on:change="changeFriendlyName" class="input-element">
                   <el-option
                       v-for="item in allRackHDWorkflows"
                       :label="item.injectableName"
@@ -104,12 +103,12 @@
               </el-form-item>
 
               <el-form-item :label="$t('friendly_name')" prop="friendlyName">
-                <el-input v-model="editObj.friendlyName"></el-input>
+                <el-input v-model="editObj.friendlyName" class="input-element"></el-input>
               </el-form-item>
 
               <el-form-item :label="$t('event_type')" prop="eventType">
                 <el-select v-model="editObj.eventType" :placeholder="$t('pls_select')"
-                           :disabled="editObj.type == 'system'">
+                           :disabled="editObj.type == 'system'" class="input-element">
                   <el-option
                       v-for="(item, key) in allEventType"
                       :label="item.name"
@@ -119,7 +118,7 @@
               </el-form-item>
 
               <el-form-item :label="$t('brands')" prop="brands">
-                <el-select v-model="editObj.brands" :placeholder="$t('pls_select')" multiple>
+                <el-select v-model="editObj.brands" :placeholder="$t('pls_select')" multiple class="input-element">
                   <el-option
                       v-for="(item, key) in allBrands"
                       :label="item"

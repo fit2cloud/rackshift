@@ -359,4 +359,9 @@ a.github:hover {
   font-weight: 500;
   color: #424342;
 }
+
+.input-element {
+  width: 100% !important;
+}
+
 </style>

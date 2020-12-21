@@ -82,7 +82,7 @@
             <el-form :model="editObj" :rules="rules" ref="form" label-position="top">
 
               <el-form-item :label="$t('endpoint')" prop="endpointId">
-                <el-select v-model="editObj.endpointId" :placeholder="$t('pls_select')">
+                <el-select v-model="editObj.endpointId" :placeholder="$t('pls_select')" class="input-element">
                   <el-option
                       v-for="(item, key) in allEndPoints"
                       :label="item.name"
