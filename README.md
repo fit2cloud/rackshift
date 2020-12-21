@@ -63,7 +63,7 @@ curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_
 ```
 
 ## 体验环境
-- http://rs.dahaia123.top:8080/ 账号密码 admin / 123
+- http://149.129.105.194:8080/ 账号密码 admin / 123
 ## 帮助文档
 - [帮助文档](https://rackshift.github.io/rackshift-docs-static/)
 
