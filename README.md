@@ -30,7 +30,7 @@ RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖�
 [开发进度](https://trello.com/b/rEE3zYaF/rackshift)  
 
 ## 技术架构
-![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rackshift-struc.jpg)
+![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-structure.jpg)
 
 组件说明：
 
