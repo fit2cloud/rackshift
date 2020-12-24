@@ -21,6 +21,10 @@
             <el-input v-model="payLoad.options.defaults.repo" placeholder="\\172.31.128.1\windowsServer2012"></el-input>
           </el-form-item>
 
+          <el-form-item :label="$t('productkey')" prop="productkey">
+            <el-input v-model="payLoad.options.defaults.productkey" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX"></el-input>
+          </el-form-item>
+
           <el-form-item :label="$t('smb_user')" prop="smbUser">
             <el-input v-model="payLoad.options.defaults.smbUser"></el-input>
           </el-form-item>
@@ -141,7 +145,7 @@ export default {
                 }
               }
             ],
-            "productkey": "XXXX-XXXX-XXXX-XXXX-XXXX",
+            "productkey": null,
             "smbUser": "onrack",
             "smbPassword": "onrack",
             "smbRepo": "\\172.31.128.1\windowsServer2012",
@@ -167,7 +171,7 @@ export default {
                 }
               }
             ],
-            "productkey": "XXXX-XXXX-XXXX-XXXX-XXXX",
+            "productkey": null,
             "smbUser": "onrack",
             "smbPassword": "onrack",
             "smbRepo": "\\172.31.128.1\windowsServer2012",

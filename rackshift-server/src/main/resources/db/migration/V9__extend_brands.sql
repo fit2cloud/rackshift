@@ -26,7 +26,7 @@ values (12,
           }
         }
       ],
-      "productkey": "XXXX-XXXX-XXXX-XXXX-XXXX",
+      "productkey": null,
       "smbUser": "onrack",
       "smbPassword": "onrack",
       "smbRepo": null,

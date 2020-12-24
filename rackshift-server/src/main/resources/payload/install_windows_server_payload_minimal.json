@@ -16,7 +16,7 @@
           }
         }
       ],
-      "productkey": "XXXX-XXXX-XXXX-XXXX-XXXX",
+      "productkey": null,
       "smbUser": "onrack",
       "smbPassword": "onrack",
       "smbRepo": "\\\\172.16.10.36\\windowsServer2012",
