@@ -4,26 +4,27 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.config.WorkflowConfig;
 import io.rackshift.constants.ServiceConstants;
-import io.rackshift.manager.BareMetalManager;
+import io.rackshift.manager.WorkflowManager;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.Task;
+import io.rackshift.mybatis.domain.Workflow;
 import io.rackshift.service.RackHDService;
 import io.rackshift.service.TaskService;
 import io.rackshift.strategy.statemachine.*;
+import io.rackshift.strategy.statemachine.handler.param.AbstractParamHandler;
 
 import javax.annotation.Resource;
 
 @EventHandlerAnnotation(LifeEventType.POST_OS_WORKFLOW_START)
 public class OsWorkflowStartHandler extends AbstractHandler {
 
-
     @Resource
     private RackHDService rackHDService;
     @Resource
-    private BareMetalManager bareMetalManager;
-    @Resource
     private TaskService taskService;
+    @Resource
+    private AbstractParamHandler abstractParamHandler;
 
     @Override
     public void handleYourself(LifeEvent event) {
@@ -35,6 +36,7 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         JSONObject params = requestDTO.getParams();
         JSONObject extraParams = requestDTO.getExtraParams();
         BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
+
         if (params == null) {
             revert(event);
         }
@@ -48,11 +50,19 @@ public class OsWorkflowStartHandler extends AbstractHandler {
             }
         }
 
+        customizeParams(requestDTO.getWorkflowName(), params);
+
         String workflowId = rackHDService.postWorkflowNoWait(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
         task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
         task.setInstanceId(workflowId);
         taskService.update(task);
         changeStatus(event, LifeStatus.deploying, true);
+    }
+
+    private void customizeParams(String injectableName, JSONObject params) {
+        if (abstractParamHandler.getHandler(injectableName) != null) {
+            abstractParamHandler.getHandler(injectableName).process(params);
+        }
     }
 
     private void removePartitions(JSONObject params) {

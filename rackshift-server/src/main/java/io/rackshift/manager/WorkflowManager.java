@@ -1,6 +1,7 @@
 package io.rackshift.manager;
 
 import io.rackshift.model.WorkflowRequestDTO;
+import io.rackshift.mybatis.domain.Workflow;
 import io.rackshift.mybatis.domain.WorkflowExample;
 import io.rackshift.mybatis.domain.WorkflowParamTemplatesExample;
 import io.rackshift.mybatis.domain.WorkflowParamTemplatesWithBLOBs;
@@ -60,5 +61,11 @@ public class WorkflowManager {
         WorkflowExample e = new WorkflowExample();
         e.createCriteria().andInjectableNameEqualTo(workflowId);
         return workflowMapper.selectByExample(e).size() > 0 ? workflowMapper.selectByExample(e).get(0).getFriendlyName() : "";
+    }
+
+    public Workflow getByInjectableName(String workflowId) {
+        WorkflowExample e = new WorkflowExample();
+        e.createCriteria().andInjectableNameEqualTo(workflowId);
+        return workflowMapper.selectByExample(e).size() > 0 ? workflowMapper.selectByExample(e).get(0) : null;
     }
 }

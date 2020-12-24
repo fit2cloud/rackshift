@@ -2,7 +2,7 @@
   <div>
     <el-form label-width="130px" :rules="rules" :model="payLoad.options.defaults" ref="form" label-position="right">
       <el-row>
-        <el-col :span="12">
+        <el-col :span="11">
           <el-form-item :label="$t('hostname')" prop="hostname">
             <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"></el-input>
           </el-form-item>
@@ -11,7 +11,7 @@
                       show-password></el-input>
           </el-form-item>
           <el-form-item :label="$t('image')" prop="repo">
-            <el-select v-model="payLoad.options.defaults.repo">
+            <el-select v-model="payLoad.options.defaults.repo" class="input-element">
               <el-option v-for="g in allImages" :label="g.name"
                          :value="g.url"></el-option>
             </el-select>
@@ -75,12 +75,12 @@
             <el-switch v-model="extraParams.uefi" @change="changeUefiBoot"></el-switch>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="13">
           <el-form v-for="d in payLoad.options.defaults.networkDevices" :model="d" :rules="nicRules"
                    ref="nicForm" label-position="right" label-width="185px">
 
             <el-form-item prop="device" :label="$t('network_card_mac')">
-              <el-select v-model="d.device">
+              <el-select v-model="d.device" class="input-element">
                 <el-option :label="n.number + '(' + n.mac + ')'" :value="n.mac"
                            v-for="n in nics"></el-option>
               </el-select>

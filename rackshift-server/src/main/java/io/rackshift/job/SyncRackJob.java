@@ -32,7 +32,7 @@ public class SyncRackJob {
             List<MachineEntity> entities = new LinkedList<>();
             JSONArray nodesArr = null;
 
-            for (Endpoint endPoint : workflowConfig.getEndPoints()) {
+             for (Endpoint endPoint : workflowConfig.getEndPoints()) {
 
                 nodesArr = JSONArray.parseArray(RackHDHttpClientUtil.get("http://" + endPoint.getIp() + ":9090" + RackHDConstants.NODES_URL, null));
 
