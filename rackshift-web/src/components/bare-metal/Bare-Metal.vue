@@ -193,8 +193,8 @@
         <keep-alive>
           <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
                      :is="currentWfParamTemplate"
-                     :params="workflowParam"
-                     :extraParams="extraParams"
+                     :params="selectedWorkflow[editWorkflowIndex].params"
+                     :extraParams="selectedWorkflow[editWorkflowIndex].extraParams"
                      :currentWorkflowIndex="editWorkflowIndex"
                      :bareMetalId="selectedWorkflow[editWorkflowIndex].bareMetalId"
                      :workflow="selectedWorkflow[editWorkflowIndex]"
@@ -208,6 +208,88 @@
           <el-button type="primary" @click="saveParams" :loading="fillWfParamsLoading">{{ $t('confirm') }}</el-button>
         </template>
       </el-dialog>
+
+      <!--批量设置参数 start-->
+
+      <el-dialog :title="$t('batch_params')" :visible.sync="batchParams" width="45vw" :close-on-click-modal="false">
+        <el-form :model="form">
+          <el-collapse v-model="activeNames" @change="handleChange" accordion>
+            <el-collapse-item title="通用装机参数" name="commonOs">
+              <el-form-item :label="$t('start_ip')" :label-width="formLabelWidth">
+                <el-input v-model="bp.startIp" autocomplete="off"></el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('end_ip')" :label-width="formLabelWidth">
+                <el-input v-model="bp.endIp" autocomplete="off"></el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('gateway')" :label-width="formLabelWidth">
+                <el-input v-model="bp.gateway" autocomplete="off"></el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('netmask')" :label-width="formLabelWidth">
+                <el-input v-model="bp.netmask" autocomplete="off"></el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('nic')" :label-width="formLabelWidth">
+                <el-select v-model="bp.nicNumber" class="input-element">
+                  <el-option v-for="n in allNicNumber" :label="n.name" :value="n.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-collapse-item>
+
+            <el-collapse-item title="windwos samba 配置" name="windowsSamba">
+
+              <el-form-item :label="$t('hostname')" prop="hostname" :label-width="formLabelWidth">
+                <el-input v-model="bp.hostname" autocomplete="off" aria-required="true"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('domain')" prop="domain" :label-width="formLabelWidth">
+                <el-input v-model="bp.domain" autocomplete="off" aria-required="true"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('username')" prop="username" :label-width="formLabelWidth">
+                <el-input v-model="bp.username" autocomplete="off" aria-required="true"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('root_pwd')" prop="rootPassword" :label-width="formLabelWidth">
+                <el-input v-model="bp.rootPassword" autocomplete="off"
+                          show-password></el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('samba')" prop="repo" :label-width="formLabelWidth">
+                <el-input v-model="bp.repo"
+                          placeholder="\\172.31.128.1\windowsServer2012"></el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('productkey')" prop="productkey" :label-width="formLabelWidth">
+                <el-input v-model="bp.productkey"
+                          placeholder="XXXX-XXXX-XXXX-XXXX-XXXX"></el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('smb_user')" prop="smbUser" :label-width="formLabelWidth">
+                <el-input v-model="bp.smbUser"></el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('smb_password')" prop="smbPassword" :label-width="formLabelWidth">
+                <el-input v-model="bp.smbPassword" show-password></el-input>
+              </el-form-item>
+            </el-collapse-item>
+          </el-collapse>
+
+        </el-form>
+
+        <template v-slot:footer>
+          <div class=" dialog-footer
+              ">
+            <el-button @click="batchParams = false">{{ $t('cancel') }}</el-button>
+            <el-button type="primary" @click="confirmBatchParams" :loading="batchParamsLoading">{{
+                $t('confirm')
+              }}
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
+
+      <!--批量设置参数 end-->
 
       <el-drawer
           :title="editType == 'edit' ? $t('edit_discovery') : $t('add_discovery')"
@@ -352,7 +434,6 @@
       </drawer>
     </el-tab-pane>
 
-
     <!-- 执行器 start -->
     <drawer
         :visible.sync="actionDrawer"
@@ -404,6 +485,7 @@
             <span v-show="selectedWorkflow.length == 0">
               {{ $t('selected_workflows') }}
               </span>
+
           </div>
           <div style="display: block;">
             <el-card v-for="(w, $index) in selectedWorkflow" style="height:100%;">
@@ -437,8 +519,11 @@
           <div class="el-icon-caret-right h25 workflow-div">{{ $t('Run') }}
           </div>
           <div class="run-splitter h25"></div>
-          <div class="center">
-            <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
+          <div class="center flex">
+            <el-button-group>
+              <el-button class="el-icon-setting h50" @click="openBatchParams"></el-button>
+              <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
+            </el-button-group>
           </div>
         </div>
       </div>
@@ -458,6 +543,8 @@ import Vue from "vue"
 import i18n from "@/i18n/i18n";
 import {WebSocketUtil} from "@/common/utils/WebSocket";
 import PowerStatus from '../../common/powerstatus/Power-Status'
+import axios from 'axios'
+import {getIPRange} from 'get-ip-range'
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -466,6 +553,11 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      activeNames: 'commonOs',
+      batchParamsLoading: false,
+      allNicNumber: [],
+      batchParams: false,
+      bp: {},
       accurate: false,
       groupedSupportedWorkflow: [],
       discoveryVisible: false,
@@ -585,6 +677,113 @@ export default {
   }
   ,
   methods: {
+    handleChange(val) {
+
+    },
+    setIpRangeParam() {
+      let rangeIp = getIPRange(this.bp.startIp, this.bp.endIp);
+      let j = 0;
+      for (let i = 0; i < this.selectedWorkflow.length; i++) {
+        if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
+          this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'ipAddr', rangeIp[j++]);
+        }
+      }
+    },
+    setGatewayParam() {
+      for (let i = 0; i < this.selectedWorkflow.length; i++) {
+        if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
+          this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'gateway', this.bp.gateway);
+        }
+      }
+    },
+    setNetmaskParam() {
+      for (let i = 0; i < this.selectedWorkflow.length; i++) {
+        if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
+          this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'netmask', this.bp.netmask);
+        }
+      }
+    },
+    setWindowsParam() {
+      for (let i = 0; i < this.selectedWorkflow.length; i++) {
+        if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
+          this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'netmask', this.bp.netmask);
+        }
+      }
+    },
+    setNicNumber() {
+      if (!this.bp.nicNumber) {
+        return;
+      }
+      let that = this;
+      for (let i = 0; i < this.selectedWorkflow.length; i++) {
+        if (that.selectedWorkflow[i].params && that.selectedWorkflow[i].params.options.defaults && that.selectedWorkflow[i].params.options.defaults.networkDevices) {
+          that.getHardWarePromise(that.selectedWorkflow[i].bareMetalId).then(d => {
+            if (d.data.data.nics.length) {
+              that.$set(that.selectedWorkflow[i].params.options.defaults.networkDevices[0], 'device', _.find(d.data.data.nics, n => n.number == that.bp.nicNumber).mac);
+            }
+          });
+        }
+      }
+    },
+    confirmBatchParams() {
+      this.batchParamsLoading = true;
+      if (this.bp.startIp && this.bp.endIp) {
+        this.setIpRangeParam();
+      }
+      if (this.bp.gateway) {
+        this.setGatewayParam();
+      }
+      if (this.bp.netmask) {
+        this.setNetmaskParam();
+      }
+      if (this.bp.nicNumber) {
+        this.setNicNumber();
+      }
+      this.setWindowsParam();
+      this.batchParamsLoading = false;
+
+    },
+    getHardWarePromise(bareMetalId) {
+      return axios.get("/bare-metal/hardwares/" + bareMetalId);
+    },
+    /**
+     * 从所有选中的物理机中找到拥有最少网卡的数量 因为要批量选择某一块网卡
+     */
+    getMinNicNumber() {
+      if (this.selectedWorkflow.length) {
+        let bareMetalIds = _.map(this.selectedWorkflow, (w) => w.bareMetalId);
+        let conReq = [];
+        let that = this;
+        bareMetalIds.forEach(id => {
+          conReq.push(that.getHardWarePromise(id))
+        })
+        let minNicNumber = 0;
+        Promise.all(conReq).then(function (data) {
+          if (data.length > 0) {
+            minNicNumber = data[0].data.data.nics.length;
+            data.forEach(d => {
+              if (d.data.data.nics.length && d.data.data.nics.length < minNicNumber) {
+                minNicNumber = d.data.nics.length;
+              }
+            })
+
+            let arr = [];
+            for (let i = 0; i < minNicNumber; i++) {
+              arr.push({
+                name: "eth" + i,
+                value: "eth" + i
+              });
+            }
+
+            that.allNicNumber = arr;
+          }
+        });
+      }
+    },
+    openBatchParams() {
+      this.batchParams = true;
+      this.getMinNicNumber();
+    },
     filterPower(tag, row) {
       return row.power == tag;
     },
@@ -769,8 +968,6 @@ export default {
       });
     },
     sortChange(val) {
-      console.log(val);
-      console.log(val.order);
       if (val.order) {
         this.queryVO.sort = val.prop + " " + val.order.replace("ending", "");
       } else {
@@ -1074,7 +1271,7 @@ export default {
 }
 
 #run-workflow {
-  min-width: 120px;
+  min-width: 220px;
   margin-right: 20px;
 }
 
