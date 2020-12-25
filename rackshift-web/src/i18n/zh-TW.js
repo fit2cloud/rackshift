@@ -390,6 +390,13 @@ export default {
     "下发通用workflow": "通用 workflow 事件",
     "主节点": "主節點",
     "从节点": "從節點",
-    "version": "版本"
+    "version": "版本",
 
+    "batch_params": "批量參數設置",
+    "common_params": "通用裝機參數",
+    "nic": "業務網卡編號",
+    "productkey": "激活碼",
+    "smb_user": "SAMBA 用戶名",
+    "smb_password": "SAMBA 密碼",
+    "samba_param": "SAMBA 配置",
 }

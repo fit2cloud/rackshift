@@ -388,7 +388,13 @@ export default {
     "下发通用workflow": "Normal Workflow",
     "主节点": "Main Endpoint",
     "从节点": "Slave Endpoint",
-    "version": "Version"
+    "version": "Version",
 
-
+    "batch_params": "Config Params",
+    "common_params": "Common Params",
+    "nic": "NIC Number",
+    "productkey": "Product Key",
+    "smb_user": "SAMBA UserName",
+    "smb_password": "SAMBA Password",
+    "samba_param": "SAMBA Config",
 }

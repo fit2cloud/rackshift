@@ -211,10 +211,21 @@
 
       <!--批量设置参数 start-->
 
-      <el-dialog :title="$t('batch_params')" :visible.sync="batchParams" width="45vw" :close-on-click-modal="false">
+      <el-dialog :title="$t('batch_params')" :visible.sync="batchParams" width="45vw" :close-on-click-modal="false"
+                 :append-to-body="true">
         <el-form :model="form">
           <el-collapse v-model="activeNames" @change="handleChange" accordion>
-            <el-collapse-item title="通用装机参数" name="commonOs">
+            <el-collapse-item :title="$t('common_params')" name="commonOs">
+
+              <el-form-item :label="$t('hostname')" prop="hostname" :label-width="formLabelWidth">
+                <el-input v-model="bp.hostname" autocomplete="off" aria-required="true"></el-input>
+              </el-form-item>
+
+              <el-form-item :label="$t('root_pwd')" prop="rootPassword" :label-width="formLabelWidth">
+                <el-input v-model="bp.rootPassword" autocomplete="off"
+                          show-password></el-input>
+              </el-form-item>
+
               <el-form-item :label="$t('start_ip')" :label-width="formLabelWidth">
                 <el-input v-model="bp.startIp" autocomplete="off"></el-input>
               </el-form-item>
@@ -239,20 +250,13 @@
               </el-form-item>
             </el-collapse-item>
 
-            <el-collapse-item title="windwos samba 配置" name="windowsSamba">
+            <el-collapse-item :title="$t('samba_param')" name="windowsSamba">
 
-              <el-form-item :label="$t('hostname')" prop="hostname" :label-width="formLabelWidth">
-                <el-input v-model="bp.hostname" autocomplete="off" aria-required="true"></el-input>
-              </el-form-item>
               <el-form-item :label="$t('domain')" prop="domain" :label-width="formLabelWidth">
                 <el-input v-model="bp.domain" autocomplete="off" aria-required="true"></el-input>
               </el-form-item>
               <el-form-item :label="$t('username')" prop="username" :label-width="formLabelWidth">
                 <el-input v-model="bp.username" autocomplete="off" aria-required="true"></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('root_pwd')" prop="rootPassword" :label-width="formLabelWidth">
-                <el-input v-model="bp.rootPassword" autocomplete="off"
-                          show-password></el-input>
               </el-form-item>
 
               <el-form-item :label="$t('samba')" prop="repo" :label-width="formLabelWidth">
@@ -579,7 +583,7 @@ export default {
       multipleSelection: [],
       delList: [],
       editVisible: false,
-      formLabelWidth: '90px',
+      formLabelWidth: '130px',
       pageTotal: 0,
       loading: false,
       columns: [
@@ -685,28 +689,32 @@ export default {
       let j = 0;
       for (let i = 0; i < this.selectedWorkflow.length; i++) {
         if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
-          this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'ipAddr', rangeIp[j++]);
+          if (rangeIp[j++])
+            this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'ipAddr', rangeIp[j++]);
         }
       }
     },
     setGatewayParam() {
       for (let i = 0; i < this.selectedWorkflow.length; i++) {
         if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
-          this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'gateway', this.bp.gateway);
+          if (this.bp.gateway)
+            this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'gateway', this.bp.gateway);
         }
       }
     },
     setNetmaskParam() {
       for (let i = 0; i < this.selectedWorkflow.length; i++) {
         if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
-          this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'netmask', this.bp.netmask);
+          if (this.bp.netmask)
+            this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'netmask', this.bp.netmask);
         }
       }
     },
     setWindowsParam() {
       for (let i = 0; i < this.selectedWorkflow.length; i++) {
         if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
-          this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'netmask', this.bp.netmask);
+          if (this.bp.netmask)
+            this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'netmask', this.bp.netmask);
         }
       }
     },
@@ -719,7 +727,8 @@ export default {
         if (that.selectedWorkflow[i].params && that.selectedWorkflow[i].params.options.defaults && that.selectedWorkflow[i].params.options.defaults.networkDevices) {
           that.getHardWarePromise(that.selectedWorkflow[i].bareMetalId).then(d => {
             if (d.data.data.nics.length) {
-              that.$set(that.selectedWorkflow[i].params.options.defaults.networkDevices[0], 'device', _.find(d.data.data.nics, n => n.number == that.bp.nicNumber).mac);
+              if (_.find(d.data.data.nics, n => n.number == that.bp.nicNumber))
+                that.$set(that.selectedWorkflow[i].params.options.defaults.networkDevices[0], 'device', _.find(d.data.data.nics, n => n.number == that.bp.nicNumber).mac);
             }
           });
         }
@@ -741,6 +750,7 @@ export default {
       }
       this.setWindowsParam();
       this.batchParamsLoading = false;
+      this.batchParams = false;
 
     },
     getHardWarePromise(bareMetalId) {
