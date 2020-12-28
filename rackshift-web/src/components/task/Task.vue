@@ -32,15 +32,17 @@
 
           <el-table-column prop="machineModel" :label="$t('Bare Metal Server')" align="left" :sortable="true">
             <template slot-scope="scope">
-              <!--              <el-tooltip class="item" effect="dark" :content="scope.row.machineModel" placement="right-end">-->
               <span style="display: block; word-break:keep-all;
   white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>
-              <!--              </el-tooltip>-->
             </template>
           </el-table-column>
 
-          <el-table-column :prop="c.prop" :label="$t(c.label)" align="left"
-                           v-for="c in columns" :sortable="c.sort"></el-table-column>
+          <el-table-column prop="machineSn" :label="$t('machine_sn')" align="left" :sortable="true">
+            <template slot-scope="scope">
+              <span style="display: block; word-break:keep-all;
+  white-space:nowrap;overflow: hidden">{{ scope.row.machineSn }}</span>
+            </template>
+          </el-table-column>
 
           <el-table-column prop="friendlyName" :label="$t('Workflow')" align="left" :sortable="true" width="210">
             <template slot-scope="scope">
@@ -69,6 +71,12 @@
           </el-table-column>
 
           <el-table-column prop="" :label="$t('opt')" align="left">
+            <template slot="header" slot-scope="scope">
+              <el-input
+                  v-model="queryVO.searchKey"
+                  size="mini"
+                  :placeholder="$t('input_key_search')" v-on:change="getData()"/>
+            </template>
             <template slot-scope="scope">
               <RSButton @click="handleEdit(scope.row, 'view')" type="view" :tip="$t('view_log')"></RSButton>
               <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
@@ -134,6 +142,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      queryVO: {},
       refreshOne: false,
       refreshSubTaskPointer: null,
       refreshTaskPointer: null,
@@ -260,7 +269,7 @@ export default {
     // 获取 easy-mock 的模拟数据
     getData(callback) {
       this.loadingList = true;
-      HttpUtil.post("/task/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
+      HttpUtil.post("/task/list/" + this.query.pageIndex + "/" + this.query.pageSize, this.queryVO, (res) => {
         let that = this;
         that.tableData = res.data.listObject;
         that.pageTotal = res.data.itemCount;

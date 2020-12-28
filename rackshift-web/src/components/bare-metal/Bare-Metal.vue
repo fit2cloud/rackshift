@@ -93,7 +93,7 @@
         <el-table-column prop="status" :label="$t('power')" align="left"
                          :filters="[{ text: $t('power_on'), value: 'on' }, { text: $t('power_off'), value: 'off' }, { text: $t('unknown'), value: 'unknown' }]"
                          :filter-method="filterPower"
-                         filter-placement="bottom-end" l>
+                         filter-placement="bottom-end">
           <template slot-scope="scope">
             <PowerStatus :content="$t('power_text')" :status="scope.row.power"></PowerStatus>
           </template>
@@ -221,6 +221,18 @@
                 <el-input v-model="bp.hostname" autocomplete="off" aria-required="true"></el-input>
               </el-form-item>
 
+              <el-form-item :label="$t('host_increase')" prop="increase" :label-width="formLabelWidth">
+                <el-col :span="12">
+                  <el-tooltip :content="$t('increase_host_desc')" effect="dark">
+                    <el-switch v-model="bp.increase"></el-switch>
+                  </el-tooltip>
+                </el-col>
+              </el-form-item>
+
+              <el-form-item :label="$t('base_number')" :label-width="formLabelWidth" v-if="bp.increase">
+                <el-input v-model="bp.baseNumber" type="number"></el-input>
+              </el-form-item>
+
               <el-form-item :label="$t('root_pwd')" prop="rootPassword" :label-width="formLabelWidth">
                 <el-input v-model="bp.rootPassword" autocomplete="off"
                           show-password></el-input>
@@ -250,7 +262,7 @@
               </el-form-item>
             </el-collapse-item>
 
-            <el-collapse-item :title="$t('samba_param')" name="windowsSamba">
+            <el-collapse-item :title="$t('windwos_param')" name="windowsSamba">
 
               <el-form-item :label="$t('domain')" prop="domain" :label-width="formLabelWidth">
                 <el-input v-model="bp.domain" autocomplete="off" aria-required="true"></el-input>
@@ -259,8 +271,8 @@
                 <el-input v-model="bp.username" autocomplete="off" aria-required="true"></el-input>
               </el-form-item>
 
-              <el-form-item :label="$t('samba')" prop="repo" :label-width="formLabelWidth">
-                <el-input v-model="bp.repo"
+              <el-form-item :label="$t('samba')" prop="smbRepo" :label-width="formLabelWidth">
+                <el-input v-model="bp.smbRepo"
                           placeholder="\\172.31.128.1\windowsServer2012"></el-input>
               </el-form-item>
 
@@ -525,8 +537,12 @@
           <div class="run-splitter h25"></div>
           <div class="center flex">
             <el-button-group>
-              <el-button class="el-icon-setting h50" @click="openBatchParams"></el-button>
-              <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
+              <el-tooltip effect="dark" :content="$t('batch_params')">
+                <el-button class="el-icon-setting h50" @click="openBatchParams"></el-button>
+              </el-tooltip>
+              <el-tooltip effect="dark" :content="$t('Run')">
+                <el-button class="el-icon-caret-right h50" @click="runWorkflow"></el-button>
+              </el-tooltip>
             </el-button-group>
           </div>
         </div>
@@ -684,37 +700,52 @@ export default {
     handleChange(val) {
 
     },
-    setIpRangeParam() {
-      let rangeIp = getIPRange(this.bp.startIp, this.bp.endIp);
-      let j = 0;
+    setParam(test) {
+      switch (test) {
+        case "ip":
+          let rangeIp = getIPRange(this.bp.startIp, this.bp.endIp);
+          let j = 0;
+          for (let i = 0; i < this.selectedWorkflow.length; i++) {
+            if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
+              if (rangeIp[j++])
+                this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'ipAddr', rangeIp[j++]);
+            }
+          }
+          break;
+        case "gateway":
+          this.setNetworkParam('gateway', this.bp.gateway);
+          break;
+        case "netmask":
+          this.setNetworkParam('netmask', this.bp.netmask);
+          break;
+        case "hostname":
+          for (let i = 0; i < this.selectedWorkflow.length; i++) {
+            if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults) {
+              if (this.bp.baseNumber) {
+                this.$set(this.selectedWorkflow[i].params.options.defaults, 'hostname', this.bp.hostname + (parseInt(this.bp.baseNumber) + i));
+              } else {
+                this.$set(this.selectedWorkflow[i].params.options.defaults, 'hostname', this.bp.hostname + (i + 1));
+              }
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    },
+    setNetworkParam(prop, value) {
       for (let i = 0; i < this.selectedWorkflow.length; i++) {
         if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
-          if (rangeIp[j++])
-            this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'ipAddr', rangeIp[j++]);
+          if (this.bp[prop])
+            this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, prop, value);
         }
       }
     },
-    setGatewayParam() {
+    setCommonParam(prop, value) {
       for (let i = 0; i < this.selectedWorkflow.length; i++) {
-        if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
-          if (this.bp.gateway)
-            this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'gateway', this.bp.gateway);
-        }
-      }
-    },
-    setNetmaskParam() {
-      for (let i = 0; i < this.selectedWorkflow.length; i++) {
-        if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
-          if (this.bp.netmask)
-            this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'netmask', this.bp.netmask);
-        }
-      }
-    },
-    setWindowsParam() {
-      for (let i = 0; i < this.selectedWorkflow.length; i++) {
-        if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
-          if (this.bp.netmask)
-            this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'netmask', this.bp.netmask);
+        if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults) {
+          if (this.bp[prop])
+            this.$set(this.selectedWorkflow[i].params.options.defaults, prop, value);
         }
       }
     },
@@ -737,18 +768,42 @@ export default {
     confirmBatchParams() {
       this.batchParamsLoading = true;
       if (this.bp.startIp && this.bp.endIp) {
-        this.setIpRangeParam();
+        this.setParam('ip');
       }
       if (this.bp.gateway) {
-        this.setGatewayParam();
+        this.setParam('gateway', this.bp.gateway);
       }
       if (this.bp.netmask) {
-        this.setNetmaskParam();
+        this.setParam('netmask', this.bp.netmask);
       }
       if (this.bp.nicNumber) {
         this.setNicNumber();
       }
-      this.setWindowsParam();
+      if (this.bp.hostname) {
+        if (this.bp.increase) {
+          this.setParam('hostname', this.bp.hostname);
+        } else {
+          this.setCommonParam('hostname', this.bp.hostname);
+        }
+      }
+      if (this.bp.rootPassword) {
+        this.setCommonParam('rootPassword', this.bp.rootPassword);
+      }
+      if (this.bp.domain) {
+        this.setCommonParam('domain', this.bp.domain);
+      }
+      if (this.bp.username) {
+        this.setCommonParam('username', this.bp.username);
+      }
+      if (this.bp.smbUser) {
+        this.setCommonParam('smbUser', this.bp.smbUser);
+      }
+      if (this.bp.smbPassword) {
+        this.setCommonParam('smbPassword', this.bp.smbPassword);
+      }
+      if (this.bp.smbRepo) {
+        this.setCommonParam('smbRepo', this.bp.smbRepo);
+      }
       this.batchParamsLoading = false;
       this.batchParams = false;
 
@@ -1129,7 +1184,6 @@ export default {
       this.actionDrawer = true;
     }
     ,
-
     runWorkflow() {
       if (!this.selectedWorkflow.length) {
         this.$message.error(this.$t('pls_select_workflow') + "!");

@@ -110,7 +110,10 @@ export default {
         ],
         repo: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
-        ]
+        ],
+        productkey: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
       },
       nicRules: {
         device: [
@@ -153,32 +156,7 @@ export default {
           }
         }
       },
-      payLoad: this.$attrs.params ? JSON.parse(JSON.stringify(this.$attrs.params)) : {
-        "options": {
-          "defaults": {
-            "hostname": "localhost",
-            "domain": "rackhd",
-            "password": "RackHDRocks!",
-            "username": "onrack",
-            "firewallDisable": true,
-            "networkDevices": [
-              {
-                "device": null,
-                "ipv4": {
-                  "ipAddr": "172.31.128.152",
-                  "gateway": "172.31.128.5",
-                  "netmask": "255.255.255.0"
-                }
-              }
-            ],
-            "productkey": null,
-            "smbUser": "onrack",
-            "smbPassword": "onrack",
-            "smbRepo": "\\172.31.128.1\windowsServer2012",
-            "repo": null
-          }
-        }
-      },
+      payLoad: this.$attrs.params,
       extraParams: this.$attrs.extraParams ? JSON.parse(JSON.stringify(this.$attrs.extraParams)) : {
         unit: 'MB'
       },

@@ -41,14 +41,11 @@
         left join workflow on task.work_flow_id = workflow.injectable_name
         left join user on task.user_id = user.id
         <where>
-            <if test="machineSn != null and machineSn != ''">
-                bare_metal.machine_sn like #{sn}
-            </if>
-            <if test="machineModel != null and machineModel != ''">
-                bare_metal.machine_model like #{machineModel}
-            </if>
-            <if test="friendlyName != null and friendlyName != ''">
-                workflow.friendly_name like #{friendlyName}
+            <if test="searchKey != null and searchKey != ''">
+                bare_metal.machine_sn like #{searchKey}
+                or bare_metal.machine_model like %#{searchKey}%
+                or workflow.friendly_name like %#{searchKey}%
+                or bare_metal.ip_array like %#{searchKey}%
             </if>
         </where>
         order by task.create_time desc

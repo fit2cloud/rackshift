@@ -400,5 +400,10 @@ export default {
     "productkey": "激活码",
     "smb_user": "SAMBA 用户名",
     "smb_password": "SAMBA 密码",
-    "samba_param": "SAMBA 配置",
+    "windwos_param": "Windows 配置",
+    "domain": "域",
+    "host_increase": "自增",
+    "increase_host_desc": "HOSTNAME1,HOSTNAME2,...",
+    "base_number": "HOSTNAME 增长基数",
+
 }

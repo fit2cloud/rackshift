@@ -398,5 +398,9 @@ export default {
     "productkey": "激活碼",
     "smb_user": "SAMBA 用戶名",
     "smb_password": "SAMBA 密碼",
-    "samba_param": "SAMBA 配置",
+    "windwos_param": "Windows 配置",
+    "domain": "域",
+    "host_increase": "自增",
+    "increase_host_desc": "HOSTNAME1,HOSTNAME2,...",
+    "base_number": "HOSTNAME 增長基數",
 }
