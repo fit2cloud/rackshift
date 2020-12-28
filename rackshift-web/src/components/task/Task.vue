@@ -64,7 +64,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="createTime" :label="$t('create_time')" align="left">
+          <el-table-column prop="createTime" :label="$t('create_time')" align="left" :sortable="true">
             <template slot-scope="scope">
               <span style="white-space: nowrap;">{{ scope.row.createTime | dateFormat }}</span>
             </template>

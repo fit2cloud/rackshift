@@ -43,9 +43,9 @@
         <where>
             <if test="searchKey != null and searchKey != ''">
                 bare_metal.machine_sn like #{searchKey}
-                or bare_metal.machine_model like %#{searchKey}%
-                or workflow.friendly_name like %#{searchKey}%
-                or bare_metal.ip_array like %#{searchKey}%
+                or bare_metal.machine_model like concat('%',#{searchKey},'%')
+                or workflow.friendly_name like concat('%',#{searchKey},'%')
+                or bare_metal.ip_array like concat('%',#{searchKey},'%')
             </if>
         </where>
         order by task.create_time desc
