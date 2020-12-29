@@ -25,6 +25,12 @@ public class OutBandController {
         return ResultHolder.success("");
     }
 
+    @RequestMapping("/saveBatch")
+    public ResultHolder saveBatch(@RequestBody OutBandDTO outBand) {
+        outBandService.fillOBMS(outBand);
+        return ResultHolder.success("");
+    }
+
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @RequestMapping("list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody OutBandDTO queryVO) {

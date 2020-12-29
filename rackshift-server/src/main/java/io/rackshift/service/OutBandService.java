@@ -2,11 +2,14 @@ package io.rackshift.service;
 
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.OutBandDTO;
+import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.domain.OutBandExample;
 import io.rackshift.mybatis.mapper.OutBandMapper;
 import io.rackshift.utils.BeanUtils;
+import io.rackshift.utils.Translator;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -104,5 +107,34 @@ public class OutBandService {
         e.createCriteria().andIpEqualTo(ip);
         List<OutBand> outBands = outBandMapper.selectByExample(e);
         return outBands.size() > 0 ? outBands.get(0) : null;
+    }
+
+    public void fillOBMS(OutBandDTO outBand) {
+        OutBand obm = outBand.getObm();
+        if (StringUtils.isAnyBlank(obm.getUserName(), obm.getPwd())) {
+            RSException.throwExceptions(Translator.get("i18n_error"));
+            return;
+        }
+        for (String id : outBand.getIds()) {
+            BareMetal bareMetal = bareMetalManager.getBareMetalById(id);
+            if (bareMetal == null) {
+                continue;
+            }
+            OutBandExample e = new OutBandExample();
+            e.createCriteria().andBareMetalIdEqualTo(bareMetal.getId());
+            List<OutBand> outBands = outBandMapper.selectByExample(e);
+            if (outBands.size() > 0) {
+                outBands.forEach(o -> {
+                    o.setUserName(obm.getUserName());
+                    o.setPwd(obm.getPwd());
+                    fillOBMS(bareMetal.getId(), o);
+                });
+            } else {
+                obm.setId(null);
+                obm.setIp(bareMetal.getManagementIp());
+                obm.setBareMetalId(id);
+                fillOBMS(bareMetal.getId(), obm);
+            }
+        }
     }
 }

@@ -25,6 +25,8 @@
               </el-dropdown-item>
               <el-dropdown-item @click.native="powerBatch('pxe')">{{ $t('power_pxe') }}
               </el-dropdown-item>
+              <el-dropdown-item @click.native="fillOBM('obm', 'batch')">{{ $t('OBM') + $t('info') }}
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-button-group>
@@ -169,7 +171,7 @@
       <!--obm-->
       <el-dialog :title="$t('obms')" :visible.sync="fillOutObms" width="35vw" :close-on-click-modal="false">
         <el-form :model="form">
-          <el-form-item :label="$t('ip')" :label-width="formLabelWidth">
+          <el-form-item :label="$t('ip')" :label-width="formLabelWidth" v-if="fillOBMMode != 'batch'">
             <el-input v-model="curObm.ip" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item :label="$t('username')" :label-width="formLabelWidth">
@@ -211,7 +213,7 @@
 
       <!--批量设置参数 start-->
 
-      <el-dialog :title="$t('batch_params')" :visible.sync="batchParams" width="45vw" :close-on-click-modal="false"
+      <el-dialog :title="$t('batch_params')" :visible.sync="batchParams" width="55vw" :close-on-click-modal="false"
                  :append-to-body="true">
         <el-form :model="form">
           <el-collapse v-model="activeNames" @change="handleChange" accordion>
@@ -238,19 +240,19 @@
                           show-password></el-input>
               </el-form-item>
 
-              <el-form-item :label="$t('start_ip')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('start_ip')" prop="startIp" :label-width="formLabelWidth">
                 <el-input v-model="bp.startIp" autocomplete="off"></el-input>
               </el-form-item>
 
-              <el-form-item :label="$t('end_ip')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('end_ip')" prop="endIp" :label-width="formLabelWidth">
                 <el-input v-model="bp.endIp" autocomplete="off"></el-input>
               </el-form-item>
 
-              <el-form-item :label="$t('gateway')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('gateway')" prop="gateway" :label-width="formLabelWidth">
                 <el-input v-model="bp.gateway" autocomplete="off"></el-input>
               </el-form-item>
 
-              <el-form-item :label="$t('netmask')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('netmask')" prop="netmask" :label-width="formLabelWidth">
                 <el-input v-model="bp.netmask" autocomplete="off"></el-input>
               </el-form-item>
 
@@ -573,6 +575,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      fillOBMMode: 'single',
       activeNames: 'commonOs',
       batchParamsLoading: false,
       allNicNumber: [],
@@ -599,7 +602,7 @@ export default {
       multipleSelection: [],
       delList: [],
       editVisible: false,
-      formLabelWidth: '130px',
+      formLabelWidth: '160px',
       pageTotal: 0,
       loading: false,
       columns: [
@@ -806,7 +809,7 @@ export default {
       }
       this.batchParamsLoading = false;
       this.batchParams = false;
-
+      localStorage.setItem("batchParams", JSON.stringify(this.bp));
     },
     getHardWarePromise(bareMetalId) {
       return axios.get("/bare-metal/hardwares/" + bareMetalId);
@@ -847,6 +850,9 @@ export default {
     },
     openBatchParams() {
       this.batchParams = true;
+      if (localStorage.getItem("batchParams")) {
+        this.bp = JSON.parse(localStorage.getItem("batchParams"));
+      }
       this.getMinNicNumber();
     },
     filterPower(tag, row) {
@@ -957,28 +963,32 @@ export default {
       });
     },
     powerBatch(opt,) {
-      this.$confirm(this.$t('confirm') + this.$t('power_' + opt) + '?', this.$t('tips'), {
-        type: "warning"
-      }).then(() => {
-        let that = this;
-        let ids = that.getSelectedIds();
-        if (!ids.length) {
-          this.$message.error(this.$t('pls_select_') + this.$t('Bare Metal Server') + "!");
-          return;
-        }
-        that.loadingList = true;
-        HttpUtil.post("/bare-metal/power/" + opt, ids, (res) => {
-          if (res.success) {
-            this.$message.success(this.$t('success'));
-          } else {
-            this.$message.error(res.message);
+      if (opt == 'obm') {
+
+      } else {
+        this.$confirm(this.$t('confirm') + this.$t('power_' + opt) + '?', this.$t('tips'), {
+          type: "warning"
+        }).then(() => {
+          let that = this;
+          let ids = that.getSelectedIds();
+          if (!ids.length) {
+            this.$message.error(this.$t('pls_select_') + this.$t('Bare Metal Server') + "!");
+            return;
           }
-          that.loadingList = false;
-        }, (msg) => {
-          that.$alert(msg);
-          that.loadingList = false;
+          that.loadingList = true;
+          HttpUtil.post("/bare-metal/power/" + opt, ids, (res) => {
+            if (res.success) {
+              this.$message.success(this.$t('success'));
+            } else {
+              this.$message.error(res.message);
+            }
+            that.loadingList = false;
+          }, (msg) => {
+            that.$alert(msg);
+            that.loadingList = false;
+          });
         });
-      });
+      }
     },
     getHardware() {
       HttpUtil.get("/bare-metal/hardwares/" + this.machine.id, null, (res) => {
@@ -993,45 +1003,88 @@ export default {
       this.detailDrawer = true;
       this.getHardware();
     },
-    fillOBM(val) {
-      if (val.outBandList.length > 0) {
-        this.curObm = {
-          ip: val.managementIp,
-          userName: val.outBandList[0].userName,
-          pwd: val.outBandList[0].pwd,
-          bareMetalId: val.id,
-        };
+    fillOBM(val, mode) {
+      if (mode != 'batch') {
+        if (val.outBandList.length > 0) {
+          this.curObm = {
+            ip: val.managementIp,
+            userName: val.outBandList[0].userName,
+            pwd: val.outBandList[0].pwd,
+            bareMetalId: val.id,
+          };
+        } else {
+          this.curObm = {
+            ip: val.managementIp,
+            userName: null,
+            pwd: null,
+            bareMetalId: val.id,
+          };
+        }
       } else {
+        if (this.getSelectedIds().length == 0) {
+          this.$message.error(this.$t('pls_select_') + this.$t('Bare Metal Server') + "!");
+          return;
+        }
         this.curObm = {
-          ip: val.managementIp,
           userName: null,
           pwd: null,
-          bareMetalId: val.id,
         };
       }
+      this.fillOBMMode = mode;
       this.fillOutObms = true;
     },
     submitOBM() {
       this.obmLoading = true;
-      if (isAnyBlank(this.curObm.ip, this.curObm.userName, this.curObm.pwd)) {
+      if (this.fillOBMMode == 'single') {
+        if (isAnyBlank(this.curObm.ip)) {
+          this.$message.error(this.$t('pls_fill_in_blanks'));
+          this.obmLoading = false;
+          return;
+        }
+      }
+      if (isAnyBlank(this.curObm.userName, this.curObm.pwd)) {
         this.$message.error(this.$t('pls_fill_in_blanks'));
         this.obmLoading = false;
         return;
       }
-      HttpUtil.post("/outband/save?bareMetalId=" + this.curObm.bareMetalId, this.curObm, (res) => {
-        if (res.success) {
+      if (this.fillOBMMode != 'batch') {
+        HttpUtil.post("/outband/save?bareMetalId=" + this.curObm.bareMetalId, this.curObm, (res) => {
+          if (res.success) {
+            this.obmLoading = false;
+            this.curObm = {};
+            this.fillOutObms = false;
+            this.$message.success(this.$t('opt_success'));
+            this.getData();
+          } else {
+            this.$alert.error(this.$t('opt_fail_pxe'));
+          }
+        }, (res) => {
           this.obmLoading = false;
-          this.curObm = {};
-          this.fillOutObms = false;
-          this.$message.success(this.$t('opt_success'));
-          this.getData();
-        } else {
-          this.$alert.error(this.$t('opt_fail_pxe'));
-        }
-      }, (res) => {
-        this.obmLoading = false;
-      });
-    },
+        });
+      } else {
+        let req = {
+          obm: this.curObm,
+          ids: this.getSelectedIds()
+        };
+        HttpUtil.post("/outband/saveBatch", req, (res) => {
+          if (res.success) {
+            this.obmLoading = false;
+            this.curObm = {};
+            this.fillOutObms = false;
+            this.$message.success(this.$t('opt_success'));
+            this.getData();
+          } else {
+            this.$alert.error(this.$t('opt_fail_pxe'));
+          }
+
+          this.fillOBMMode = 'single';
+        }, (res) => {
+          this.obmLoading = false;
+          this.fillOBMMode = 'single';
+        });
+      }
+    }
+    ,
     sortChange(val) {
       if (val.order) {
         this.queryVO.sort = val.prop + " " + val.order.replace("ending", "");
@@ -1039,7 +1092,8 @@ export default {
         delete this.queryVO.sort;
       }
       this.getData();
-    },
+    }
+    ,
     getData() {
       this.loadingList = true;
       HttpUtil.post("/bare-metal/list/" + this.query.pageIndex + "/" + this.query.pageSize, this.queryVO, (res) => {
@@ -1047,24 +1101,29 @@ export default {
         this.pageTotal = res.data.itemCount;
         this.loadingList = false;
       });
-    },
+    }
+    ,
     handleSizeChange(val) {
       this.query.pageSize = val;
       this.handlePageChange(this.query.pageIndex);
-    },
+    }
+    ,
     handleClose() {
       this.detailDrawer = false;
       this.actionDrawer = false;
       this.discoveryVisible = false;
-    },
+    }
+    ,
     handleCloseExecutionLog() {
       this.executionLogDrawer = false;
       window.clearInterval(this.logPoller);
-    },
+    }
+    ,
     cancelForm() {
       this.loading = false;
       this.detailDrawer = false;
-    },
+    }
+    ,
     confirmEdit() {
       this.loading = true;
       if (this.editType == 'edit') {
@@ -1082,16 +1141,19 @@ export default {
           this.getData();
         })
       }
-    },
+    }
+    ,
     // 多选操作
     handleSelectionChange(val) {
       this.multipleSelection = val;
-    },
+    }
+    ,
     getSelectedIds: function () {
       this.delList = [].concat(this.multipleSelection);
       let ids = _.map(this.delList, (item) => item.id);
       return ids;
-    },
+    }
+    ,
     delAllSelection() {
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
@@ -1116,7 +1178,8 @@ export default {
           this.loadingList = false;
         });
       })
-    },
+    }
+    ,
     // 编辑操作
     handleEdit(row, type) {
       if (type == 'edit') {
