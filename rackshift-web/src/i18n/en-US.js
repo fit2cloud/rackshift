@@ -396,9 +396,11 @@ export default {
     "productkey": "Product Key",
     "smb_user": "SAMBA UserName",
     "smb_password": "SAMBA Password",
-    "windwos_param": "Windows Config",
+    "windwos_param": "Windows Param Config",
     "domain": "Domain",
     "host_increase": "Increase",
     "increase_host_desc": "HOSTNAME1,HOSTNAME2,...",
     "base_number": "HOSTNAME BaseNumber",
+    "platform": "Platform",
+    "samba": "SAMBA",
 }

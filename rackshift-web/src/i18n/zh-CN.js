@@ -397,13 +397,15 @@ export default {
     "batch_params": "批量参数设置",
     "common_params": "通用装机参数",
     "nic": "业务网卡编号",
-    "productkey": "激活码",
+    "productkey": "密钥",
     "smb_user": "SAMBA 用户名",
     "smb_password": "SAMBA 密码",
-    "windwos_param": "Windows 配置",
+    "windwos_param": "Windows 参数配置",
     "domain": "域",
     "host_increase": "自增",
     "increase_host_desc": "HOSTNAME1,HOSTNAME2,...",
     "base_number": "HOSTNAME 增长基数",
+    "platform": "平台",
+    "samba": "SAMBA",
 
 }

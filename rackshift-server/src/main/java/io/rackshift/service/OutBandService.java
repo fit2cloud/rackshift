@@ -15,6 +15,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -136,5 +137,11 @@ public class OutBandService {
                 fillOBMS(bareMetal.getId(), obm);
             }
         }
+    }
+
+    public List<OutBand> getByBareMetalIds(String[] bareMetalIds) {
+        OutBandExample e = new OutBandExample();
+        e.createCriteria().andBareMetalIdIn(Arrays.asList(bareMetalIds));
+        return outBandMapper.selectByExample(e);
     }
 }

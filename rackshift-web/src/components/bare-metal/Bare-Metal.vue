@@ -649,8 +649,6 @@ export default {
       supportedWorkflow: [],
       wfRequest: {},
       workflowParamList: [],
-      workflowParam: {},
-      extraParams: {},
       paramEditable: false,
       selectedWorkflow: [],
       fillOutObms: false,
@@ -711,7 +709,7 @@ export default {
           for (let i = 0; i < this.selectedWorkflow.length; i++) {
             if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
               if (rangeIp[j++])
-                this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'ipAddr', rangeIp[j++]);
+                this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'ipAddr', rangeIp[j]);
             }
           }
           break;
@@ -937,10 +935,6 @@ export default {
       this.fillWfParams = true;
       this.currentWfParamTemplate = this.selectedWorkflow[index].componentId;
       this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.selectedWorkflow[index].friendlyName + " " + this.$t('param_config');
-      if (this.workflowParamList.length) {
-        this.workflowParam = this.selectedWorkflow[index].params;
-        this.extraParams = this.selectedWorkflow[index].extraParams;
-      }
     },
     power(opt, row) {
       this.$confirm(this.$t('confirm') + this.$t('power_' + opt) + '?', this.$t('tips'), {
@@ -1292,7 +1286,6 @@ export default {
           this.workflowParamList = res.data;
         } else {
           this.workflowParamList = [];
-          this.workflowParam = null;
         }
       })
     }
@@ -1349,18 +1342,13 @@ export default {
               return p.bareMetalId == that.selectedWorkflow[that.selectedWorkflow.length - 1].bareMetalId;
             });
             if (paramTemplate == null) {
-              that.$set(that, 'workflowParam', null);
-              that.$set(that, 'extraParams', null);
+              that.selectedWorkflow[that.selectedWorkflow.length - 1].params = _.cloneDeep(originWf.defaultParams);
             } else {
-              that.$set(that, 'workflowParam', JSON.parse(paramTemplate.paramsTemplate));
-              that.$set(that, 'extraParams', JSON.parse(paramTemplate.extraParams));
               that.selectedWorkflow[that.selectedWorkflow.length - 1].params = JSON.parse(paramTemplate.paramsTemplate);
               that.selectedWorkflow[that.selectedWorkflow.length - 1].extraParams = JSON.parse(paramTemplate.extraParams);
             }
           } else {
-            that.selectedWorkflow[that.selectedWorkflow.length - 1].params = originWf.defaultParams;
-            that.$set(that, 'workflowParam', originWf.defaultParams);
-            that.$set(that, 'extraParams', null);
+            that.selectedWorkflow[that.selectedWorkflow.length - 1].params = _.cloneDeep(originWf.defaultParams);
           }
         }
       }

@@ -67,7 +67,9 @@
 <!--        <table tableName="disk"/>-->
 <!--        <table tableName="memory"/>-->
 <!--        <table tableName="workflow"/>-->
-        <table tableName="task"/>
+        <table tableName="plugin"/>
+        <table tableName="instruction"/>
+        <table tableName="instruction_log"/>
 <!--        <table tableName="ip"/>-->
 
     </context>

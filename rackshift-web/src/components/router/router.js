@@ -13,6 +13,8 @@ import Endpoint from "../endpoint/Endpoint"
 import Wizard from "../wizard/Wizard"
 import Discovery from "../discovery/Discovery"
 import Task from "../task/Task"
+import OBM from "../obm/Obm"
+import Plugin from "../plugin/Plugin"
 
 Vue.use(VueRouter);
 
@@ -25,7 +27,8 @@ const routes = [
     {path: '/bare-metal', component: BareMetal},
     {path: '/image', component: Image},
     {path: '/network', component: Network},
-    // {path: '/system-parameter', component: SystemParameter},
+    {path: '/obm', component: OBM},
+    {path: '/plugin', component: Plugin},
     {path: '/execution-log', component: ExecutionLog},
     {path: '/workflow', component: Workflow},
     {path: '/endpoint', component: Endpoint},

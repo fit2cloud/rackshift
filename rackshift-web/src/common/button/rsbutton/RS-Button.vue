@@ -50,6 +50,8 @@ export default {
         return "el-icon-refresh";
       } else if (this.type == "view") {
         return "el-icon-view";
+      } else if (this.type == "run") {
+        return "el-icon-caret-right";
       }
     }
   },

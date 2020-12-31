@@ -84,6 +84,13 @@ export default {
                     "order": "11",
                     "icon": "el-icon-s-operation",
                 },
+                {
+                    "name": 'Plugin',
+                    "router": "/Plugin",
+                    "requireRole": "admin",
+                    "order": "12",
+                    "icon": "el-icon-s-operation",
+                },
             ]
         }, {
             "name": 'Configuration',

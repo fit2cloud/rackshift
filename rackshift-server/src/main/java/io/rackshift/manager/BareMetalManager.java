@@ -207,7 +207,7 @@ public class BareMetalManager {
             example.setOrderByClause(queryVO.getSort());
         }
         if (StringUtils.isNotBlank(queryVO.getSearchKey())) {
-            String likeClause = "%s" + queryVO.getSearchKey() + "$s";
+            String likeClause = "%" + queryVO.getSearchKey() + "%";
             example.or(example.createCriteria().andMachineModelLike(likeClause));
             example.or(example.createCriteria().andMachineSnLike(likeClause));
             example.or(example.createCriteria().andManagementIpLike(likeClause));

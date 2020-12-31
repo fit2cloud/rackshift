@@ -158,7 +158,7 @@ body {
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px;
 }
 
-#main-title {
+.main-title {
   font-size: 1.3rem !important;
   font-weight: 400;
   font-family: Metropolis, Avenir Next, Helvetica Neue, Arial, sans-serif;
@@ -362,6 +362,10 @@ a.github:hover {
 
 .input-element {
   width: 100% !important;
+}
+
+.drawer-full {
+  padding: 20px;
 }
 
 </style>
