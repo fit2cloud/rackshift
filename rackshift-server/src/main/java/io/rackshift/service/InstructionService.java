@@ -9,9 +9,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class InstructionService {
@@ -73,10 +76,6 @@ public class InstructionService {
         return instructionLogMapper.selectByExampleWithBLOBs(e);
     }
 
-    public static void main(String[] args) {
-        new ArrayList<>().get(0);
-    }
-
     public boolean runCommands(InstructionDTO instructionDTO) {
         if (StringUtils.isBlank(instructionDTO.getId()) || instructionDTO.getBareMetalIds().length == 0) {
             return false;
@@ -105,11 +104,44 @@ public class InstructionService {
         return true;
     }
 
-    private List<String> buildCommand(OutBand o, Plugin plugin, Instruction instruction) {
-        List<String> commands = new LinkedList<>();
+    private List<Map<String, String>> buildCommand(OutBand o, Plugin plugin, Instruction instruction) {
+        List<Map<String, String>> commands = new LinkedList<>();
         for (String s : instruction.getContent().split("\n")) {
-            commands.add(String.format(plugin.getBaseInstruction().trim() + " ", o.getIp(), o.getUserName(), o.getPwd()) + " " + s);
+            Map paramMap = new HashMap<String, String>();
+            paramMap.put("image", plugin.getImage());
+            paramMap.put("cmd", String.format(plugin.getBaseInstruction().trim() + " ", o.getIp(), o.getUserName(), o.getPwd()) + " " + s);
+            commands.add(paramMap);
         }
         return commands;
+    }
+
+    private String replaceVar(String text, OutBand o) {
+        Map<String, String> paramMap = buildMap(o);
+
+        Pattern p = Pattern.compile("\\{\\{(\\w+)\\}\\}");
+        Matcher m = p.matcher(text);
+
+        while (m.find()) {
+            text = text.replace(m.group(0), paramMap.get(m.group(1)));
+        }
+        return text;
+    }
+
+    private Map<String, String> buildMap(OutBand o) {
+
+        Map map = new HashMap<String, String>();
+        map.put("host", o.getIp());
+        map.put("username", o.getUserName());
+        map.put("password", o.getPwd());
+        return map;
+    }
+
+    public static void main(String[] args) {
+        Pattern p = Pattern.compile("\\{\\{(\\w+)\\}\\}");
+        Matcher m = p.matcher("-I lanplus -H {{host}} -U {{username}} -P {{password}}");
+
+        while (m.find()) {
+            System.out.println(m.group(1) + m.group(0));
+        }
     }
 }

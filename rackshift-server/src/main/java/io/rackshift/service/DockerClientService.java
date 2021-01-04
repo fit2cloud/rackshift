@@ -1,8 +1,10 @@
 package io.rackshift.service;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.command.CommitCmd;
+import com.github.dockerjava.api.async.ResultCallbackTemplate;
+import com.github.dockerjava.api.command.SyncDockerCmd;
 import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.api.model.SearchItem;
 import com.github.dockerjava.core.DockerClientBuilder;
 import io.rackshift.metal.sdk.util.LogUtil;
 import io.rackshift.mybatis.domain.Instruction;
@@ -14,6 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,21 +60,52 @@ public class DockerClientService {
 
     }
 
-    public boolean runWithContainer(List<String> buildCommand, Instruction instruction) {
+    public boolean runWithContainer(List<Map<String, String>> buildCommand, Instruction instruction) {
 
-        for (String s : buildCommand) {
-            CommitCmd cmd = client.commitCmd(s);
-            String r = null;
-            try {
-                r = cmd.exec();
-            } catch (Exception e) {
-                r = "执行出错!" + e;
+        for (Map<String, String> s : buildCommand) {
+            List<SearchItem> items = client.searchImagesCmd(s.get("image")).exec();
+            String r;
+            if (items.size() == 0) {
+                r = String.format("Docker 镜像【%s】不存在,正在执行在线安装...");
+                addInstructionLog(instruction.getId(), r);
+
+                client.pullImageCmd(s.get("image")).exec(new ResultCallbackTemplate() {
+                    @Override
+                    public void onNext(Object o) {
+                        SyncDockerCmd cmd = client.createContainerCmd(s.get("image")).withCmd(s.get("cmd"));
+                        String r = null;
+                        try {
+                            r = (String) cmd.exec();
+                        } catch (Exception e) {
+                            r = "执行出错!" + e;
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        super.onError(throwable);
+                        String r = String.format("Docker 镜像【%s】在线安装失败！请手动执行 docker load -i 进行加载");
+                        addInstructionLog(instruction.getId(), r);
+                    }
+                });
+            } else {
+                SyncDockerCmd cmd = client.createContainerCmd(s.get("image")).withCmd(s.get("cmd"));
+                try {
+                    r = (String) cmd.exec();
+                } catch (Exception e) {
+                    r = "执行出错!" + e;
+                }
             }
-            InstructionLog log = new InstructionLog();
-            log.setInstructionId(instruction.getId());
-            log.setContent(r);
-            instructionLogMapper.insertSelective(log);
+            addInstructionLog(instruction.getId(), r);
         }
         return true;
+    }
+
+
+    private void addInstructionLog(String instructionId, String output) {
+        InstructionLog log = new InstructionLog();
+        log.setInstructionId(instructionId);
+        log.setContent(output);
+        instructionLogMapper.insertSelective(log);
     }
 }

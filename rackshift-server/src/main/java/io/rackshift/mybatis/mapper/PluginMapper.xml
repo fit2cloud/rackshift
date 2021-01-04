@@ -6,6 +6,7 @@
     <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="platform" jdbcType="VARCHAR" property="platform" />
     <result column="base_instruction" jdbcType="VARCHAR" property="baseInstruction" />
+    <result column="image" jdbcType="VARCHAR" property="image" />
     <result column="create_time" jdbcType="BIGINT" property="createTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -67,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, NAME, platform, base_instruction, create_time
+    id, NAME, platform, base_instruction, image, create_time
   </sql>
   <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.PluginExample" resultMap="BaseResultMap">
     select
@@ -101,9 +102,11 @@
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.Plugin">
     insert into plugin (id, NAME, platform, 
-      base_instruction, create_time)
+      base_instruction, image, create_time
+      )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{platform,jdbcType=VARCHAR}, 
-      #{baseInstruction,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT})
+      #{baseInstruction,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.Plugin">
     insert into plugin
@@ -119,6 +122,9 @@
       </if>
       <if test="baseInstruction != null">
         base_instruction,
+      </if>
+      <if test="image != null">
+        image,
       </if>
       <if test="createTime != null">
         create_time,
@@ -136,6 +142,9 @@
       </if>
       <if test="baseInstruction != null">
         #{baseInstruction,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null">
+        #{image,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=BIGINT},
@@ -163,6 +172,9 @@
       <if test="record.baseInstruction != null">
         base_instruction = #{record.baseInstruction,jdbcType=VARCHAR},
       </if>
+      <if test="record.image != null">
+        image = #{record.image,jdbcType=VARCHAR},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=BIGINT},
       </if>
@@ -177,6 +189,7 @@
       NAME = #{record.name,jdbcType=VARCHAR},
       platform = #{record.platform,jdbcType=VARCHAR},
       base_instruction = #{record.baseInstruction,jdbcType=VARCHAR},
+      image = #{record.image,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -194,6 +207,9 @@
       <if test="baseInstruction != null">
         base_instruction = #{baseInstruction,jdbcType=VARCHAR},
       </if>
+      <if test="image != null">
+        image = #{image,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=BIGINT},
       </if>
@@ -205,6 +221,7 @@
     set NAME = #{name,jdbcType=VARCHAR},
       platform = #{platform,jdbcType=VARCHAR},
       base_instruction = #{baseInstruction,jdbcType=VARCHAR},
+      image = #{image,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT}
     where id = #{id,jdbcType=VARCHAR}
   </update>

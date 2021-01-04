@@ -4,9 +4,6 @@
       <div class="container-task">
 
         <div class="machine-title">
-          <!--          <el-button-group class="batch-button">-->
-          <!--            <el-button type="primary" icon="el-icon-refresh" @click="getData()">{{ $t('refresh') }}</el-button>-->
-          <!--          </el-button-group>-->
         </div>
 
         <el-table
@@ -34,6 +31,13 @@
             </template>
           </el-table-column>
 
+          <el-table-column prop="image" :label="$t('image')" align="left" :sortable="true" width="210">
+            <template slot-scope="scope">
+              <span style="display: block; word-break:keep-all;
+  white-space:nowrap;overflow: hidden">{{ scope.row.image }}</span>
+            </template>
+          </el-table-column>
+
           <el-table-column prop="platform" :label="$t('base_instruction')" align="left" :sortable="true" width="210">
             <template slot-scope="scope">
               <span style="display: block; word-break:keep-all;
@@ -50,7 +54,7 @@
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
               <RSButton @click="handleEdit(scope.row, 'edit')" type="edit" :tip="$t('edit')"></RSButton>
-              <RSButton @click="handleEdit(scope.row, 'view')" type="view" :tip="$t('view_instructions')"></RSButton>
+              <RSButton @click="handleEdit(scope.row, 'view')" type="view" :tip="$t('execute_instruction')"></RSButton>
               <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
             </template>
           </el-table-column>

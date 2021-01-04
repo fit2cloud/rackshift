@@ -14,8 +14,8 @@ public class I18NTest {
     public static void main(String[] args) throws IOException {
 //        File file = new File("D:\\rackshift\\rackshift-web\\src\\common\\validator\\CommonValidator.js");
 //        File file = new File("D:\\rackshift\\rackshift-web\\src\\common\\utils");
-        File file = new File("D:\\rackshift\\rackshift-web\\src\\rackparams");
-//        File file = new File("D:\\rackshift\\rackshift-web\\src\\components");
+//        File file = new File("D:\\rackshift\\rackshift-web\\src\\rackparams");
+        File file = new File("D:\\rackshift\\rackshift-web\\src\\components");
         File file2 = new File("D:\\rackshift\\rackshift-web\\src\\i18n\\zh-CN.json");
         BufferedReader reader = new BufferedReader(new FileReader(file2));
         String line = null;
@@ -63,7 +63,8 @@ public class I18NTest {
 
 //            Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?]*)['\"]*\\)");
 //            Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?]*)['\"]*\\)");
-            Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?,/！ ]*)['\"],\\s*['\"]([a-zA-Z_0-9-!?,/！：， \\u4e00-\\u9fa5]*)['\"]*\\)");
+//            Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?,/！ ]*)['\"],\\s*['\"]([a-zA-Z_0-9-!?,/！：， \\u4e00-\\u9fa5]*)['\"]*\\)");
+            Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?,/！ ]*)['\"]*\\)");
             Matcher m = p.matcher(sb.toString());
             while (m.find()) {
 //                if (!i18n.containsKey(m.group(1).trim())) {
@@ -71,16 +72,15 @@ public class I18NTest {
 //                    r.put(m.group(1), null);
 //                }
                 if (!r.containsKey(m.group(1)) && !i18n.containsKey(m.group(1)))
-                    r.put(m.group(1), m.group(2));
+                    r.put(m.group(1), null);
             }
         }
     }
 
 
-//    public static void main(String[] args) {
-//        Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?,/！ ]*)['\"],\\s*['\"]([a-zA-Z_0-9-!?,/！ \\u4e00-\\u9fa5]*)['\"]*\\)");
-//        Matcher m = p.matcher("$t('i18n_di','第')");
-//        m.find();
-//        return m.group(2)
-//    }
+    public static void main2(String[] args) {
+        Pattern p = Pattern.compile("t\\(['\"]*([a-zA-Z_0-9-!?,/！ ]*)['\"]*\\)");
+        Matcher m = p.matcher("t('view_instructions')");
+        System.out.println(m.find());
+    }
 }

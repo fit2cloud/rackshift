@@ -6,6 +6,7 @@ CREATE TABLE PLUGIN (
 	NAME VARCHAR (50) NOT NULL COMMENT '名称',
 	platform VARCHAR (10) NOT NULL DEFAULT 'X86' COMMENT 'docker 工具运行的平台',
 	base_instruction VARCHAR (300) NOT NULL COMMENT '基础指令例如  ipmitool -I lanplus -H xxx -U xxx -P xxx ',
+	image VARCHAR (100) NOT NULL COMMENT 'docker 镜像',
 	create_time BIGINT NOT NULL DEFAULT 1 COMMENT '创建时间',
 	PRIMARY KEY (id)
 );
@@ -32,3 +33,5 @@ CREATE TABLE instruction_log (
 	create_time BIGINT NOT NULL DEFAULT 1 COMMENT '创建时间',
 	PRIMARY KEY (id)
 );
+
+insert into plugin values (1, 'ipmitool', 'X86', '-I lanplus -H {{host}} -U {{username}} -P {{password}}', 'kfox1111/ipmitool', 1609740581974)

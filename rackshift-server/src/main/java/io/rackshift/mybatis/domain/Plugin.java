@@ -13,6 +13,8 @@ public class Plugin implements Serializable {
 
     private String baseInstruction;
 
+    private String image;
+
     private Long createTime;
 
     private static final long serialVersionUID = 1L;
