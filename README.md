@@ -7,7 +7,7 @@
 
 RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖裸金属服务器的发现、带外管理、系统安装（包含 RAID 配置）等。RackShift 基于任务工作流，提供可视化的 WebUI，支持市面上主流 X86 物理服务器品牌，如浪潮、戴尔、华为、联想、惠普等。
 
-![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-main.png)
+![runoob](rs-main.png)
 
 ## 解决的问题
 - 各种网络环境下裸金属服务器的自动、手动发现；
@@ -30,7 +30,7 @@ RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖�
 [开发进度](https://trello.com/b/rEE3zYaF/rackshift)  
 
 ## 技术架构
-![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-structure.jpg)
+![runoob](rs-structure.jpg)
 
 组件说明：
 
@@ -44,7 +44,7 @@ RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖�
 - DockerEngine：各组件的容器运行时。
 
 ## 组件调用关系
-![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-call2.jpg)
+![runoob](rs-call2.jpg)
 
 ## 技术栈
 
@@ -63,13 +63,15 @@ curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_
 ```
 
 ## 体验环境
-- https://home.dahaia123.top:33396/ 账号密码 admin / 123
+- http://rs.dahaia123.top:8080/ 账号密码 admin / 123
 ## 帮助文档
 - [帮助文档](https://rackshift.github.io/rackshift-docs-static/)
 
 ## 微信群
 
-<img src="https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-21-01-04.jpg" width="300" height="300" align="middle" />
+
+![runnob](rs-01-04.jpg)
+如果看不到图片请先加入 QQ 群，然后群主会统一拉入微信群
 
 ## QQ 群
 - 693376431
