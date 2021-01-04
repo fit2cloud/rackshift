@@ -109,7 +109,7 @@ public class InstructionService {
         for (String s : instruction.getContent().split("\n")) {
             Map paramMap = new HashMap<String, String>();
             paramMap.put("image", plugin.getImage());
-            paramMap.put("cmd", String.format(plugin.getBaseInstruction().trim() + " ", o.getIp(), o.getUserName(), o.getPwd()) + " " + s);
+            paramMap.put("cmd", replaceVar(plugin.getBaseInstruction().trim(), o) + " " + s);
             commands.add(paramMap);
         }
         return commands;
