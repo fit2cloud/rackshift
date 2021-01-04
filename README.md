@@ -63,7 +63,7 @@ curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_
 ```
 
 ## 体验环境
-- http://rs.dahaia123.top:8080/ 账号密码 admin / 123
+- http://149.129.105.194:8080/ 账号密码 admin / 123
 ## 帮助文档
 - [帮助文档](https://rackshift.github.io/rackshift-docs-static/)
 
@@ -71,7 +71,8 @@ curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_
 
 
 ![runnob](rs-01-04.jpg)
-如果看不到图片请先加入 QQ 群，然后群主会统一拉入微信群
+如果看不到图片请先加入 QQ 群（693376431）或者打开帮助文档页面扫描加入
+- [二维码](https://rackshift.github.io/rackshift-docs-static/about/)
 
 ## QQ 群
 - 693376431
