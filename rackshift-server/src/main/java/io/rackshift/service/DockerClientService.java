@@ -4,7 +4,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallbackTemplate;
 import com.github.dockerjava.api.command.SyncDockerCmd;
 import com.github.dockerjava.api.model.Container;
-import com.github.dockerjava.api.model.SearchItem;
+import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.core.DockerClientBuilder;
 import io.rackshift.metal.sdk.util.LogUtil;
 import io.rackshift.mybatis.domain.Instruction;
@@ -63,10 +63,10 @@ public class DockerClientService {
     public boolean runWithContainer(List<Map<String, String>> buildCommand, Instruction instruction) {
 
         for (Map<String, String> s : buildCommand) {
-            List<SearchItem> items = client.searchImagesCmd(s.get("image")).exec();
+            List<Image> images = client.listImagesCmd().withImageNameFilter(s.get("image")).exec();
             String r;
-            if (items.size() == 0) {
-                r = String.format("Docker 镜像【%s】不存在,正在执行在线安装...");
+            if (images.size() == 0) {
+                r = String.format("Docker 镜像【%s】不存在,正在执行在线安装...", s.get("image"));
                 addInstructionLog(instruction.getId(), r);
 
                 client.pullImageCmd(s.get("image")).exec(new ResultCallbackTemplate() {
@@ -84,7 +84,7 @@ public class DockerClientService {
                     @Override
                     public void onError(Throwable throwable) {
                         super.onError(throwable);
-                        String r = String.format("Docker 镜像【%s】在线安装失败！请手动执行 docker load -i 进行加载");
+                        String r = String.format("Docker 镜像【%s】在线安装失败！请手动执行 docker load -i 进行加载", s.get("image"));
                         addInstructionLog(instruction.getId(), r);
                     }
                 });
