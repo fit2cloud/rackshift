@@ -3,11 +3,11 @@ package io.rackshift.service;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.LogContainerCmd;
-import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.core.DockerClientBuilder;
+import com.github.dockerjava.core.InvocationBuilder;
 import io.rackshift.metal.sdk.util.LogUtil;
 import io.rackshift.mybatis.domain.Instruction;
 import io.rackshift.mybatis.domain.InstructionLog;
@@ -70,15 +70,8 @@ public class DockerClientService {
             if (images.size() == 0) {
                 r = String.format("Docker 镜像【%s】不存在,正在执行在线安装...", s.get("image"));
                 addInstructionLog(instruction.getId(), r);
-
                 try {
-                    client.pullImageCmd(s.get("image")).exec(new PullImageResultCallback() {
-
-                        @Override
-                        public void onComplete() {
-                            runCmd(instruction, s);
-                        }
-
+                    client.pullImageCmd(s.get("image")).exec(new InvocationBuilder.AsyncResultCallback() {
                         @Override
                         public void onError(Throwable throwable) {
                             super.onError(throwable);
@@ -87,11 +80,12 @@ public class DockerClientService {
                         }
                     }).awaitCompletion();
                 } catch (InterruptedException e) {
-                    addInstructionLog(instruction.getId(), "异常：" + e);
+                    addInstructionLog(instruction.getId(), String.format("异常 pull image【%s】：", s.get("image")));
+                    return false;
                 }
-            } else {
-                runCmd(instruction, s);
             }
+            runCmd(instruction, s);
+
         }
         return true;
     }

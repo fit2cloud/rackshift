@@ -10,7 +10,7 @@
 
       <div class="machine-title">
         <el-button-group class="batch-button">
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="add">{{
+          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit(null, 'add')">{{
               $t('add')
             }}
           </el-button>
@@ -403,10 +403,6 @@ export default {
     handleClose() {
       this.editDialogVisible = false;
     },
-    add() {
-      this.editDialogVisible = true;
-      this.editType = 'add';
-    },
     confirmEdit() {
       this.validateResult = true;
       this.$refs.form.validate((f) => {
@@ -501,6 +497,10 @@ export default {
           this.bareMetalData = res.data.listObject;
           this.bareMetalpageTotal = res.data.itemCount;
         });
+      } else {
+        this.editDialogVisible = true;
+        this.editType = type;
+        this.editObj = {};
       }
     }
     ,
