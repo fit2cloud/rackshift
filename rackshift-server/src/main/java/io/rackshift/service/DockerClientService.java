@@ -1,9 +1,12 @@
 package io.rackshift.service;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.async.ResultCallbackTemplate;
+import com.github.dockerjava.api.command.ExecCreateCmdResponse;
 import com.github.dockerjava.api.command.SyncDockerCmd;
 import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.core.DockerClientBuilder;
 import io.rackshift.metal.sdk.util.LogUtil;
@@ -14,6 +17,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +85,7 @@ public class DockerClientService {
                         } catch (Exception e) {
                             r = "执行出错!" + e;
                         }
+                        addInstructionLog(instruction.getId(), r);
                     }
 
                     @Override
@@ -89,14 +96,44 @@ public class DockerClientService {
                     }
                 });
             } else {
-                SyncDockerCmd cmd = client.createContainerCmd(s.get("image")).withCmd(s.get("cmd"));
-                try {
-                    r = (String) cmd.exec();
-                } catch (Exception e) {
-                    r = "执行出错!" + e;
-                }
+                ExecCreateCmdResponse execCreateCmdResponse = client.execCreateCmd(client.execCreateCmd(s.get("image")).exec().getId())//
+                        .withAttachStdout(true) //
+                        .withAttachStderr(true)//
+                        .withCmd("ls")//
+                        .exec();
+                client.execStartCmd(execCreateCmdResponse.getId()).exec(new ResultCallback<Frame>() {
+                    @Override
+                    public void onStart(Closeable closeable) {
+
+                    }
+
+                    @Override
+                    public void onNext(Frame frame) {
+                        try {
+                            String r = new String(frame.getPayload(), "utf-8");
+                            addInstructionLog(instruction.getId(), r);
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void close() throws IOException {
+
+                    }
+                });
             }
-            addInstructionLog(instruction.getId(), r);
+
         }
         return true;
     }

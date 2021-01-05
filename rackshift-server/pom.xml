@@ -198,7 +198,7 @@
             <groupId>com.github.docker-java</groupId>
             <artifactId>docker-java</artifactId>
             <!-- use latest version https://github.com/docker-java/docker-java/releases -->
-            <version>3.2.0</version>
+            <version>3.2.7</version>
         </dependency>
     </dependencies>
 
