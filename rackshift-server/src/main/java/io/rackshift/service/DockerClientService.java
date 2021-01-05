@@ -2,9 +2,7 @@ package io.rackshift.service;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
-import com.github.dockerjava.api.async.ResultCallbackTemplate;
 import com.github.dockerjava.api.command.LogContainerCmd;
-import com.github.dockerjava.api.command.SyncDockerCmd;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.Image;
@@ -73,17 +71,11 @@ public class DockerClientService {
                 addInstructionLog(instruction.getId(), r);
 
                 try {
-                    client.pullImageCmd(s.get("image")).exec(new ResultCallbackTemplate() {
+                    client.pullImageCmd(s.get("image")).exec(new ResultCallback.Adapter() {
+
                         @Override
-                        public void onNext(Object o) {
-                            SyncDockerCmd cmd = client.createContainerCmd(s.get("image")).withCmd(s.get("cmd"));
-                            String r = null;
-                            try {
-                                r = (String) cmd.exec();
-                            } catch (Exception e) {
-                                r = "执行出错!" + e;
-                            }
-                            addInstructionLog(instruction.getId(), r);
+                        public void onComplete() {
+                            runCmd(instruction, s);
                         }
 
                         @Override
@@ -97,28 +89,33 @@ public class DockerClientService {
                     addInstructionLog(instruction.getId(), "异常：" + e);
                 }
             } else {
-                String containerId = client.createContainerCmd(s.get("image")).withCmd(s.get("cmd").split(" ")).exec().getId();
-                client.startContainerCmd(containerId).exec();
-
-                LogContainerCmd logContainerCmd = client.logContainerCmd(containerId);
-                logContainerCmd.withStdOut(true).withStdErr(true);
-                StringBuffer sb = new StringBuffer();
-
-                try {
-                    logContainerCmd.exec(new ResultCallback.Adapter<Frame>() {
-                        @Override
-                        public void onNext(Frame item) {
-                            sb.append(item.toString());
-                        }
-                    }).awaitCompletion();
-                    addInstructionLog(instruction.getId(), sb.toString());
-                } catch (InterruptedException e) {
-                    addInstructionLog(instruction.getId(), "异常：" + e);
-                }
+                runCmd(instruction, s);
             }
-
         }
         return true;
+    }
+
+    private void runCmd(Instruction instruction, Map<String, String> s) {
+        String containerId = client.createContainerCmd(s.get("image")).withCmd(s.get("cmd").split(" ")).exec().getId();
+        client.startContainerCmd(containerId).exec();
+
+        LogContainerCmd logContainerCmd = client.logContainerCmd(containerId);
+        logContainerCmd.withStdOut(true).withStdErr(true);
+        StringBuffer sb = new StringBuffer();
+
+        try {
+            logContainerCmd.exec(new ResultCallback.Adapter<Frame>() {
+                @Override
+                public void onNext(Frame item) {
+                    sb.append(item.toString());
+                }
+            }).awaitCompletion();
+            addInstructionLog(instruction.getId(), sb.toString());
+        } catch (InterruptedException e) {
+            addInstructionLog(instruction.getId(), "异常：" + e);
+        }
+
+        client.removeContainerCmd(containerId);
     }
 
 
