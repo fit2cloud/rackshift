@@ -9,7 +9,8 @@ CREATE TABLE plugin (
 	image VARCHAR (100) NOT NULL COMMENT 'docker 镜像',
 	create_time BIGINT NOT NULL DEFAULT 1 COMMENT '创建时间',
 	PRIMARY KEY (id)
-);
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4;
 
 DROP TABLE
 IF EXISTS instruction;
@@ -21,7 +22,8 @@ CREATE TABLE instruction (
 	content text NOT NULL COMMENT '指令的内容如 ipmitool -I lanplus -H xxx -U xxx -P xxx power on 以占位符形式组合成指令然后批量执行',
 	create_time BIGINT NOT NULL DEFAULT 1 COMMENT '创建时间',
 	PRIMARY KEY (id)
-);
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4;
 
 DROP TABLE
 IF EXISTS instruction_log;
@@ -32,6 +34,7 @@ CREATE TABLE instruction_log (
 	instruction_id VARCHAR (50) NOT NULL COMMENT '指令执行日志关联的指令id',
 	create_time BIGINT NOT NULL DEFAULT 1 COMMENT '创建时间',
 	PRIMARY KEY (id)
-);
+) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4;
 
 insert into plugin values (1, 'ipmitool', 'X86', '-I lanplus -H {{host}} -U {{username}} -P {{password}}', 'kfox1111/ipmitool', 1609740581974)

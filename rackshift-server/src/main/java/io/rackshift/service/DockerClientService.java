@@ -72,26 +72,30 @@ public class DockerClientService {
                 r = String.format("Docker 镜像【%s】不存在,正在执行在线安装...", s.get("image"));
                 addInstructionLog(instruction.getId(), r);
 
-                client.pullImageCmd(s.get("image")).exec(new ResultCallbackTemplate() {
-                    @Override
-                    public void onNext(Object o) {
-                        SyncDockerCmd cmd = client.createContainerCmd(s.get("image")).withCmd(s.get("cmd"));
-                        String r = null;
-                        try {
-                            r = (String) cmd.exec();
-                        } catch (Exception e) {
-                            r = "执行出错!" + e;
+                try {
+                    client.pullImageCmd(s.get("image")).exec(new ResultCallbackTemplate() {
+                        @Override
+                        public void onNext(Object o) {
+                            SyncDockerCmd cmd = client.createContainerCmd(s.get("image")).withCmd(s.get("cmd"));
+                            String r = null;
+                            try {
+                                r = (String) cmd.exec();
+                            } catch (Exception e) {
+                                r = "执行出错!" + e;
+                            }
+                            addInstructionLog(instruction.getId(), r);
                         }
-                        addInstructionLog(instruction.getId(), r);
-                    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        super.onError(throwable);
-                        String r = String.format("Docker 镜像【%s】在线安装失败！请手动执行 docker load -i 进行加载", s.get("image"));
-                        addInstructionLog(instruction.getId(), r);
-                    }
-                });
+                        @Override
+                        public void onError(Throwable throwable) {
+                            super.onError(throwable);
+                            String r = String.format("Docker 镜像【%s】在线安装失败！请手动执行 docker load -i 进行加载", s.get("image"));
+                            addInstructionLog(instruction.getId(), r);
+                        }
+                    }).awaitCompletion();
+                } catch (InterruptedException e) {
+                    addInstructionLog(instruction.getId(), "异常：" + e);
+                }
             } else {
                 String containerId = client.createContainerCmd(s.get("image")).withCmd(s.get("cmd").split(" ")).exec().getId();
                 client.startContainerCmd(containerId).exec();
