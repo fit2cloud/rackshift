@@ -454,6 +454,76 @@ public class PluginExample {
             return (Criteria) this;
         }
 
+        public Criteria andTagIsNull() {
+            addCriterion("tag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagIsNotNull() {
+            addCriterion("tag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagEqualTo(String value) {
+            addCriterion("tag =", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNotEqualTo(String value) {
+            addCriterion("tag <>", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagGreaterThan(String value) {
+            addCriterion("tag >", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagGreaterThanOrEqualTo(String value) {
+            addCriterion("tag >=", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLessThan(String value) {
+            addCriterion("tag <", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLessThanOrEqualTo(String value) {
+            addCriterion("tag <=", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagLike(String value) {
+            addCriterion("tag like", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNotLike(String value) {
+            addCriterion("tag not like", value, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagIn(List<String> values) {
+            addCriterion("tag in", values, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNotIn(List<String> values) {
+            addCriterion("tag not in", values, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagBetween(String value1, String value2) {
+            addCriterion("tag between", value1, value2, "tag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTagNotBetween(String value1, String value2) {
+            addCriterion("tag not between", value1, value2, "tag");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

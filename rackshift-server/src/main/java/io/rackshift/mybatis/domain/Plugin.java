@@ -15,6 +15,8 @@ public class Plugin implements Serializable {
 
     private String image;
 
+    private String tag;
+
     private Long createTime;
 
     private static final long serialVersionUID = 1L;

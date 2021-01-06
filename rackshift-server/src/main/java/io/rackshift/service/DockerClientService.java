@@ -11,6 +11,7 @@ import com.github.dockerjava.core.InvocationBuilder;
 import io.rackshift.metal.sdk.util.LogUtil;
 import io.rackshift.mybatis.domain.Instruction;
 import io.rackshift.mybatis.domain.InstructionLog;
+import io.rackshift.mybatis.domain.Plugin;
 import io.rackshift.mybatis.mapper.InstructionLogMapper;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +64,7 @@ public class DockerClientService {
 
     }
 
-    public boolean runWithContainer(List<Map<String, String>> buildCommand, Instruction instruction) {
+    public boolean runWithContainer(List<Map<String, String>> buildCommand, Plugin plugin, Instruction instruction) {
 
         for (Map<String, String> s : buildCommand) {
             List<Image> images = client.listImagesCmd().withImageNameFilter(s.get("image")).exec();
@@ -72,7 +73,7 @@ public class DockerClientService {
                 r = String.format("Docker 镜像【%s】不存在,正在执行在线安装...", s.get("image"));
                 addInstructionLog(instruction.getId(), r);
                 try {
-                    client.pullImageCmd(s.get("image")).exec(new InvocationBuilder.AsyncResultCallback() {
+                    client.pullImageCmd(plugin.getImage()).withTag(plugin.getTag()).exec(new InvocationBuilder.AsyncResultCallback() {
                         @Override
                         public void onError(Throwable throwable) {
                             super.onError(throwable);

@@ -98,7 +98,7 @@ public class InstructionService {
         }
 
         outBands.forEach(o -> {
-            dockerClientService.runWithContainer(buildCommand(o, plugin, instruction), instruction);
+            dockerClientService.runWithContainer(buildCommand(o, plugin, instruction), plugin, instruction);
         });
 
         return true;

@@ -7,10 +7,10 @@ CREATE TABLE plugin (
 	platform VARCHAR (10) NOT NULL DEFAULT 'X86' COMMENT 'docker 工具运行的平台',
 	base_instruction VARCHAR (300) NOT NULL COMMENT '基础指令例如  ipmitool -I lanplus -H xxx -U xxx -P xxx ',
 	image VARCHAR (100) NOT NULL COMMENT 'docker 镜像',
+	tag varchar (10) NOT NULL DEFAULT 'latest' COMMENT '镜像TAG',
 	create_time BIGINT NOT NULL DEFAULT 1 COMMENT '创建时间',
 	PRIMARY KEY (id)
-) ENGINE = InnoDB
-    DEFAULT CHARSET = utf8mb4;
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4;
 
 DROP TABLE
 IF EXISTS instruction;
@@ -37,4 +37,4 @@ CREATE TABLE instruction_log (
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4;
 
-insert into plugin values (1, 'ipmitool', 'X86', '-I lanplus -H {{host}} -U {{username}} -P {{password}}', 'kfox1111/ipmitool:latest', 1609740581974)
+insert into plugin values (1, 'ipmitool', 'X86', '-I lanplus -H {{host}} -U {{username}} -P {{password}}', 'kfox1111/ipmitool','latest', 1609740581974)
