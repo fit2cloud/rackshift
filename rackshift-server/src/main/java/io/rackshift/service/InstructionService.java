@@ -58,7 +58,7 @@ public class InstructionService {
 
     public Object delLog(String[] ids) {
         for (String id : ids) {
-            if(!delLog(id)){
+            if (!delLog(id)) {
                 return false;
             }
         }
@@ -75,7 +75,11 @@ public class InstructionService {
     }
 
     private InstructionExample buildExample(InstructionDTO queryVO) {
-        return new InstructionExample();
+        InstructionExample e = new InstructionExample();
+        if (StringUtils.isNotBlank(queryVO.getPluginId())) {
+            e.createCriteria().andPluginIdEqualTo(queryVO.getPluginId());
+        }
+        return e;
     }
 
 

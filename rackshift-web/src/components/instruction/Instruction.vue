@@ -327,14 +327,14 @@ export default {
       logs: [],
     };
   },
-  computed: {
-    action: function () {
-      return '/instruction/upload?fileName=' + this.fileName;
-    }
-  },
   components: {PowerStatus},
   mounted() {
     this.getData();
+  },
+  watch: {
+    pluginId() {
+      this.getData();
+    }
   },
   methods: {
     statusFilter(row) {
@@ -402,7 +402,7 @@ export default {
     // 获取 easy-mock 的模拟数据
     getData() {
       this.loadingList = true;
-      HttpUtil.post("/instruction/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
+      HttpUtil.post("/instruction/list/" + this.query.pageIndex + "/" + this.query.pageSize, {pluginId: this.pluginId}, (res) => {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
         this.loadingList = false;
@@ -531,7 +531,6 @@ export default {
         this.editDialogVisible = true;
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
-        this.editObj.credentialParam = this.editObj.credentialParam ? JSON.parse(this.editObj.credentialParam) : [];
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'

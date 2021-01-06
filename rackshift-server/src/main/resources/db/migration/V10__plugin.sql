@@ -37,4 +37,5 @@ CREATE TABLE instruction_log (
 ) ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4;
 
-insert into plugin values (1, 'ipmitool', 'X86', '-I lanplus -H {{host}} -U {{username}} -P {{password}}', 'kfox1111/ipmitool','latest', 1609740581974)
+insert into plugin values (1, 'IPMITOOL', 'X86', '-I lanplus -H {{host}} -U {{username}} -P {{password}}', 'kfox1111/ipmitool','latest', 1609740581974)
+insert into plugin values (2, 'DELL-RACADM', 'X86', '-r {{host}} -u {{username}} -p {{password}}', 'stackdot/racadm','latest', 1609740581974)
