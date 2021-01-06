@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +27,7 @@ public class DockerClientService {
     private DockerClient client;
     private static final List statusList = Arrays.asList("created", "restarting", "running", "paused", "exited");
     private static final List runningStatusList = Arrays.asList("restarting", "running");
-
+    private static final int cmdWaitTime = 10;
     @Resource
     InstructionLogMapper instructionLogMapper;
 
@@ -78,7 +79,7 @@ public class DockerClientService {
                             String r = String.format("Docker 镜像【%s】在线安装失败！请手动执行 docker load -i 进行加载", s.get("image"));
                             addInstructionLog(instruction.getId(), r);
                         }
-                    }).awaitCompletion();
+                    }).awaitCompletion(cmdWaitTime, TimeUnit.MINUTES);
                 } catch (InterruptedException e) {
                     addInstructionLog(instruction.getId(), String.format("异常 pull image【%s】：", s.get("image")));
                     return false;
@@ -104,7 +105,7 @@ public class DockerClientService {
                 public void onNext(Frame item) {
                     sb.append(item.toString());
                 }
-            }).awaitCompletion();
+            }).awaitCompletion(cmdWaitTime, TimeUnit.MINUTES);
             addInstructionLog(instruction.getId(), sb.toString());
         } catch (InterruptedException e) {
             addInstructionLog(instruction.getId(), "异常：" + e);
