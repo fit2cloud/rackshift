@@ -101,12 +101,23 @@ public class DockerClientService {
         StringBuffer sb = new StringBuffer();
 
         try {
-            logContainerCmd.exec(new ResultCallback.Adapter<Frame>() {
+
+            ResultCallback.Adapter<Frame> rc = new ResultCallback.Adapter<Frame>() {
                 @Override
                 public void onNext(Frame item) {
                     sb.append(item.toString());
                 }
-            }).awaitCompletion();
+
+            };
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    logContainerCmd.exec(rc);
+                }
+            }).start();
+
+            rc.awaitCompletion(10, TimeUnit.MINUTES);
             addInstructionLog(instruction.getId(), sb.toString());
         } catch (InterruptedException e) {
             addInstructionLog(instruction.getId(), "异常：" + e);
