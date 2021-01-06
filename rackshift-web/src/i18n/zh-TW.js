@@ -385,6 +385,7 @@ export default {
     "清空Dell服务器磁盘和Raid信息": "清空 Dell 服務器 RAID",
     "搜集Dell服务器磁盘Raid信息": "搜集 Dell 服務器 RAID",
     "安装 RedHat7 64位版": "安裝 RedHat7 64位版",
+    "安装 windowsServer 2012 标准版": "安装 windowsServer 2012 標準版",
 
     "下发安装系统workflow": "安裝系統 workflow 事件",
     "下发通用workflow": "通用 workflow 事件",
@@ -427,4 +428,6 @@ export default {
     "pls_select_instruction": "請選擇指令",
     "PXE": "PXE",
     "execute_instruction": "執行命令",
+    "pls_select_log": "請選擇日志",
+
 }

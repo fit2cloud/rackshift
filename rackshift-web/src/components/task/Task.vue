@@ -57,7 +57,7 @@
           <el-table-column prop="status" :label="$t('status')" align="left">
             <template slot-scope="scope">
               <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
-              <span style="margin-left: 10px">{{ $t(scope.row.status) }}</span>
+              <span>{{ $t(scope.row.status) }}</span>
               <span class="percent" v-if="scope.row.status.indexOf('ing') != -1 && scope.row.totalCount != 0">{{
                   scope.row.successCount + '/' + scope.row.totalCount
                 }}</span>

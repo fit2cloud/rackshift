@@ -56,6 +56,20 @@ public class InstructionService {
         return null;
     }
 
+    public Object delLog(String[] ids) {
+        for (String id : ids) {
+            if(!delLog(id)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean delLog(String id) {
+        instructionLogMapper.deleteByPrimaryKey(id);
+        return true;
+    }
+
     public List<Instruction> list(InstructionDTO queryVO) {
         return instructionMapper.selectByExampleWithBLOBs(buildExample(queryVO));
     }
@@ -134,14 +148,5 @@ public class InstructionService {
         map.put("username", o.getUserName());
         map.put("password", o.getPwd());
         return map;
-    }
-
-    public static void main(String[] args) {
-        Pattern p = Pattern.compile("\\{\\{(\\w+)\\}\\}");
-        Matcher m = p.matcher("-I lanplus -H {{host}} -U {{username}} -P {{password}}");
-
-        while (m.find()) {
-            System.out.println(m.group(1) + m.group(0));
-        }
     }
 }

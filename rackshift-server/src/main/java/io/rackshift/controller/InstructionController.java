@@ -50,6 +50,12 @@ public class InstructionController {
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @RequestMapping("delLog")
+    public ResultHolder delLog(@RequestBody String[] ids) {
+        return ResultHolder.success(instructionService.delLog(ids));
+    }
+
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @RequestMapping("logs")
     public ResultHolder logs(@RequestParam String id) {
         return ResultHolder.success(instructionService.logs(id));

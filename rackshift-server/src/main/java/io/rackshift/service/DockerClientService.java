@@ -99,29 +99,17 @@ public class DockerClientService {
         LogContainerCmd logContainerCmd = client.logContainerCmd(containerId);
         logContainerCmd.withStdOut(true).withStdErr(true);
         StringBuffer sb = new StringBuffer();
+
         try {
             Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        try {
-
             ResultCallback.Adapter<Frame> rc = new ResultCallback.Adapter<Frame>() {
                 @Override
                 public void onNext(Frame item) {
                     sb.append(item.toString());
                 }
-
             };
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    logContainerCmd.exec(rc);
-                }
-            }).start();
-
-            rc.awaitCompletion(10, TimeUnit.MINUTES);
+            logContainerCmd.exec(rc).awaitCompletion(10, TimeUnit.MINUTES);
             addInstructionLog(instruction.getId(), sb.toString());
         } catch (InterruptedException e) {
             addInstructionLog(instruction.getId(), "异常：" + e);

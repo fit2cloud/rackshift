@@ -156,19 +156,39 @@
 
             <el-col :span="12">
               <div class="instruction-title">{{ $t('logs') }}</div>
+              <el-button-group class="batch-button">
+                <el-button type="primary" icon="el-icon-delete" @click="delAllSelectionLog">{{ $t('del') }}
+                </el-button>
+                <el-button type="primary" icon="el-icon-refresh" @click="getLogs">{{ $t('refresh') }}</el-button>
+              </el-button-group>
 
               <div class="instruction-logs">
-                <table class="detail-info log" v-if="logs.length">
-                  <tr>
-                    <td>{{ $t('create_time') }}</td>
-                    <td>{{ $t('output') }}</td>
-                  </tr>
+                <el-table
+                    :data="logs"
+                    class="table"
+                    ref="multipleLogTable"
+                    v-loading="loadingLogList"
+                    header-cell-class-name="table-header"
+                    style="width: 100%"
+                    v-if="logs.length"
+                    @selection-change="handleLogSelectionChange"
+                >
+                  <el-table-column type="selection" align="left"></el-table-column>
+                  <el-table-column prop="createTime" :label="$t('create_time')" align="left"
+                                   sortable="custom">
+                    <template slot-scope="scope">
+                      {{ scope.row.createTime | dateFormat }}
+                    </template>
+                  </el-table-column>
 
-                  <tr v-for="(l, index) in logs">
-                    <td class="nowrap">{{ l.createTime | dateFormat }}</td>
-                    <td>{{ l.content }}</td>
-                  </tr>
-                </table>
+                  <el-table-column prop="content" :label="$t('output')" align="left"
+                                   sortable="custom">
+                    <template slot-scope="scope">
+                      {{ scope.row.content }}
+                    </template>
+                  </el-table-column>
+
+                </el-table>
 
                 <span v-else class="mb10">{{ $t('no_more_logs') }}</span>
               </div>
@@ -190,9 +210,7 @@
   </div>
 </template>
 
-<script>
-
-import HttpUtil from "../../common/utils/HttpUtil"
+<script>import HttpUtil from "../../common/utils/HttpUtil"
 import {requiredValidator} from "@/common/validator/CommonValidator";
 import PowerStatus from "@/common/powerstatus/Power-Status";
 
@@ -201,6 +219,7 @@ export default {
   props: ['pluginId'],
   data() {
     return {
+      loadingLogList: false,
       runLoading: false,
       loadingBareMetalList: false,
       bareMetalColumns: [
@@ -260,6 +279,7 @@ export default {
       loadingList: [],
       multipleSelection: [],
       multipleMetalSelection: [],
+      multipleLogSelection: [],
       delList: [],
       editVisible: false,
       customProtocol: false,
@@ -358,8 +378,10 @@ export default {
       });
     },
     getLogs() {
+      this.loadingLogList = true;
       HttpUtil.get("instruction/logs?id=" + this.editObj.id, null, (res) => {
         this.logs = res.data;
+        this.loadingLogList = false;
       })
     },
     resizeWith(c) {
@@ -437,12 +459,21 @@ export default {
       this.multipleSelection = val;
     }
     ,
+    handleLogSelectionChange(val) {
+      this.multipleLogSelection = val;
+    }
+    ,
     handleMetalSelectionChange(val) {
       this.multipleMetalSelection = val;
     }
     ,
     getSelectedIds: function () {
       this.delList = [].concat(this.multipleSelection);
+      let ids = _.map(this.delList, (item) => item.id);
+      return ids;
+    }
+    , getSelectedLogIds: function () {
+      this.delList = [].concat(this.multipleLogSelection);
       let ids = _.map(this.delList, (item) => item.id);
       return ids;
     }
@@ -472,6 +503,26 @@ export default {
         });
         this.multipleSelection = [];
       });
+    },
+    delAllSelectionLog() {
+      let ids = this.getSelectedLogIds();
+      if (!ids || ids.length == 0) {
+        this.$message.error(this.$t('pls_select_log') + "!");
+        return;
+      }
+      this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
+        type: 'warning'
+      }).then(() => {
+        HttpUtil.post("/instruction/delLog", ids, (res) => {
+          if (res.success) {
+            this.$message.success(this.$t('delete_success'));
+            this.getLogs();
+          } else {
+            this.$message.success(this.$t('delete_fail'));
+          }
+        });
+        this.multipleLogSelection = [];
+      });
     }
     ,
 // 编辑操作
@@ -497,6 +548,8 @@ export default {
           this.bareMetalData = res.data.listObject;
           this.bareMetalpageTotal = res.data.itemCount;
         });
+
+        this.getLogs();
       } else {
         this.editDialogVisible = true;
         this.editType = type;
@@ -539,6 +592,8 @@ export default {
   border: 1px solid #EBEEF5;
   border-spacing: 0px !important;
   width: 100%;
+  /*table-layout: fixed;*/
+  word-break: break-all
 }
 
 .test-protocol td {
@@ -562,8 +617,11 @@ export default {
 }
 
 .instruction-logs {
-  height: 300px;
+  height: 500px;
   overflow-y: scroll;
 }
 
+.nowrap {
+  width: 25%
+}
 </style>
