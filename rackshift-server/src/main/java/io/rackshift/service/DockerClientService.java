@@ -77,7 +77,7 @@ public class DockerClientService {
                         @Override
                         public void onError(Throwable throwable) {
                             super.onError(throwable);
-                            String r = String.format("Docker 镜像【%s】在线安装失败！请手动执行 docker load -i 进行加载", s.get("image"));
+                            String r = String.format("Docker 镜像【%s】在线安装失败！请手动执行 docker pull %s 在线安装或 docker load -i %s 进行离线安装...", plugin.getImage(), plugin.getImage(), plugin.getImage());
                             addInstructionLog(instruction.getId(), r);
                         }
                     }).awaitCompletion(cmdWaitTime, TimeUnit.MINUTES);
@@ -106,13 +106,13 @@ public class DockerClientService {
                 public void onNext(Frame item) {
                     sb.append(item.toString());
                 }
-            }).awaitCompletion(cmdWaitTime, TimeUnit.MINUTES);
+            }).awaitCompletion();
             addInstructionLog(instruction.getId(), sb.toString());
         } catch (InterruptedException e) {
             addInstructionLog(instruction.getId(), "异常：" + e);
         }
 
-        client.removeContainerCmd(containerId);
+        client.removeContainerCmd(containerId).exec();
     }
 
 
