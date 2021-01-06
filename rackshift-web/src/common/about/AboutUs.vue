@@ -47,7 +47,7 @@ export default {
       dialogVisible: false,
       githubUrl: 'https://github.com/rackshift/rackshift',
       websiteUrl: 'https://rackshift.io',
-      version: '1.2.2'
+      version: '1.2.3'
     }
   },
   created() {

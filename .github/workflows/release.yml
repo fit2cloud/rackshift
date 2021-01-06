@@ -54,21 +54,13 @@ jobs:
             - 百度网盘下载链接: https://pan.baidu.com/s/136BMDzBtdf-xBWSCQFmT1A 提取码: msej
 
             # 新增功能
-             - 裸金属可以批量执行开机/关机/重启/PXE操作
-             - Centos/Redhat 支持多磁盘下 KS 的自动分区
-
-            # 功能优化
-            - 被动扫描发现的机器自动添加带外账号
-            - 前端 Workflow 说明文案精简和国际化
-            - 修改登陆失效时间为 1 小时
-            - 物理机状态由带外账号密码是否配置以及当前状态决定
-            - 删除数据和操作物理机时显示加载框
-            - 修复发现结束时发现规则id被覆盖的问题
+             - 裸金属可以批量设置IPMI/账号
+             - 裸金属可以批量设置 Linux/windows 装机参数
+             - windowsServer 2012 安装
+             - 集成 IPMITOOL/RACADM 插件功能
 
             # Bug 修复
-            - 物理机关机状态时 PXE 重启失效的问题
-            - 首次发现物理机后执行 PXE 重启主动发现后状态变更失败的问题
-            - 修复使用 rsctl upgrade 升级会覆盖原配置参数的问题
+            - 修复多机器同时装机，参数被覆盖的问题
 
       - name: Upload Release Asset
         id: upload-release-asset
