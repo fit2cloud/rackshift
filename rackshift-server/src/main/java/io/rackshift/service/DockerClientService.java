@@ -99,7 +99,11 @@ public class DockerClientService {
         LogContainerCmd logContainerCmd = client.logContainerCmd(containerId);
         logContainerCmd.withStdOut(true).withStdErr(true);
         StringBuffer sb = new StringBuffer();
-
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         try {
 
             ResultCallback.Adapter<Frame> rc = new ResultCallback.Adapter<Frame>() {
