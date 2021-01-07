@@ -17,8 +17,9 @@
                       show-password></el-input>
           </el-form-item>
 
-          <el-form-item :label="$t('samba')" prop="repo">
-            <el-input v-model="payLoad.options.defaults.repo" placeholder="\\172.31.128.1\windowsServer2012"></el-input>
+          <el-form-item :label="$t('samba')" prop="smbRepo">
+            <el-input v-model="payLoad.options.defaults.smbRepo"
+                      placeholder="\\172.31.128.1\windowsServer2012"></el-input>
           </el-form-item>
 
           <el-form-item :label="$t('productkey')" prop="productkey">
@@ -108,7 +109,7 @@ export default {
         username: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
-        repo: [
+        smbRepo: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
         productkey: [
