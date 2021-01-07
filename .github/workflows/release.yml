@@ -55,8 +55,8 @@ jobs:
 
             # 新增功能
              - 裸金属可以批量设置IPMI/账号
-             - 裸金属可以批量设置 Linux/windows 装机参数
-             - windowsServer 2012 安装
+             - 裸金属可以批量设置 Linux/Windows 装机参数
+             - WindowsServer 2012 安装
              - 集成 IPMITOOL/RACADM 插件功能
 
             # Bug 修复
