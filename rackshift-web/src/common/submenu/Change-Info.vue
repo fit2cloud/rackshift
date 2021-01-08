@@ -108,7 +108,7 @@ export default {
         this.aboutUsVisible = true;
         this.$emit('about');
       } else {
-        window.open("https://rackshift.github.io/rackshift-docs-static/");
+        window.open("http://149.129.105.194:8081/");
       }
     },
     change() {
