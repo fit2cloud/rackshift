@@ -142,6 +142,9 @@ public class DiscoveryTask extends Thread {
                             }
                         } else {
                             LogUtil.info("使用插件探测裸金属失败！" + JSONObject.toJSONString(request));
+                            if (ServiceConstants.IPMI_Rest.equalsIgnoreCase(request.getProtocol())) {
+                                onlyExtractIPMI(request, bareMetalRule);
+                            }
                         }
                     }
                 }
