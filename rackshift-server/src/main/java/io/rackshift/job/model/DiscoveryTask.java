@@ -117,9 +117,6 @@ public class DiscoveryTask extends Thread {
                             }
                         } catch (Exception e) {
                             LogUtil.info("爬虫抓取硬件信息失败！" + ExceptionUtils.getExceptionDetail(e));
-                            if (ServiceConstants.IPMI_Rest.equalsIgnoreCase(request.getProtocol())) {
-                                onlyExtractIPMI(request, bareMetalRule);
-                            }
                         }
                         if (entity != null) {
                             entity.setProviderId(iMetalProvider.getName());
@@ -201,7 +198,7 @@ public class DiscoveryTask extends Thread {
         bareMetalManager.addToBareMetal(physicalMachine);
 
         saveOutBand(account, physicalMachine);
-    }
+     }
 
     private void saveOutBand(IPMIUtil.Account account, BareMetal bareMetal) {
         OutBand o = new OutBand();
