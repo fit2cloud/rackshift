@@ -45,6 +45,7 @@ public class OutBandService {
         } else {
             OutBand dbOutBand = outBandMapper.selectByExample(example).get(0);
             o.setId(dbOutBand.getId());
+            o.setBareMetalId(dbOutBand.getBareMetalId());
             BeanUtils.copyBean(dbOutBand, o);
             outBandMapper.updateByPrimaryKeySelective(dbOutBand);
         }
