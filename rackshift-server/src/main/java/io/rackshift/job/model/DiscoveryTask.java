@@ -100,11 +100,9 @@ public class DiscoveryTask extends Thread {
                         iMetalProvider = cloudProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(brand));
                     } catch (Exception e) {
                         LogUtil.error(String.format("根据品牌获取插件出错!ip:%s", ip));
-                        continue;
                     }
                     if (iMetalProvider == null) {
                         LogUtil.error("不支持的品牌,ip:" + ip);
-                        continue;
                     }
 
                     for (ProtocolRequest request : paramList) {
