@@ -129,7 +129,7 @@ public class BareMetalService {
     }
 
     public boolean addToBareMetal(BareMetalDTO bareMetalDTO) {
-        if (StringUtils.isAnyBlank(bareMetalDTO.getManagementIp(), bareMetalDTO.getMachineModel(), bareMetalDTO.getRuleId())) {
+        if (StringUtils.isAnyBlank(bareMetalDTO.getMachineSn(), bareMetalDTO.getMachineModel(), bareMetalDTO.getRuleId())) {
             RSException.throwExceptions(Translator.get("i18n_param_error"));
         }
         BareMetal bareMetal = new BareMetal();

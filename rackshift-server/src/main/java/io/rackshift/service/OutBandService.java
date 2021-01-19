@@ -37,18 +37,12 @@ public class OutBandService {
             o.setId(dbOutBand.getId());
             BeanUtils.copyBean(dbOutBand, o);
             outBandMapper.updateByPrimaryKeySelective(dbOutBand);
+            return;
         }
         OutBandExample example = new OutBandExample();
         example.createCriteria().andIpEqualTo(o.getIp());
-        if (outBandMapper.countByExample(example) == 0) {
-            outBandMapper.insertSelective(o);
-        } else {
-            OutBand dbOutBand = outBandMapper.selectByExample(example).get(0);
-            o.setId(dbOutBand.getId());
-            o.setBareMetalId(dbOutBand.getBareMetalId());
-            BeanUtils.copyBean(dbOutBand, o);
-            outBandMapper.updateByPrimaryKeySelective(dbOutBand);
-        }
+        outBandMapper.deleteByExample(example);
+        outBandMapper.insertSelective(o);
     }
 
     public void fillOBMS(String bareMetalId, OutBand outBand) {

@@ -195,12 +195,12 @@ public class DiscoveryTask extends Thread {
         //插入ipmi发现的物理机之前 再次用序列号查询一次 没有重复的才能插入
         physicalMachine.setProviderId("");
         physicalMachine.setStatus(LifeStatus.onrack.name());
-        bareMetalManager.addToBareMetal(physicalMachine);
+        boolean r = bareMetalManager.addToBareMetal(physicalMachine);
+        saveOutBand(account, physicalMachine, r);
+    }
 
-        saveOutBand(account, physicalMachine);
-     }
-
-    private void saveOutBand(IPMIUtil.Account account, BareMetal bareMetal) {
+    private void saveOutBand(IPMIUtil.Account account, BareMetal bareMetal, boolean r) {
+        if (!r) return;
         OutBand o = new OutBand();
         o.setIp(account.getHost());
         o.setBareMetalId(bareMetal.getId());
