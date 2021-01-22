@@ -71,7 +71,7 @@ public class WorkflowJob {
         Map<String, List<TaskWithBLOBs>> groupTaskList = taskList.stream().collect(Collectors.groupingBy(Task::getBareMetalId));
         for (Map.Entry<String, List<TaskWithBLOBs>> entry : groupTaskList.entrySet()) {
             boolean activeTask = findActiveTaskById(entry.getKey());
-            //保证同一台机器同一时刻只能有一个任务处于执行状态
+            //保证同一台机器同一时刻只能有一个任务处于执行状态8
             if (!activeTask) {
                 stateMachine.runTaskList(entry.getValue());
             }

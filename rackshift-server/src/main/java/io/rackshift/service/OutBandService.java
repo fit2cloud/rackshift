@@ -32,6 +32,9 @@ public class OutBandService {
     private OutBandService outBandService;
 
     public void saveOrUpdate(OutBand o) {
+        if (StringUtils.isBlank(o.getBareMetalId())) {
+            RSException.throwExceptions("保存带外信息失败！无裸金属服务ID");
+        }
         if (o.getId() != null) {
             OutBand dbOutBand = outBandMapper.selectByPrimaryKey(o.getId());
             o.setId(dbOutBand.getId());
@@ -39,15 +42,25 @@ public class OutBandService {
             outBandMapper.updateByPrimaryKeySelective(dbOutBand);
             return;
         }
+
         OutBandExample example = new OutBandExample();
-        example.createCriteria().andIpEqualTo(o.getIp());
-        outBandMapper.deleteByExample(example);
-        outBandMapper.insertSelective(o);
+        example.createCriteria().andBareMetalIdEqualTo(o.getBareMetalId());
+        List<OutBand> outBands = outBandMapper.selectByExample(example);
+        if (outBands.size() > 0) {
+            outBands.forEach(o1 -> {
+                o1.setUserName(o.getUserName());
+                o1.setPwd(o.getPwd());
+                outBandMapper.updateByPrimaryKey(o1);
+            });
+        } else {
+            outBandMapper.insertSelective(o);
+        }
     }
 
     public void fillOBMS(String bareMetalId, OutBand outBand) {
         BareMetal bareMetal = bareMetalManager.getBareMetalById(bareMetalId);
         rackHDService.createOrUpdateObm(outBand, bareMetal);
+        outBand.setBareMetalId(bareMetalId);
         outBandService.saveOrUpdate(outBand);
     }
 

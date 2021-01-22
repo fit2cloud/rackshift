@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class    OutBand implements Serializable {
+public class OutBand implements Serializable {
     private String id;
 
     private String bareMetalId;
