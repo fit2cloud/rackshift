@@ -24,7 +24,7 @@ public class WindowsHandler implements IOsParamHandler {
         if (endps.size() > 0) {
             endps = endps.stream().filter(e -> ServiceConstants.EndPointType.main_endpoint.name().equalsIgnoreCase(e.getType())).collect(Collectors.toList());
             if (endps.size() > 0) {
-                String winPeUrl = String.format("http://%s/common/winpe", endps.get(0).getIp());
+                String winPeUrl = String.format("http://%s:9090/common/winpe", endps.get(0).getIp());
                 params.getJSONObject("options").getJSONObject("defaults").put("repo", winPeUrl);
             } else {
                 RSException.throwExceptions("error:no main endpoints");
