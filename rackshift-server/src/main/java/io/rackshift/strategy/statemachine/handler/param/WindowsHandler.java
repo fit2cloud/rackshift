@@ -19,6 +19,8 @@ public class WindowsHandler implements IOsParamHandler {
     @Override
     public void process(JSONObject params) {
         List<Endpoint> endps = workflowConfig.getEndPoints();
+        //装机超时时间设定为2小时 "_taskTimeout": 3600000
+        params.getJSONObject("options").put("_taskTimeout", 7200000);
         if (endps.size() > 0) {
             endps = endps.stream().filter(e -> ServiceConstants.EndPointType.main_endpoint.name().equalsIgnoreCase(e.getType())).collect(Collectors.toList());
             if (endps.size() > 0) {

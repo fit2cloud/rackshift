@@ -16,6 +16,8 @@ public class AbstractParamHandler {
     @PostConstruct
     public void initMap() {
         handlerMap.put("Graph.InstallWindowsServer", windowsHandler);
+        handlerMap.put("Graph.InstallCentOS", windowsHandler);
+        handlerMap.put("Graph.InstallRHEL", windowsHandler);
     }
 
     public IOsParamHandler getHandler(String osType) {
