@@ -31,7 +31,7 @@ public class OutBandService {
     @Resource
     private OutBandService outBandService;
 
-    public void saveOrUpdate(OutBand o) {
+    public void saveOrUpdate(OutBand o, boolean modifyIp) {
         if (StringUtils.isBlank(o.getBareMetalId())) {
             RSException.throwExceptions("保存带外信息失败！无裸金属服务ID");
         }
@@ -48,6 +48,9 @@ public class OutBandService {
         List<OutBand> outBands = outBandMapper.selectByExample(example);
         if (outBands.size() > 0) {
             outBands.forEach(o1 -> {
+                if(modifyIp){
+                    o1.setIp(o.getIp());
+                }
                 o1.setUserName(o.getUserName());
                 o1.setPwd(o.getPwd());
                 outBandMapper.updateByPrimaryKey(o1);
@@ -61,7 +64,7 @@ public class OutBandService {
         BareMetal bareMetal = bareMetalManager.getBareMetalById(bareMetalId);
         rackHDService.createOrUpdateObm(outBand, bareMetal);
         outBand.setBareMetalId(bareMetalId);
-        outBandService.saveOrUpdate(outBand);
+        outBandService.saveOrUpdate(outBand, true);
     }
 
     public Object add(OutBandDTO queryVO) {

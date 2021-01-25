@@ -133,7 +133,7 @@ public class DiscoveryTask extends Thread {
                                 o.setUserName(request.getUserName());
                                 o.setPwd(request.getPwd());
 
-                                outBandService.saveOrUpdate(o);
+                                outBandService.saveOrUpdate(o, false);
                             }
                         } else {
                             LogUtil.info("使用插件探测裸金属失败！" + JSONObject.toJSONString(request));
@@ -206,7 +206,7 @@ public class DiscoveryTask extends Thread {
         o.setBareMetalId(bareMetal.getId());
         o.setUserName(account.getUserName());
         o.setPwd(account.getPwd());
-        outBandService.saveOrUpdate(o);
+        outBandService.saveOrUpdate(o, false);
     }
 
     private MachineEntity convert(io.rackshift.metal.sdk.model.MachineEntity machineEntity) {
