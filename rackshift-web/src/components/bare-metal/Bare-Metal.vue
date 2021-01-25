@@ -1001,7 +1001,7 @@ export default {
       if (mode != 'batch') {
         if (val.outBandList.length > 0) {
           this.curObm = {
-            ip: val.managementIp,
+            ip: val.outBandList[0].ip,
             userName: val.outBandList[0].userName,
             pwd: val.outBandList[0].pwd,
             bareMetalId: val.id,
