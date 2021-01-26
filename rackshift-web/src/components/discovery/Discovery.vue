@@ -159,11 +159,13 @@
 import HttpUtil from "../../common/utils/HttpUtil"
 import {ipValidator, requiredValidator} from "@/common/validator/CommonValidator";
 import Devices from "../discovery-devices/Discovery-devices"
+import {WebSocketUtil} from "@/common/utils/WebSocket";
 
 let _ = require('lodash');
 export default {
   data() {
     return {
+      websocket: null,
       protocols: [
         {
           "name": "IPMI+Rest",
@@ -283,7 +285,16 @@ export default {
     Devices
   },
   mounted() {
-    this.getData();
+    if (!this.websocket) {
+      this.websocket = new WebSocketUtil();
+      this.websocket.openSocket('discovery', this.notify);
+      this.getData();
+    }
+  },
+  destroyed() {
+    if (this.websocket) {
+      this.websocket.close();
+    }
   },
   methods: {
     showMachine(rule) {
@@ -294,6 +305,9 @@ export default {
     },
     back() {
       this.$emit('back');
+      if (this.websocket) {
+        this.websocket.close();
+      }
     },
     delTestProtocol(index) {
       this.editObj.credentialParam.splice(index, 1);
