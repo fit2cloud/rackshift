@@ -24,8 +24,6 @@ public class OutBandService {
     private OutBandMapper outBandMapper;
     @Resource
     private BareMetalManager bareMetalManager;
-    @Autowired
-    private SimpMessagingTemplate template;
     @Resource
     private RackHDService rackHDService;
     @Resource
@@ -44,13 +42,20 @@ public class OutBandService {
         }
 
         OutBandExample example = new OutBandExample();
+        example.createCriteria().andIpEqualTo(o.getIp()).andBareMetalIdNotEqualTo(o.getBareMetalId());
+        if (outBandMapper.selectByExample(example).size() > 0) {
+            outBandMapper.deleteByExample(example);
+        }
+        example.clear();
         example.createCriteria().andBareMetalIdEqualTo(o.getBareMetalId());
+
         List<OutBand> outBands = outBandMapper.selectByExample(example);
         if (outBands.size() > 0) {
             outBands.forEach(o1 -> {
-                if(modifyIp){
+                if (modifyIp) {
                     o1.setIp(o.getIp());
                 }
+                o1.setBareMetalId(o.getBareMetalId());
                 o1.setUserName(o.getUserName());
                 o1.setPwd(o.getPwd());
                 outBandMapper.updateByPrimaryKey(o1);
@@ -154,5 +159,11 @@ public class OutBandService {
         OutBandExample e = new OutBandExample();
         e.createCriteria().andBareMetalIdIn(Arrays.asList(bareMetalIds));
         return outBandMapper.selectByExample(e);
+    }
+
+    public void delBareMetalById(String id) {
+        OutBandExample e = new OutBandExample();
+        e.createCriteria().andBareMetalIdEqualTo(id);
+        outBandMapper.deleteByExample(e);
     }
 }

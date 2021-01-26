@@ -6,8 +6,6 @@
       }}
     </el-button>
     <el-divider content-position="left">{{ $t('Discovery_Rule') }}</el-divider>
-    <!--    <el-tabs v-model="activeName" @tab-click="refreshChildData">-->
-    <!--      <el-tab-pane :label="$t('discovery')" name="discovery">-->
     <div class="container-discovery">
 
       <div class="machine-title">
@@ -149,8 +147,6 @@
       </el-drawer>
 
     </div>
-    <!--      </el-tab-pane>-->
-    <!--    </el-tabs>-->
   </div>
 </template>
 
