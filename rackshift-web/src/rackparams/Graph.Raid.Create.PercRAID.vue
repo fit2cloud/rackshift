@@ -2,7 +2,7 @@
   <div>
     <el-form label-width="101px">
       <el-form-item :label="$t('custom_raid')">
-        <table class="detail-info" style="float: left;margin-top:20px;">
+        <table class="detail-info-rack">
           <thead>
           <tr>
             <th>{{ $t('raid_type') }}</th>

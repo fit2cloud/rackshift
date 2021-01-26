@@ -29,8 +29,7 @@
           <el-table-column prop="friendlyName" :label="$t('friendly_name')" align="left">
             <template slot-scope="scope">
               <!--              <el-tooltip class="item" effect="dark" :content="scope.row.friendlyName" placement="right-end">-->
-              <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ $t(scope.row.friendlyName) }}</span>
+              <span class="rs-nowrap">{{ $t(scope.row.friendlyName) }}</span>
               <!--              </el-tooltip>-->
             </template>
 
@@ -43,8 +42,7 @@
           <el-table-column prop="eventType" :label="$t('event_type')" align="left">
             <template slot-scope="scope">
               <!--              <el-tooltip class="item" effect="dark" :content="i18n(scope.row.eventType)" placement="right-end">-->
-              <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ scope.row.eventType | eventFormat }}</span>
+              <span class="rs-nowrap">{{ scope.row.eventType | eventFormat }}</span>
               <!--              </el-tooltip>-->
             </template>
           </el-table-column>

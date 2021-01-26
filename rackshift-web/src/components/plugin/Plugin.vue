@@ -19,35 +19,31 @@
 
           <el-table-column prop="name" :label="$t('name')" align="left" :sortable="true">
             <template slot-scope="scope">
-              <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ scope.row.name }}</span>
+              <span class="rs-nowrap">{{ scope.row.name }}</span>
             </template>
           </el-table-column>
 
           <el-table-column prop="platform" :label="$t('platform')" align="left" :sortable="true" width="210">
             <template slot-scope="scope">
-              <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ scope.row.platform }}</span>
+              <span class="rs-nowrap">{{ scope.row.platform }}</span>
             </template>
           </el-table-column>
 
           <el-table-column prop="image" :label="$t('image')" align="left" :sortable="true" width="210">
             <template slot-scope="scope">
-              <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ scope.row.image }}</span>
+              <span class="rs-nowrap">{{ scope.row.image }}</span>
             </template>
           </el-table-column>
 
           <el-table-column prop="platform" :label="$t('base_instruction')" align="left" :sortable="true" width="210">
             <template slot-scope="scope">
-              <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ scope.row.baseInstruction }}</span>
+              <span class="rs-nowrap">{{ scope.row.baseInstruction }}</span>
             </template>
           </el-table-column>
 
           <el-table-column prop="createTime" :label="$t('create_time')" align="left" :sortable="true">
             <template slot-scope="scope">
-              <span style="white-space: nowrap;">{{ scope.row.createTime | dateFormat }}</span>
+              <span class="rs-nowrap">{{ scope.row.createTime | dateFormat }}</span>
             </template>
           </el-table-column>
 

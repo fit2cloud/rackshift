@@ -113,8 +113,7 @@
                 <el-table-column prop="machine_model" :label="$t('machine_model')" align="left"
                                  sortable="custom" style="overflow: scroll" width="180">
                   <template slot-scope="scope">
-                  <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>
+                  <span class="rs-nowrap">{{ scope.row.machineModel }}</span>
                   </template>
                 </el-table-column>
 

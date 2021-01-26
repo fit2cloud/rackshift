@@ -26,28 +26,25 @@
 
           <el-table-column prop="id" :label="$t('id')" align="left" :sortable="true">
             <template slot-scope="scope">
-              <span style="white-space: nowrap;">{{ scope.row.id }}</span>
+              <span class="rs-nowrap">{{ scope.row.id }}</span>
             </template>
           </el-table-column>
 
           <el-table-column prop="machineModel" :label="$t('Bare Metal Server')" align="left" :sortable="true">
             <template slot-scope="scope">
-              <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>
+              <span class="rs-nowrap">{{ scope.row.machineModel }}</span>
             </template>
           </el-table-column>
 
           <el-table-column prop="machineSn" :label="$t('machine_sn')" align="left" :sortable="true">
             <template slot-scope="scope">
-              <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ scope.row.machineSn }}</span>
+              <span class="rs-nowrap">{{ scope.row.machineSn }}</span>
             </template>
           </el-table-column>
 
           <el-table-column prop="friendlyName" :label="$t('Workflow')" align="left" :sortable="true" width="210">
             <template slot-scope="scope">
-              <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ $t(scope.row.friendlyName) }}</span>
+              <span class="rs-nowrap">{{ $t(scope.row.friendlyName) }}</span>
             </template>
           </el-table-column>
 
@@ -66,7 +63,7 @@
 
           <el-table-column prop="createTime" :label="$t('create_time')" align="left" :sortable="true">
             <template slot-scope="scope">
-              <span style="white-space: nowrap;">{{ scope.row.createTime | dateFormat }}</span>
+              <span class="rs-nowrap">{{ scope.row.createTime | dateFormat }}</span>
             </template>
           </el-table-column>
 

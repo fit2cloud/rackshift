@@ -49,8 +49,7 @@
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
               <el-link type="primary" @click="showDetail(scope.row)" target="_blank">
-                  <span style="display: block; word-break:keep-all;
-  white-space:nowrap;overflow: hidden">{{ scope.row.machineModel }}</span>
+                  <span class="rs-nowrap">{{ scope.row.machineModel }}</span>
               </el-link>
             </el-tooltip>
           </template>

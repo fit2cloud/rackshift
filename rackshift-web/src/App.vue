@@ -2,10 +2,10 @@
   <div id="app">
     <el-container v-if="login">
       <el-header id="main-header">
-        <div style="display: inline-block; ">
+        <div id="logo-div">
           <img id="logo" src="./assets/rackshift-04.png" alt="">
         </div>
-        <div style="display: flex; float: right">
+        <div id="right-menu">
           <div class="align-right">
             <ChangeLanguage></ChangeLanguage>
             <ChangeInfo @about="about"></ChangeInfo>
@@ -14,9 +14,9 @@
         </div>
 
       </el-header>
-      <el-container style="height: calc(100vh - 40px)">
-        <el-aside style="background-color: #fff; min-height: 780px;">
-          <el-menu id="main-menu" :unique-opened=false style="border-right: none;">
+      <el-container id="main-content">
+        <el-aside id="main-menu-container">
+          <el-menu id="main-menu" :unique-opened=false>
             <el-submenu :index="m.order" v-for="m in menus">
               <template slot="title"><i :class="m.icon"></i>{{ $t(m.name) }}</template>
               <el-menu-item :class="$route.path == c.router ? 'is-active' : ''"
@@ -173,6 +173,12 @@ body {
 }
 
 #main-menu {
+  border-right: none;
+}
+
+#main-menu-container {
+  background-color: #fff;
+  min-height: 780px;
 }
 
 .machine-title {
@@ -292,6 +298,19 @@ button {
   height: 37px;
 }
 
+#logo-div {
+  display: inline-block;
+}
+
+#main-content {
+  height: calc(100vh - 40px);
+}
+
+#right-menu {
+  display: flex;
+  float: right
+}
+
 .rs-divider {
   background-color: #DCDFE6;
   position: relative;
@@ -368,4 +387,18 @@ a.github:hover {
   padding: 20px;
 }
 
+.rs-nowrap {
+  display: block;
+  word-break: keep-all;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.detail-info-rack {
+  float: left;
+  margin-top: 20px;
+  border: 1px solid #EBEEF5;
+  border-spacing: 0px !important;
+  width: 100%;
+}
 </style>

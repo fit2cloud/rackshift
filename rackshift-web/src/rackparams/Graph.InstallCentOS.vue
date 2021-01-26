@@ -21,7 +21,7 @@
             <el-switch
                 v-model="extraParams.customPartition">
             </el-switch>
-            <table class="detail-info" style="float: left;margin-top:20px;" v-show="extraParams.customPartition">
+            <table class="detail-info-rack" v-show="extraParams.customPartition">
               <thead>
               <tr>
                 <th>{{ $t('mount_point') }}</th>

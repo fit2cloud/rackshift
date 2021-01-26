@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form label-width="130px" :rules="rules" :model="payLoad.options.defaults" ref="form" label-position="right">
-      <el-row style="display: flex">
+      <el-row>
         <el-col :span="11">
           <el-form-item :label="$t('hostname')" prop="hostname">
             <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"></el-input>
