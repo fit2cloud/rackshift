@@ -427,5 +427,5 @@ export default {
     "PXE": "PXE",
     "execute_instruction": "Execute Instruction",
     "pls_select_log": "Please Select Logs",
-
+    "scan_over": "Scan Over!",
 }

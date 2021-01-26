@@ -431,4 +431,5 @@ export default {
     "PXE": "PXE",
     "execute_instruction": "执行命令",
     "pls_select_log": "请选择日志",
+    "scan_over": "扫描结束",
 }

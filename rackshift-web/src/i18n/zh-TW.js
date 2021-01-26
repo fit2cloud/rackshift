@@ -429,5 +429,5 @@ export default {
     "PXE": "PXE",
     "execute_instruction": "執行命令",
     "pls_select_log": "請選擇日志",
-
+    "scan_over": "掃描結束",
 }

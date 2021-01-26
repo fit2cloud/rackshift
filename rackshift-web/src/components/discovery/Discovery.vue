@@ -297,6 +297,13 @@ export default {
     }
   },
   methods: {
+    notify(msg) {
+      this.getData();
+      this.$notify({
+        title: this.$t('server_message'),
+        message: this.$t('scan_over'),
+      });
+    },
     showMachine(rule) {
       if (rule.number) {
         this.$emit('queryByRuleId', rule.id);
