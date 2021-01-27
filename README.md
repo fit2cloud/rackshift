@@ -27,7 +27,7 @@ RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖�
 详细的版本规划请参考 [版本路线图](https://github.com/rackshift/rackshift/blob/master/ROADMAP.md)  
 
 如果您想进一步了解目前的开发进度请查看
-[开发进度](https://trello.com/b/rEE3zYaF/rackshift)  
+[开发进度](https://github.com/rackshift/rackshift/projects/1)  
 
 ## 技术架构
 ![runoob](rs-structure.jpg)
