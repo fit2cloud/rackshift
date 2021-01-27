@@ -181,13 +181,13 @@ export default {
       if (this.editType == 'edit') {
         HttpUtil.post("/role/update", this.editObj, (res) => {
           this.editDialogVisible = false;
-          this.$message.success('编辑成功');
+          this.$message.success('edit_success');
           this.getData();
         })
       } else {
         HttpUtil.post("/role/add", this.editObj, (res) => {
           this.editDialogVisible = false;
-          this.$message.success('新增成功');
+          this.$message.success('opt_success');
           this.getData();
         })
       }
@@ -224,12 +224,12 @@ export default {
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
       } else if (type == 'del') {
-        this.$confirm('确定要删除吗？', '提示', {
+        this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
           HttpUtil.get("/role/del/" + row.id, {}, (res) => {
             this.getData();
-            this.$message.success('删除成功');
+            this.$message.success(this.$t('delete_success'));
           });
         })
       } else {

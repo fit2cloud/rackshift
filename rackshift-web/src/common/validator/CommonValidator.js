@@ -15,7 +15,7 @@ function requiredValidator(rule, value, callback) {
     callback();
 }
 
-var emailReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+var emailReg =  /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 var phoneReg = /^((0\d{2,3}-\d{7,8})|(1[3456789]\d{9}))$/;
 
 function emailValidator(rule, value, callback) {

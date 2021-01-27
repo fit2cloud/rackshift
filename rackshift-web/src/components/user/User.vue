@@ -234,14 +234,14 @@ export default {
       if (this.editType == 'edit') {
         HttpUtil.post("/user/update", this.editObj, (res) => {
           this.drawer = false;
-          this.$message.success('编辑成功');
+          this.$message.success(this.$t('edit_success'));
           this.cancelForm();
           this.getData();
         })
       } else {
         HttpUtil.post("/user/add", this.editObj, (res) => {
           this.drawer = false;
-          this.$message.success('新增成功');
+          this.$message.success('opt_success');
           this.cancelForm();
           this.getData();
         })
@@ -281,10 +281,10 @@ export default {
         this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
 
       } else if (type == 'del') {
-        this.$confirm('确定要删除吗？', '提示', {
+        this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.get("/user/del/" + row.id, {}, (res) => {
+          HttpUtil.get("/user/del/" + encodeURIComponent(row.id), {}, (res) => {
             this.getData();
             this.$message.success('删除成功');
           });
