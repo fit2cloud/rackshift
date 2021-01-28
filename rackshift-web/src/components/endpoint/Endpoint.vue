@@ -213,6 +213,7 @@ export default {
     },
     handleSizeChange(val) {
       this.query.pageSize = val;
+      this.handlePageChange(this.query.pageIndex);
     },
     handleClose() {
       this.editDialogVisible = false;

@@ -40,11 +40,11 @@ public class MybatisInterceptor implements Interceptor {
             invocation.getArgs()[1] = process(parameter);
         }
         if (parameter != null && ((MappedStatement) invocation.getArgs()[0]).getSqlCommandType() == SqlCommandType.INSERT) {
-            processTime(parameter);
+            processTime(parameter, false);
             processId(parameter);
         }
         if (parameter != null && ((MappedStatement) invocation.getArgs()[0]).getSqlCommandType() == SqlCommandType.UPDATE) {
-            processTime(parameter);
+            processTime(parameter, true);
         }
         Object returnValue = invocation.proceed();
         Object result = returnValue;
@@ -104,24 +104,26 @@ public class MybatisInterceptor implements Interceptor {
 
     static Class instanceTypes[] = {Integer.class, String.class, Character.class, Float.class, Double.class, Boolean.class, Byte.class, Short.class};
 
-    private void processTime(Object parameter) {
+    private void processTime(Object parameter, boolean isUpdateClause) {
         for (Class aClass : instanceTypes) {
             if (parameter.getClass() == aClass) {
                 return;
             }
         }
         Field[] fields = parameter.getClass().getDeclaredFields();
-        setTime(fields, parameter);
+        setTime(fields, parameter, isUpdateClause);
         fields = parameter.getClass().getSuperclass().getDeclaredFields();
-        setTime(fields, parameter);
+        setTime(fields, parameter, isUpdateClause);
     }
 
-    private void setTime(Field[] fields, Object parameter) {
+    private void setTime(Field[] fields, Object parameter, boolean isUpdateClause) {
         for (Field filed : fields) {
             if (filed.getName().equals("updateTime") || filed.getName().equals("createTime")) {
                 try {
-                    filed.setAccessible(true);
-                    filed.set(parameter, System.currentTimeMillis());
+                    if (!isUpdateClause || (isUpdateClause && filed.getName().equals("updateTime"))) {
+                        filed.setAccessible(true);
+                        filed.set(parameter, System.currentTimeMillis());
+                    }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }

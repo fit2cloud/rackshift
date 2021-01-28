@@ -95,17 +95,22 @@ public class UserService {
     }
 
     public boolean add(UserDTO queryVO) {
-        User user = new User();
-        BeanUtils.copyProperties(queryVO, user);
-        user.setPassword(CodingUtil.md5(user.getPassword()));
-        user.setStatus(UserStatus.NORMAL);
-        userMapper.insertSelective(user);
-        for (String roleId : queryVO.getRolesIds()) {
-            UserRole userRole = new UserRole();
-            userRole.setId(UUID.randomUUID().toString());
-            userRole.setRoleId(roleId);
-            userRole.setUserId(queryVO.getId());
-            userRoleMapper.insertSelective(userRole);
+        try {
+            User user = new User();
+            BeanUtils.copyProperties(queryVO, user);
+            user.setPassword(CodingUtil.md5(user.getPassword()));
+            user.setStatus(UserStatus.NORMAL);
+            userMapper.insertSelective(user);
+
+            for (String roleId : queryVO.getRolesIds()) {
+                UserRole userRole = new UserRole();
+                userRole.setId(UUID.randomUUID().toString());
+                userRole.setRoleId(roleId);
+                userRole.setUserId(queryVO.getId());
+                userRoleMapper.insertSelective(userRole);
+            }
+        } catch (Exception e) {
+            return false;
         }
         return true;
     }

@@ -159,7 +159,7 @@ public class NetworkService {
 
     public Map list(NetworkDTO queryVO, int page, int pageSize) {
         Map r = new HashMap();
-        syncNetworkJob.run();
+        syncNetworkJob.run(false);
         Page<Object> page1 = PageHelper.startPage(page, pageSize, true);
         NetworkExample example = buildExample(queryVO);
         r.put("list", networkMapper.selectByExample(example));

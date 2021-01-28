@@ -10,7 +10,7 @@ public class ServiceConstants {
     public static final String SNMP = "SNMP";
 
     public enum EndPointType {
-        main_endpoint("主节点", "main_endpoint"), slave_endpoint("从节点", "slave_endpoint");
+        slave_endpoint("从节点", "slave_endpoint"), main_endpoint("主节点", "main_endpoint");
 
         private String name;
         private String value;
@@ -51,6 +51,6 @@ public class ServiceConstants {
     }
 
     public enum RackHDTaskStatusEnum {
-        pending, failed, cancelled,timeout, succeeded
+        pending, failed, cancelled, timeout, succeeded
     }
 }

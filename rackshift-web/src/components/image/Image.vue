@@ -288,6 +288,7 @@ export default {
     },
     handleSizeChange(val) {
       this.query.pageSize = val;
+      this.handlePageChange(this.query.pageIndex);
     },
     changeOsVersion() {
       this.allOsVersion = _.find(this.allOs, {"id": this.editObj.os}).versions;

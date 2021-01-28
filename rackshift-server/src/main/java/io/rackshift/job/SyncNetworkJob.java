@@ -26,9 +26,14 @@ public class SyncNetworkJob {
     @Resource
     private WorkflowConfig workflowConfig;
 
-    public void run() {
+    public void run(boolean full) {
         List<Network> networks = new LinkedList<>();
         for (Endpoint endPoint : workflowConfig.getEndPoints()) {
+            if (!full) {
+                if ("Offline".equalsIgnoreCase(endPoint.getStatus())) {
+                    continue;
+                }
+            }
             String res = HttpFutureUtils.getHttp("http://" + endPoint.getIp() + ":8083/dhcp/configFile", ProxyUtil.getHeaders());
             if (StringUtils.isNotBlank(res)) {
                 JSONObject obj = JSONObject.parseObject(res);

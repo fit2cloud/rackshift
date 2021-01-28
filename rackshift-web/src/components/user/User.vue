@@ -240,10 +240,15 @@ export default {
         })
       } else {
         HttpUtil.post("/user/add", this.editObj, (res) => {
-          this.drawer = false;
-          this.$message.success('opt_success');
-          this.cancelForm();
-          this.getData();
+          if (res.data) {
+            this.drawer = false;
+            this.$message.success(this.$t('opt_success'));
+            this.cancelForm();
+            this.getData();
+          } else {
+            this.$message.success(this.$t('opt_fail'));
+            this.loading = false;
+          }
         })
       }
     },
