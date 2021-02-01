@@ -30,7 +30,7 @@ public class SyncNetworkJob {
         List<Network> networks = new LinkedList<>();
         for (Endpoint endPoint : workflowConfig.getEndPoints()) {
             if (!full) {
-                if ("Offline".equalsIgnoreCase(endPoint.getStatus())) {
+                if (!"Online".equalsIgnoreCase(endPoint.getStatus())) {
                     continue;
                 }
             }

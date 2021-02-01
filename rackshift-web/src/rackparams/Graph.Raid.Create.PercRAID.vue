@@ -251,3 +251,13 @@ export default {
   }
 }
 </script>
+
+<style>
+.detail-info-rack {
+  float: left;
+  margin-top: 20px;
+  border: 1px solid #EBEEF5;
+  border-spacing: 0px !important;
+  width: 100%;
+}
+</style>

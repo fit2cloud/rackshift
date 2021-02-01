@@ -6,9 +6,11 @@ import io.rackshift.constants.ServiceConstants;
 import io.rackshift.job.EndpointPoller;
 import io.rackshift.job.SyncRackJob;
 import io.rackshift.model.EndpointDTO;
-import io.rackshift.mybatis.domain.Endpoint;
-import io.rackshift.mybatis.domain.EndpointExample;
+import io.rackshift.mybatis.domain.*;
+import io.rackshift.mybatis.mapper.BareMetalMapper;
 import io.rackshift.mybatis.mapper.EndpointMapper;
+import io.rackshift.mybatis.mapper.ImageMapper;
+import io.rackshift.mybatis.mapper.NetworkMapper;
 import io.rackshift.utils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -24,13 +26,17 @@ public class EndpointService {
     @Resource
     private EndpointMapper endpointMapper;
     @Resource
-    private ApplicationContext applicationContext;
-    @Resource
     private WorkflowConfig workflowConfig;
     @Resource
     private SyncRackJob syncRackJob;
     @Resource
     private EndpointPoller endpointPoller;
+    @Resource
+    private BareMetalMapper bareMetalMapper;
+    @Resource
+    private ImageMapper imageMapper;
+    @Resource
+    private NetworkMapper networkMapper;
 
     public Object add(EndpointDTO queryVO) {
 
@@ -77,9 +83,26 @@ public class EndpointService {
             return false;
         }
 
-        endpointMapper.deleteByPrimaryKey(id);
+        int i = endpointMapper.deleteByPrimaryKey(id);
+        if (i == 1) {
+            delRelated(id);
+        }
         workflowConfig.initWorkflow();
         return true;
+    }
+
+    private void delRelated(String id) {
+        BareMetalExample be = new BareMetalExample();
+        be.createCriteria().andEndpointIdEqualTo(id);
+        bareMetalMapper.deleteByExample(be);
+
+        NetworkExample ne = new NetworkExample();
+        ne.createCriteria().andEndpointIdEqualTo(id);
+        networkMapper.deleteByExample(ne);
+
+        ImageExample ie = new ImageExample();
+        ie.createCriteria().andEndpointIdEqualTo(id);
+        imageMapper.deleteByExample(ie);
     }
 
     public Object del(String[] ids) {
