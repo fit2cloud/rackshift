@@ -3,6 +3,7 @@ package io.rackshift.job;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.config.WorkflowConfig;
+import io.rackshift.constants.ServiceConstants;
 import io.rackshift.job.model.DHCPConfig;
 import io.rackshift.metal.sdk.util.HttpFutureUtils;
 import io.rackshift.mybatis.domain.Endpoint;
@@ -30,7 +31,7 @@ public class SyncNetworkJob {
         List<Network> networks = new LinkedList<>();
         for (Endpoint endPoint : workflowConfig.getEndPoints()) {
             if (!full) {
-                if (!"Online".equalsIgnoreCase(endPoint.getStatus())) {
+                if (!ServiceConstants.EndpointStatusEnum.Online.name().equalsIgnoreCase(endPoint.getStatus())) {
                     continue;
                 }
             }

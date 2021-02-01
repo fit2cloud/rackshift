@@ -47,6 +47,7 @@ public class EndpointService {
         e.clear();
         if (ServiceConstants.EndPointType.main_endpoint.name().equals(queryVO.getType())) {
             e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.name());
+            e.or().andIpEqualTo(queryVO.getIp());
             if (endpointMapper.selectByExample(e).stream().count() > 0) {
                 return false;
             }
@@ -118,14 +119,9 @@ public class EndpointService {
     }
 
     private EndpointExample buildExample(EndpointDTO queryVO) {
-        if (StringUtils.isNotBlank(queryVO.getName())) {
+        if (StringUtils.isNotBlank(queryVO.getIp())) {
             EndpointExample e = new EndpointExample();
-            e.createCriteria().andNameEqualTo(queryVO.getName());
-            return e;
-        }
-        if (StringUtils.isNotBlank(queryVO.getId())) {
-            EndpointExample e = new EndpointExample();
-            e.createCriteria().andIdEqualTo(queryVO.getId());
+            e.createCriteria().andIpEqualTo(queryVO.getIp());
             return e;
         }
         return new EndpointExample();

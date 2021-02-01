@@ -428,4 +428,5 @@ export default {
     "execute_instruction": "Execute Instruction",
     "pls_select_log": "Please Select Logs",
     "scan_over": "Scan Over!",
+    "confirm_to_del_endpoint": "Deleting node will delete all resources under the node at the same time. Confirm deletion?",
 }

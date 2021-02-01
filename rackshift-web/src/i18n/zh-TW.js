@@ -430,4 +430,5 @@ export default {
     "execute_instruction": "執行命令",
     "pls_select_log": "請選擇日志",
     "scan_over": "掃描結束",
+    "confirm_to_del_endpoint": "刪除節點將會同時刪除節點下的所有資源，確認刪除？",
 }

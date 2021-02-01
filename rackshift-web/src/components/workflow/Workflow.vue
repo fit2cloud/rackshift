@@ -408,6 +408,7 @@ export default {
       } else {
         this.editDialogVisible = true;
         this.editType = type;
+        this.$refs.form.resetFields();
         this.editObj = {
           injectableName: null,
           friendlyName: null,

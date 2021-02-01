@@ -457,6 +457,7 @@ export default {
         this.editDialogVisible = true;
         this.editType = type;
         let mainEndPoint = _.find(this.allEndPoints, e => e.type == 'main_endpoint');
+        this.$refs.form.resetFields();
         this.editObj = {
           endpointId: mainEndPoint ? mainEndPoint.id : null,
           url: null,

@@ -66,18 +66,6 @@
           </el-table-column>
         </el-table>
 
-        <!--        <div class="pagination">-->
-        <!--          <el-pagination-->
-        <!--              @size-change="handleSizeChange"-->
-        <!--              @current-change="handlePageChange"-->
-        <!--              :current-page="query.pageIndex"-->
-        <!--              :page-sizes="[10, 20, 50, 100]"-->
-        <!--              :page-size="10"-->
-        <!--              layout="total, sizes, prev, pager, next, jumper"-->
-        <!--              :total="pageTotal">-->
-        <!--          </el-pagination>-->
-        <!--        </div>-->
-
         <el-drawer
             :title="editType == 'edit' ? $t('edit_image') : $t('add_image')"
             :visible.sync="editDialogVisible"
@@ -92,7 +80,8 @@
               </el-form-item>
 
               <el-form-item :label="$t('os')" prop="os">
-                <el-select v-model="editObj.os" :placeholder="$t('pls_select')" v-on:change="changeOsVersion" class="input-element">
+                <el-select v-model="editObj.os" :placeholder="$t('pls_select')" v-on:change="changeOsVersion"
+                           class="input-element">
                   <el-option
                       v-for="(item, key) in allOs"
                       :key="item.id"
@@ -112,7 +101,7 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item :label="$t('image')">
+              <el-form-item :label="$t('image')" v-if="editType != 'edit'">
                 <el-upload
                     class="upload-demo"
                     drag
@@ -120,6 +109,7 @@
                     :on-success="afterUploadSuccess"
                     action="/image/upload"
                     style="margin-bottom: 20px;"
+                    :disabled="editType == 'edit'"
                 >
                   <i class="el-icon-upload"></i>
                   <div class="el-upload__text">{{ $t('drag_file_into_or') }}<em>{{ $t('click_to_upload') }}</em></div>
@@ -132,7 +122,14 @@
             </el-form>
             <div class="demo-drawer__footer">
               <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
-              <el-button type="primary" @click="confirmEdit" :loading="loading" :disabled="!canConfirm">{{
+              <el-button type="primary" @click="confirmEdit" :loading="loading" :disabled="!canConfirm"
+                         v-if="editType != 'edit'">{{
+                  loading ? $t('submitting') +
+                      '...' : $t('SUBMIT')
+                }}
+              </el-button>
+
+              <el-button type="primary" @click="confirmEdit" :loading="loading" v-if="editType == 'edit'">{{
                   loading ? $t('submitting') +
                       '...' : $t('SUBMIT')
                 }}
@@ -292,6 +289,7 @@ export default {
     },
     changeOsVersion() {
       this.allOsVersion = _.find(this.allOs, {"id": this.editObj.os}).versions;
+      this.editObj.osVersion = null;
     },
     handleClose() {
       this.editDialogVisible = false;
@@ -300,7 +298,7 @@ export default {
     add() {
       this.editDialogVisible = true;
       this.editType = 'add';
-      this.canConfirm = true;
+      this.canConfirm = false;
     },
     confirmEdit() {
       this.validateResult = true;
@@ -400,6 +398,7 @@ export default {
       } else {
         this.editDialogVisible = true;
         this.editType = type;
+        this.$refs.form.resetFields();
         this.editObj = {
           endpointId: _.find(this.allEndPoints, e => e.type == 'main_endpoint').id,
           url: null

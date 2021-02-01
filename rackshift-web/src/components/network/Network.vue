@@ -81,6 +81,10 @@
           <div class="demo-drawer__content">
             <el-form :model="editObj" :rules="rules" ref="form" label-position="top">
 
+              <el-form-item :label="$t('name')" prop="name">
+                <el-input v-model="editObj.name" autocomplete="off"></el-input>
+              </el-form-item>
+
               <el-form-item :label="$t('endpoint')" prop="endpointId">
                 <el-select v-model="editObj.endpointId" :placeholder="$t('pls_select')" class="input-element">
                   <el-option
@@ -268,15 +272,23 @@ export default {
       if (this.editType == 'edit') {
         HttpUtil.post("/network/update", this.editObj, (res) => {
           this.editDialogVisible = false;
-          this.$message.success(this.$t('edit_success'));
-          this.getData();
+          if (res.success) {
+            this.$message.success(this.$t('add_success'));
+            this.getData();
+          } else {
+            this.$message.error(this.$t('opt_fail'));
+          }
           this.loading = false;
         })
       } else {
         HttpUtil.post("/network/add", this.editObj, (res) => {
           this.editDialogVisible = false;
-          this.$message.success(this.$t('add_success'));
-          this.getData();
+          if (res.success) {
+            this.$message.success(this.$t('add_success'));
+            this.getData();
+          } else {
+            this.$message.error(this.$t('opt_fail'));
+          }
           this.loading = false;
         })
       }
@@ -328,6 +340,7 @@ export default {
       } else {
         this.editDialogVisible = true;
         this.editType = type;
+        this.$refs.form.resetFields();
         this.editObj = {
           pxeEnable: false,
           dhcpEnable: false,

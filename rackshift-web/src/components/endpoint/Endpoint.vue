@@ -101,7 +101,7 @@
               <el-form-item :label="$t('type')" prop="type">
 
                 <el-select v-model="editObj.type" class="input-element">
-                  <el-option v-for="t in allEndPointType" :label="$t(t.name)" :value="t.value"></el-option>
+                  <el-option v-for="t in onlySlave(allEndPointType)" :label="$t(t.name)" :value="t.value"></el-option>
                 </el-select>
               </el-form-item>
 
@@ -195,6 +195,14 @@ export default {
     this.getAllEndPointType();
   },
   methods: {
+    onlySlave() {
+      return [
+        {
+          "name": this.$t("从节点"),
+          "value": "slave_endpoint"
+        }
+      ];
+    },
     // 获取 easy-mock 的模拟数据
     getData() {
       this.loadingList = true;
@@ -268,7 +276,7 @@ export default {
         this.$message.error(this.$t('pls_select_endpoint') + "!");
         return;
       }
-      this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
+      this.$confirm(this.$t('confirm_to_del_endpoint'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
         HttpUtil.post("/endpoint/del", ids, (res) => {
@@ -293,7 +301,7 @@ export default {
         // this.editObj.status = eval(this.editObj.status);
 
       } else if (type == 'del') {
-        this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
+        this.$confirm(this.$t('confirm_to_del_endpoint'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
           HttpUtil.get("/endpoint/del/" + row.id, {}, (res) => {
@@ -317,6 +325,7 @@ export default {
       } else {
         this.editDialogVisible = true;
         this.editType = type;
+        this.$refs.editForm.resetFields();
         this.editObj = {
           status: "1"
         };

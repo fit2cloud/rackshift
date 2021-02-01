@@ -24,6 +24,9 @@ public class DiskUtils {
 
         int tempSize = Integer.valueOf(value);
         if (tempSize % 10 == 0) {
+            if (unit.contains("T")) {
+                return String.valueOf(Integer.valueOf(value) * 1000);
+            }
             return value;
         } else {
             int standardValue = (int) (tempSize / 0.931);
@@ -35,6 +38,6 @@ public class DiskUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(getDiskManufactorValue("465 GB"));
+        System.out.println(getDiskManufactorValue("480 GB"));
     }
 }

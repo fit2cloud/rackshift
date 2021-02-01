@@ -221,6 +221,7 @@ export default {
     add() {
       this.drawer = true;
       this.editType = 'add';
+      this.$refs.editForm.resetFields();
     },
     confirmEdit() {
       this.validateResult = true;
@@ -297,6 +298,7 @@ export default {
       } else {
         this.drawer = true;
         this.editType = type;
+        this.$refs.editForm.resetFields();
         this.editObj = {};
       }
     },

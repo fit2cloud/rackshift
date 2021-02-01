@@ -113,7 +113,7 @@
                 <el-table-column prop="machine_model" :label="$t('machine_model')" align="left"
                                  sortable="custom" style="overflow: scroll" width="180">
                   <template slot-scope="scope">
-                  <span class="rs-nowrap">{{ scope.row.machineModel }}</span>
+                    <span class="rs-nowrap">{{ scope.row.machineModel }}</span>
                   </template>
                 </el-table-column>
 
@@ -553,6 +553,7 @@ export default {
         this.editDialogVisible = true;
         this.editType = type;
         this.editObj = {};
+        this.$refs.form.resetFields();
       }
     }
     ,
