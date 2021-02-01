@@ -400,6 +400,20 @@ public class RackHDService {
         }
         for (int j = 0; j < catalogsObj.size(); j++) {
             JSONObject catalogObj = catalogsObj.getJSONObject(j);
+            //序列号等特征
+            if ("ipmi-fru".equalsIgnoreCase(catalogObj.getString("source"))) {
+                JSONObject fru = catalogObj.getJSONObject("data");
+                if (fru.containsKey("Builtin FRU Device (ID 0)")) {
+                    JSONObject fruDevice = fru.getJSONObject("Builtin FRU Device (ID 0)");
+                    if (StringUtils.isAnyBlank(en.getModel(), en.getName(), en.getBrand())) {
+                        en.setBrand(fruDevice.getString("Product Manufacturer"));
+                        en.setModel(fruDevice.getString("Board Product"));
+                        en.setName(en.getBrand() + " " + en.getModel());
+                        en.setSerialNo(fruDevice.getString("Product Serial"));
+                    }
+                }
+
+            }
             if ("dmi".equalsIgnoreCase(catalogObj.getString("source"))) {
                 JSONObject dmi = catalogObj.getJSONObject("data");
                 JSONArray memoryDeviceObj = dmi.getJSONArray("Memory Device");
@@ -448,17 +462,22 @@ public class RackHDService {
                 extendInfo.put("memoryDetails", memoryDetails.toString());
                 en.setExtendInfo(extendInfo);
                 en.setMemoryType(memoryType);
-                JSONObject chassisInfo = dmi.getJSONObject("Chassis Information");
-                en.setBrand(chassisInfo.getString("Manufacturer"));
-                if ("Dell Inc.".equalsIgnoreCase(en.getBrand())) {
-                    en.setBrand(PluginConstants.DELL);
-                }
-                en.setModel(dmi.getJSONObject("System Information").getString("Product Name"));
-                en.setInstanceUuid(dmi.getJSONObject("System Information").getString("UUID"));
 
-                en.setSerialNo(chassisInfo.getString("Serial Number"));
-                if ("Inspur".equalsIgnoreCase(en.getBrand())) {
-                    en.setSerialNo(dmi.getJSONObject("System Information").getString("Serial Number"));
+                JSONObject chassisInfo = dmi.getJSONObject("Chassis Information");
+                if (StringUtils.isBlank(en.getBrand())) {
+                    en.setBrand(chassisInfo.getString("Manufacturer"));
+                    if ("Dell Inc.".equalsIgnoreCase(en.getBrand())) {
+                        en.setBrand(PluginConstants.DELL);
+                    }
+                }
+                if (StringUtils.isBlank(en.getSerialNo())) {
+                    en.setSerialNo(chassisInfo.getString("Serial Number"));
+                    if ("Inspur".equalsIgnoreCase(en.getBrand())) {
+                        en.setSerialNo(dmi.getJSONObject("System Information").getString("Serial Number"));
+                    }
+                }
+                if (StringUtils.isBlank(en.getModel())) {
+                    en.setModel(dmi.getJSONObject("System Information").getString("Product Name"));
                 }
                 //cpu
 

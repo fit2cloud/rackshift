@@ -48,7 +48,7 @@ public class DiscoveryTask extends Thread {
         this.outBandService = outBandService;
     }
 
-    public  DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, CountDownLatch countDownLatch, Cache cache, CloudProviderManager cloudProviderManager, OutBandService outBandService) {
+    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, CountDownLatch countDownLatch, Cache cache, CloudProviderManager cloudProviderManager, OutBandService outBandService) {
         this.bareMetalRule = bareMetalRule;
         this.bareMetalManager = bareMetalManager;
         this.template = template;
@@ -175,7 +175,9 @@ public class DiscoveryTask extends Thread {
         String name = machineBrand + " " + fruObj.getString("Product Name");
 
         BareMetal physicalMachine = new BareMetal();
-        physicalMachine.setMachineModel(name);
+        if (StringUtils.isNotBlank(name)) {
+            physicalMachine.setMachineModel(name);
+        }
         physicalMachine.setId(UUIDUtil.newUUID());
         if (powerResult.contains(RackHDConstants.PM_POWER_ON)) {
             physicalMachine.setPower(RackHDConstants.PM_POWER_ON);
