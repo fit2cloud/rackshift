@@ -252,6 +252,7 @@ export default {
           this.$message.success(this.$t('edit_success'));
           this.getData();
           this.loading = false;
+          this.getAllEndPointType();
         })
       } else {
         HttpUtil.post("/endpoint/add", this.editObj, (res) => {
@@ -263,6 +264,7 @@ export default {
           }
           this.getData();
           this.loading = false;
+          this.getAllEndPointType();
         })
       }
     },
