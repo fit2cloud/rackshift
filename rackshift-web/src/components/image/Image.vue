@@ -316,7 +316,7 @@ export default {
       if (this.editType == 'edit') {
         HttpUtil.post("/image/update", this.editObj, (res) => {
           this.editDialogVisible = false;
-          this.canConfirm = true;
+          this.canConfirm = false;
           this.$message.success(this.$t('edit_success'));
           this.getData();
           this.loading = false;
