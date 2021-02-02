@@ -1,8 +1,7 @@
 package io.rackshift.mybatis.domain;
 
-import lombok.Data;
-
 import java.io.Serializable;
+import lombok.Data;
 
 @Data
 public class BareMetalRule implements Serializable {
@@ -21,6 +20,8 @@ public class BareMetalRule implements Serializable {
     private String syncStatus;
 
     private Long lastSyncTimestamp;
+
+    private Boolean config;
 
     private String credentialParam;
 

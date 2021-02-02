@@ -755,7 +755,7 @@ public class RackHDService {
         if (!org.apache.shiro.util.CollectionUtils.isEmpty(machineEntity.getDisks())) {
             for (Disk d : machineEntity.getDisks()) {
                 thisDisk = d.getSize();
-                diskSize += Integer.parseInt(DiskUtils.getDiskManufactorValue(thisDisk));
+                diskSize += Integer.parseInt(thisDisk.replace(thisDisk.replaceAll("\\d+", ""), ""));
             }
         }
 

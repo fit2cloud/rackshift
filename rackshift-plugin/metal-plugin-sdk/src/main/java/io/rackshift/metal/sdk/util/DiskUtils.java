@@ -4,40 +4,39 @@ import org.apache.commons.lang3.StringUtils;
 
 public class DiskUtils {
     /**
-     * 将558等实际值转换为形如600的标称值
+     * 将558等实际值转换为形如600的标称值 转换后为 GB
      */
     public static String getDiskManufactorValue(String value) {
         if (StringUtils.isBlank(value)) {
             return null;
         }
-        String unit = value.contains("GB") ? "GB" : value.contains("TB") ? "TB" : value.contains("G") ? "GB" : value.contains("T") ?
-                "TB" : "GB";
+        Unit unit = Unit.valueOf(value.replaceAll("\\d+", "").replaceAll("\\.", "").replaceAll(" ", ""));
         value = value.replace("GB", "").replace("TB", "").replace(" ", "").replace("KB", "");
-        if (value.indexOf(".") != -1) {
-            double realValue = Double.parseDouble(value);
-            int standardValue = (int) (realValue / 0.931);
-            if (standardValue % 10 != 0) {
-                standardValue += 10 - standardValue % 10;
-            }
-            return standardValue + " " + unit;
+        double realValue = Double.parseDouble(value);
+        int standardValue = (int) Math.ceil(realValue / 0.931);
+
+        return standardValue * unit.toGB(unit) + " " + Unit.GB.name();
+    }
+
+    private enum Unit {
+        B, MB, GB, TB, PB, EB;
+
+        boolean bigger(Unit unit) {
+            return unit.ordinal() - GB.ordinal() > 0 ? true : false;
         }
 
-        int tempSize = Integer.valueOf(value);
-        if (tempSize % 10 == 0) {
-            if (unit.contains("T")) {
-                return String.valueOf(Integer.valueOf(value) * 1000);
+        int toGB(Unit unit) {
+            int pos = Math.abs(unit.ordinal() - GB.ordinal());
+            if (bigger(unit)) {
+                return pos * 1000;
+            } else if (unit.ordinal() == GB.ordinal()) {
+                return 1;
             }
-            return value;
-        } else {
-            int standardValue = (int) (tempSize / 0.931);
-            if (standardValue % 10 != 0) {
-                standardValue += 10 - standardValue % 10;
-            }
-            return standardValue + " " + unit;
+            return 1 / (1000) ^ pos;
         }
     }
 
     public static void main(String[] args) {
-        System.out.println(getDiskManufactorValue("480 GB"));
+        System.out.println(getDiskManufactorValue("1.818 TB"));
     }
 }

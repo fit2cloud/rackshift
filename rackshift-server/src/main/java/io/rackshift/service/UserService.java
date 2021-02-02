@@ -1,6 +1,7 @@
 package io.rackshift.service;
 
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.constants.AuthorizationConstants;
 import io.rackshift.constants.UserStatus;
 import io.rackshift.model.RSException;
 import io.rackshift.model.UserDTO;
@@ -136,18 +137,21 @@ public class UserService {
 
     public boolean del(String id) {
         if (id.equalsIgnoreCase("admin")) {
-            return true;
+            return false;
         }
-        UserExample userExample = new UserExample();
-        userExample.createCriteria().andIdEqualTo(id);
-        User user = new User();
-        user.setStatus(UserStatus.DISABLED);
-        return userMapper.updateByExampleSelective(user, userExample) > 0;
+        return userMapper.deleteByPrimaryKey(id) > 0;
     }
 
     public boolean del(String[] ids) {
         for (String id : ids) {
-            del(id);
+            if (AuthorizationConstants.ROLE_ADMIN.equalsIgnoreCase(id)) {
+                return false;
+            }
+        }
+        for (String id : ids) {
+            if (!del(id)) {
+                return false;
+            }
         }
         return true;
     }

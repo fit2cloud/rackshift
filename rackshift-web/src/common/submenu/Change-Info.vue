@@ -9,22 +9,26 @@
       mode="horizontal"
   >
     <el-dialog :title="$t('change_pwd')" :visible.sync="changePwd" :append-to-body="true" width="35vw"
+               :before-close="reset"
                :close-on-click-modal="false">
       <el-form :model="editObj" :rules="rules" ref="editForm" label-position="right">
-        <el-form-item :label="$t('origin-password')" prop="originPwd" label-width="5vw">
+        <el-form-item :label="$t('origin-password')" prop="originPwd" label-width="6vw">
           <el-input v-model="editObj.originPwd" show-password></el-input>
         </el-form-item>
-        <el-form-item :label="$t('new-password')" prop="newPwd" label-width="5vw">
+        <el-form-item :label="$t('new-password')" prop="newPwd" label-width="6vw">
           <el-input v-model="editObj.newPwd" show-password></el-input>
         </el-form-item>
 
-        <el-form-item :label="$t('confirm-password')" prop="confirmPwd" label-width="5vw">
+        <el-form-item :label="$t('confirm-password')" prop="confirmPwd" label-width="6vw">
           <el-input v-model="editObj.confirmPwd" show-password></el-input>
         </el-form-item>
       </el-form>
       <template v-slot:footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="changePwd=false">{{ $t('cancel') }}</el-button>
+          <el-button type="primary" @click="reset">{{
+              $t('cancel')
+            }}
+          </el-button>
           <el-button type="primary" @click="change">{{ $t('confirm') }}</el-button>
         </div>
       </template>
@@ -92,6 +96,10 @@ export default {
   mounted() {
   },
   methods: {
+    reset() {
+      this.changePwd = false;
+      this.$refs.editForm.resetFields();
+    },
     logout() {
       HttpUtil.get("logout", null, () => {
         localStorage.removeItem("login");

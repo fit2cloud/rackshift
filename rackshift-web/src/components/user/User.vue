@@ -247,7 +247,7 @@ export default {
             this.cancelForm();
             this.getData();
           } else {
-            this.$message.success(this.$t('opt_fail'));
+            this.$message.error(this.$t('opt_fail'));
             this.loading = false;
           }
         })
@@ -272,8 +272,12 @@ export default {
         type: 'warning'
       }).then(() => {
         HttpUtil.post("/user/del", ids, (res) => {
-          this.$message.success(this.$t('delete_success'));
-          this.getData();
+          if (res.data) {
+            this.$message.success(this.$t('delete_success'));
+            this.getData();
+          } else {
+            this.$message.error(this.$t('delete_fail'));
+          }
         });
         this.multipleSelection = [];
       });
@@ -285,14 +289,18 @@ export default {
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
         this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
-
+        this.$refs.editForm.resetFields();
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
           HttpUtil.get("/user/del/" + encodeURIComponent(row.id), {}, (res) => {
-            this.getData();
-            this.$message.success('删除成功');
+            if (res.data) {
+              this.$message.success(this.$t('delete_success'));
+              this.getData();
+            } else {
+              this.$message.error(this.$t('delete_fail'));
+            }
           });
         })
       } else {

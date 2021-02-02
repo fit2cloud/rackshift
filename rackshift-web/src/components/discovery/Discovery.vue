@@ -103,8 +103,8 @@
             </el-form-item>
 
             <el-form-item :label="$t('detect_params')" prop="params">
-              <el-switch v-model="customProtocol">{{ $t('set_detect_params') }}</el-switch>
-              <table class="test-protocol" v-if="customProtocol">
+              <el-switch v-model="editObj.config">{{ $t('set_detect_params') }}</el-switch>
+              <table class="test-protocol" v-if="editObj.config">
                 <tr>
                   <td>{{ $t('protocol') }}</td>
                   <td>{{ $t('possible_params') }}</td>
@@ -233,7 +233,6 @@ export default {
       multipleSelection: [],
       delList: [],
       editVisible: false,
-      customProtocol: false,
       labelPosition: 'top',
       pageTotal: 0,
       idx: -1,

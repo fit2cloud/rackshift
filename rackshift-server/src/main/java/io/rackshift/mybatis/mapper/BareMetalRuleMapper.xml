@@ -10,6 +10,7 @@
     <result column="provider_id" jdbcType="VARCHAR" property="providerId" />
     <result column="sync_status" jdbcType="VARCHAR" property="syncStatus" />
     <result column="last_sync_timestamp" jdbcType="BIGINT" property="lastSyncTimestamp" />
+    <result column="config" jdbcType="BIT" property="config" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.BareMetalRule">
     <result column="credential_param" jdbcType="LONGVARCHAR" property="credentialParam" />
@@ -73,7 +74,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, start_ip, end_ip, mask, provider_id, sync_status, last_sync_timestamp
+    id, name, start_ip, end_ip, mask, provider_id, sync_status, last_sync_timestamp, 
+    config
   </sql>
   <sql id="Blob_Column_List">
     credential_param
@@ -129,12 +131,12 @@
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.BareMetalRule">
     insert into bare_metal_rule (id, name, start_ip, 
       end_ip, mask, provider_id, 
-      sync_status, last_sync_timestamp, credential_param
-      )
+      sync_status, last_sync_timestamp, config, 
+      credential_param)
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{startIp,jdbcType=VARCHAR}, 
       #{endIp,jdbcType=VARCHAR}, #{mask,jdbcType=VARCHAR}, #{providerId,jdbcType=VARCHAR}, 
-      #{syncStatus,jdbcType=VARCHAR}, #{lastSyncTimestamp,jdbcType=BIGINT}, #{credentialParam,jdbcType=LONGVARCHAR}
-      )
+      #{syncStatus,jdbcType=VARCHAR}, #{lastSyncTimestamp,jdbcType=BIGINT}, #{config,jdbcType=BIT}, 
+      #{credentialParam,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.BareMetalRule">
     insert into bare_metal_rule
@@ -162,6 +164,9 @@
       </if>
       <if test="lastSyncTimestamp != null">
         last_sync_timestamp,
+      </if>
+      <if test="config != null">
+        config,
       </if>
       <if test="credentialParam != null">
         credential_param,
@@ -191,6 +196,9 @@
       </if>
       <if test="lastSyncTimestamp != null">
         #{lastSyncTimestamp,jdbcType=BIGINT},
+      </if>
+      <if test="config != null">
+        #{config,jdbcType=BIT},
       </if>
       <if test="credentialParam != null">
         #{credentialParam,jdbcType=LONGVARCHAR},
@@ -230,6 +238,9 @@
       <if test="record.lastSyncTimestamp != null">
         last_sync_timestamp = #{record.lastSyncTimestamp,jdbcType=BIGINT},
       </if>
+      <if test="record.config != null">
+        config = #{record.config,jdbcType=BIT},
+      </if>
       <if test="record.credentialParam != null">
         credential_param = #{record.credentialParam,jdbcType=LONGVARCHAR},
       </if>
@@ -248,6 +259,7 @@
       provider_id = #{record.providerId,jdbcType=VARCHAR},
       sync_status = #{record.syncStatus,jdbcType=VARCHAR},
       last_sync_timestamp = #{record.lastSyncTimestamp,jdbcType=BIGINT},
+      config = #{record.config,jdbcType=BIT},
       credential_param = #{record.credentialParam,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -262,7 +274,8 @@
       mask = #{record.mask,jdbcType=VARCHAR},
       provider_id = #{record.providerId,jdbcType=VARCHAR},
       sync_status = #{record.syncStatus,jdbcType=VARCHAR},
-      last_sync_timestamp = #{record.lastSyncTimestamp,jdbcType=BIGINT}
+      last_sync_timestamp = #{record.lastSyncTimestamp,jdbcType=BIGINT},
+      config = #{record.config,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -291,6 +304,9 @@
       <if test="lastSyncTimestamp != null">
         last_sync_timestamp = #{lastSyncTimestamp,jdbcType=BIGINT},
       </if>
+      <if test="config != null">
+        config = #{config,jdbcType=BIT},
+      </if>
       <if test="credentialParam != null">
         credential_param = #{credentialParam,jdbcType=LONGVARCHAR},
       </if>
@@ -306,6 +322,7 @@
       provider_id = #{providerId,jdbcType=VARCHAR},
       sync_status = #{syncStatus,jdbcType=VARCHAR},
       last_sync_timestamp = #{lastSyncTimestamp,jdbcType=BIGINT},
+      config = #{config,jdbcType=BIT},
       credential_param = #{credentialParam,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -317,7 +334,8 @@
       mask = #{mask,jdbcType=VARCHAR},
       provider_id = #{providerId,jdbcType=VARCHAR},
       sync_status = #{syncStatus,jdbcType=VARCHAR},
-      last_sync_timestamp = #{lastSyncTimestamp,jdbcType=BIGINT}
+      last_sync_timestamp = #{lastSyncTimestamp,jdbcType=BIGINT},
+      config = #{config,jdbcType=BIT}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

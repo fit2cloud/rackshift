@@ -653,6 +653,66 @@ public class BareMetalRuleExample {
             addCriterion("last_sync_timestamp not between", value1, value2, "lastSyncTimestamp");
             return (Criteria) this;
         }
+
+        public Criteria andConfigIsNull() {
+            addCriterion("config is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigIsNotNull() {
+            addCriterion("config is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigEqualTo(Boolean value) {
+            addCriterion("config =", value, "config");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNotEqualTo(Boolean value) {
+            addCriterion("config <>", value, "config");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigGreaterThan(Boolean value) {
+            addCriterion("config >", value, "config");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("config >=", value, "config");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigLessThan(Boolean value) {
+            addCriterion("config <", value, "config");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigLessThanOrEqualTo(Boolean value) {
+            addCriterion("config <=", value, "config");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigIn(List<Boolean> values) {
+            addCriterion("config in", values, "config");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNotIn(List<Boolean> values) {
+            addCriterion("config not in", values, "config");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigBetween(Boolean value1, Boolean value2) {
+            addCriterion("config between", value1, value2, "config");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("config not between", value1, value2, "config");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

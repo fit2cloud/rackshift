@@ -101,7 +101,7 @@
               <el-form-item :label="$t('type')" prop="type">
 
                 <el-select v-model="editObj.type" class="input-element">
-                  <el-option v-for="t in onlySlave(allEndPointType)" :label="$t(t.name)" :value="t.value"></el-option>
+                  <el-option v-for="t in onlySlave(editObj.type)" :label="$t(t.name)" :value="t.value"></el-option>
                 </el-select>
               </el-form-item>
 
@@ -195,7 +195,15 @@ export default {
     this.getAllEndPointType();
   },
   methods: {
-    onlySlave() {
+    onlySlave(type) {
+      if (type == 'main_endpoint') {
+        return [
+          {
+            "name": this.$t("主节点"),
+            "value": "main_endpoint"
+          }
+        ];
+      }
       return [
         {
           "name": this.$t("从节点"),
@@ -247,12 +255,17 @@ export default {
       this.editObj.brands = JSON.stringify(this.editObj.brands);
       if (this.editType == 'edit') {
         HttpUtil.post("/endpoint/update", this.editObj, (res) => {
-          this.editDialogVisible = false;
-          this.editObj.defaultParams = JSON.stringify(this.editObj.defaultParams);
-          this.$message.success(this.$t('edit_success'));
-          this.getData();
-          this.loading = false;
-          this.getAllEndPointType();
+          if (res.data) {
+            this.editDialogVisible = false;
+            this.editObj.defaultParams = JSON.stringify(this.editObj.defaultParams);
+            this.$message.success(this.$t('edit_success'));
+            this.getData();
+            this.loading = false;
+            this.getAllEndPointType();
+          } else {
+            this.$message.error(this.$t('opt_fail'));
+            this.loading = false;
+          }
         })
       } else {
         HttpUtil.post("/endpoint/add", this.editObj, (res) => {
@@ -282,10 +295,10 @@ export default {
         type: 'warning'
       }).then(() => {
         HttpUtil.post("/endpoint/del", ids, (res) => {
-          if (res.success) {
+          if (res.data) {
             this.$message.success(this.$t('delete_success'));
           } else {
-            this.$message.success(this.$t('delete_fail'));
+            this.$message.error(this.$t('delete_fail'));
           }
           this.getData();
         });
@@ -300,8 +313,7 @@ export default {
         this.editObj = JSON.parse(JSON.stringify(row));
         this.editObj.brands = eval(this.editObj.brands);
         this.editObj.settable = eval(this.editObj.settable);
-        // this.editObj.status = eval(this.editObj.status);
-
+        this.$refs.editForm.resetFields();
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del_endpoint'), this.$t('tips'), {
           type: 'warning'
@@ -310,7 +322,7 @@ export default {
             if (res.data) {
               this.$message.success(this.$t('delete_success'));
             } else {
-              this.$message.success(this.$t('delete_fail'));
+              this.$message.error(this.$t('delete_fail'));
             }
             this.getData();
           });

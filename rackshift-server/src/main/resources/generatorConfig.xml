@@ -62,14 +62,14 @@
 <!--        <table tableName="endpoint"/>-->
 <!--        <table tableName="bare_me2tal"/>-->
 <!--        <table tableName="network"/>-->
-<!--        <table tableName="bare_metal_rule"/>-->
+        <table tableName="bare_metal_rule"/>
 <!--        <table tableName="cpu"/>-->
 <!--        <table tableName="disk"/>-->
 <!--        <table tableName="memory"/>-->
 <!--        <table tableName="workflow"/>-->
-        <table tableName="plugin"/>
-        <table tableName="instruction"/>
-        <table tableName="instruction_log"/>
+<!--        <table tableName="bare_metal_rule"/>-->
+<!--        <table tableName="instruction"/>-->
+<!--        <table tableName="instruction_log"/>-->
 <!--        <table tableName="ip"/>-->
 
     </context>

@@ -223,7 +223,7 @@ export default {
         if (res.success) {
           this.$message.success(this.$t('cancel_task_success'));
         } else {
-          this.$message.success(this.$t('opt_fail'));
+          this.$message.error(this.$t('opt_fail'));
         }
       })
     },

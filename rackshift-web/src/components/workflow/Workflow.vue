@@ -390,7 +390,7 @@ export default {
         this.editObj.brands = eval(this.editObj.brands);
         this.editObj.settable = eval(this.editObj.settable);
         this.editObj.friendlyName = this.$t(this.editObj.friendlyName);
-
+        this.$refs.form.resetFields();
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'

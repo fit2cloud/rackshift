@@ -328,6 +328,7 @@ export default {
         this.editDialogVisible = true;
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
+        this.$refs.form.resetFields();
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'

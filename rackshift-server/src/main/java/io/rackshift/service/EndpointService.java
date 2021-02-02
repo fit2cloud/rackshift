@@ -2,6 +2,7 @@ package io.rackshift.service;
 
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.config.WorkflowConfig;
+import io.rackshift.constants.AuthorizationConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.job.EndpointPoller;
 import io.rackshift.job.SyncRackJob;
@@ -63,10 +64,10 @@ public class EndpointService {
         Endpoint image = new Endpoint();
         BeanUtils.copyBean(image, queryVO);
 
-        EndpointExample e = new EndpointExample();
-        if (ServiceConstants.EndPointType.main_endpoint.name().equals(queryVO.getType())) {
-            e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.name());
-            if (endpointMapper.selectByExample(e).stream().count() != 0 && !endpointMapper.selectByExample(e).get(0).getId().equalsIgnoreCase(queryVO.getId())) {
+        if (StringUtils.isNotBlank(queryVO.getIp())) {
+            EndpointExample e = new EndpointExample();
+            e.createCriteria().andIpEqualTo(queryVO.getIp()).andIdNotEqualTo(queryVO.getId());
+            if (endpointMapper.selectByExample(e).stream().count() > 0) {
                 return false;
             }
         }
@@ -76,7 +77,7 @@ public class EndpointService {
         return true;
     }
 
-    public Object del(String id) {
+    public boolean del(String id) {
         if (endpointMapper.selectByPrimaryKey(id) == null) {
             return true;
         }
@@ -108,9 +109,16 @@ public class EndpointService {
 
     public Object del(String[] ids) {
         for (String id : ids) {
-            del(id);
+            if (ServiceConstants.EndPointType.main_endpoint.name().equalsIgnoreCase(endpointMapper.selectByPrimaryKey(id).getType())) {
+                return false;
+            }
         }
-        return null;
+        for (String id : ids) {
+            if (!del(id)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public List<Endpoint> list(EndpointDTO queryVO) {

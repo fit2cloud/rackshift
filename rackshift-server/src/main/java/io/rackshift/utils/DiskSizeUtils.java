@@ -101,7 +101,7 @@ public class DiskSizeUtils {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(getSize(-1, Unit.TB).toString());
+        System.out.println(getSize("8192", Unit.TB).toString());
     }
 
 }
