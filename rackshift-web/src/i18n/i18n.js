@@ -7,6 +7,7 @@ import zh_TWLocale from "element-ui/lib/locale/lang/zh-TW";
 import zh_CN from "./zh-CN";
 import en_US from "./en-US";
 import zh_TW from "./zh-TW";
+import bus from '../common/bus/bus'
 
 Vue.use(VueI18n);
 
@@ -43,6 +44,7 @@ function setI18nLanguage(lang) {
     axios.defaults.headers.common['Accept-Language'] = lang;
     document.querySelector('html').setAttribute('lang', lang);
     localStorage.setItem("lang", lang);
+    bus.$emit('refresh_workflow');
     return lang;
 }
 

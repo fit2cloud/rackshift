@@ -516,7 +516,7 @@
                 <el-col :span="10">
                   {{ w.machineModel + ' ' + w.machineSn }}
                   <br>
-                  {{ w.friendlyName }}
+                  {{ w.friendlyNameInternational }}
                 </el-col>
 
                 <el-col :span="8">
@@ -566,6 +566,7 @@ import {WebSocketUtil} from "@/common/utils/WebSocket";
 import PowerStatus from '../../common/powerstatus/Power-Status'
 import axios from 'axios'
 import {getIPRange} from 'get-ip-range'
+import bus from '../../common/bus/bus'
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -694,9 +695,18 @@ export default {
       this.getData();
     }
     this.getAllGraphDefinitions();
+    bus.$on('refresh_workflow', this.refreshWorkflow);
   }
   ,
   methods: {
+    refreshWorkflow() {
+      if (this.selectedWorkflow.length) {
+        let that = this;
+        _.map(this.selectedWorkflow, w => {
+          w.friendlyNameInternational = that.$t(w.friendlyName)
+        })
+      }
+    },
     handleChange(val) {
 
     },
@@ -913,6 +923,7 @@ export default {
       delete request.settable;
       delete request.brands;
       delete request.friendlyName;
+      delete request.friendlyNameInternational;
       return request;
     },
     saveParams() {
@@ -933,7 +944,7 @@ export default {
       this.editWorkflowIndex = index;
       this.createWorkflowParamComponent(this.selectedWorkflow[index]);
       this.currentWfParamTemplate = this.selectedWorkflow[index].componentId;
-      this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.selectedWorkflow[index].friendlyName + " " + this.$t('param_config');
+      this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.$t(this.selectedWorkflow[index].friendlyName) + " " + this.$t('param_config');
       this.fillWfParams = true;
     },
     power(opt, row) {
@@ -1346,6 +1357,7 @@ export default {
                 machineSn: that.multipleSelection[k].machineSn,
                 workflowName: that.getWorkflowById().injectableName,
                 friendlyName: originWf.friendlyName,
+                friendlyNameInternational: this.$t(originWf.friendlyName),
                 settable: originWf.settable,
                 params: params,
                 extraParams: extraParams,
