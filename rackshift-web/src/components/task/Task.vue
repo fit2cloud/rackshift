@@ -210,11 +210,11 @@ export default {
     }
   },
   mounted() {
-    if (!this.websocket) {
-      this.websocket = new WebSocketUtil();
-      this.websocket.openSocket('taskLifecycle', this.notify);
-      this.getData();
-    }
+    // if (!this.websocket) {
+    //   this.websocket = new WebSocketUtil();
+    //   this.websocket.openSocket('taskLifecycle', this.notify);
+    //   this.getData();
+    // }
   },
   methods: {
     cancel() {
@@ -289,6 +289,11 @@ export default {
     getDataNoLoading(callback) {
       HttpUtil.post("/task/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
         this.tableData = res.data.listObject;
+        this.tableData.forEach(d => {
+          if (this.multipleSelection.contains(d.id)) {
+            this.$refs.multipleTable.toggleRowSelection(d, true);
+          }
+        })
         this.pageTotal = res.data.itemCount;
         let that = this;
         if (!_.find(res.data.listObject, (o) => o.status == 'running' || o.status == 'created')) {
