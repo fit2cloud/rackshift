@@ -313,7 +313,7 @@ export default {
         this.editObj = JSON.parse(JSON.stringify(row));
         this.editObj.brands = eval(this.editObj.brands);
         this.editObj.settable = eval(this.editObj.settable);
-        this.$refs.editForm.resetFields();
+        this.resetFields();
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del_endpoint'), this.$t('tips'), {
           type: 'warning'
@@ -339,10 +339,15 @@ export default {
       } else {
         this.editDialogVisible = true;
         this.editType = type;
-        this.$refs.editForm.resetFields();
+        this.resetFields();
         this.editObj = {
           status: "1"
         };
+      }
+    },
+    resetFields() {
+      if (this.$refs.editForm) {
+        this.$refs.editForm.resetFields();
       }
     },
     // 分页导航

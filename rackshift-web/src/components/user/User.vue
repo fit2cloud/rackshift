@@ -218,10 +218,15 @@ export default {
       this.loading = false;
       this.drawer = false;
     },
+    resetFields() {
+      if (this.$refs.editForm) {
+        this.$refs.editForm.resetFields();
+      }
+    },
     add() {
       this.drawer = true;
       this.editType = 'add';
-      this.$refs.editForm.resetFields();
+      this.resetFields();
     },
     confirmEdit() {
       this.validateResult = true;
@@ -289,7 +294,7 @@ export default {
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
         this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
-        this.$refs.editForm.resetFields();
+        this.resetFields();
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
@@ -306,7 +311,7 @@ export default {
       } else {
         this.drawer = true;
         this.editType = type;
-        this.$refs.editForm.resetFields();
+        this.resetFields();
         this.editObj = {};
       }
     },

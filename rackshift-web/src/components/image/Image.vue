@@ -85,7 +85,7 @@
                   <el-option
                       v-for="(item, key) in allOs"
                       :key="item.id"
-                      :label="item.name"
+                      :label="$t(item.name)"
                       :value="item.id">
                   </el-option>
                 </el-select>
@@ -109,6 +109,8 @@
                     :on-success="afterUploadSuccess"
                     action="/image/upload"
                     style="margin-bottom: 20px;"
+                    :multiple=false
+                    :limit="1"
                     :disabled="editType == 'edit'"
                 >
                   <i class="el-icon-upload"></i>
@@ -380,7 +382,7 @@ export default {
         this.editDialogVisible = true;
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
-        this.$refs.form.resetFields();
+        this.resetFields();
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
@@ -398,11 +400,21 @@ export default {
       } else {
         this.editDialogVisible = true;
         this.editType = type;
-        this.$refs.form.resetFields();
+        if (this.$refs.form) {
+          this.$refs.form.resetFields();
+        }
+        let endpoint = _.find(this.allEndPoints, e => e.type == 'main_endpoint');
         this.editObj = {
-          endpointId: _.find(this.allEndPoints, e => e.type == 'main_endpoint').id,
-          url: null
+          endpointId: endpoint ? endpoint.id : null,
+          url: null,
+          os: null,
+          osVersion: null
         };
+      }
+    },
+    resetFields() {
+      if (this.$refs.form) {
+        this.$refs.form.resetFields();
       }
     },
     // 分页导航

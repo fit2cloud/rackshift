@@ -436,6 +436,7 @@ export default {
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
         this.editObj.credentialParam = this.editObj.credentialParam ? JSON.parse(this.editObj.credentialParam) : [];
+        this.resetFields();
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
@@ -456,7 +457,7 @@ export default {
         this.editDialogVisible = true;
         this.editType = type;
         let mainEndPoint = _.find(this.allEndPoints, e => e.type == 'main_endpoint');
-        this.$refs.form.resetFields();
+        this.resetFields();
         this.editObj = {
           endpointId: mainEndPoint ? mainEndPoint.id : null,
           url: null,
@@ -465,6 +466,11 @@ export default {
       }
     }
     ,
+    resetFields() {
+      if (this.$refs.form) {
+        this.$refs.form.resetFields();
+      }
+    },
 // 分页导航
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);

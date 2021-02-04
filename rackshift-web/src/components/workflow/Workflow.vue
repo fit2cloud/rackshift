@@ -109,7 +109,7 @@
                            :disabled="editObj.type == 'system'" class="input-element">
                   <el-option
                       v-for="(item, key) in allEventType"
-                      :label="item.name"
+                      :label="$t(item.name)"
                       :value="item.value">
                   </el-option>
                 </el-select>
@@ -390,7 +390,7 @@ export default {
         this.editObj.brands = eval(this.editObj.brands);
         this.editObj.settable = eval(this.editObj.settable);
         this.editObj.friendlyName = this.$t(this.editObj.friendlyName);
-        this.$refs.form.resetFields();
+        this.resetFields();
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
@@ -408,7 +408,7 @@ export default {
       } else {
         this.editDialogVisible = true;
         this.editType = type;
-        this.$refs.form.resetFields();
+        this.resetFields();
         this.editObj = {
           injectableName: null,
           friendlyName: null,
@@ -417,6 +417,11 @@ export default {
           brands: [],
           defaultParams: null
         };
+      }
+    },
+    resetFields() {
+      if (this.$refs.form) {
+        this.$refs.form.resetFields();
       }
     },
     // 分页导航

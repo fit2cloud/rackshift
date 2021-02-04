@@ -98,7 +98,9 @@ export default {
   methods: {
     reset() {
       this.changePwd = false;
-      this.$refs.editForm.resetFields();
+      if (this.$refs.editForm) {
+        this.$refs.editForm.resetFields();
+      }
     },
     logout() {
       HttpUtil.get("logout", null, () => {
