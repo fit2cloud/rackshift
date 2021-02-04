@@ -35,7 +35,11 @@ function brandsFormat(brands) {
 }
 
 function endpointFormat(endpointId) {
-    return i18n.t(_.find(JSON.parse(localStorage.getItem("allEndPoints")), (o) => o.id == endpointId).name);
+    let enpoint = _.find(JSON.parse(localStorage.getItem("allEndPoints")), (o) => o.id == endpointId);
+    if (enpoint) {
+        return i18n.t(enpoint.name);
+    }
+    return "";
 }
 
 export {dateFormat, brandsFormat, endpointFormat}
