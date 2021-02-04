@@ -27,7 +27,7 @@ axios.interceptors.response.use(function (response) {
     }
     return response;
 }, function (error) {
-    if (error.response.data && error.response.data.indexOf('Authentication Status Invalid') != -1) {
+    if (error.response && error.response.data && error.response.data.indexOf('Authentication Status Invalid') != -1) {
         throw new LoginError("login time out");
     } else {
         return Promise.reject(error);
@@ -38,13 +38,17 @@ const HttpUtil = {
     get: function (url, params, resolve, reject) {
         axios.get(url, params).then((res) => {
             if (res) {
-                if (res.data.success) {
+                if (res.data && res.data.success) {
                     resolve(res.data);
                 } else {
-                    if (reject) {
-                        reject(res.data.message);
+                    if (res.data) {
+                        if (reject) {
+                            reject(res.data);
+                        } else {
+                            MessageBox.alert(res.data);
+                        }
                     } else {
-                        MessageBox.alert(res.data.message);
+                        MessageBox.alert(i18n.t('network_error'));
                     }
                 }
             }
@@ -52,7 +56,7 @@ const HttpUtil = {
             if (LoginError.prototype.isPrototypeOf(e)) {
                 loginFail();
             } else {
-                MessageBox.alert(e);
+                MessageBox.alert(i18n.t('network_error'));
             }
         });
     },
@@ -76,7 +80,7 @@ const HttpUtil = {
                 if (LoginError.prototype.isPrototypeOf(e)) {
                     loginFail();
                 } else {
-                    MessageBox.alert(e);
+                    MessageBox.alert(i18n.t('network_error'));
                 }
             }
         });

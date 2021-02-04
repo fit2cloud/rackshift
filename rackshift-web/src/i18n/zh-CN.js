@@ -437,4 +437,5 @@ export default {
     "confirm_to_del_endpoint": "删除节点将会同时删除节点下的所有资源，确认删除？",
     "Centos 64位": "CentOS 64位",
     "RedHat 64位": "RedHat 64位",
+    "network_error": "网络错误，请检查网络~"
 }
