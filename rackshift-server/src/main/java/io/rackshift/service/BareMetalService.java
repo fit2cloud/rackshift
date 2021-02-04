@@ -117,6 +117,7 @@ public class BareMetalService {
             if (endpointService.getById(bareMetal.getEndpointId()) != null) {
                 if (StringUtils.isNotBlank(bareMetal.getServerId())) {
                     try {
+                        rackHDService.cancelWorkflow(bareMetal);
                         rackHDService.deleteNode(bareMetal);
                     } catch (Exception e) {
                         LogUtil.info("删除RackHD节点失败！", ExceptionUtils.getExceptionDetail(e));
