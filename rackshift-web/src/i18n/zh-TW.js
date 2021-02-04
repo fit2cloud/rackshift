@@ -387,8 +387,10 @@ export default {
     "安装 RedHat7 64位版": "安裝 RedHat7 64位版",
     "安装 windowsServer 2012 标准版": "安装 windowsServer 2012 標準版",
 
-    "下发安装系统workflow": "安裝系統 workflow 事件",
-    "下发通用workflow": "通用 workflow 事件",
+    "下发安装系统workflow": "安裝系統 WORKFLOW 事件",
+    "下发通用workflow": "通用 WORKFLOW 事件",
+    "补充OBM信息": "補充 OBM 信息",
+    "下发发现workflow": "下發發現 WORKFLOW",
     "主节点": "主節點",
     "从节点": "從節點",
     "version": "版本",
@@ -431,4 +433,6 @@ export default {
     "pls_select_log": "請選擇日志",
     "scan_over": "掃描結束",
     "confirm_to_del_endpoint": "刪除節點將會同時刪除節點下的所有資源，確認刪除？",
+    "Centos 64位": "CentOS 64位",
+    "RedHat 64位": "RedHat 64位",
 }

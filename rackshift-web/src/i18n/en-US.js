@@ -229,7 +229,7 @@ export default {
     "pls_input_name": "Please enter a name",
     "pls_select_discovery-devices": "Please select discovered devices",
     "dhcp_enable": "Whether to enable DHCP",
-    "injectable_name": "workflow template",
+    "injectable_name": "Workflow Template",
     "proc_name": "Processor Model",
     "no_nessary_to_set": "No nessary to set",
     "raid": "Raid Level",
@@ -241,7 +241,7 @@ export default {
     "error": "Error",
     "delete": "Delete",
     "mem_mod_type": "Memory Type",
-    "settable": "Is it settable",
+    "settable": "Settable",
     "zh_TW": "繁體中文",
     "add_image": "Add image",
     "netmask": "Subnet Mask",
@@ -387,6 +387,8 @@ export default {
 
     "下发安装系统workflow": "Install OS Workflow",
     "下发通用workflow": "Normal Workflow",
+    "补充OBM信息": "OBM Info",
+    "下发发现workflow": "Discovery Workflow",
     "主节点": "Main Endpoint",
     "从节点": "Slave Endpoint",
     "version": "Version",
@@ -429,4 +431,6 @@ export default {
     "pls_select_log": "Please Select Logs",
     "scan_over": "Scan Over!",
     "confirm_to_del_endpoint": "Deleting node will delete all resources under the node at the same time. Confirm deletion?",
+    "Centos 64位": "CentOS 64 Bit Version",
+    "RedHat 64位": "RedHat 64 Bit Version",
 }
