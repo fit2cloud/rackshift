@@ -832,6 +832,10 @@ public class RackHDService {
         return new ArrayList<>();
     }
 
+    public List<String> getActiveWorkflowByNodeId(String endPointId, String nodeId) {
+        return getActiveWorkflowNodeIds(endPointId).stream().filter(id -> id.equalsIgnoreCase(nodeId)).collect(Collectors.toList());
+    }
+
     public boolean deleteNode(BareMetal bareMetal) {
         RackHDResponse response = RackHDHttpClientUtil.delete(String.format(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()) + "/api/2.0/nodes/%s", bareMetal.getServerId()));
         return response.getReCode() <= RackHDConstants.ERROR_RE_CODE;

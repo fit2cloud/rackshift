@@ -105,11 +105,12 @@ public class BareMetalManager {
                 if (LifeStatus.provisioning.name().equalsIgnoreCase(dbBareMetal.getStatus()) || LifeStatus.deploying.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
                     bareMetal.setStatus(null);
                 }
-                if (LifeStatus.discovering.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
+
+                if (LifeStatus.discovering.name().equalsIgnoreCase(dbBareMetal.getStatus()) && StringUtils.isNotBlank(dbBareMetal.getServerId()) && rackHDService.getActiveWorkflowByNodeId(dbBareMetal.getEndpointId(), dbBareMetal.getServerId()).size() == 0) {
                     bareMetal.setStatus(LifeStatus.ready.name());
                     changeStatus = true;
                     //第一次发现已经完毕 同步带外账号至 RackHD
-                    syncOutBand(bareMetal);
+                    syncOutBand(dbBareMetal);
                 }
                 bareMetal.setPower(null);
                 bareMetal.setRuleId(null);
