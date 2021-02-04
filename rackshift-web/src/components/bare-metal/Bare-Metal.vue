@@ -49,7 +49,7 @@
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="$t('detail')" placement="right-end">
               <el-link type="primary" @click="showDetail(scope.row)" target="_blank">
-                  <span class="rs-nowrap">{{ scope.row.machineModel }}</span>
+                <span class="rs-nowrap">{{ scope.row.machineModel }}</span>
               </el-link>
             </el-tooltip>
           </template>
@@ -931,9 +931,10 @@ export default {
     },
     editWfParams(index) {
       this.editWorkflowIndex = index;
-      this.fillWfParams = true;
+      this.createWorkflowParamComponent(this.selectedWorkflow[index]);
       this.currentWfParamTemplate = this.selectedWorkflow[index].componentId;
       this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.selectedWorkflow[index].friendlyName + " " + this.$t('param_config');
+      this.fillWfParams = true;
     },
     power(opt, row) {
       this.$confirm(this.$t('confirm') + this.$t('power_' + opt) + '?', this.$t('tips'), {
@@ -1292,12 +1293,12 @@ export default {
     createWorkflowParamComponent(workflowParam) {
       //动态异步
       if (!this.paramComponent[workflowParam.componentId]) {
-
-        let comPointer = Vue.component(workflowParam.componentId,
-            // 这个动态导入会返回一个 `Promise` 对象。
-            () => import("./../../rackparams/" + workflowParam.workflowName)
-        )
-
+        const component = () => ({
+          component: import("./../../rackparams/" + workflowParam.workflowName),
+          delay: 200,
+          timeout: 3000
+        })
+        let comPointer = Vue.component(workflowParam.componentId, component);
         this.paramComponent[workflowParam.componentId] = comPointer;
       }
     }
@@ -1321,6 +1322,22 @@ export default {
             continue;
           }
 
+          let params = null;
+          let extraParams = null;
+          if (that.workflowParamList.length) {
+            let paramTemplate = _.find(that.workflowParamList, function (p) {
+              return p.bareMetalId == that.multipleSelection[k].id;
+            });
+            if (paramTemplate == null) {
+              params = _.cloneDeep(originWf.defaultParams);
+            } else {
+              params = JSON.parse(paramTemplate.paramsTemplate);
+              extraParams = JSON.parse(paramTemplate.extraParams);
+            }
+          } else {
+            params = _.cloneDeep(originWf.defaultParams);
+          }
+
           that.selectedWorkflow.push(
               {
                 componentId: that.getWorkflowById().injectableName + "-" + that.multipleSelection[k].id,
@@ -1330,25 +1347,10 @@ export default {
                 workflowName: that.getWorkflowById().injectableName,
                 friendlyName: originWf.friendlyName,
                 settable: originWf.settable,
+                params: params,
+                extraParams: extraParams,
               }
           );
-
-          that.createWorkflowParamComponent(that.selectedWorkflow[that.selectedWorkflow.length - 1]);
-
-          that.currentWfParamTemplate = that.selectedWorkflow[that.selectedWorkflow.length - 1].componentId;
-          if (that.workflowParamList.length) {
-            let paramTemplate = _.find(that.workflowParamList, function (p) {
-              return p.bareMetalId == that.selectedWorkflow[that.selectedWorkflow.length - 1].bareMetalId;
-            });
-            if (paramTemplate == null) {
-              that.selectedWorkflow[that.selectedWorkflow.length - 1].params = _.cloneDeep(originWf.defaultParams);
-            } else {
-              that.selectedWorkflow[that.selectedWorkflow.length - 1].params = JSON.parse(paramTemplate.paramsTemplate);
-              that.selectedWorkflow[that.selectedWorkflow.length - 1].extraParams = JSON.parse(paramTemplate.extraParams);
-            }
-          } else {
-            that.selectedWorkflow[that.selectedWorkflow.length - 1].params = _.cloneDeep(originWf.defaultParams);
-          }
         }
       }
     }
