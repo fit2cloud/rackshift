@@ -183,9 +183,17 @@ public class TaskService {
         }
         for (String id : ids) {
             Task task = taskMapper.selectByPrimaryKey(id);
-            if (task != null && task.getBareMetalId() != null){
-                if (!rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()))) {
-                    return false;
+            if (task != null && task.getBareMetalId() != null) {
+                if (StringUtils.isNotBlank(task.getInstanceId())) {
+                    if (rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()))) {
+                        task.setStatus(ServiceConstants.TaskStatusEnum.cancelled.name());
+                        taskMapper.updateByPrimaryKey(task);
+                    } else {
+                        return false;
+                    }
+                } else {
+                    task.setStatus(ServiceConstants.TaskStatusEnum.cancelled.name());
+                    taskMapper.updateByPrimaryKey(task);
                 }
             }
         }
