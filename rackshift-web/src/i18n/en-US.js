@@ -433,5 +433,6 @@ export default {
     "confirm_to_del_endpoint": "Deleting node will delete all resources under the node at the same time. Confirm deletion?",
     "Centos 64位": "CentOS 64 Bit Version",
     "RedHat 64位": "RedHat 64 Bit Version",
-    "network_error": "Network Error，Please Check it out~"
+    "network_error": "Network Error，Please Check it out~",
+    "cancelled": "cancelled"
 }

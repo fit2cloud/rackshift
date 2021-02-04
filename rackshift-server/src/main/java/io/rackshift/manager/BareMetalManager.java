@@ -14,6 +14,8 @@ import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.LogUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -42,6 +44,8 @@ public class BareMetalManager {
     private IPMIHandlerDecorator ipmiHandlerDecorator;
     @Resource
     private StateMachine stateMachine;
+    @Autowired
+    private SimpMessagingTemplate template;
 
     public BareMetal getBareMetalBySn(String sn) {
         if (StringUtils.isBlank(sn)) {
@@ -85,6 +89,9 @@ public class BareMetalManager {
         }
         BeanUtils.copyBean(oldBareMetal, bareMetal);
         bareMetalMapper.updateByPrimaryKeySelective(oldBareMetal);
+        if (changeStatus) {
+            template.convertAndSend("/topic/lifecycle", "");
+        }
     }
 
     public BareMetal saveOrUpdateEntity(MachineEntity e) {

@@ -215,6 +215,10 @@ export default {
   methods: {
     cancel() {
       let ids = this.getSelectedIds();
+      if (!ids.length) {
+        this.$message.error(this.$t('pls_select_') + this.$t('Task') + "!");
+        return;
+      }
       HttpUtil.post("/task/cancel", ids, (res) => {
         if (res.success) {
           this.$message.success(this.$t('cancel_task_success'));
@@ -286,7 +290,7 @@ export default {
       HttpUtil.post("/task/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
         this.tableData = res.data.listObject;
         this.tableData.forEach(d => {
-          if (this.multipleSelection.contains(d.id)) {
+          if (_.contains(this.multipleSelection, d)) {
             this.$refs.multipleTable.toggleRowSelection(d, true);
           }
         })
