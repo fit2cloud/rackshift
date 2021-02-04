@@ -44,6 +44,7 @@ function setI18nLanguage(lang) {
     axios.defaults.headers.common['Accept-Language'] = lang;
     document.querySelector('html').setAttribute('lang', lang);
     localStorage.setItem("lang", lang);
+    //工作流如果选中需要刷新国际化
     bus.$emit('refresh_workflow');
     return lang;
 }

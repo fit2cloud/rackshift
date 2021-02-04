@@ -49,9 +49,7 @@
 
           <el-table-column prop="" :label="$t('opt')" align="left">
             <template slot-scope="scope">
-              <RSButton @click="handleEdit(scope.row, 'edit')" type="edit" :tip="$t('edit')"></RSButton>
-              <RSButton @click="handleEdit(scope.row, 'view')" type="view" :tip="$t('execute_instruction')"></RSButton>
-              <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
+              <RSButton @click="handleEdit(scope.row, 'view')" type="run" :tip="$t('execute_instruction')"></RSButton>
             </template>
           </el-table-column>
         </el-table>

@@ -29,29 +29,31 @@ export default {
   },
   computed: {
     typeClass() {
-      if (this.type == "edit") {
-        return "el-button";
-      } else if (this.type == "del") {
-        return "el-button--danger";
-      } else if (this.type == "sync") {
-        return "el-button--success";
-      } else {
-        return "el-button";
+      switch (this.type) {
+        case "edit":
+          return "el-button";
+        case "del":
+          return "el-button--danger";
+        case "sync":
+          return "el-button--success";
+        default :
+          return "el-button";
       }
     },
     icon() {
-      if (this.type == "edit") {
-        return "el-icon-edit";
-      } else if (this.type == "del") {
-        return "el-icon-delete";
-      } else if (this.type == "add") {
-        return "el-icon-plus";
-      } else if (this.type == "sync") {
-        return "el-icon-refresh";
-      } else if (this.type == "view") {
-        return "el-icon-view";
-      } else if (this.type == "run") {
-        return "el-icon-caret-right";
+      switch (this.type) {
+        case "edit":
+          return "el-icon-edit";
+        case "del":
+          return "el-icon-delete";
+        case "sync":
+          return "el-icon-refresh";
+        case "view":
+          return "el-icon-view";
+        case "run":
+          return "el-icon-caret-right";
+        default :
+          return "";
       }
     }
   },

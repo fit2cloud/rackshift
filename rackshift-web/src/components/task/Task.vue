@@ -210,11 +210,7 @@ export default {
     }
   },
   mounted() {
-    // if (!this.websocket) {
-    //   this.websocket = new WebSocketUtil();
-    //   this.websocket.openSocket('taskLifecycle', this.notify);
-    //   this.getData();
-    // }
+    this.getData();
   },
   methods: {
     cancel() {
