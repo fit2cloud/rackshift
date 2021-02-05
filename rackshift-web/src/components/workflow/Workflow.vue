@@ -41,9 +41,7 @@
 
           <el-table-column prop="eventType" :label="$t('event_type')" align="left">
             <template slot-scope="scope">
-              <!--              <el-tooltip class="item" effect="dark" :content="i18n(scope.row.eventType)" placement="right-end">-->
               <span class="rs-nowrap">{{ scope.row.eventType | eventFormat }}</span>
-              <!--              </el-tooltip>-->
             </template>
           </el-table-column>
 
@@ -220,8 +218,7 @@ export default {
       columns: [
         {
           label: this.$t('type'),
-          prop: "type",
-          sort: true
+          prop: "type"
         }
       ],
       editDialogVisible: false,

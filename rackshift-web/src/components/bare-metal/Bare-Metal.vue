@@ -567,6 +567,7 @@ import PowerStatus from '../../common/powerstatus/Power-Status'
 import axios from 'axios'
 import {getIPRange} from 'get-ip-range'
 import bus from '../../common/bus/bus'
+import parmaMap from '../../rackparams/params'
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -942,8 +943,8 @@ export default {
     },
     editWfParams(index) {
       this.editWorkflowIndex = index;
-      this.createWorkflowParamComponent(this.selectedWorkflow[index]);
-      this.currentWfParamTemplate = this.selectedWorkflow[index].componentId;
+      // this.createWorkflowParamComponent(this.selectedWorkflow[index]);
+      this.currentWfParamTemplate = parmaMap[this.selectedWorkflow[index].workflowName];
       this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.$t(this.selectedWorkflow[index].friendlyName) + " " + this.$t('param_config');
       this.fillWfParams = true;
     },
@@ -1301,6 +1302,10 @@ export default {
       })
     }
     ,
+    /**
+     * 异步方式会因为有时网络问题加载不出来导致显示出 bug 的问题
+     * @param workflowParam
+     */
     createWorkflowParamComponent(workflowParam) {
       //动态异步
       if (!this.paramComponent[workflowParam.componentId]) {
@@ -1368,8 +1373,6 @@ export default {
     }
     ,
     deleteSelectedWorkflow(index) {
-      if (this.$refs.currentWfParamTemplate)
-        this.$refs.currentWfParamTemplate.$destroy(true);
       this.selectedWorkflow.splice(index, 1);
     }
     ,
