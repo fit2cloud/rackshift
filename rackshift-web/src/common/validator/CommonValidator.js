@@ -1,3 +1,5 @@
+import {checkMask} from "@/common/utils/CommonUtil";
+
 function requiredValidator(rule, value, callback) {
     if (value === '' || !value) {
         if (rule.field == "userName") {
@@ -15,7 +17,7 @@ function requiredValidator(rule, value, callback) {
     callback();
 }
 
-var emailReg =  /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+var emailReg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 var phoneReg = /^((0\d{2,3}-\d{7,8})|(1[3456789]\d{9}))$/;
 
 function emailValidator(rule, value, callback) {
@@ -97,6 +99,20 @@ function ipValidator(rule, value, callback) {
     callback();
 }
 
+function maskValidator(rule, value, callback) {
+    if (value === '' || !value) {
+        callback(new Error(rule.vue.$t('cannt_be_null')));
+    }
+    if (!/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value)) {
+        callback(new Error(rule.vue.$t('ip_invalid_format')));
+    }
+
+    if (!checkMask(value)) {
+        callback(new Error(rule.vue.$t('netmask_validate_error')));
+    }
+    callback();
+}
+
 export {
-    requiredValidator, hostnameValidator, ipValidator, requiredSelectValidator, emailValidator, phoneValidator
+    requiredValidator, hostnameValidator, ipValidator, requiredSelectValidator, emailValidator, phoneValidator, maskValidator
 }

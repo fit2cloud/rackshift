@@ -88,9 +88,9 @@ public class DiscoveryService {
             return false;
         }
         BareMetalRule rule = bareMetalRuleMapper.selectByPrimaryKey(id);
-        if (ServiceConstants.DiscoveryStatusEnum.PENDING.name().equalsIgnoreCase(rule.getSyncStatus())) {
-            return false;
-        }
+//        if (ServiceConstants.DiscoveryStatusEnum.PENDING.name().equalsIgnoreCase(rule.getSyncStatus())) {
+//            return false;
+//        }
         rule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.PENDING.name());
         bareMetalRuleMapper.updateByPrimaryKey(rule);
         new Thread(new DiscoveryTask(rule, bareMetalRuleMapper, bareMetalManager, template, metalProviderManager, outBandService)).start();

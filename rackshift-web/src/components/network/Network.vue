@@ -149,7 +149,8 @@
 <script>
 
 import HttpUtil from "../../common/utils/HttpUtil"
-import {ipValidator, requiredSelectValidator} from "@/common/validator/CommonValidator";
+import {ipValidator, requiredSelectValidator, maskValidator} from "@/common/validator/CommonValidator";
+import {checkMask} from "@/common/utils/CommonUtil";
 
 let _ = require('lodash');
 export default {
@@ -167,7 +168,7 @@ export default {
           {validator: ipValidator, trigger: 'blur', vue: this},
         ],
         netmask: [
-          {validator: ipValidator, trigger: 'blur', vue: this},
+          {validator: maskValidator, trigger: 'blur', vue: this},
         ],
       },
       query: {
@@ -266,6 +267,10 @@ export default {
       });
       if (!this.validateResult) {
         this.$message.error(this.$t('validate_error'));
+        return;
+      }
+      if (!checkMask(this.editObj.netmask)) {
+        this.$message.error(this.$t('netmask_validate_error'));
         return;
       }
       this.loading = true;

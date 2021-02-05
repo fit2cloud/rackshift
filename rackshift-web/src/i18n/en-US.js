@@ -434,5 +434,6 @@ export default {
     "Centos 64位": "CentOS 64 Bit Version",
     "RedHat 64位": "RedHat 64 Bit Version",
     "network_error": "Network Error，Please Check it out~",
-    "cancelled": "cancelled"
+    "cancelled": "cancelled",
+    "netmask_validate_error": "Netmask is illegal!",
 }

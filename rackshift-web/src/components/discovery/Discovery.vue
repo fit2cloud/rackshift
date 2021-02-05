@@ -153,9 +153,11 @@
 <script>
 
 import HttpUtil from "../../common/utils/HttpUtil"
-import {ipValidator, requiredValidator} from "@/common/validator/CommonValidator";
+import {ipValidator, requiredValidator, maskValidator} from "@/common/validator/CommonValidator";
 import Devices from "../discovery-devices/Discovery-devices"
 import {WebSocketUtil} from "@/common/utils/WebSocket";
+import {checkMask} from "@/common/utils/CommonUtil";
+
 
 let _ = require('lodash');
 export default {
@@ -206,7 +208,7 @@ export default {
           {validator: ipValidator, trigger: 'blur', vue: this},
         ],
         mask: [
-          {validator: ipValidator, trigger: 'blur', vue: this},
+          {validator: maskValidator, trigger: 'blur', vue: this},
         ],
       },
       protocolRules: {
@@ -378,9 +380,13 @@ export default {
         this.$message.error(this.$t('validate_error'));
         return;
       }
-      this.loading = true;
       let param = JSON.parse(JSON.stringify(this.editObj));
+      if (!checkMask(param.mask)) {
+        this.$message.error(this.$t('netmask_validate_error'));
+        return;
+      }
       param.credentialParam = JSON.stringify(this.editObj.credentialParam);
+      this.loading = true;
       if (this.editType == 'edit') {
         HttpUtil.post("/discovery/update", param, (res) => {
           this.editDialogVisible = false;

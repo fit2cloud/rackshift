@@ -36,4 +36,15 @@ function toLine(name) {
     return name.replace(/([A-Z])/g, "_$1").toLowerCase();
 }
 
-export {isAnyBlank, isAnyPropertyBlank, toLine, toHump}
+function checkMask(mask) {
+    var obj = mask;
+    var exp = /^(254|252|248|240|224|192|128|0)\.0\.0\.0|255\.(254|252|248|240|224|192|128|0)\.0\.0|255\.255\.(254|252|248|240|224|192|128|0)\.0|255\.255\.255\.(254|252|248|240|224|192|128|0)$/;
+    var reg = obj.match(exp);
+    if (reg == null) {
+        return false; //"非法"
+    } else {
+        return true; //"合法"
+    }
+}
+
+export {isAnyBlank, isAnyPropertyBlank, toLine, toHump, checkMask}

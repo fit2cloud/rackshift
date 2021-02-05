@@ -438,5 +438,7 @@ export default {
     "Centos 64位": "CentOS 64位",
     "RedHat 64位": "RedHat 64位",
     "network_error": "网络错误，请检查网络~",
-    "cancelled": "已取消"
+    "cancelled": "已取消",
+    "netmask_validate_error": "子网掩码不合法！",
+
 }
