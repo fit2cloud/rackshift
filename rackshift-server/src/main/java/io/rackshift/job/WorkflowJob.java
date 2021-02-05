@@ -12,6 +12,7 @@ import io.rackshift.service.EndpointService;
 import io.rackshift.service.RackHDService;
 import io.rackshift.strategy.statemachine.LifeEvent;
 import io.rackshift.strategy.statemachine.LifeEventType;
+import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.strategy.statemachine.StateMachine;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.ExceptionUtils;
@@ -21,6 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,6 +42,10 @@ public class WorkflowJob {
     private StateMachine stateMachine;
     @Resource
     private ExecutionLogDetailsMapper executionLogDetailsMapper;
+    private List<String> runingStatus = new ArrayList<String>() {{
+        add(LifeStatus.provisioning.name());
+        add(LifeStatus.deploying.name());
+    }};
 
     /**
      * 任务执行
@@ -54,11 +60,34 @@ public class WorkflowJob {
         try {
             updateRunningTask();
             runCreatedTask();
+            checkNoTaskBareMetal();
         } catch (Exception e) {
             LogUtil.error("执行任务失败！", ExceptionUtils.getExceptionDetail(e));
             return false;
         }
         return true;
+    }
+
+    /**
+     * provisioning("provisioning"),//执行工作流任务中
+     * deploying("deploying"),//安装
+     * 这两种状态的机器有可能在服务重启后未能及时更新到终态
+     */
+
+    private void checkNoTaskBareMetal() {
+        BareMetalExample e = new BareMetalExample();
+        e.createCriteria().andStatusIn(runingStatus);
+        List<BareMetal> bareMetals = bareMetalMapper.selectByExample(e);
+        for (BareMetal bareMetal : bareMetals) {
+            TaskExample te = new TaskExample();
+            te.createCriteria().andBareMetalIdEqualTo(bareMetal.getId()).andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
+            List<Task> tasks = taskMapper.selectByExample(te);
+            if (tasks.size() == 0) {
+                //说明任务已经结束了 该机器还未到终态 一律回归 ready 状态
+                bareMetal.setStatus(LifeStatus.ready.name());
+                bareMetalMapper.updateByPrimaryKey(bareMetal);
+            }
+        }
     }
 
     private void runCreatedTask() {
