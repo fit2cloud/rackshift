@@ -20,13 +20,20 @@
             header-cell-class-name="table-header"
             style="width: 100%"
             @selection-change="handleSelectionChange"
+
+            type=selection
+            :reserve-selection="true"
+            :row-key="row => row.id"
+            highlight-current-row
         >
-          <el-table-column type="selection" align="left"></el-table-column>
+          <el-table-column type="selection" :reserve-selection="true" align="left"></el-table-column>
 
 
           <el-table-column prop="id" :label="$t('id')" align="left" :sortable="true">
             <template slot-scope="scope">
-              <span class="rs-nowrap">{{ scope.row.id }}</span>
+              <el-tooltip class="item" effect="dark" :content="scope.row.id" placement="right-end">
+                <span class="rs-nowrap">{{ scope.row.id }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
 
@@ -289,11 +296,6 @@ export default {
     getDataNoLoading(callback) {
       HttpUtil.post("/task/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
         this.tableData = res.data.listObject;
-        this.tableData.forEach(d => {
-          if (_.includes(this.multipleSelection, d)) {
-            this.$refs.multipleTable.toggleRowSelection(d, true);
-          }
-        })
         this.pageTotal = res.data.itemCount;
         let that = this;
         if (!_.find(res.data.listObject, (o) => o.status == 'running' || o.status == 'created')) {
@@ -301,6 +303,7 @@ export default {
             clearInterval(that.refreshTaskPointer);
           }
         }
+
         if (callback) {
           callback();
         }

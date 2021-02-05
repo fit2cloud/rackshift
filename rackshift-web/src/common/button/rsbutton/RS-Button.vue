@@ -52,6 +52,8 @@ export default {
           return "el-icon-view";
         case "run":
           return "el-icon-caret-right";
+        case "add":
+          return "el-icon-plus";
         default :
           return "";
       }
