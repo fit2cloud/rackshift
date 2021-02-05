@@ -290,7 +290,7 @@ export default {
       HttpUtil.post("/task/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
         this.tableData = res.data.listObject;
         this.tableData.forEach(d => {
-          if (_.contains(this.multipleSelection, d)) {
+          if (_.includes(this.multipleSelection, d)) {
             this.$refs.multipleTable.toggleRowSelection(d, true);
           }
         })
