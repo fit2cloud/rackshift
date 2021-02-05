@@ -188,7 +188,6 @@ public class NetworkService {
                     n1.setStartIp(network.getStartIp());
                     n1.setEndIp(network.getEndIp());
                     n1.setNetmask(network.getNetmask());
-                    n1.setName(network.getName());
                     n1.setEndpointId(network.getEndpointId());
                     networkMapper.updateByPrimaryKeySelective(n1);
                     oldIds.remove(n1.getId());

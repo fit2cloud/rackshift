@@ -149,7 +149,12 @@
 <script>
 
 import HttpUtil from "../../common/utils/HttpUtil"
-import {ipValidator, requiredSelectValidator, maskValidator} from "@/common/validator/CommonValidator";
+import {
+  ipValidator,
+  requiredSelectValidator,
+  maskValidator,
+  requiredValidator
+} from "@/common/validator/CommonValidator";
 import {checkMask} from "@/common/utils/CommonUtil";
 
 let _ = require('lodash');
@@ -158,6 +163,9 @@ export default {
     return {
       activeName: 'network',
       rules: {
+        name: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
         endpointId: [
           {validator: requiredSelectValidator, trigger: 'blur', vue: this},
         ],
@@ -278,7 +286,7 @@ export default {
         HttpUtil.post("/network/update", this.editObj, (res) => {
           this.editDialogVisible = false;
           if (res.success) {
-            this.$message.success(this.$t('add_success'));
+            this.$message.success(this.$t('edit_success'));
             this.getData();
           } else {
             this.$message.error(this.$t('opt_fail'));

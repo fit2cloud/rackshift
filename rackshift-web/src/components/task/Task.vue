@@ -140,7 +140,6 @@
 
 import HttpUtil from "../../common/utils/HttpUtil"
 import {ipValidator, requiredValidator} from "@/common/validator/CommonValidator";
-import {WebSocketUtil} from "@/common/utils/WebSocket";
 
 let _ = require('lodash');
 export default {
