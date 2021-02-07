@@ -183,7 +183,7 @@
 
                   <el-table-column prop="content" :label="$t('output')" align="left">
                     <template slot-scope="scope">
-                      {{ scope.row.content }}
+                      <div v-html="scope.row.content"></div>
                     </template>
                   </el-table-column>
 
@@ -399,6 +399,9 @@ export default {
     getLogs() {
       this.loadingLogList = true;
       HttpUtil.post("instruction/logs?id=" + this.editObj.id, this.logQueryVO, (res) => {
+        _.map(res.data, (l) => {
+          l.content = l.content.replaceAll("\n", "</br>");
+        })
         this.logs = res.data;
         this.loadingLogList = false;
       })
