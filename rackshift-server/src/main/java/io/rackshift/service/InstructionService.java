@@ -87,10 +87,14 @@ public class InstructionService {
         return instructionMapper.selectByPrimaryKey(taskId);
     }
 
-    public Object logs(String id) {
+    public Object logs(String id, InstructionDTO instructionDTO) {
         InstructionLogExample e = new InstructionLogExample();
         e.createCriteria().andInstructionIdEqualTo(id);
-        e.setOrderByClause("create_time asc");
+        if (StringUtils.isNotBlank(instructionDTO.getSort())) {
+            e.setOrderByClause(instructionDTO.getSort());
+        } else {
+            e.setOrderByClause("create_time asc");
+        }
         return instructionLogMapper.selectByExampleWithBLOBs(e);
     }
 

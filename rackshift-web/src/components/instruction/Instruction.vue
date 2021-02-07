@@ -170,11 +170,12 @@
                     header-cell-class-name="table-header"
                     style="width: 100%"
                     v-if="logs.length"
+                    @sort-change="logSortChange($event)"
                     @selection-change="handleLogSelectionChange"
                 >
                   <el-table-column type="selection" align="left"></el-table-column>
                   <el-table-column prop="createTime" :label="$t('create_time')" align="left"
-                                   :sortable="true">
+                                   sortable="custom">
                     <template slot-scope="scope">
                       {{ scope.row.createTime | dateFormat }}
                     </template>
@@ -211,6 +212,7 @@
 <script>import HttpUtil from "../../common/utils/HttpUtil"
 import {requiredValidator} from "@/common/validator/CommonValidator";
 import PowerStatus from "@/common/powerstatus/Power-Status";
+import {humpToLine} from "@/common/utils/CommonUtil";
 
 let _ = require('lodash');
 export default {
@@ -271,6 +273,9 @@ export default {
         pageSize: 10
       },
       queryVO: {
+        searchKey: null
+      },
+      logQueryVO: {
         searchKey: null
       },
       tableData: [],
@@ -344,6 +349,15 @@ export default {
       this.getBareMetalData();
     }
     ,
+    logSortChange(val) {
+      if (val.order) {
+        this.logQueryVO.sort = humpToLine(val.prop) + " " + val.order.replace("ending", "");
+      } else {
+        delete this.logQueryVO.sort;
+      }
+      this.getLogs();
+    }
+    ,
     statusFilter(row) {
       if (row.status.indexOf("ing") == -1) {
         if (row.serverId)
@@ -386,7 +400,7 @@ export default {
     },
     getLogs() {
       this.loadingLogList = true;
-      HttpUtil.get("instruction/logs?id=" + this.editObj.id, null, (res) => {
+      HttpUtil.post("instruction/logs?id=" + this.editObj.id, this.logQueryVO, (res) => {
         this.logs = res.data;
         this.loadingLogList = false;
       })

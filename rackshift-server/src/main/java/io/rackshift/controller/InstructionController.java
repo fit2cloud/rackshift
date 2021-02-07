@@ -57,8 +57,8 @@ public class InstructionController {
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @RequestMapping("logs")
-    public ResultHolder logs(@RequestParam String id) {
-        return ResultHolder.success(instructionService.logs(id));
+    public ResultHolder logs(@RequestParam String id, @RequestBody InstructionDTO instructionDTO) {
+        return ResultHolder.success(instructionService.logs(id, instructionDTO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
