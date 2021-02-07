@@ -49,7 +49,7 @@ RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖�
 ## 技术栈
 
 - 前端: [Vue.js](https://vuejs.org/)
-- 后端: [Spring Boot](https://www.tutorialspoint.com/spring_boot/spring_boot_introduction.htm)s
+- 后端: [Spring Boot](https://www.tutorialspoint.com/spring_boot/spring_boot_introduction.htm)
 - 数据库: [MySQL](https://www.mysql.com/)
 
 ## 快速开始
@@ -70,7 +70,7 @@ curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_
 ## 微信群
 
 
-![runnob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-21-02-01.png)
+![runnob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-21-02-07.png)
 如果看不到图片请先加入 QQ 群（693376431）或者打开帮助文档页面扫描加入
 - [二维码](http://149.129.105.194:8081/about/)
 
