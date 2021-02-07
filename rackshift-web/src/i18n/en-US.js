@@ -319,6 +319,7 @@ export default {
     "i18n_zu": "Group",
     "i18n_raid60_must_be_2n": "raid60 the number of disk must be multiples of the number two！",
     "i18n_di": "第",
+    "i18n_raid1_must_be_2": "Inspur raid1 the number of disk must be two！",
     "i18n_raid1_must_be_2n": "raid1 the number of disk must be multiples of the number two！",
     "i18n_raid10_must_be_2n": "raid10 the number of disk must be multiples of the number two！",
     "i18n_raid50_must_be_2n": "raid50 the number of disk must be multiples of the number two！",

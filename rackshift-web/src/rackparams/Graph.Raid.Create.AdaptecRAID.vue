@@ -145,7 +145,7 @@ export default {
         switch (raidType) {
           case "raid1":
             if (raidDisk.length != 2) {
-              this.$message.error(this.$t('i18n_di') + (i + 1) + this.$t('i18n_zu') + this.$t('i18n_raid1_must_be_2n'));
+              this.$message.error(this.$t('i18n_di') + (i + 1) + this.$t('i18n_zu') + this.$t('i18n_raid1_must_be_2'));
               return false;
             }
             break;

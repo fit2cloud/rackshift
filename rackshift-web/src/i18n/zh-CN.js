@@ -321,6 +321,7 @@ export default {
     "i18n_zu": "组",
     "i18n_raid60_must_be_2n": "raid60磁盘数必须是2的倍数！",
     "i18n_di": "第",
+    "i18n_raid1_must_be_2": "浪潮机器 raid1 只能是2块磁盘！",
     "i18n_raid1_must_be_2n": "raid1只能是2块或者2n块磁盘！",
     "i18n_raid10_must_be_2n": "raid10磁盘数必须是2的倍数！",
     "i18n_raid50_must_be_2n": "raid50磁盘数必须是2的倍数！",
