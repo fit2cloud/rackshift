@@ -20,7 +20,7 @@
             header-cell-class-name="table-header"
             style="width: 100%"
             @selection-change="handleSelectionChange"
-
+            @sort-change="sortChange($event)"
             type=selection
             :reserve-selection="true"
             :row-key="row => row.id"
@@ -29,7 +29,7 @@
           <el-table-column type="selection" :reserve-selection="true" align="left"></el-table-column>
 
 
-          <el-table-column prop="id" :label="$t('id')" align="left" :sortable="true">
+          <el-table-column prop="id" :label="$t('id')" align="left" :sortable="custom">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.id" placement="right-end">
                 <span class="rs-nowrap">{{ scope.row.id }}</span>
@@ -37,25 +37,25 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="machineModel" :label="$t('Bare Metal Server')" align="left" :sortable="true">
+          <el-table-column prop="machineModel" :label="$t('Bare Metal Server')" align="left" sortable="custom">
             <template slot-scope="scope">
               <span class="rs-nowrap">{{ scope.row.machineModel }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column prop="machineSn" :label="$t('machine_sn')" align="left" :sortable="true">
+          <el-table-column prop="machineSn" :label="$t('machine_sn')" align="left" sortable="custom">
             <template slot-scope="scope">
               <span class="rs-nowrap">{{ scope.row.machineSn }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column prop="friendlyName" :label="$t('Workflow')" align="left" :sortable="true" width="210">
+          <el-table-column prop="friendlyName" :label="$t('Workflow')" align="left" sortable="custom" width="210">
             <template slot-scope="scope">
               <span class="rs-nowrap">{{ $t(scope.row.friendlyName) }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column prop="userId" :label="$t('user')" align="left" :sortable="true">
+          <el-table-column prop="userId" :label="$t('user')" align="left" sortable="custom">
           </el-table-column>
 
           <el-table-column prop="status" :label="$t('status')" align="left">
@@ -68,7 +68,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="createTime" :label="$t('create_time')" align="left" :sortable="true">
+          <el-table-column prop="createTime" :label="$t('create_time')" align="left" sortable="custom">
             <template slot-scope="scope">
               <span class="rs-nowrap">{{ scope.row.createTime | dateFormat }}</span>
             </template>
@@ -140,6 +140,7 @@
 
 import HttpUtil from "../../common/utils/HttpUtil"
 import {ipValidator, requiredValidator} from "@/common/validator/CommonValidator";
+import {humpToLine} from "@/common/utils/CommonUtil"
 
 let _ = require('lodash');
 export default {
@@ -219,6 +220,14 @@ export default {
     this.getData();
   },
   methods: {
+    sortChange(val) {
+      if (val.order) {
+        this.queryVO.sort = humpToLine(val.prop) + " " + val.order.replace("ending", "");
+      } else {
+        delete this.queryVO.sort;
+      }
+      this.getData();
+    },
     cancel() {
       let ids = this.getSelectedIds();
       if (!ids.length) {

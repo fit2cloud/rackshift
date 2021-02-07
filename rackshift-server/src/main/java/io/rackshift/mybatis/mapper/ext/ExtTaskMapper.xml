@@ -48,7 +48,12 @@
                 or bare_metal.ip_array like concat('%',#{searchKey},'%')
             </if>
         </where>
-        order by task.create_time desc
+        <if test="sort != null and sort != ''">
+            order by ${sort}
+        </if>
+        <if test="sort == null or sort == ''">
+            order by task.create_time desc
+        </if>
     </select>
 
 </mapper>

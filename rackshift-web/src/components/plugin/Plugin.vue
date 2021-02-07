@@ -17,31 +17,31 @@
         >
           <el-table-column type="selection" align="left"></el-table-column>
 
-          <el-table-column prop="name" :label="$t('name')" align="left" :sortable="true">
+          <el-table-column prop="name" :label="$t('name')" align="left">
             <template slot-scope="scope">
               <span class="rs-nowrap">{{ scope.row.name }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column prop="platform" :label="$t('platform')" align="left" :sortable="true" width="210">
+          <el-table-column prop="platform" :label="$t('platform')" align="left" width="210">
             <template slot-scope="scope">
               <span class="rs-nowrap">{{ scope.row.platform }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column prop="image" :label="$t('image')" align="left" :sortable="true" width="210">
+          <el-table-column prop="image" :label="$t('image')" align="left" width="210">
             <template slot-scope="scope">
               <span class="rs-nowrap">{{ scope.row.image }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column prop="platform" :label="$t('base_instruction')" align="left" :sortable="true" width="210">
+          <el-table-column prop="platform" :label="$t('base_instruction')" align="left" width="210">
             <template slot-scope="scope">
               <span class="rs-nowrap">{{ scope.row.baseInstruction }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column prop="createTime" :label="$t('create_time')" align="left" :sortable="true">
+          <el-table-column prop="createTime" :label="$t('create_time')" align="left">
             <template slot-scope="scope">
               <span class="rs-nowrap">{{ scope.row.createTime | dateFormat }}</span>
             </template>
@@ -155,7 +155,7 @@ export default {
         {
           label: 'machine_sn',
           prop: "machineSn",
-          sort: true
+          sort: false
         }
       ],
       editDialogVisible: false,

@@ -32,7 +32,7 @@ function toHump(name) {
 }
 
 // 驼峰转换下划线
-function toLine(name) {
+function humpToLine(name) {
     return name.replace(/([A-Z])/g, "_$1").toLowerCase();
 }
 
@@ -47,4 +47,4 @@ function checkMask(mask) {
     }
 }
 
-export {isAnyBlank, isAnyPropertyBlank, toLine, toHump, checkMask}
+export {isAnyBlank, isAnyPropertyBlank, humpToLine, toHump, checkMask}

@@ -174,14 +174,13 @@
                 >
                   <el-table-column type="selection" align="left"></el-table-column>
                   <el-table-column prop="createTime" :label="$t('create_time')" align="left"
-                                   sortable="custom">
+                                   :sortable="true">
                     <template slot-scope="scope">
                       {{ scope.row.createTime | dateFormat }}
                     </template>
                   </el-table-column>
 
-                  <el-table-column prop="content" :label="$t('output')" align="left"
-                                   sortable="custom">
+                  <el-table-column prop="content" :label="$t('output')" align="left">
                     <template slot-scope="scope">
                       {{ scope.row.content }}
                     </template>
@@ -292,12 +291,12 @@ export default {
         {
           label: 'name',
           prop: "name",
-          sort: true
+          sort: false
         },
         {
           label: 'instruction_content',
           prop: "content",
-          sort: true
+          sort: false
         },
       ],
       baremetalColumns: [
@@ -336,6 +335,15 @@ export default {
     }
   },
   methods: {
+    sortChange(val) {
+      if (val.order) {
+        this.queryVO.sort = val.prop + " " + val.order.replace("ending", "");
+      } else {
+        delete this.queryVO.sort;
+      }
+      this.getBareMetalData();
+    }
+    ,
     statusFilter(row) {
       if (row.status.indexOf("ing") == -1) {
         if (row.serverId)

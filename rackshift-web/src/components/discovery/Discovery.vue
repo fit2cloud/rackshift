@@ -27,11 +27,12 @@
           v-loading="loadingList"
           header-cell-class-name="table-header"
           style="width: 100%"
+          @sort-change="sortChange($event)"
           @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" align="left"></el-table-column>
 
-        <el-table-column :prop="c.prop" :label="$t(c.label)" align="left"
+        <el-table-column :prop="c.dbProp" :label="$t(c.label)" align="left"
                          v-for="c in columns" :sortable="c.sort"></el-table-column>
         <el-table-column prop="syncStatus" :label="$t('sync_status')" align="left">
           <template slot-scope="scope">
@@ -156,7 +157,7 @@ import HttpUtil from "../../common/utils/HttpUtil"
 import {ipValidator, requiredValidator, maskValidator} from "@/common/validator/CommonValidator";
 import Devices from "../discovery-devices/Discovery-devices"
 import {WebSocketUtil} from "@/common/utils/WebSocket";
-import {checkMask} from "@/common/utils/CommonUtil";
+import {checkMask, humpToLine} from "@/common/utils/CommonUtil";
 
 
 let _ = require('lodash');
@@ -225,6 +226,9 @@ export default {
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
       },
+      queryVO: {
+        searchKey: null
+      },
       query: {
         name: '',
         pageIndex: 1,
@@ -244,23 +248,27 @@ export default {
         {
           label: 'name',
           prop: "name",
-          sort: true
+          dbProp: "name",
+          sort: false
         },
         {
           label: 'start_ip',
-          prop: "startIp",
-          sort: true
+          prop: "start_ip",
+          dbProp: "startIp",
+          sort: false
         },
         {
           label: 'end_ip',
-          prop: "endIp",
-          sort: true
+          prop: "end_ip",
+          dbProp: "endIp",
+          sort: false
         },
         {
           label: 'mask',
           prop: "mask",
-          sort: true
+          dbProp: "mask",
         },
+
       ],
       editDialogVisible: false,
       editType: 'edit',
@@ -294,6 +302,14 @@ export default {
     }
   },
   methods: {
+    sortChange(val) {
+      if (val.order) {
+        this.queryVO.sort = humpToLine(val.prop) + " " + val.order.replace("ending", "");
+      } else {
+        delete this.queryVO.sort;
+      }
+      this.getData();
+    },
     notify(msg) {
       this.getData();
       this.$notify({
@@ -335,7 +351,7 @@ export default {
     // 获取 easy-mock 的模拟数据
     getData() {
       this.loadingList = true;
-      HttpUtil.post("/discovery/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
+      HttpUtil.post("/discovery/list/" + this.query.pageIndex + "/" + this.query.pageSize, this.queryVO, (res) => {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
         this.loadingList = false;

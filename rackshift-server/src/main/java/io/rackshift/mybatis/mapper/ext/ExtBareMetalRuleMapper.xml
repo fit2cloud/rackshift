@@ -3,12 +3,18 @@
 <mapper namespace="io.rackshift.mybatis.mapper.ext.ExtBareMetalRuleMapper">
     <select id="list" parameterType="io.rackshift.model.BareMetalRuleVO"
             resultType="io.rackshift.model.BareMetalRuleDTO">
-       select
-       bmr.*,
-       count(bm.id) number
-       from bare_metal_rule bmr
-       left join bare_metal bm on bmr.id = bm.rule_id
-       group by bmr.id
+        select * from
+        (
+        select
+        bmr.*,
+        count(bm.id) number
+        from bare_metal_rule bmr
+        left join bare_metal bm on bmr.id = bm.rule_id
+        group by bmr.id
+        ) a
+        <if test="sort != null and sort != ''">
+            order by #{sort}
+        </if>
     </select>
 
 </mapper>
