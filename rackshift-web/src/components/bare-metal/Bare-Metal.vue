@@ -868,10 +868,12 @@ export default {
     },
     notify(msg) {
       this.getData();
-      this.$notify({
-        title: this.$t('server_message'),
-        message: msg,
-      });
+      if (msg != "") {
+        this.$notify({
+          title: this.$t('server_message'),
+          message: msg,
+        });
+      }
     },
     queryByRuleId(e) {
       if (e) {

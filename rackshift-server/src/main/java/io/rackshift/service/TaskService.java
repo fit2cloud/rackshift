@@ -17,6 +17,8 @@ import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.SessionUtil;
 import io.rackshift.utils.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -42,6 +44,8 @@ public class TaskService {
     private ExecutionLogDetailsMapper executionLogDetailsMapper;
     @Resource
     private EndpointService endpointService;
+    @Autowired
+    private SimpMessagingTemplate template;
 
     public Object add(TaskDTO queryVO) {
         TaskWithBLOBs task = new TaskWithBLOBs();
@@ -188,12 +192,14 @@ public class TaskService {
                     if (rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()))) {
                         task.setStatus(ServiceConstants.TaskStatusEnum.cancelled.name());
                         taskMapper.updateByPrimaryKey(task);
+                        template.convertAndSend("/topic/lifecycle", "");
                     } else {
                         return false;
                     }
                 } else {
                     task.setStatus(ServiceConstants.TaskStatusEnum.cancelled.name());
                     taskMapper.updateByPrimaryKey(task);
+                    template.convertAndSend("/topic/lifecycle", "");
                 }
             }
         }

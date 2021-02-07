@@ -18,6 +18,8 @@ import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.LogUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,8 @@ public class WorkflowJob {
     private RackHDService rackHDService;
     @Resource
     private StateMachine stateMachine;
+    @Autowired
+    private SimpMessagingTemplate template;
     @Resource
     private ExecutionLogDetailsMapper executionLogDetailsMapper;
     private List<String> runingStatus = new ArrayList<String>() {{
@@ -86,6 +90,7 @@ public class WorkflowJob {
                 //说明任务已经结束了 该机器还未到终态 一律回归 ready 状态
                 bareMetal.setStatus(LifeStatus.ready.name());
                 bareMetalMapper.updateByPrimaryKey(bareMetal);
+                template.convertAndSend("/topic/lifecycle", "");
             }
         }
     }

@@ -29,7 +29,7 @@
           <el-table-column type="selection" :reserve-selection="true" align="left"></el-table-column>
 
 
-          <el-table-column prop="id" :label="$t('id')" align="left" :sortable="custom">
+          <el-table-column prop="id" :label="$t('id')" align="left" sortable="custom">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :content="scope.row.id" placement="right-end">
                 <span class="rs-nowrap">{{ scope.row.id }}</span>

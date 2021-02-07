@@ -107,6 +107,7 @@ export default {
         localStorage.removeItem("login");
         window.location.href = "/";
         window.event.returnValue = false;
+        sessionStorage.removeItem("rsSocket");
       })
     },
     clicked: function (command) {
