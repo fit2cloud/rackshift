@@ -26,6 +26,7 @@ public class StateMachine {
     private TaskService taskService;
     private ConcurrentHashMap<LifeEventType, IStateHandler> handlerMap = new ConcurrentHashMap<>();
     private static List<String> endStatusList = new ArrayList<String>() {{
+        add(ServiceConstants.TaskStatusEnum.cancelled.name());
         add(ServiceConstants.TaskStatusEnum.failed.name());
         add(ServiceConstants.TaskStatusEnum.succeeded.name());
     }};
