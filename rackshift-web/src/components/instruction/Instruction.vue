@@ -174,7 +174,7 @@
                     @selection-change="handleLogSelectionChange"
                 >
                   <el-table-column type="selection" align="left"></el-table-column>
-                  <el-table-column prop="createTime" :label="$t('create_time')" align="left"
+                  <el-table-column prop="createTime" :label="$t('create_time')" align="left" width="151px"
                                    sortable="custom">
                     <template slot-scope="scope">
                       {{ scope.row.createTime | dateFormat }}
@@ -188,8 +188,6 @@
                   </el-table-column>
 
                 </el-table>
-
-                <span v-else class="mb10">{{ $t('no_more_logs') }}</span>
               </div>
 
             </el-col>

@@ -105,7 +105,7 @@ public class DockerClientService {
             ResultCallback.Adapter<Frame> rc = new ResultCallback.Adapter<Frame>() {
                 @Override
                 public void onNext(Frame item) {
-                    sb.append(item.toString());
+                    sb.append(item.toString()).append("\n");
                 }
             };
 
