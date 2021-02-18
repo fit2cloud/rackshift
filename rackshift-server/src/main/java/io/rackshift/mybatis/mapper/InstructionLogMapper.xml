@@ -5,6 +5,7 @@
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="instruction_id" jdbcType="VARCHAR" property="instructionId" />
     <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="bare_metal_id" jdbcType="VARCHAR" property="bareMetalId" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.InstructionLog">
     <result column="content" jdbcType="LONGVARCHAR" property="content" />
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, instruction_id, create_time
+    id, instruction_id, create_time, bare_metal_id
   </sql>
   <sql id="Blob_Column_List">
     content
@@ -123,9 +124,9 @@
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.InstructionLog">
     insert into instruction_log (id, instruction_id, create_time, 
-      content)
+      bare_metal_id, content)
     values (#{id,jdbcType=VARCHAR}, #{instructionId,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, 
-      #{content,jdbcType=LONGVARCHAR})
+      #{bareMetalId,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.InstructionLog">
     insert into instruction_log
@@ -138,6 +139,9 @@
       </if>
       <if test="createTime != null">
         create_time,
+      </if>
+      <if test="bareMetalId != null">
+        bare_metal_id,
       </if>
       <if test="content != null">
         content,
@@ -152,6 +156,9 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="bareMetalId != null">
+        #{bareMetalId,jdbcType=VARCHAR},
       </if>
       <if test="content != null">
         #{content,jdbcType=LONGVARCHAR},
@@ -176,6 +183,9 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=BIGINT},
       </if>
+      <if test="record.bareMetalId != null">
+        bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
+      </if>
       <if test="record.content != null">
         content = #{record.content,jdbcType=LONGVARCHAR},
       </if>
@@ -189,6 +199,7 @@
     set id = #{record.id,jdbcType=VARCHAR},
       instruction_id = #{record.instructionId,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=BIGINT},
+      bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
       content = #{record.content,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -198,7 +209,8 @@
     update instruction_log
     set id = #{record.id,jdbcType=VARCHAR},
       instruction_id = #{record.instructionId,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=BIGINT}
+      create_time = #{record.createTime,jdbcType=BIGINT},
+      bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -212,6 +224,9 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=BIGINT},
       </if>
+      <if test="bareMetalId != null">
+        bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
+      </if>
       <if test="content != null">
         content = #{content,jdbcType=LONGVARCHAR},
       </if>
@@ -222,13 +237,15 @@
     update instruction_log
     set instruction_id = #{instructionId,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT},
+      bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
       content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.InstructionLog">
     update instruction_log
     set instruction_id = #{instructionId,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=BIGINT}
+      create_time = #{createTime,jdbcType=BIGINT},
+      bare_metal_id = #{bareMetalId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

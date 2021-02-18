@@ -28,4 +28,6 @@ public interface BareMetalMapper {
     int updateByPrimaryKeySelective(BareMetal record);
 
     int updateByPrimaryKey(BareMetal record);
+
+    List<BareMetal> getByIds(String[] bareMetalIds);
 }

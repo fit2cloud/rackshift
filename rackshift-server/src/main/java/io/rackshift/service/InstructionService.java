@@ -1,9 +1,12 @@
 package io.rackshift.service;
 
+import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.InstructionDTO;
 import io.rackshift.mybatis.domain.*;
+import io.rackshift.mybatis.mapper.BareMetalMapper;
 import io.rackshift.mybatis.mapper.InstructionLogMapper;
 import io.rackshift.mybatis.mapper.InstructionMapper;
+import io.rackshift.mybatis.mapper.ext.ExtInstructionLogMapper;
 import io.rackshift.utils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -25,9 +28,13 @@ public class InstructionService {
     @Resource
     private PluginService pluginService;
     @Resource
-    private OutBandService outBandService;
+    private BareMetalManager bareMetalManager;
     @Resource
     private DockerClientService dockerClientService;
+    @Resource
+    private OutBandService outBandService;
+    @Resource
+    private ExtInstructionLogMapper extInstructionLogMapper;
 
     public Object add(InstructionDTO queryVO) {
         Instruction task = new Instruction();
@@ -88,14 +95,9 @@ public class InstructionService {
     }
 
     public Object logs(String id, InstructionDTO instructionDTO) {
-        InstructionLogExample e = new InstructionLogExample();
-        e.createCriteria().andInstructionIdEqualTo(id);
-        if (StringUtils.isNotBlank(instructionDTO.getSort())) {
-            e.setOrderByClause(instructionDTO.getSort());
-        } else {
-            e.setOrderByClause("create_time asc");
-        }
-        return instructionLogMapper.selectByExampleWithBLOBs(e);
+        Map m = new HashMap();
+        m.put("instructionId", id);
+        return extInstructionLogMapper.list(m);
     }
 
     public boolean runCommands(InstructionDTO instructionDTO) {
@@ -113,25 +115,29 @@ public class InstructionService {
             return false;
         }
 
-        List<OutBand> outBands = outBandService.getByBareMetalIds(instructionDTO.getBareMetalIds());
-
-        if (outBands.size() == 0) {
+        if (instructionDTO.getBareMetalIds().length == 0) {
             return false;
         }
 
-        outBands.forEach(o -> {
+        List<BareMetal> bms = bareMetalManager.getByIds(instructionDTO.getBareMetalIds());
+        bms.forEach(o -> {
             dockerClientService.runWithContainer(buildCommand(o, plugin, instruction), plugin, instruction);
         });
 
         return true;
     }
 
-    private List<Map<String, String>> buildCommand(OutBand o, Plugin plugin, Instruction instruction) {
+    private List<Map<String, String>> buildCommand(BareMetal b, Plugin plugin, Instruction instruction) {
         List<Map<String, String>> commands = new LinkedList<>();
+        OutBand o = outBandService.getByBareMetalId(b.getId());
         for (String s : instruction.getContent().split("\n")) {
             Map paramMap = new HashMap<String, String>();
             paramMap.put("image", plugin.getImage());
-            paramMap.put("cmd", replaceVar(plugin.getBaseInstruction().trim(), o) + " " + s);
+            paramMap.put("cmd", "");
+            paramMap.put("bareId", b.getId());
+            if (o != null) {
+                paramMap.put("cmd", replaceVar(plugin.getBaseInstruction().trim(), o) + " " + s);
+            }
             commands.add(paramMap);
         }
         return commands;

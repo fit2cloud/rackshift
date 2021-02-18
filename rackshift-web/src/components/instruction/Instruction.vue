@@ -92,11 +92,11 @@
       </el-drawer>
 
       <!--run commands-->
-      <el-dialog :title="$t('Run')" :visible.sync="runInstruction" width="85vw" :close-on-click-modal="false"
+      <el-dialog :title="$t('Run')" :visible.sync="runInstruction" :fullscreen="true" :close-on-click-modal="false"
                  :appendToBody=true>
         <div>
           <el-row>
-            <el-col :span="12">
+            <el-col :span="10">
               <div class="instruction-title">{{ $t('select_machine') }}</div>
               <el-table
                   :data="bareMetalData"
@@ -153,7 +153,7 @@
               </div>
             </el-col>
 
-            <el-col :span="12">
+            <el-col :span="14">
               <div class="instruction-title">{{ $t('logs') }}</div>
               <el-button-group class="batch-button">
                 <el-button type="primary" icon="el-icon-delete" @click="delAllSelectionLog">{{ $t('del') }}
@@ -181,9 +181,15 @@
                     </template>
                   </el-table-column>
 
-                  <el-table-column prop="content" :label="$t('output')" align="left">
+                  <el-table-column prop="machineModel" :label="$t('machine_model')" align="left" width="151px">
                     <template slot-scope="scope">
-                      <div v-html="scope.row.content"></div>
+                      <span v-html="scope.row.machineModel + '</br>[' + scope.row.machineSn + ']'"></span>
+                    </template>
+                  </el-table-column>
+
+                  <el-table-column prop="content" :label="$t('output')" align="left">
+                    <template slot-scope="scope" class="code">
+                      <codemirror v-model="scope.row.content" :options="options"></codemirror>
                     </template>
                   </el-table-column>
 
@@ -209,14 +215,27 @@
 
 <script>import HttpUtil from "../../common/utils/HttpUtil"
 import {requiredValidator} from "@/common/validator/CommonValidator";
-import PowerStatus from "@/common/powerstatus/Power-Status";
 import {humpToLine} from "@/common/utils/CommonUtil";
+import {codemirror} from 'vue-codemirror'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/theme/rubyblue.css'
+import 'codemirror/mode/python/python.js'
 
 let _ = require('lodash');
 export default {
   props: ['pluginId'],
   data() {
     return {
+      options: {
+        tabSize: 2, // 缩进格式
+        theme: 'rubyblue', // 主题，对应主题库 JS 需要提前引入
+        lineNumbers: true, // 显示行号
+        styleActiveLine: true, // 高亮选中行
+        readOnly: true,
+        hintOptions: {
+          completeSingle: true // 当匹配只有一项的时候是否自动补全
+        }
+      },
       loadingLogList: false,
       runLoading: false,
       loadingBareMetalList: false,
@@ -328,7 +347,7 @@ export default {
       logs: [],
     };
   },
-  components: {PowerStatus},
+  components: {codemirror},
   mounted() {
     this.getData();
   },
@@ -399,9 +418,8 @@ export default {
     getLogs() {
       this.loadingLogList = true;
       HttpUtil.post("instruction/logs?id=" + this.editObj.id, this.logQueryVO, (res) => {
-        _.map(res.data, (l) => {
-          // l.content = l.content.replaceAll("\n", "</br>");
-          _.replace(l.content, "\n", "</br>");
+        _.forEach(res.data, (d) => {
+          d.content = d.content ? d.content.replace(/STDOUT:/g, "") : "";
         })
         this.logs = res.data;
         this.loadingLogList = false;
@@ -609,6 +627,11 @@ export default {
 
 .mr10 {
   margin-right: 10px;
+}
+
+.code {
+  overflow-y: scroll !important;
+  height: auto !important;
 }
 
 .container-instruction {

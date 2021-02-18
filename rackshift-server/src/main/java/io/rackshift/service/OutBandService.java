@@ -161,6 +161,16 @@ public class OutBandService {
         return outBandMapper.selectByExample(e);
     }
 
+    public OutBand getByBareMetalId(String id) {
+        OutBandExample e = new OutBandExample();
+        e.createCriteria().andBareMetalIdEqualTo(id);
+        List<OutBand> o = outBandMapper.selectByExample(e);
+        if (o.size() > 0) {
+            return o.get(0);
+        }
+        return null;
+    }
+
     public void delBareMetalById(String id) {
         OutBandExample e = new OutBandExample();
         e.createCriteria().andBareMetalIdEqualTo(id);

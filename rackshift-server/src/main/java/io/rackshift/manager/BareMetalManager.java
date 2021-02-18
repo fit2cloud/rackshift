@@ -19,6 +19,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,13 +39,7 @@ public class BareMetalManager {
     @Resource
     private NetworkCardMapper networkCardMapper;
     @Resource
-    private OutBandMapper outBandMapper;
-    @Resource
     private OutBandManager outBandManager;
-    @Resource
-    private IPMIHandlerDecorator ipmiHandlerDecorator;
-    @Resource
-    private StateMachine stateMachine;
     @Autowired
     private SimpMessagingTemplate template;
 
@@ -232,5 +228,14 @@ public class BareMetalManager {
             return true;
         }
         return false;
+    }
+
+    public List<BareMetal> getByIds(String[] bareMetalIds) {
+        if (bareMetalIds == null || bareMetalIds.length == 0) {
+            return new ArrayList<>();
+        }
+        BareMetalExample e = new BareMetalExample();
+        e.createCriteria().andIdIn(Arrays.asList(bareMetalIds));
+        return bareMetalMapper.selectByExample(e);
     }
 }

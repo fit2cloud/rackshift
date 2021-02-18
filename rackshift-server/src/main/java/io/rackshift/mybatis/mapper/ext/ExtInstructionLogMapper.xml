@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.mybatis.mapper.ext.ExtInstructionLogMapper">
+    <resultMap id="BaseResultMap" type="io.rackshift.model.InstructionDTO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <id column="content" jdbcType="LONGVARCHAR" property="content"/>
+        <id column="machine_model" jdbcType="VARCHAR" property="machineModel"/>
+        <id column="machine_sn" jdbcType="VARCHAR" property="machineSn"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+    </resultMap>
+    <select id="list" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        l.id,
+        l.content,
+        l.instruction_id,
+        l.create_time,
+        b.machine_model,
+        b.machine_sn
+        FROM
+        instruction_log l
+        LEFT JOIN bare_metal b ON l.bare_metal_id = b.id
+        where 1=1
+        <if test="instructionId != null and instructionId != ''">
+            and l.instruction_id = #{ instructionId }
+        </if>
+    </select>
+</mapper>

@@ -11,6 +11,8 @@ public class InstructionLog implements Serializable {
 
     private Long createTime;
 
+    private String bareMetalId;
+
     private String content;
 
     private static final long serialVersionUID = 1L;

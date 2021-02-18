@@ -1,0 +1,1 @@
+    ALTER TABLE instruction_log ADD COLUMN bare_metal_id VARCHAR (50);

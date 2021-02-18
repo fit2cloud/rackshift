@@ -44,6 +44,8 @@ public class BareMetalService {
     private ExecutionLogService executionLogService;
     @Resource
     private OutBandService outBandService;
+    @Resource
+    private InstructionLogService instructionLogService;
 
     public List<BareMetalDTO> list(BareMetalQueryVO queryVO) {
         return bareMetalManager.list(queryVO);
@@ -128,6 +130,7 @@ public class BareMetalService {
             outBandService.delBareMetalById(id);
             taskService.delByBareMetalId(id);
             executionLogService.delDetailsByBareMetalId(id);
+            instructionLogService.delDetailsByBareMetalId(id);
         }
         return true;
     }

@@ -13,6 +13,7 @@ import io.rackshift.mybatis.domain.Instruction;
 import io.rackshift.mybatis.domain.InstructionLog;
 import io.rackshift.mybatis.domain.Plugin;
 import io.rackshift.mybatis.mapper.InstructionLogMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -71,18 +72,18 @@ public class DockerClientService {
             String r;
             if (images.size() == 0) {
                 r = String.format("Docker 镜像【%s】不存在,正在执行在线安装...", s.get("image"));
-                addInstructionLog(instruction.getId(), r);
+                addInstructionLog(s.get("bareId"), instruction.getId(), r);
                 try {
                     client.pullImageCmd(plugin.getImage()).withTag(plugin.getTag()).exec(new InvocationBuilder.AsyncResultCallback() {
                         @Override
                         public void onError(Throwable throwable) {
                             super.onError(throwable);
                             String r = String.format("Docker 镜像【%s】在线安装失败！请手动执行 docker pull %s 在线安装或 docker load -i %s 进行离线安装...", plugin.getImage(), plugin.getImage(), plugin.getImage());
-                            addInstructionLog(instruction.getId(), r);
+                            addInstructionLog(s.get("bareId"), instruction.getId(), r);
                         }
                     }).awaitCompletion(cmdWaitTime, TimeUnit.MINUTES);
                 } catch (InterruptedException e) {
-                    addInstructionLog(instruction.getId(), String.format("异常 pull image【%s】：", s.get("image")));
+                    addInstructionLog(s.get("bareId"), instruction.getId(), String.format("异常 pull image【%s】：", s.get("image")));
                     return false;
                 }
             }
@@ -93,6 +94,9 @@ public class DockerClientService {
     }
 
     private void runCmd(Instruction instruction, Map<String, String> s) {
+        if (StringUtils.isBlank(s.get("cmd"))) {
+
+        }
         String containerId = client.createContainerCmd(s.get("image")).withCmd(s.get("cmd").split(" ")).exec().getId();
         client.startContainerCmd(containerId).exec();
 
@@ -110,19 +114,20 @@ public class DockerClientService {
             };
 
             logContainerCmd.exec(rc).awaitCompletion(10, TimeUnit.MINUTES);
-            addInstructionLog(instruction.getId(), sb.toString());
+            addInstructionLog(s.get("bareId"), instruction.getId(), sb.toString());
         } catch (InterruptedException e) {
-            addInstructionLog(instruction.getId(), "异常：" + e);
+            addInstructionLog(s.get("bareId"), instruction.getId(), "异常：" + e);
         }
 
         client.removeContainerCmd(containerId).exec();
     }
 
 
-    private void addInstructionLog(String instructionId, String output) {
+    private void addInstructionLog(String bareMetalId, String instructionId, String output) {
         InstructionLog log = new InstructionLog();
         log.setInstructionId(instructionId);
         log.setContent(output);
+        log.setBareMetalId(bareMetalId);
         instructionLogMapper.insertSelective(log);
     }
 }
