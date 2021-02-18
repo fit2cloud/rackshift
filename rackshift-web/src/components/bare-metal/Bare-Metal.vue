@@ -194,11 +194,9 @@
         <keep-alive>
           <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"
                      :is="currentWfParamTemplate"
-                     :params="selectedWorkflow[editWorkflowIndex].params"
-                     :extraParams="selectedWorkflow[editWorkflowIndex].extraParams"
-                     :currentWorkflowIndex="editWorkflowIndex"
-                     :bareMetalId="selectedWorkflow[editWorkflowIndex].bareMetalId"
-                     :workflow="selectedWorkflow[editWorkflowIndex]"
+                     :params="selectedWorkflow[editWorkflowIndex] && selectedWorkflow[editWorkflowIndex].params"
+                     :extraParams="selectedWorkflow[editWorkflowIndex] && selectedWorkflow[editWorkflowIndex].extraParams"
+                     :bareMetalId="selectedWorkflow[editWorkflowIndex] && selectedWorkflow[editWorkflowIndex].bareMetalId"
                      ref="currentWfParamTemplate"></component>
         </keep-alive>
         <template v-slot:footer>
@@ -567,7 +565,7 @@ import PowerStatus from '../../common/powerstatus/Power-Status'
 import axios from 'axios'
 import {getIPRange} from 'get-ip-range'
 import bus from '../../common/bus/bus'
-import parmaMap from '../../rackparams/params'
+import paramMap from '../../rackparams/params'
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -652,6 +650,7 @@ export default {
       workflowParamList: [],
       paramEditable: false,
       selectedWorkflow: [],
+      selectedWorkflowComponent: {},
       fillOutObms: false,
       curObm: {
         ip: null,
@@ -945,10 +944,15 @@ export default {
     },
     editWfParams(index) {
       this.editWorkflowIndex = index;
-      // this.createWorkflowParamComponent(this.selectedWorkflow[index]);
-      this.currentWfParamTemplate = parmaMap[this.selectedWorkflow[index].workflowName];
-      this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.$t(this.selectedWorkflow[index].friendlyName) + " " + this.$t('param_config');
-      this.fillWfParams = true;
+      let comId = this.selectedWorkflow[index].workflowName + this.selectedWorkflow[index].machineSn;
+      if (paramMap[this.selectedWorkflow[index].workflowName]) {
+        if (!this.selectedWorkflowComponent[comId]) {
+          this.currentWfParamTemplate = _.cloneDeep(paramMap[this.selectedWorkflow[index].workflowName]);
+          this.selectedWorkflowComponent[comId] = this.currentWfParamTemplate;
+        }
+        this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.$t(this.selectedWorkflow[index].friendlyName) + " " + this.$t('param_config');
+        this.fillWfParams = true;
+      }
     },
     power(opt, row) {
       this.$confirm(this.$t('confirm') + this.$t('power_' + opt) + '?', this.$t('tips'), {
@@ -1340,8 +1344,8 @@ export default {
             continue;
           }
 
-          let params = null;
-          let extraParams = null;
+          let params = {};
+          let extraParams = {};
           if (that.workflowParamList.length) {
             let paramTemplate = _.find(that.workflowParamList, function (p) {
               return p.bareMetalId == that.multipleSelection[k].id;
@@ -1375,6 +1379,7 @@ export default {
     }
     ,
     deleteSelectedWorkflow(index) {
+      this.editWorkflowIndex = index;
       this.selectedWorkflow.splice(index, 1);
     }
     ,
