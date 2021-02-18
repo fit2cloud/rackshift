@@ -70,7 +70,7 @@ curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_
 ## 微信群
 
 
-![runnob](hhttps://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-21-02-09.png)
+![runnob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-21-02-18.png)
 如果看不到图片请先加入 QQ 群（693376431）或者打开帮助文档页面扫描加入
 - [二维码](http://149.129.105.194:8081/about/)
 
