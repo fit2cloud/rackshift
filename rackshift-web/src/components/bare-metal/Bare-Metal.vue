@@ -949,10 +949,12 @@ export default {
         if (!this.selectedWorkflowComponent[comId]) {
           this.currentWfParamTemplate = _.cloneDeep(paramMap[this.selectedWorkflow[index].workflowName]);
           this.selectedWorkflowComponent[comId] = this.currentWfParamTemplate;
+        } else {
+          this.currentWfParamTemplate = this.selectedWorkflowComponent[comId];
         }
-        this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.$t(this.selectedWorkflow[index].friendlyName) + " " + this.$t('param_config');
-        this.fillWfParams = true;
       }
+      this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.$t(this.selectedWorkflow[index].friendlyName) + " " + this.$t('param_config');
+      this.fillWfParams = true;
     },
     power(opt, row) {
       this.$confirm(this.$t('confirm') + this.$t('power_' + opt) + '?', this.$t('tips'), {
