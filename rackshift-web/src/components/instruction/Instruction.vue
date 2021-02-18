@@ -183,7 +183,7 @@
 
                   <el-table-column prop="machineModel" :label="$t('machine_model')" align="left" width="151px">
                     <template slot-scope="scope">
-                      <span v-html="scope.row.machineModel + '</br>[' + scope.row.machineSn + ']'"></span>
+                      <span v-html="getMachineText(scope)"></span>
                     </template>
                   </el-table-column>
 
@@ -357,6 +357,10 @@ export default {
     }
   },
   methods: {
+    getMachineText(scope) {
+      if (scope.row.machineModel)
+        return scope.row.machineModel + '</br>[' + scope.row.machineSn + ']';
+    },
     sortChange(val) {
       if (val.order) {
         this.queryVO.sort = val.prop + " " + val.order.replace("ending", "");
