@@ -119,7 +119,7 @@ export default {
         this.aboutUsVisible = true;
         this.$emit('about');
       } else {
-        window.open("http://149.129.105.194:8081/");
+        window.open("https://rackshift-docs.fit2cloud.com/");
       }
     },
     change() {
