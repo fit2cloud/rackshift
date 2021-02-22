@@ -21,7 +21,6 @@ public class WorkflowStartHandler extends AbstractHandler {
 
     @Override
     public void handleYourself(LifeEvent event) {
-        changeStatus(event, LifeStatus.provisioning, true);
         String taskId = event.getWorkflowRequestDTO().getTaskId();
         Task task = taskService.getById(taskId);
         task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
@@ -31,12 +30,13 @@ public class WorkflowStartHandler extends AbstractHandler {
         BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
         if (params == null) {
             revert(event);
+            return;
         }
 
         String instanceId = rackHDService.postWorkflowNoWait(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
         task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
         task.setInstanceId(instanceId);
         taskService.update(task);
-        notifyWebSocket(bareMetal, task);
+        changeStatus(event, LifeStatus.provisioning, true);
     }
 }
