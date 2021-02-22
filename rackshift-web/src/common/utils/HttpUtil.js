@@ -16,6 +16,7 @@ function loginFail() {
         confirmButtonText: i18n.t('confirm'),
         callback: action => {
             localStorage.removeItem("login");
+            sessionStorage.removeItem("rsSocket");
             window.location.href = "/";
         }
     });

@@ -105,9 +105,9 @@ export default {
     logout() {
       HttpUtil.get("logout", null, () => {
         localStorage.removeItem("login");
+        sessionStorage.removeItem("rsSocket");
         window.location.href = "/";
         window.event.returnValue = false;
-        sessionStorage.removeItem("rsSocket");
       })
     },
     clicked: function (command) {

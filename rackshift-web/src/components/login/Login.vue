@@ -118,6 +118,7 @@ export default {
               localStorage.setItem('login', true);
               localStorage.setItem('user', JSON.stringify(res.data));
               localStorage.setItem('first', true);
+              sessionStorage.removeItem("rsSocket");
               window.location.href = "/";
             } else {
               let msg = res.message;
