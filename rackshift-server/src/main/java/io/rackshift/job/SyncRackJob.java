@@ -33,9 +33,11 @@ public class SyncRackJob {
             JSONArray nodesArr = null;
 
             for (Endpoint endPoint : workflowConfig.getEndPoints()) {
-
-                nodesArr = JSONArray.parseArray(RackHDHttpClientUtil.get("http://" + endPoint.getIp() + ":9090" + RackHDConstants.NODES_URL, null));
-
+                try {
+                    nodesArr = JSONArray.parseArray(RackHDHttpClientUtil.get("http://" + endPoint.getIp() + ":9090" + RackHDConstants.NODES_URL, null));
+                } catch (Exception e) {
+                    nodesArr = new JSONArray();
+                }
                 for (int i = 0; i < nodesArr.size(); i++) {
                     JSONObject nodeObj = nodesArr.getJSONObject(i);
                     String type = nodeObj.getString("type");
