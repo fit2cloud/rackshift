@@ -16,7 +16,7 @@ RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖�
  * 准备一台不小于 8G 内存，50G 硬盘且可以访问互联网的 64位 Linux 主机；
  * 以 root 用户执行如下命令一键安装 RackShift。
 ```sh
-curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh | sh
+export serverIp=您用作PXE网卡的IP地址 && curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh | sh
 ```
 
 ## 帮助文档
