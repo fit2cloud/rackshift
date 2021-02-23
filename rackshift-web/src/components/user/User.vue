@@ -66,7 +66,7 @@
           <div class="demo-drawer__content">
             <el-form :model="editObj" label-position="top" :rules="rules" ref="editForm">
               <el-form-item label="ID" :label-width="formLabelWidth" prop="id">
-                <el-input v-model="editObj.id" autocomplete="off"></el-input>
+                <el-input v-model="editObj.id" autocomplete="off" :disabled="editType == 'edit'"></el-input>
               </el-form-item>
               <el-form-item :label="$t('name')" :label-width="formLabelWidth" prop="name">
                 <el-input v-model="editObj.name" autocomplete="off"
