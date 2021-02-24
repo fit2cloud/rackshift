@@ -4,17 +4,17 @@
       <el-row>
         <el-col :span="11">
           <el-form-item :label="$t('hostname')" prop="hostname">
-            <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"></el-input>
+            <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true" maxlength="10"></el-input>
           </el-form-item>
           <el-form-item :label="$t('domain')" prop="domain">
-            <el-input v-model="payLoad.options.defaults.domain" autocomplete="off" aria-required="true"></el-input>
+            <el-input v-model="payLoad.options.defaults.domain" autocomplete="off" aria-required="true" maxlength="10"></el-input>
           </el-form-item>
           <el-form-item :label="$t('username')" prop="username">
-            <el-input v-model="payLoad.options.defaults.username" autocomplete="off" aria-required="true"></el-input>
+            <el-input v-model="payLoad.options.defaults.username" autocomplete="off" aria-required="true" maxlength="10"></el-input>
           </el-form-item>
           <el-form-item :label="$t('root_pwd')" prop="rootPassword">
             <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
-                      show-password></el-input>
+                      show-password maxlength="10"></el-input>
           </el-form-item>
 
           <el-form-item :label="$t('samba')" prop="smbRepo">

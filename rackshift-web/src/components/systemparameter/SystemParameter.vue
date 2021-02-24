@@ -78,7 +78,7 @@
 
           <el-form-item :label="$t('param_value')">
             <el-input v-model="editObj.paramValue" autocomplete="off"
-                      :placeholder="$t('pls_input_param_value')"></el-input>
+                      :placeholder="$t('pls_input_param_value')" maxlength="30"></el-input>
           </el-form-item>
         </el-form>
         <div class="demo-drawer__footer">

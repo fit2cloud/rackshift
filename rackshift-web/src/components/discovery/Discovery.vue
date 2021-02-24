@@ -88,7 +88,7 @@
         <div class="demo-drawer__content">
           <el-form :model="editObj" :rules="rules" ref="form" label-width="50px" :label-position="labelPosition">
             <el-form-item :label="$t('name')" prop="name">
-              <el-input v-model="editObj.name" autocomplete="off"></el-input>
+              <el-input v-model="editObj.name" autocomplete="off" maxlength="30"></el-input>
             </el-form-item>
 
             <el-form-item :label="$t('start_ip')" prop="startIp">

@@ -174,10 +174,10 @@
             <el-input v-model="curObm.ip" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item :label="$t('username')" :label-width="formLabelWidth">
-            <el-input v-model="curObm.userName" autocomplete="off"></el-input>
+            <el-input v-model="curObm.userName" autocomplete="off" maxlength="30"></el-input>
           </el-form-item>
           <el-form-item :label="$t('pwd')" :label-width="formLabelWidth">
-            <el-input v-model="curObm.pwd" autocomplete="off" show-password></el-input>
+            <el-input v-model="curObm.pwd" autocomplete="off" show-password maxlength="30"></el-input>
           </el-form-item>
         </el-form>
         <template v-slot:footer>
@@ -217,7 +217,7 @@
             <el-collapse-item :title="$t('common_params')" name="commonOs">
 
               <el-form-item :label="$t('hostname')" prop="hostname" :label-width="formLabelWidth">
-                <el-input v-model="bp.hostname" autocomplete="off" aria-required="true"></el-input>
+                <el-input v-model="bp.hostname" autocomplete="off" aria-required="true" maxlength="30"></el-input>
               </el-form-item>
 
               <el-form-item :label="$t('host_increase')" prop="increase" :label-width="formLabelWidth">
@@ -234,7 +234,7 @@
 
               <el-form-item :label="$t('root_pwd')" prop="rootPassword" :label-width="formLabelWidth">
                 <el-input v-model="bp.rootPassword" autocomplete="off"
-                          show-password></el-input>
+                          show-password maxlength="30"></el-input>
               </el-form-item>
 
               <el-form-item :label="$t('start_ip')" prop="startIp" :label-width="formLabelWidth">

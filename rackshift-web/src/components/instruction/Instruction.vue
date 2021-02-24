@@ -72,11 +72,11 @@
         <div class="demo-drawer__content">
           <el-form :model="editObj" :rules="rules" ref="form" label-width="50px" :label-position="labelPosition">
             <el-form-item :label="$t('name')" prop="name">
-              <el-input type="text" v-model="editObj.name" autocomplete="off"></el-input>
+              <el-input type="text" v-model="editObj.name" autocomplete="off" maxlength="30"></el-input>
             </el-form-item>
 
             <el-form-item :label="$t('instruction_content')" prop="content">
-              <el-input type="textarea" v-model="editObj.content" autocomplete="off"
+              <el-input type="textarea" v-model="editObj.content" autocomplete="off" maxlength="3000"
                         placeholder="例如：sel clear = ipmitool -I lanplus -H xxx -U xxx -P xxx sel clear,多条命令请换行"></el-input>
             </el-form-item>
           </el-form>

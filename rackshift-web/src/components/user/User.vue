@@ -66,15 +66,15 @@
           <div class="demo-drawer__content">
             <el-form :model="editObj" label-position="top" :rules="rules" ref="editForm">
               <el-form-item label="ID" :label-width="formLabelWidth" prop="id">
-                <el-input v-model="editObj.id" autocomplete="off" :disabled="editType == 'edit'"></el-input>
+                <el-input v-model="editObj.id" autocomplete="off" :disabled="editType == 'edit'" maxlength="30"></el-input>
               </el-form-item>
               <el-form-item :label="$t('name')" :label-width="formLabelWidth" prop="name">
                 <el-input v-model="editObj.name" autocomplete="off"
-                          :placeholder="$t('pls_input_name')"></el-input>
+                          :placeholder="$t('pls_input_name')" maxlength="30"></el-input>
               </el-form-item>
               <el-form-item :label="$t('email')" :label-width="formLabelWidth" prop="email">
                 <el-input v-model="editObj.email" autocomplete="off"
-                          :placeholder="$t('pls_input_email')"></el-input>
+                          :placeholder="$t('pls_input_email')" maxlength="50"></el-input>
               </el-form-item>
               <el-form-item :label="$t('phone')" :label-width="formLabelWidth" prop="phone">
                 <el-input v-model="editObj.phone" autocomplete="off"
@@ -84,7 +84,7 @@
               <el-form-item :label="$t('password')" :label-width="formLabelWidth" prop="password"
                             v-if="editType != 'edit'">
                 <el-input v-model="editObj.password" autocomplete="off"
-                          :placeholder="$t('pls_input_pwd')" show-password></el-input>
+                          :placeholder="$t('pls_input_pwd')" show-password maxlength="30"></el-input>
               </el-form-item>
 
               <!--              <el-form-item :label="$t('role')" :label-width="formLabelWidth" prop="rolesIds">-->

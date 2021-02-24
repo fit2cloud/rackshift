@@ -5,11 +5,11 @@
       <el-row>
         <el-col :span="11">
           <el-form-item :label="$t('hostname')" prop="hostname">
-            <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"></el-input>
+            <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true" maxlength="10"></el-input>
           </el-form-item>
           <el-form-item :label="$t('root_pwd')" prop="rootPassword">
             <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
-                      show-password></el-input>
+                      show-password maxlength="10"></el-input>
           </el-form-item>
           <el-form-item :label="$t('image')" prop="repo">
             <el-select v-model="payLoad.options.defaults.repo" class="input-element">

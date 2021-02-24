@@ -71,7 +71,7 @@
           </el-form-item>
           <el-form-item :label="$t('user_name')">
             <el-input v-model="editObj.userName" autocomplete="off"
-                      :placeholder="$t('pls_input_user_name')"></el-input>
+                      :placeholder="$t('pls_input_user_name')" maxlength="30"></el-input>
           </el-form-item>
           <el-form-item :label="$t('pwd')">
             <el-input v-model="editObj.pwd" autocomplete="off" type="password"

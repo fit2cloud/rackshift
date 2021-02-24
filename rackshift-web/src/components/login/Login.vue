@@ -28,11 +28,11 @@
 
             <el-form-item prop="userName">
               <el-input type="text" v-model="ruleForm.userName" autocomplete="off"
-                        :placeholder="$t('username_or_id')"></el-input>
+                        :placeholder="$t('username_or_id')" maxlength="30"></el-input>
             </el-form-item>
             <el-form-item prop="password">
               <el-input type="password" v-model="ruleForm.password" autocomplete="off" show-password
-                        :placeholder="$t('password')"></el-input>
+                        :placeholder="$t('password')" maxlength="30"></el-input>
             </el-form-item>
           </div>
           <div class="btn">

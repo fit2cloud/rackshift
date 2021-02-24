@@ -82,7 +82,7 @@
             <el-form :model="editObj" :rules="rules" ref="form" label-position="top">
 
               <el-form-item :label="$t('name')" prop="name">
-                <el-input v-model="editObj.name" autocomplete="off"></el-input>
+                <el-input v-model="editObj.name" autocomplete="off" maxlength="30"></el-input>
               </el-form-item>
 
               <el-form-item :label="$t('endpoint')" prop="endpointId">

@@ -94,7 +94,7 @@
             <el-form :model="editObj" labelPosition="top" :rules="rules" ref="editForm" label-width="80px">
 
               <el-form-item :label="$t('name')" prop="name">
-                <el-input v-model="editObj.name" autocomplete="off"
+                <el-input v-model="editObj.name" autocomplete="off" maxlength="30"
                           :placeholder="$t('pls_input_param_value')" class="input-element"></el-input>
               </el-form-item>
 
