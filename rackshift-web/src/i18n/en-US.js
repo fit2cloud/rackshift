@@ -298,7 +298,7 @@ export default {
     "i18n_file_type_cant_be_null": "File type cannot be empty!",
     "i18n_all_greater_than_1_gb": "The minimum capacity of all partitions cannot be less than 1GB!",
     "i18n_mut_only_one": "There must be one and only one root, swap and /boot partition!",
-    "only_iso_no_more_than_10g": " can only upload ISO files, and no more than 10GB ",
+    "only_iso_no_more_than_10g": " can only upload ISO files, and no more than 10GB ，only support full type, not minimal!",
     "drag_file_into_or": "Drag the file here, or ",
     "click_to_upload": " click to Upload ",
     "uefi_boot": "UEFI BOOT",
@@ -438,6 +438,6 @@ export default {
     "cancelled": "cancelled",
     "netmask_validate_error": "Netmask is illegal!",
     "i18n_yigou_disk": " the group has heterogeneous disks (such as mechanical and solid state), so raid cannot be created! ",
-
-
+    "COMPLETE": "complete",
+    "not_discoveryed": "active discovery has not been completed, please restart the server by PXE! ",
 }

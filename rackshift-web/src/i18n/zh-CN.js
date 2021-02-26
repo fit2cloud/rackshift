@@ -300,7 +300,7 @@ export default {
     "i18n_all_greater_than_1_gb": "所有分区最低容量不能小于1GB！",
     "i18n_mut_only_one": "必须有且仅有一个根，swap和/boot分区！",
 
-    "only_iso_no_more_than_10g": "只能上传ISO文件，且不超过10GB",
+    "only_iso_no_more_than_10g": "只能上传ISO文件，且不超过10GB,只支持完整版镜像，不支持 Minimal 版！",
     "drag_file_into_or": "将文件拖到此处，或",
     "click_to_upload": "点击上传",
     "uefi_boot": "UEFI 引导",
@@ -442,5 +442,6 @@ export default {
     "cancelled": "已取消",
     "netmask_validate_error": "子网掩码不合法！",
     "i18n_yigou_disk": " 组存在异构磁盘（比如机械和固态），不能创建 RAID!",
-
+    "COMPLETE": "完成",
+    "not_discoveryed": "未完成主动发现，请执行对服务器进行 PXE重启！再执行工作流！",
 }
