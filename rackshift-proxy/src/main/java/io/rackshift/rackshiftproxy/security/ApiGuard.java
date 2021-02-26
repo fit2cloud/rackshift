@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class ApiGuard {
 
-    private static final String APISECRET = "rackshift-proxy-20200820";
     private static final String SIGNATURE = "signature";
 
     @Pointcut("execution(* io.rackshift.rackshiftproxy.controller.*.*(..))")
@@ -26,7 +25,7 @@ public class ApiGuard {
     }
 
     @Before("pointCut()")
-    private void remoteCallCheck() throws Throwable {
+    private void remoteCallCheck() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         if (StringUtils.isBlank(request.getHeader(SIGNATURE))) {
             throw new RuntimeException("ilegal call with no apikey");

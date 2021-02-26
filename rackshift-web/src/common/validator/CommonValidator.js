@@ -114,5 +114,11 @@ function maskValidator(rule, value, callback) {
 }
 
 export {
-    requiredValidator, hostnameValidator, ipValidator, requiredSelectValidator, emailValidator, phoneValidator, maskValidator
+    requiredValidator,
+    hostnameValidator,
+    ipValidator,
+    requiredSelectValidator,
+    emailValidator,
+    phoneValidator,
+    maskValidator
 }

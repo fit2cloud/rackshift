@@ -187,7 +187,7 @@ Vue.prototype.$message = Notification;
 Vue.prototype.$message = Message;
 
 Vue.config.productionTip = false
-let app = new Vue({
+new Vue({
     router,
     i18n,
     render: h => h(App),
