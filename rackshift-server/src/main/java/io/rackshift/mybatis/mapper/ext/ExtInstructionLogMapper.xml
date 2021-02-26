@@ -23,5 +23,6 @@
         <if test="instructionId != null and instructionId != ''">
             and l.instruction_id = #{ instructionId }
         </if>
+        order by l.create_time desc
     </select>
 </mapper>

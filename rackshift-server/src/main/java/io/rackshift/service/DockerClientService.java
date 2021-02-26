@@ -95,7 +95,8 @@ public class DockerClientService {
 
     private void runCmd(Instruction instruction, Map<String, String> s) {
         if (StringUtils.isBlank(s.get("cmd"))) {
-
+            addInstructionLog(s.get("bareId"), instruction.getId(), "指令为空!");
+            return;
         }
         String containerId = client.createContainerCmd(s.get("image")).withCmd(s.get("cmd").split(" ")).exec().getId();
         client.startContainerCmd(containerId).exec();
@@ -118,7 +119,7 @@ public class DockerClientService {
         } catch (InterruptedException e) {
             addInstructionLog(s.get("bareId"), instruction.getId(), "异常：" + e);
         }
-
+        client.stopContainerCmd(containerId).exec();
         client.removeContainerCmd(containerId).exec();
     }
 
@@ -127,6 +128,9 @@ public class DockerClientService {
         InstructionLog log = new InstructionLog();
         log.setInstructionId(instructionId);
         log.setContent(output);
+        if (StringUtils.isBlank(output)) {
+            log.setContent("There is no result returned... maybe cmd is wrong or etc.");
+        }
         log.setBareMetalId(bareMetalId);
         instructionLogMapper.insertSelective(log);
     }
