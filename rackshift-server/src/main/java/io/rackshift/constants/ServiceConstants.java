@@ -39,7 +39,7 @@ public class ServiceConstants {
 
 
     public enum DiscoveryStatusEnum {
-        PENDING, ERROR, SUCCESS
+        PENDING, COMPLETE
     }
 
     public enum ImageStatusEnum {

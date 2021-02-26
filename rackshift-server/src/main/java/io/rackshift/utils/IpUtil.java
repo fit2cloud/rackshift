@@ -1,29 +1,34 @@
 package io.rackshift.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.util.SubnetUtils;
 
+import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class IpUtil {
+    private static final int TIME_OUT = 3000;
+
     public static List<String> getIpRange(String startIp, String endIp, String mask) {
-        if(startIp != null && startIp.equals(endIp) && "255.255.255.255".equals(mask)) {
-            return new ArrayList<>(Collections.singletonList(startIp));
-        }
         List<String> result = new ArrayList<>();
         SubnetUtils utils = new SubnetUtils(startIp, mask);
         SubnetUtils.SubnetInfo info = utils.getInfo();
         String[] allIps = info.getAllAddresses();
-        for (int i = 0; i < allIps.length; i++) {
-            if (ipInRange(allIps[i], startIp, endIp)) {
-                result.add(allIps[i]);
+        for (String allIp : allIps) {
+            if (ipInRange(allIp, startIp, endIp)) {
+                result.add(allIp);
             }
         }
         return result;
     }
 
-    public static Boolean ipInRange(String ip, String startIp, String endIp) {
+    private static Boolean ipInRange(String ip, String startIp, String endIp) {
         String ipSection = startIp + "-" + endIp;
         ip = ip.trim();
         final String REGX_IP = "((25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]\\d|\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]\\d|\\d)";
@@ -48,12 +53,57 @@ public class IpUtil {
         return ips <= ipt && ipt <= ipe;
     }
 
-    public static long ipToInt(String ip) {
-        long ipNumbers = 0;
-        String[] split = ip.split("\\.");
-        for (int i = 0; i < 4; i++) {
-            ipNumbers += Long.parseLong(split[i]) << (24 - (8 * i));
-        }
-        return ipNumbers;
+    static Pattern ipPattern = Pattern
+            .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]"
+                    + "|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
+
+    public static boolean checkIP(String str) {
+        return ipPattern.matcher(str).matches();
     }
+
+    public static boolean ping(String ip) {
+        if (StringUtils.isAnyBlank(ip)) {
+            throw new RuntimeException("运行ping命令失败！参数非法！");
+        }
+        try {
+            InetAddress address = Inet4Address.getByName(ip);
+            return address.isReachable(1500);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * 先使用icmp 如果不通则使用socket测试443端口，如果能通则返回true
+     * 南方中心宿主机禁止了icmp协议
+     *
+     * @param ip
+     * @return
+     */
+    public static boolean canConnect(String ip) {
+        if (StringUtils.isAnyBlank(ip)) {
+            throw new RuntimeException("运行ping命令失败！参数非法！");
+        }
+        Socket s = null;
+        try {
+            InetAddress address = Inet4Address.getByName(ip);
+            if (address.isReachable(1500)) return true;
+            s = new Socket();
+            s.connect(new InetSocketAddress(ip, 443));
+        } catch (Exception e) {
+            return false;
+        } finally {
+            if (s != null) {
+                try {
+                    s.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return true;
+    }
+
 }

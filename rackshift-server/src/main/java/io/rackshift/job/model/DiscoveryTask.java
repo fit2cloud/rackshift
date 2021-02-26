@@ -80,7 +80,8 @@ public class DiscoveryTask extends Thread {
             }
             if (ips != null && ips.size() > 0) {
                 for (String ip : ips) {
-
+                    if (!IpUtil.ping(ip))
+                        continue;
                     Element brandsElement = null;
                     if (cache != null) {
                         brandsElement = cache.get(ip);
@@ -144,12 +145,10 @@ public class DiscoveryTask extends Thread {
                     }
                 }
             }
-            bareMetalRule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.SUCCESS.name());
-
         } catch (Exception e) {
-            bareMetalRule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.ERROR.name());
             LogUtil.error(String.format("嗅探发生异常:%s", ExceptionUtils.getExceptionDetail(e)));
         }
+        bareMetalRule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.COMPLETE.name());
         template.convertAndSend("/topic/discovery", "");
         bareMetalRuleMapper.updateByPrimaryKey(bareMetalRule);
 
