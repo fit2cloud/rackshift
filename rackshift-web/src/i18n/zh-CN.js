@@ -441,5 +441,6 @@ export default {
     "network_error": "网络错误，请检查网络~",
     "cancelled": "已取消",
     "netmask_validate_error": "子网掩码不合法！",
+    "i18n_yigou_disk": " 组存在异构磁盘（比如机械和固态），不能创建 RAID!",
 
 }

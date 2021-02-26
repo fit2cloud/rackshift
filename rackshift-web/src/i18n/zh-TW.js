@@ -439,4 +439,5 @@ export default {
     "network_error": "網絡錯誤，請檢查網絡~",
     "cancelled": "已取消",
     "netmask_validate_error": "子網掩碼不合法！",
+    "i18n_yigou_disk": " 組存在異構磁盤（比如機械和固態），不能創建 RAID!",
 }

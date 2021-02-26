@@ -29,7 +29,7 @@
                 <el-option v-for="t in odisks" :label="t.drives"
                            :value="t.enclosureId + '-' + t.drive">
                   {{
-                    'raidLevel:' + (t.raid ? t.raid : '无') + '-enclosureId:' + t.enclosureId + '-driveId:' + t.drive + '-' + t.size
+                    (t.type ? t.type : $t('unknown')) + ' raidLevel:' + (t.raid ? t.raid : '无') + '-enclosureId:' + t.enclosureId + '-driveId:' + t.drive + '-' + t.size
                   }}
                 </el-option>
               </el-select>
@@ -48,6 +48,7 @@
 </template>
 <script>
 import HttpUtil from "../common/utils/HttpUtil";
+import {isomerismDisk} from "@/common/utils/RackHDUtil";
 
 let _ = require('lodash');
 export default {
@@ -101,6 +102,7 @@ export default {
       cpus: [],
       memories: [],
       disks: [],
+      diskMap: {},
       nics: [],
       validateResult: false,
     };
@@ -133,6 +135,10 @@ export default {
         let config = raidConfig[i];
         let raidType = config.type;
         let raidDisk = config.drives;
+        if (isomerismDisk(this.getSelectDisks(raidDisk))) {
+          this.$message.error(this.$t('i18n_di') + (i + 1) + this.$t('i18n_yigou_disk'));
+          return;
+        }
         diskStr += raidDisk + ",";
         if (!raidType) {
           this.$message.error(this.$t('i18n_di') + (i + 1) + this.$t('i18n_zu_de_raid_not_config'));
@@ -223,14 +229,24 @@ export default {
         this.memories = res.data.memories;
         this.disks = res.data.disks;
 
-        // if (res.data.disks && res.data.disks.length > 0) {
-        //   res.data.disks = _.orderBy(res.data.disks, ['drive'], ['asc']);
-        //   res.data.disks.forEach(d => this.disks.push(d.enclosureId + "-" + d.drive));
-        // }
+        if (res.data.disks && res.data.disks.length > 0) {
+          res.data.disks = _.orderBy(res.data.disks, ['drive'], ['asc']);
+          let that = this;
+          res.data.disks.forEach(d => that.diskMap[d.enclosureId + "-" + d.drive] = d);
+        }
+
         this.nics = res.data.nics;
       })
     }
     ,
+    getSelectDisks(raidDisk) {
+      let selected = [];
+      if (raidDisk && raidDisk.length) {
+        raidDisk.forEach(d => selected.push(this.diskMap[d]));
+        ;
+      }
+      return selected;
+    }
   }
 }
 </script>
