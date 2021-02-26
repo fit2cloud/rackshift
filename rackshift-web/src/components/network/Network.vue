@@ -296,7 +296,7 @@ export default {
       } else {
         HttpUtil.post("/network/add", this.editObj, (res) => {
           this.editDialogVisible = false;
-          if (res.success) {
+          if (res.data) {
             this.$message.success(this.$t('add_success'));
             this.getData();
           } else {
