@@ -212,7 +212,7 @@
 
       <el-dialog :title="$t('batch_params')" :visible.sync="batchParams" width="55vw" :close-on-click-modal="false"
                  :append-to-body="true">
-        <el-form :model="form">
+        <el-form :model="bp" :rules="rules" ref="batchParam">
           <el-collapse v-model="activeNames" @change="handleChange" accordion>
             <el-collapse-item :title="$t('common_params')" name="commonOs">
 
@@ -566,6 +566,7 @@ import axios from 'axios'
 import {getIPRange} from 'get-ip-range'
 import bus from '../../common/bus/bus'
 import paramMap from '../../rackparams/params'
+import {ipValidator, maskValidator, requiredValidator} from "@/common/validator/CommonValidator";
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -574,6 +575,20 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      rules: {
+        gateway: [
+          {validator: ipValidator, trigger: 'blur', vue: this},
+        ],
+        startIp: [
+          {validator: ipValidator, trigger: 'blur', vue: this},
+        ],
+        endIp: [
+          {validator: ipValidator, trigger: 'blur', vue: this},
+        ],
+        mask: [
+          {validator: maskValidator, trigger: 'blur', vue: this},
+        ],
+      },
       fillOBMMode: 'single',
       activeNames: 'commonOs',
       batchParamsLoading: false,
@@ -717,8 +732,9 @@ export default {
           let j = 0;
           for (let i = 0; i < this.selectedWorkflow.length; i++) {
             if (this.selectedWorkflow[i].params && this.selectedWorkflow[i].params.options.defaults && this.selectedWorkflow[i].params.options.defaults.networkDevices) {
-              if (rangeIp[j++])
-                this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'ipAddr', rangeIp[j]);
+              if (rangeIp[j]) {
+                this.$set(this.selectedWorkflow[i].params.options.defaults.networkDevices[0].ipv4, 'ipAddr', rangeIp[j++]);
+              }
             }
           }
           break;
@@ -776,6 +792,16 @@ export default {
       }
     },
     confirmBatchParams() {
+      this.validateResult = true;
+      this.$refs.batchParam.validate((f) => {
+        if (!f) {
+          this.validateResult = false;
+        }
+      });
+      if (!this.validateResult) {
+        this.$message.error(this.$t('opt_fail'));
+        return;
+      }
       this.batchParamsLoading = true;
       if (this.bp.startIp && this.bp.endIp) {
         this.setParam('ip');
@@ -856,6 +882,9 @@ export default {
       }
     },
     openBatchParams() {
+      if (this.$refs.batchParam) {
+        this.$refs.batchParam.resetFields();
+      }
       this.batchParams = true;
       if (localStorage.getItem("batchParams")) {
         this.bp = JSON.parse(localStorage.getItem("batchParams"));
@@ -1332,6 +1361,10 @@ export default {
       if (that.getWorkflowById().injectableName) {
         let originWf = _.find(that.supportedWorkflow, s => s.injectableName == that.getWorkflowById().injectableName);
         for (let k = 0; k < that.multipleSelection.length; k++) {
+          if (!that.multipleSelection[k].serverId) {
+            that.$message.warning(that.multipleSelection[k].machineModel + ' [' + that.multipleSelection[k].machineSn + ']' + that.$t('not_discoveryed'));
+            continue;
+          }
           let duplicated = false;
           let componentId = that.getWorkflowById().injectableName + "-" + that.multipleSelection[k].id;
           for (let j = 0; j < that.selectedWorkflow.length; j++) {
