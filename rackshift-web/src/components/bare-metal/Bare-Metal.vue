@@ -922,7 +922,7 @@ export default {
               + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
         else
           return '<span style="display: inline-block;white-space: nowrap;">' +
-              this.$t('PXE') + ' ' + this.$t('status') + '<i class="el-icon-close" style="margin-left:5px;color: red;"></i><br>'
+              this.$t('PXE') + ' ' + this.$t('onrack') + '<br>'
               + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
       } else {
         return '<span style="display: inline-block;white-space: nowrap;">' +
