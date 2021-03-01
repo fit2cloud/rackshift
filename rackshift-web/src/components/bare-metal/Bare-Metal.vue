@@ -585,7 +585,7 @@ export default {
         endIp: [
           {validator: ipValidator, trigger: 'blur', vue: this},
         ],
-        mask: [
+        netmask: [
           {validator: maskValidator, trigger: 'blur', vue: this},
         ],
       },
@@ -594,7 +594,20 @@ export default {
       batchParamsLoading: false,
       allNicNumber: [],
       batchParams: false,
-      bp: {},
+      bp: {
+        hostname: null,
+        increase: null,
+        baseNumber: null,
+        rootPassword: null,
+        startIp: null,
+        endIp: null,
+        gateway: null,
+        netmask: null,
+        nicNumber: null,
+        domain: null,
+        username: null,
+        smbRepo: null,
+      },
       accurate: false,
       groupedSupportedWorkflow: [],
       discoveryVisible: false,
