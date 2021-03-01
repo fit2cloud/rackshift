@@ -16,6 +16,12 @@ public class WebSocketController {
         return ResultHolder.success("from server : " + hello);
     }
 
+    @MessageMapping("/hello")
+    @SendTo("/topic/hello")
+    public ResultHolder hello(String hello) throws Exception {
+        return ResultHolder.success("from server : " + hello);
+    }
+
     @MessageMapping("/discovery")
     @SendTo("/topic/discovery")
     public ResultHolder discovery(String hello, Session session) throws Exception {

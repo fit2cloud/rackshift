@@ -566,7 +566,7 @@ import axios from 'axios'
 import {getIPRange} from 'get-ip-range'
 import bus from '../../common/bus/bus'
 import paramMap from '../../rackparams/params'
-import {ipValidator, maskValidator, requiredValidator} from "@/common/validator/CommonValidator";
+import {ipValidator, maskValidator} from "@/common/validator/CommonValidator";
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -704,7 +704,8 @@ export default {
       logPoller: null,
       currentParamConfig: '',
       loadingList: false,
-      websocket: null
+      websocket: null,
+      websocketInterval: null
     }
   },
   components: {
@@ -715,11 +716,23 @@ export default {
     if (this.websocket) {
       this.websocket.close();
     }
+    if (this.websocketInterval) {
+      clearInterval(this.websocketInterval);
+    }
   },
   mounted() {
     if (!this.websocket) {
       this.websocket = new WebSocketUtil();
       this.websocket.openSocket('lifecycle', this.notify);
+      let that = this;
+      this.websocketInterval = setInterval(function () {
+        try {
+          that.websocket.sendMessage("hello");
+        } catch (e) {
+          sessionStorage.removeItem("rsSocket");
+          that.websocket.openSocket('lifecycle', that.notify);
+        }
+      }, 3000);
       this.getData();
     }
     this.getAllGraphDefinitions();
@@ -1524,7 +1537,7 @@ export default {
 
 .detail-info {
   border: 1px solid #EBEEF5;
-  border-spacing: 0px !important;
+  border-spacing: 0 !important;
   width: 100%;
 }
 
@@ -1541,7 +1554,7 @@ export default {
   text-align: center;
 }
 
-.el-tabs__nav-wrap .is-top {
+.el-tabs__nav-wrap {
   padding-left: 10px;
 }
 

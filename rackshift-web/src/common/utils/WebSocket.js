@@ -16,12 +16,12 @@ let WebSocketUtil = function () {
                                 cal(res.body);
                             }
                         });
-                        sessionStorage.setItem("rsSocket", "exist");
                     } catch (e) {
                         console.log("订阅" + "/topic/" + topic + " 失败！");
                         sessionStorage.removeItem("rsSocket");
                     }
                 });
+                sessionStorage.setItem("rsSocket", "exist");
 
             }
             return this.stompClient;
