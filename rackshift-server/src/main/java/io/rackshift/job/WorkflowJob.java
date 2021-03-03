@@ -51,6 +51,10 @@ public class WorkflowJob {
         add(LifeStatus.deploying.name());
     }};
 
+    private List<String> subTasks = new ArrayList<String>() {{
+        add("delete-raid");
+    }};
+
     /**
      * 任务执行
      * 1.查询更新正在运行中的任务
@@ -212,11 +216,16 @@ public class WorkflowJob {
         return r;
     }
 
+
     private void setSubTaskOutput(JSONObject taskObj, ExecutionLogDetails ex) {
         if (ServiceConstants.RackHDTaskStatusEnum.failed.name().equalsIgnoreCase(taskObj.getString("state"))) {
-            if (StringUtils.isNotBlank(taskObj.getString("error")))
-                ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行失败！详情：" + taskObj.getString("error"));
-            else
+            if (StringUtils.isNotBlank(taskObj.getString("error"))) {
+                if (subTasks.get(0).equalsIgnoreCase(taskObj.getString("label"))) {
+                    ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行失败！详情：" + taskObj.getString("error") + "已经清空 raid 的机器不能再次清空 raid!");
+                } else {
+                    ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行失败！详情：" + taskObj.getString("error"));
+                }
+            } else
                 ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行失败！");
         } else if (ServiceConstants.RackHDTaskStatusEnum.succeeded.name().equalsIgnoreCase(taskObj.getString("state"))) {
             ex.setOutPut("子任务:" + taskObj.getString("label") + " 执行成功！");
