@@ -9,6 +9,7 @@
     <result column="bare_metal_id" jdbcType="VARCHAR" property="bareMetalId" />
     <result column="mac" jdbcType="VARCHAR" property="mac" />
     <result column="sync_time" jdbcType="BIGINT" property="syncTime" />
+    <result column="pxe" jdbcType="BIT" property="pxe" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -69,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, vlan_id, ip, number, bare_metal_id, mac, sync_time
+    id, vlan_id, ip, number, bare_metal_id, mac, sync_time, pxe
   </sql>
   <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.NetworkCardExample" resultMap="BaseResultMap">
     select
@@ -104,10 +105,10 @@
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.NetworkCard">
     insert into network_card (id, vlan_id, ip, 
       number, bare_metal_id, mac, 
-      sync_time)
+      sync_time, pxe)
     values (#{id,jdbcType=VARCHAR}, #{vlanId,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
       #{number,jdbcType=VARCHAR}, #{bareMetalId,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR}, 
-      #{syncTime,jdbcType=BIGINT})
+      #{syncTime,jdbcType=BIGINT}, #{pxe,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.NetworkCard">
     insert into network_card
@@ -133,6 +134,9 @@
       <if test="syncTime != null">
         sync_time,
       </if>
+      <if test="pxe != null">
+        pxe,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -155,6 +159,9 @@
       </if>
       <if test="syncTime != null">
         #{syncTime,jdbcType=BIGINT},
+      </if>
+      <if test="pxe != null">
+        #{pxe,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -188,6 +195,9 @@
       <if test="record.syncTime != null">
         sync_time = #{record.syncTime,jdbcType=BIGINT},
       </if>
+      <if test="record.pxe != null">
+        pxe = #{record.pxe,jdbcType=BIT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -201,7 +211,8 @@
       number = #{record.number,jdbcType=VARCHAR},
       bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
       mac = #{record.mac,jdbcType=VARCHAR},
-      sync_time = #{record.syncTime,jdbcType=BIGINT}
+      sync_time = #{record.syncTime,jdbcType=BIGINT},
+      pxe = #{record.pxe,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -227,6 +238,9 @@
       <if test="syncTime != null">
         sync_time = #{syncTime,jdbcType=BIGINT},
       </if>
+      <if test="pxe != null">
+        pxe = #{pxe,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -237,7 +251,8 @@
       number = #{number,jdbcType=VARCHAR},
       bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
       mac = #{mac,jdbcType=VARCHAR},
-      sync_time = #{syncTime,jdbcType=BIGINT}
+      sync_time = #{syncTime,jdbcType=BIGINT},
+      pxe = #{pxe,jdbcType=BIT}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

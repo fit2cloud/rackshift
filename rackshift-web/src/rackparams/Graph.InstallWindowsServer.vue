@@ -4,13 +4,16 @@
       <el-row>
         <el-col :span="11">
           <el-form-item :label="$t('hostname')" prop="hostname">
-            <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true" maxlength="10"></el-input>
+            <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"
+                      maxlength="10"></el-input>
           </el-form-item>
           <el-form-item :label="$t('domain')" prop="domain">
-            <el-input v-model="payLoad.options.defaults.domain" autocomplete="off" aria-required="true" maxlength="10"></el-input>
+            <el-input v-model="payLoad.options.defaults.domain" autocomplete="off" aria-required="true"
+                      maxlength="10"></el-input>
           </el-form-item>
           <el-form-item :label="$t('username')" prop="username">
-            <el-input v-model="payLoad.options.defaults.username" autocomplete="off" aria-required="true" maxlength="10"></el-input>
+            <el-input v-model="payLoad.options.defaults.username" autocomplete="off" aria-required="true"
+                      maxlength="10"></el-input>
           </el-form-item>
           <el-form-item :label="$t('root_pwd')" prop="rootPassword">
             <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
@@ -41,8 +44,15 @@
 
             <el-form-item prop="device" :label="$t('network_card_mac')">
               <el-select v-model="d.device" class="input-element">
-                <el-option :label="n.number + '(' + n.mac + ')'" :value="n.mac"
-                           v-for="n in nics"></el-option>
+                <el-option :value="n.mac" v-for="n in nics">
+                  <span>
+                    {{
+                      n.number + '(' + n.mac + ')'
+                    }}
+                    <span style="color:red" v-if="n.pxe">{{ ' ' + $t('is_pxe') }}</span>
+                  </span>
+
+                </el-option>
               </el-select>
             </el-form-item>
 

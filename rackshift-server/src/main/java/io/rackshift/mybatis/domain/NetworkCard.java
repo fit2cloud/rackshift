@@ -1,8 +1,7 @@
 package io.rackshift.mybatis.domain;
 
-import lombok.Data;
-
 import java.io.Serializable;
+import lombok.Data;
 
 @Data
 public class NetworkCard implements Serializable {
@@ -19,6 +18,8 @@ public class NetworkCard implements Serializable {
     private String mac;
 
     private Long syncTime;
+
+    private Boolean pxe;
 
     private static final long serialVersionUID = 1L;
 }

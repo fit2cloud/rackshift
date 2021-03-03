@@ -45,6 +45,15 @@ public class MachineEntity {
 
     private String providerId;
     private String ruleId;
+    private String pxeMac;
+
+    public String getPxeMac() {
+        return pxeMac;
+    }
+
+    public void setPxeMac(String pxeMac) {
+        this.pxeMac = pxeMac;
+    }
 
     public String getStatus() {
         return status;

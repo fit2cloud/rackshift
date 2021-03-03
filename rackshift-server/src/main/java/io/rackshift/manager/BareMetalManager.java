@@ -186,6 +186,9 @@ public class BareMetalManager {
             networkCardMapper.deleteByExample(networkCardExample);
             nics.forEach(d -> {
                 d.setBareMetalId(bareMetal.getId());
+                if (!StringUtils.isAnyBlank(e.getPxeMac(), d.getMac()) && d.getMac().equalsIgnoreCase(e.getPxeMac())) {
+                    d.setPxe(true);
+                }
                 d.setSyncTime(now);
                 networkCardMapper.insertSelective(d);
             });

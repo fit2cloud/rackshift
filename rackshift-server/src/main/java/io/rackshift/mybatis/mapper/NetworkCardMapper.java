@@ -2,9 +2,8 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.NetworkCard;
 import io.rackshift.mybatis.domain.NetworkCardExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface NetworkCardMapper {
     long countByExample(NetworkCardExample example);

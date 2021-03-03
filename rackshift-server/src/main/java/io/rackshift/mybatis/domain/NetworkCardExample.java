@@ -583,6 +583,66 @@ public class NetworkCardExample {
             addCriterion("sync_time not between", value1, value2, "syncTime");
             return (Criteria) this;
         }
+
+        public Criteria andPxeIsNull() {
+            addCriterion("pxe is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeIsNotNull() {
+            addCriterion("pxe is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeEqualTo(Boolean value) {
+            addCriterion("pxe =", value, "pxe");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeNotEqualTo(Boolean value) {
+            addCriterion("pxe <>", value, "pxe");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeGreaterThan(Boolean value) {
+            addCriterion("pxe >", value, "pxe");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("pxe >=", value, "pxe");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeLessThan(Boolean value) {
+            addCriterion("pxe <", value, "pxe");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeLessThanOrEqualTo(Boolean value) {
+            addCriterion("pxe <=", value, "pxe");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeIn(List<Boolean> values) {
+            addCriterion("pxe in", values, "pxe");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeNotIn(List<Boolean> values) {
+            addCriterion("pxe not in", values, "pxe");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeBetween(Boolean value1, Boolean value2) {
+            addCriterion("pxe between", value1, value2, "pxe");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("pxe not between", value1, value2, "pxe");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

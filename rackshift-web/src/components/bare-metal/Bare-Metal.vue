@@ -435,11 +435,13 @@
                 <tr>
                   <td>{{ $t('nic_number') }}</td>
                   <td>{{ $t('mac') }}</td>
+                  <td>{{ $t('is_pxe') }}</td>
                   <td>{{ $t('sync_time') }}</td>
                 </tr>
                 <tr v-for="c in nics">
                   <td>{{ c.number }}</td>
                   <td>{{ c.mac }}</td>
+                  <td>{{ $t(c.pxe) }}</td>
                   <td>{{ c.syncTime | dateFormat }}</td>
                 </tr>
               </table>

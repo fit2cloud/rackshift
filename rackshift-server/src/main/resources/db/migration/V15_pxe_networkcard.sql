@@ -1,0 +1,1 @@
+ALTER TABLE network_card ADD COLUMN pxe TINYINT (1) COMMENT '是否是PXE网卡';

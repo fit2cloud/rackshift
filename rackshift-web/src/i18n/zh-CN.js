@@ -444,4 +444,7 @@ export default {
     "i18n_yigou_disk": " 组存在异构磁盘（比如机械和固态），不能创建 RAID!",
     "COMPLETE": "完成",
     "not_discoveryed": "未完成主动发现，请执行对服务器进行 PXE重启！再执行工作流！",
+    "is_pxe": "PXE 网卡",
+    "true": "是",
+    "false": "否",
 }

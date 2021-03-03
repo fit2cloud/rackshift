@@ -440,4 +440,5 @@ export default {
     "i18n_yigou_disk": " the group has heterogeneous disks (such as mechanical and solid state), so raid cannot be created! ",
     "COMPLETE": "complete",
     "not_discoveryed": "active discovery has not been completed, please restart the server by PXE! ",
+    "is_pxe": "PXE Card",
 }

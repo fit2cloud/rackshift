@@ -43,6 +43,7 @@ public class SyncRackJob {
                     String type = nodeObj.getString("type");
                     if ("compute".equalsIgnoreCase(type)) {
                         MachineEntity en = rackHDService.getNodeEntity("http://" + endPoint.getIp() + ":9090", nodeObj.getString("id"), null);
+                        en.setPxeMac(nodeObj.getString("name"));
                         if (en != null) {
                             en.setEndPoint(endPoint.getId());
                             entities.add(en);

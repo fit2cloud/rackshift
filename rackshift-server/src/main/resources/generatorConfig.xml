@@ -69,7 +69,7 @@
 <!--        <table tableName="workflow"/>-->
 <!--        <table tableName="bare_metal_rule"/>-->
 <!--        <table tableName="instruction"/>-->
-        <table tableName="instruction_log"/>
+        <table tableName="network_card"/>
 <!--        <table tableName="ip"/>-->
 
     </context>
