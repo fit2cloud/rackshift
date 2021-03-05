@@ -9,7 +9,7 @@ RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖�
 
 ![runoob](rs-main.png)
 
-## 快速开始
+<a href="https://rackshift-docs.fit2cloud.com/quick_start/" target="_blank" style="font-size:26px;font-weight:600">快速开始</a>
 
 仅需两步快速安装 RackShift：
 
