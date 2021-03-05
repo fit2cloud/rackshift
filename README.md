@@ -9,15 +9,15 @@ RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖�
 
 ![runoob](rs-main.png)
 
-# [快速开始](https://rackshift-docs.fit2cloud.com/quick_start/)
+## 快速开始
 
 仅需两步快速安装 RackShift：
-
  * 准备一台不小于 8G 内存，50G 硬盘且可以访问互联网的 64位 Linux 主机；
  * 以 root 用户执行如下命令一键安装 RackShift。
 ```sh
 export serverIp=您用作PXE网卡的IP地址 && curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh | sh
 ```
+* 详细的离线&在线安装教程请看 [安装文档](https://rackshift-docs.fit2cloud.com/quick_start/)
 
 ## 帮助文档
 - [帮助文档](https://rackshift-docs.fit2cloud.com/)
