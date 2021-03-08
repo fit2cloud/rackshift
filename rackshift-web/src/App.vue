@@ -152,7 +152,8 @@ body {
 #main-header {
   min-width: 1520px;
   height: 40px !important;
-  background: linear-gradient(to right, rgb(55, 71, 84) 20%, rgb(55, 71, 84) 80%);
+  /*background: linear-gradient(to right, rgb(55, 71, 84) 20%, rgb(55, 71, 84) 80%);*/
+  background: linear-gradient(to right, #004a71 20%, #004a71 80%);
   color: #333;
   z-index: 2;
   line-height: 40px;

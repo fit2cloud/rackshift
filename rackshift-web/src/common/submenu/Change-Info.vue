@@ -2,7 +2,7 @@
   <el-menu
       id="main-menu"
       :unique-opened=true
-      background-color="rgb(55,71,84)"
+      background-color="#004a71"
       text-color="#fff"
       active-text-color="#fff"
       class="main-header-menu"
