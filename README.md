@@ -67,7 +67,7 @@ export serverIp=您用作PXE网卡的IP地址 && curl -sSL https://github.com/ra
 
 ## 微信群
 
-![runnob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-21-03-01.png)
+![runnob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-21-03-08.png)
 如果看不到图片请先加入 QQ 群（693376431）或者打开帮助文档页面扫描加入
 - [二维码](http://149.129.105.194:8081/about/)
 
