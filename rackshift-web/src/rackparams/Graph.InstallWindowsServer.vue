@@ -15,8 +15,8 @@
             <el-input v-model="payLoad.options.defaults.username" autocomplete="off" aria-required="true"
                       maxlength="10"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('root_pwd')" prop="rootPassword">
-            <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
+          <el-form-item :label="$t('root_pwd')" prop="password">
+            <el-input v-model="payLoad.options.defaults.password" autocomplete="off"
                       show-password maxlength="10"></el-input>
           </el-form-item>
 
@@ -110,7 +110,7 @@ export default {
         hostname: [
           {validator: hostnameValidator, trigger: 'blur', vue: this},
         ],
-        rootPassword: [
+        password: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
         domain: [
@@ -224,12 +224,12 @@ export default {
       }
 
       let hostname = this.payLoad.options.defaults.hostname;
-      let rootPassword = this.payLoad.options.defaults.rootPassword;
+      let password = this.payLoad.options.defaults.password;
       let nic = this.payLoad.options.defaults.networkDevices[0].device;
       let ip = this.payLoad.options.defaults.networkDevices[0].ipv4.ipAddr;
       let gateway = this.payLoad.options.defaults.networkDevices[0].ipv4.gateway;
       let netmask = this.payLoad.options.defaults.networkDevices[0].ipv4.netmask;
-      if (isAnyBlank(hostname, rootPassword, nic, ip, gateway, netmask)) {
+      if (isAnyBlank(hostname, password, nic, ip, gateway, netmask)) {
         this.$message.error(this.$t("param_cannot_be_null!"));
         return false;
       }
