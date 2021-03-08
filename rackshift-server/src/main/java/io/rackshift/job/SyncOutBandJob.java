@@ -55,7 +55,7 @@ public class SyncOutBandJob {
                 IPMIUtil.Account account = new IPMIUtil.Account(o.getIp(), o.getUserName(), o.getPwd());
                 //找出对应ip的mac地址的物理机把mac地址回写到带外
                 BareMetalExample pmExample = new BareMetalExample();
-                pmExample.createCriteria().andManagementIpEqualTo(o.getIp());
+                pmExample.createCriteria().andIdEqualTo(o.getBareMetalId());
                 List<BareMetal> pms = bareMetalMapper.selectByExample(pmExample);
                 try {
 
