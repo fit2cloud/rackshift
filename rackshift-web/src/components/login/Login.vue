@@ -198,7 +198,7 @@ export default {
   margin: 20px auto 20px;
   position: relative;
   width: 80px;
-  background: #E95420;
+  background: #004a71;
 }
 
 .welcome {
@@ -224,8 +224,8 @@ export default {
 .btn > .submit {
   width: 100%;
   border-radius: 0;
-  border-color: #E95420;
-  background-color: #E95420;
+  border-color: #004a71;
+  background-color: #004a71;
 }
 
 .logo {
