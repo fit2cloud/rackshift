@@ -1,10 +1,12 @@
 package io.rackshift.strategy.statemachine.handler.param;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.config.WorkflowConfig;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.Endpoint;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,6 +28,13 @@ public class WindowsHandler implements IOsParamHandler {
             if (endps.size() > 0) {
                 String winPeUrl = String.format("http://%s:9090/common/winpe", endps.get(0).getIp());
                 params.getJSONObject("options").getJSONObject("defaults").put("repo", winPeUrl);
+                JSONArray networkDevices = params.getJSONObject("options").getJSONObject("defaults").getJSONArray("networkDevices");
+                if (networkDevices.size() > 0) {
+                    for (int i = 0; i < networkDevices.size(); i++) {
+                        if (StringUtils.isNotBlank(networkDevices.getJSONObject(i).getString("device"))) // windows 的坑 必须要转换
+                            networkDevices.getJSONObject(i).put("device", networkDevices.getJSONObject(i).getString("device").replace(":", "-"));
+                    }
+                }
             } else {
                 RSException.throwExceptions("error:no main endpoints");
             }
