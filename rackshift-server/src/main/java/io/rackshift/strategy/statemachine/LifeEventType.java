@@ -2,6 +2,7 @@ package io.rackshift.strategy.statemachine;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import io.rackshift.constants.RackHDConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ public enum LifeEventType {
     POST_OS_WORKFLOW_END("安装系统workflow执行完毕", new ArrayList<String>() {{
         add("Graph.InstallCentOS");
         add("Graph.InstallRHEL");
+        add("Graph.InstallWindowsServer");
     }}),
     POST_OS_WORKFLOW_CANCEL("取消安装系统workflow");
     @JSONField(name = "desc")
