@@ -7,7 +7,7 @@
 
 RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖裸金属服务器的发现、带外管理、系统安装（包含 RAID 配置）等。RackShift 基于任务工作流，提供可视化的 WebUI，支持市面上主流 X86 物理服务器品牌，如浪潮、戴尔、华为、联想、惠普等。
 
-![runoob](rs-main.png)
+![runoob](docs/pic/rs-main.png)
 
 ## 快速开始
 
@@ -43,7 +43,7 @@ export serverIp=您用作PXE网卡的IP地址 && curl -sSL https://github.com/ra
 [开发进度](https://github.com/rackshift/rackshift/projects/1)  
 
 ## 技术架构
-![runoob](rs-structure.jpg)
+![runoob](docs/pic/rs-structure.jpg)
 
 组件说明：
 
@@ -57,7 +57,7 @@ export serverIp=您用作PXE网卡的IP地址 && curl -sSL https://github.com/ra
 - DockerEngine：各组件的容器运行时。
 
 ## 组件调用关系
-![runoob](rs-call2.jpg)
+![runoob](docs/pic/rs-call2.jpg)
 
 ## 技术栈
 
@@ -67,7 +67,8 @@ export serverIp=您用作PXE网卡的IP地址 && curl -sSL https://github.com/ra
 
 ## 微信群
 
-![runnob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-21-03-08.png)
+![runnob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-21-03-08.png)  
+
 如果看不到图片请先加入 QQ 群（693376431）或者打开帮助文档页面扫描加入
 - [二维码](http://149.129.105.194:8081/about/)
 
