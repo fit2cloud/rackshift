@@ -407,8 +407,10 @@ public class RackHDService {
                     JSONObject fruDevice = fru.getJSONObject("Builtin FRU Device (ID 0)");
                     if (StringUtils.isAnyBlank(en.getModel(), en.getName(), en.getBrand())) {
                         en.setBrand(fruDevice.getString("Product Manufacturer"));
-                        en.setModel(fruDevice.getString("Board Product"));
-                        en.setName(en.getBrand() + " " + en.getModel());
+                        if (StringUtils.isBlank(en.getModel())) {
+                            en.setModel(fruDevice.getString("Board Product"));
+                            en.setName(en.getBrand() + " " + en.getModel());
+                        }
                         en.setSerialNo(fruDevice.getString("Product Serial"));
                     }
                 }
