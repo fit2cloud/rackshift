@@ -378,7 +378,7 @@ export default {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.get("/task/del/" + row.id, {}, (res) => {
+          HttpUtil.delete("/task/del/" + row.id, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
           });

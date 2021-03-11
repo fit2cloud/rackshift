@@ -254,7 +254,7 @@ export default {
       this.loading = true;
       this.editObj.brands = JSON.stringify(this.editObj.brands);
       if (this.editType == 'edit') {
-        HttpUtil.post("/endpoint/update", this.editObj, (res) => {
+        HttpUtil.put("/endpoint/update", this.editObj, (res) => {
           if (res.data) {
             this.editDialogVisible = false;
             this.editObj.defaultParams = JSON.stringify(this.editObj.defaultParams);
@@ -318,7 +318,7 @@ export default {
         this.$confirm(this.$t('confirm_to_del_endpoint'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.get("/endpoint/del/" + row.id, {}, (res) => {
+          HttpUtil.delete("/endpoint/del/" + row.id, {}, (res) => {
             if (res.data) {
               this.$message.success(this.$t('delete_success'));
             } else {

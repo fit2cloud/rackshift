@@ -181,7 +181,7 @@ export default {
       this.loading = true;
       this.editObj.brands = JSON.stringify(this.editObj.brands);
       if (this.editType == 'edit') {
-        HttpUtil.post("/system_parameter/update", this.editObj, (res) => {
+        HttpUtil.put("/system_parameter/update", this.editObj, (res) => {
           this.editDialogVisible = false;
           this.editObj.defaultParams = JSON.stringify(this.editObj.defaultParams);
           this.$message.success(this.$t('edit_success'));
@@ -236,7 +236,7 @@ export default {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.get("/system_parameter/del/" + row.id, {}, (res) => {
+          HttpUtil.delete("/system_parameter/del/" + row.id, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
           });

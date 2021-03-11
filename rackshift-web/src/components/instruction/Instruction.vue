@@ -485,7 +485,7 @@ export default {
       let param = JSON.parse(JSON.stringify(this.editObj));
       param.pluginId = this.pluginId;
       if (this.editType == 'edit') {
-        HttpUtil.post("/instruction/update", param, (res) => {
+        HttpUtil.put("/instruction/update", param, (res) => {
           this.editDialogVisible = false;
           this.$message.success(this.$t('edit_success'));
           this.getData();
@@ -582,7 +582,7 @@ export default {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.get("/instruction/del/" + row.id, {}, (res) => {
+          HttpUtil.delete("/instruction/del/" + row.id, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
           });

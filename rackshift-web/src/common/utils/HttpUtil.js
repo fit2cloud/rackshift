@@ -62,12 +62,59 @@ const HttpUtil = {
         });
     },
 
+    delete: function (url, params, resolve, reject) {
+        axios.delete(url, params).then((res) => {
+            if (res) {
+                if (res.data && res.data.success) {
+                    resolve(res.data);
+                } else {
+                    if (res.data) {
+                        if (reject) {
+                            reject(res.data);
+                        } else {
+                            MessageBox.alert(res.data);
+                        }
+                    } else {
+                        MessageBox.alert(i18n.t('network_error'));
+                    }
+                }
+            }
+        }).catch((e) => {
+            if (LoginError.prototype.isPrototypeOf(e)) {
+                loginFail();
+            } else {
+                MessageBox.alert(i18n.t('network_error'));
+            }
+        });
+    },
+
     getAsync: async function (url, params) {
         return axios.get(url, params);
     },
 
     post: (url, data, resolve, errorHandler) => {
         axios.post(url, data, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then((res) => {
+                resolve(res.data);
+            }
+        ).catch((e) => {
+            if (errorHandler) {
+                errorHandler(e);
+            } else {
+                if (LoginError.prototype.isPrototypeOf(e)) {
+                    loginFail();
+                } else {
+                    MessageBox.alert(i18n.t('network_error'));
+                }
+            }
+        });
+    },
+
+    put: (url, data, resolve, errorHandler) => {
+        axios.put(url, data, {
             headers: {
                 "Content-Type": "application/json"
             }

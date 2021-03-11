@@ -238,7 +238,7 @@ export default {
       if (!this.validateResult) return;
       this.loading = true;
       if (this.editType == 'edit') {
-        HttpUtil.post("/user/update", this.editObj, (res) => {
+        HttpUtil.put("/user/update", this.editObj, (res) => {
           this.drawer = false;
           this.$message.success(this.$t('edit_success'));
           this.cancelForm();
@@ -299,7 +299,7 @@ export default {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.get("/user/del/" + encodeURIComponent(row.id), {}, (res) => {
+          HttpUtil.delete("/user/del/" + encodeURIComponent(row.id), {}, (res) => {
             if (res.data) {
               this.$message.success(this.$t('delete_success'));
               this.getData();

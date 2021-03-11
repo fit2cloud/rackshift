@@ -11,15 +11,13 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class LoginController {
 
     @ResponseBody
-    @RequestMapping("/signin")
+    @PostMapping("/signin")
     public ResultHolder login(@RequestBody JSONObject request) {
         String userName = request.getString("userName");
         String password = request.getString("password");
@@ -53,7 +51,7 @@ public class LoginController {
     }
 
     @ResponseBody
-    @RequestMapping("/isLogin")
+    @GetMapping("/isLogin")
     public ResultHolder isLogin() {
         if (SecurityUtils.getSubject().isAuthenticated()) {
             return ResultHolder.success(LocaleContextHolder.getLocale());
@@ -67,7 +65,7 @@ public class LoginController {
     }
 
     @ResponseBody
-    @RequestMapping("/logout")
+    @GetMapping("/logout")
     public ResultHolder logout() {
         SecurityUtils.getSubject().logout();
         return ResultHolder.success("");

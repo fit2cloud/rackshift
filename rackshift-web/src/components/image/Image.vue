@@ -316,7 +316,7 @@ export default {
       this.loading = true;
       this.editObj.brands = JSON.stringify(this.editObj.brands);
       if (this.editType == 'edit') {
-        HttpUtil.post("/image/update", this.editObj, (res) => {
+        HttpUtil.put("/image/update", this.editObj, (res) => {
           this.editDialogVisible = false;
           this.canConfirm = false;
           this.$message.success(this.$t('edit_success'));
@@ -388,7 +388,7 @@ export default {
           type: 'warning'
         }).then(() => {
           this.loadingList = true;
-          HttpUtil.get("/image/del/" + row.id, {}, (res) => {
+          HttpUtil.delete("/image/del/" + row.id, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
             this.loadingList = false;

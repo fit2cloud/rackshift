@@ -37,32 +37,32 @@ public class ImageController {
     private String fileUploadBase;
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("list/{page}/{pageSize}")
+    @PostMapping("list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody ImageDTO queryVO) {
         Page<Object> page1 = PageHelper.startPage(page, 1000, true);
         return ResultHolder.success(PageUtils.setPageInfo(page1, imageService.list(queryVO)));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("add")
+    @PostMapping("add")
     public ResultHolder add(@RequestBody ImageDTO queryVO) {
         return ResultHolder.success(imageService.add(queryVO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("update")
+    @PutMapping("update")
     public ResultHolder update(@RequestBody ImageDTO queryVO) {
         return ResultHolder.success(imageService.update(queryVO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del/{id}")
+    @DeleteMapping("del/{id}")
     public ResultHolder del(@PathVariable String id) {
         return ResultHolder.success(imageService.del(id));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del")
+    @PostMapping("del")
     public ResultHolder del(@RequestBody String[] ids) {
         return ResultHolder.success(imageService.del(ids));
     }

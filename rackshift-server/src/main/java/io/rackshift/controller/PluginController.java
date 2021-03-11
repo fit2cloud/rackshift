@@ -21,38 +21,38 @@ public class PluginController {
     private PluginService pluginService;
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("list/{page}/{pageSize}")
+    @PostMapping("list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody PluginDTO queryVO) {
         Page<Object> page1 = PageHelper.startPage(page, pageSize, true);
         return ResultHolder.success(PageUtils.setPageInfo(page1, pluginService.list(queryVO)));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("add")
+    @PostMapping("add")
     public ResultHolder add(@RequestBody PluginDTO queryVO) {
         return ResultHolder.success(pluginService.add(queryVO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("update")
+    @PutMapping("update")
     public ResultHolder update(@RequestBody PluginDTO queryVO) {
         return ResultHolder.success(pluginService.update(queryVO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del/{id}")
+    @DeleteMapping("del/{id}")
     public ResultHolder del(@PathVariable String id) {
         return ResultHolder.success(pluginService.del(id));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del")
+    @PostMapping("del")
     public ResultHolder del(@RequestBody String[] ids) {
         return ResultHolder.success(pluginService.del(ids));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("logs")
+    @GetMapping("logs")
     public ResultHolder logs(@RequestParam String id) {
         return ResultHolder.success(pluginService.logs(id));
     }

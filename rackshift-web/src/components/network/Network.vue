@@ -283,7 +283,7 @@ export default {
       }
       this.loading = true;
       if (this.editType == 'edit') {
-        HttpUtil.post("/network/update", this.editObj, (res) => {
+        HttpUtil.put("/network/update", this.editObj, (res) => {
           this.editDialogVisible = false;
           if (res.success) {
             this.$message.success(this.$t('edit_success'));
@@ -346,7 +346,7 @@ export default {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.get("/network/del/" + row.id, {}, (res) => {
+          HttpUtil.delete("/network/del/" + row.id, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
           });

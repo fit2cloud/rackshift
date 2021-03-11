@@ -8,10 +8,7 @@ import io.rackshift.model.RoleDTO;
 import io.rackshift.service.RoleService;
 import io.rackshift.utils.PageUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -22,32 +19,32 @@ public class RoleController {
     private RoleService roleService;
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("list/{page}/{pageSize}")
+    @PostMapping("list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody RoleDTO queryVO) {
         Page<Object> page1 = PageHelper.startPage(page, pageSize, true);
         return ResultHolder.success(PageUtils.setPageInfo(page1, roleService.list(queryVO)));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("add")
+    @PostMapping("add")
     public ResultHolder add(@RequestBody RoleDTO queryVO) {
         return ResultHolder.success(roleService.add(queryVO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("update")
+    @PutMapping("update")
     public ResultHolder update(@RequestBody RoleDTO queryVO) {
         return ResultHolder.success(roleService.update(queryVO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del/{id}")
+    @DeleteMapping("del/{id}")
     public ResultHolder del(@PathVariable String id) {
         return ResultHolder.success(roleService.del(id));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del")
+    @PostMapping("del")
     public ResultHolder del(@RequestBody String[] ids) {
         return ResultHolder.success(roleService.del(ids));
     }

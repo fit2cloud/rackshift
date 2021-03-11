@@ -329,7 +329,7 @@ export default {
       this.loading = true;
       this.editObj.brands = JSON.stringify(this.editObj.brands);
       if (this.editType == 'edit') {
-        HttpUtil.post("/workflow/update", this.editObj, (res) => {
+        HttpUtil.put("/workflow/update", this.editObj, (res) => {
           this.editDialogVisible = false;
           this.editObj.defaultParams = JSON.stringify(this.editObj.defaultParams);
           this.$message.success(this.$t('edit_success'));
@@ -393,7 +393,7 @@ export default {
           type: 'warning'
         }).then(() => {
           this.loadingList = true;
-          HttpUtil.get("/workflow/del/" + row.id, {}, (res) => {
+          HttpUtil.delete("/workflow/del/" + row.id, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
             this.loadingList = false;

@@ -8,10 +8,7 @@ import io.rackshift.model.ResultHolder;
 import io.rackshift.service.EndpointService;
 import io.rackshift.utils.PageUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -23,50 +20,50 @@ public class EndpointController {
     private EndpointService endpointService;
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("list/{page}/{pageSize}")
+    @PostMapping("list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody EndpointDTO queryVO) {
         Page<Object> page1 = PageHelper.startPage(page, pageSize, true);
         return ResultHolder.success(PageUtils.setPageInfo(page1, endpointService.list(queryVO)));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("getAllEndPoints")
+    @GetMapping("getAllEndPoints")
     public ResultHolder getAllEndPoints() {
         return ResultHolder.success(endpointService.getAllEndPoints());
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("getAllEndPointType")
+    @GetMapping("getAllEndPointType")
     public ResultHolder getAllEndPointType() {
         return ResultHolder.success(endpointService.getAllEndPointType());
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("add")
+    @PostMapping("add")
     public ResultHolder add(@RequestBody EndpointDTO queryVO) {
         return ResultHolder.success(endpointService.add(queryVO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("update")
+    @PutMapping("update")
     public ResultHolder update(@RequestBody EndpointDTO queryVO) {
         return ResultHolder.success(endpointService.update(queryVO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del/{id}")
+    @DeleteMapping("del/{id}")
     public ResultHolder del(@PathVariable String id) {
         return ResultHolder.success(endpointService.del(id));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del")
+    @PostMapping("del")
     public ResultHolder del(@RequestBody String[] ids) {
         return ResultHolder.success(endpointService.del(ids));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("sync")
+    @GetMapping("sync")
     public ResultHolder sync() {
         return ResultHolder.success(endpointService.sync());
     }

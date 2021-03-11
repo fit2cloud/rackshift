@@ -175,7 +175,7 @@ export default {
     confirmEdit() {
       this.loading = true;
       if (this.editType == 'edit') {
-        HttpUtil.post("/outband/update", this.editObj, (res) => {
+        HttpUtil.put("/outband/update", this.editObj, (res) => {
           this.editDialogVisible = false;
           this.$message.success(this.$t('edit_success'));
           this.loadingList = false;
@@ -225,7 +225,7 @@ export default {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.get("/outband/del/" + row.id, {}, (res) => {
+          HttpUtil.delete("/outband/del/" + row.id, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
           });

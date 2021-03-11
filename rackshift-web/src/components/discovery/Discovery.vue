@@ -404,7 +404,7 @@ export default {
       param.credentialParam = JSON.stringify(this.editObj.credentialParam);
       this.loading = true;
       if (this.editType == 'edit') {
-        HttpUtil.post("/discovery/update", param, (res) => {
+        HttpUtil.put("/discovery/update", param, (res) => {
           this.editDialogVisible = false;
           this.$message.success(this.$t('edit_success'));
           this.getData();
@@ -463,7 +463,7 @@ export default {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.get("/discovery/del/" + row.id, {}, (res) => {
+          HttpUtil.delete("/discovery/del/" + row.id, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
           });

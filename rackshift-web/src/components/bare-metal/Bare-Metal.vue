@@ -963,17 +963,6 @@ export default {
     restoreParams() {
       this.$refs.currentWfParamTemplate.restoreParams();
     },
-    expandChange(a) {
-      this.executionLogDrawer = true;
-      this.currentMachine = a;
-      this.logTitle = this.$t('execution_log') + ' ' + this.currentMachine.machineModel + ' ' + this.currentMachine.machineSn + ' ' + this.currentMachine.managementIp;
-      this.logPoller = window.setInterval(this.loadLogs, 1000);
-    },
-    loadLogs() {
-      HttpUtil.post("/execution-log/detaillist/" + 1 + "/" + 1000, {bareMetalId: this.currentMachine.id}, (res) => {
-        this.$set(this, 'logs', res.data.listObject);
-      });
-    },
     buildRequest(workflow) {
       let request = JSON.parse(JSON.stringify(workflow));
       delete request.componentId;
@@ -1263,7 +1252,7 @@ export default {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.get("/bare-metal/del/" + row.id, {}, (res) => {
+          HttpUtil.post("/bare-metal/del/" + row.id, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
           });

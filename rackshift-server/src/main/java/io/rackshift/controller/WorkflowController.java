@@ -35,58 +35,58 @@ public class WorkflowController {
         return workflowService.postParamsByName(requestDTO);
     }
 
-    @RequestMapping("/run")
+    @PostMapping("/run")
     public ResultHolder run(@RequestBody List<WorkflowRequestDTO> requestDTOs) {
         return workflowService.run(requestDTOs);
     }
 
-    @RequestMapping("listall")
+    @GetMapping("listall")
     public ResultHolder listall() {
         return workflowService.listall();
     }
 
-    @RequestMapping("listallEventType")
+    @GetMapping("listallEventType")
     public ResultHolder listallEventType() {
         return workflowService.listallEventType();
     }
 
-    @RequestMapping("listallRackHDWorkflows")
+    @GetMapping("listallRackHDWorkflows")
     public ResultHolder listallRackHDWorkflows() {
         return ResultHolder.success(allWorkflow);
     }
 
-    @RequestMapping("listallRackHDTasks")
+    @GetMapping("listallRackHDTasks")
     public ResultHolder listallRackHDTasks() {
         return ResultHolder.success(allTask);
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("list/{page}/{pageSize}")
+    @PostMapping("list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody WorkflowDTO queryVO) {
         Page<Object> page1 = PageHelper.startPage(page, pageSize, true);
         return ResultHolder.success(PageUtils.setPageInfo(page1, workflowService.list(queryVO)));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("add")
+    @PostMapping("add")
     public ResultHolder add(@RequestBody WorkflowDTO queryVO) {
         return ResultHolder.success(workflowService.add(queryVO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("update")
+    @PutMapping("update")
     public ResultHolder update(@RequestBody WorkflowDTO queryVO) {
         return ResultHolder.success(workflowService.update(queryVO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del/{id}")
+    @DeleteMapping("del/{id}")
     public ResultHolder del(@PathVariable String id) {
         return ResultHolder.success(workflowService.del(id));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del")
+    @PostMapping("del")
     public ResultHolder del(@RequestBody String[] ids) {
         return ResultHolder.success(workflowService.del(ids));
     }

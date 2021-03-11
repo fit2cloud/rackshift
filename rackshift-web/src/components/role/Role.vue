@@ -179,7 +179,7 @@ export default {
       if (!this.validateResult) return;
 
       if (this.editType == 'edit') {
-        HttpUtil.post("/role/update", this.editObj, (res) => {
+        HttpUtil.put("/role/update", this.editObj, (res) => {
           this.editDialogVisible = false;
           this.$message.success('edit_success');
           this.getData();
@@ -227,7 +227,7 @@ export default {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.get("/role/del/" + row.id, {}, (res) => {
+          HttpUtil.delete("/role/del/" + row.id, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success'));
           });

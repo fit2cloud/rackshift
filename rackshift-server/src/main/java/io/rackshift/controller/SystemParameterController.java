@@ -8,10 +8,7 @@ import io.rackshift.model.SystemParameterDTO;
 import io.rackshift.service.SystemParameterService;
 import io.rackshift.utils.PageUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -23,38 +20,38 @@ public class SystemParameterController {
     private SystemParameterService systemParameterService;
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("list/{page}/{pageSize}")
+    @PostMapping("list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody SystemParameterDTO queryVO) {
         Page<Object> page1 = PageHelper.startPage(page, pageSize, true);
         return ResultHolder.success(PageUtils.setPageInfo(page1, systemParameterService.list(queryVO)));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("getAllEndPointType")
+    @GetMapping("getAllEndPointType")
     public ResultHolder getAllEndPointType() {
         return ResultHolder.success(systemParameterService.getAllEndPointType());
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("add")
+    @PostMapping("add")
     public ResultHolder add(@RequestBody SystemParameterDTO queryVO) {
         return ResultHolder.success(systemParameterService.add(queryVO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("update")
+    @PutMapping("update")
     public ResultHolder update(@RequestBody SystemParameterDTO queryVO) {
         return ResultHolder.success(systemParameterService.update(queryVO));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del/{id}")
+    @DeleteMapping("del/{id}")
     public ResultHolder del(@PathVariable String id) {
         return ResultHolder.success(systemParameterService.del(id));
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del")
+    @PostMapping("del")
     public ResultHolder del(@RequestBody String[] ids) {
         return ResultHolder.success(systemParameterService.del(ids));
     }

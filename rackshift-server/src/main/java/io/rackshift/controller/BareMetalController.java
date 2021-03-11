@@ -9,10 +9,7 @@ import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.service.BareMetalService;
 import io.rackshift.utils.PageUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -22,30 +19,30 @@ public class BareMetalController {
     @Resource
     private BareMetalService bareMetalService;
 
-    @RequestMapping("/list/{page}/{pageSize}")
+    @PostMapping("/list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody BareMetalQueryVO queryVO) {
         Page<BareMetal> pager = PageHelper.startPage(page, pageSize);
         return ResultHolder.success(PageUtils.setPageInfo(pager, bareMetalService.list(queryVO)));
     }
 
-    @RequestMapping("/power/{id}/{power}")
+    @GetMapping("/power/{id}/{power}")
     public ResultHolder power(@PathVariable String id, @PathVariable String power) {
         return bareMetalService.power(id, power);
     }
 
-    @RequestMapping("/power/{power}")
+    @PostMapping("/power/{power}")
     public ResultHolder powerBatch(@RequestBody String[] ids, @PathVariable String power) {
         return bareMetalService.powerBatch(ids, power);
     }
 
-    @RequestMapping("/hardwares/{bareId}")
+    @GetMapping("/hardwares/{bareId}")
     public ResultHolder hardwares(@PathVariable String bareId) {
         return bareMetalService.hardwares(bareId);
     }
 
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @RequestMapping("del")
+    @PostMapping("del")
     public ResultHolder del(@RequestBody String[] ids) {
         return ResultHolder.success(bareMetalService.del(ids));
     }
