@@ -447,4 +447,5 @@ export default {
     "is_pxe": "PXE 网卡",
     "true": "是",
     "false": "否",
+    "params_not_valid_json": "参数不是标准 json 格式！",
 }

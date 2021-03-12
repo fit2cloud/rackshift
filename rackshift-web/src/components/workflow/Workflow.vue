@@ -325,7 +325,14 @@ export default {
         }
       });
       if (!this.validateResult) return;
-
+      try {
+        if (this.editObj.defaultParams) {
+          JSON.parse(this.editObj.defaultParams);
+        }
+      } catch (e) {
+        this.$message.error(this.$t('params_not_valid_json'));
+        return;
+      }
       this.loading = true;
       this.editObj.brands = JSON.stringify(this.editObj.brands);
       if (this.editType == 'edit') {
