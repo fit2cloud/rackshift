@@ -486,7 +486,6 @@ public class RackHDService {
                 Object processor = dmi.getObject("Processor Information", Object.class);
                 if (processor instanceof JSONArray) {
                     JSONArray cpuInfo = (JSONArray) processor;
-                    en.setCpu(cpuInfo.size());
                     en.setCore(Optional.ofNullable(cpuInfo.getJSONObject(0).getInteger("Core Count")).orElse(1));
                     en.setThread(Optional.ofNullable(cpuInfo.getJSONObject(0).getInteger("Thread Count")).orElse(2));
                     en.setCpuFre(cpuInfo.getJSONObject(0).getString("Current Speed"));
@@ -506,6 +505,7 @@ public class RackHDService {
                         cpu.setProcName(cpuInfo.getJSONObject(l).getString("Version"));
                         cpus.add(cpu);
                     }
+                    en.setCpu(cpus.size());
                 } else {
                     JSONObject cpuInfo = (JSONObject) processor;
                     en.setCpu(1);
