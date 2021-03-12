@@ -3,6 +3,7 @@ package io.rackshift.service;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.LogContainerCmd;
+import com.github.dockerjava.api.exception.DockerException;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.Image;
@@ -116,11 +117,14 @@ public class DockerClientService {
 
             logContainerCmd.exec(rc).awaitCompletion(10, TimeUnit.MINUTES);
             addInstructionLog(s.get("bareId"), instruction.getId(), sb.toString());
+
+            client.stopContainerCmd(containerId).exec();
+            client.removeContainerCmd(containerId).exec();
         } catch (InterruptedException e) {
             addInstructionLog(s.get("bareId"), instruction.getId(), "异常：" + e);
+        } catch (DockerException e) {
+            LogUtil.info(String.format("关闭停止容器发生异常,status:%s,%s", e.getHttpStatus(), e.getMessage()));
         }
-        client.stopContainerCmd(containerId).exec();
-        client.removeContainerCmd(containerId).exec();
     }
 
 
