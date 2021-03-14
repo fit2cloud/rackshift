@@ -1,6 +1,8 @@
 # RackShift
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/956d688c965044d49ec807817efd3ca0)](https://app.codacy.com/gh/rackshift/rackshift?utm_source=github.com&utm_medium=referral&utm_content=rackshift/rackshift&utm_campaign=Badge_Grade)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/rackshift/rackshift)](https://github.com/rackshift/rackshift/releases/latest)
+[![GitHub All Releases](https://img.shields.io/github/downloads/rackshift/rackshift/total)](https://github.com/rackshift/rackshift/releases)
 | Developer Wanted                                                                                             |
 | ------------------------------------------------------------------------------------------------------------ |
 | 我们正在寻找开发者，欢迎加入我们共同打造更好用、更强大的 RackShift。联系我们： [dahai.zhang@fit2cloud.com](mailto:dahai.zhang@fit2cloud.com) |
