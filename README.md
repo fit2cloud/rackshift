@@ -15,12 +15,15 @@ RackShift 遵循 GPL v2 开源协议，使用 SpringBoot/Vue 进行开发，界�
 ## 快速开始
 
 仅需两步快速安装 RackShift：
- * 准备一台不小于 8G 内存，50G 硬盘且可以访问互联网的 64位 Linux 主机；
- * 以 root 用户执行如下命令一键安装 RackShift。
+
+* 准备一台不小于 8G 内存，50G 硬盘且可以访问互联网的 64位 Linux 主机；
+* 以 root 用户执行如下命令一键安装 RackShift。
+
 ```sh
-export serverIp=您用作PXE网卡的IP地址 && curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh | sh
+  curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh | sh
 ```
-*  [安装文档](https://rackshift-docs.fit2cloud.com/quick_start/)
+
+* [安装文档](https://rackshift-docs.fit2cloud.com/quick_start/)
 
 ## 帮助文档
 - [帮助文档](https://rackshift-docs.fit2cloud.com/)
