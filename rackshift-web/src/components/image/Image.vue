@@ -105,6 +105,7 @@
                 <el-upload
                     class="upload-demo"
                     drag
+                    ref="uploader"
                     :before-upload="beforeUpload"
                     :on-success="afterUploadSuccess"
                     action="/image/upload"
@@ -332,6 +333,7 @@ export default {
           } else {
             this.$message.error(this.$t('upload') + this.$t('failed'));
           }
+          this.$refs.uploader.clearFiles();
           this.loading = false;
           this.canConfirm = true;
         }, null, (e) => {
