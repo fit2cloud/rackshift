@@ -1,4 +1,4 @@
-# RackShift
+# RackShift 开源裸金属管理平台
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/956d688c965044d49ec807817efd3ca0)](https://app.codacy.com/gh/rackshift/rackshift?utm_source=github.com&utm_medium=referral&utm_content=rackshift/rackshift&utm_campaign=Badge_Grade)
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/rackshift/rackshift)](https://github.com/rackshift/rackshift/releases/latest)
@@ -7,7 +7,8 @@
 | ------------------------------------------------------------------------------------------------------------ |
 | 我们正在寻找开发者，欢迎加入我们共同打造更好用、更强大的 RackShift。联系我们： [dahai.zhang@fit2cloud.com](mailto:dahai.zhang@fit2cloud.com) |
 
-RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖裸金属服务器的发现、带外管理、系统安装（包含 RAID 配置）等。RackShift 基于任务工作流，提供可视化的 WebUI，支持市面上主流 X86 物理服务器品牌，如浪潮、戴尔、华为、联想、惠普等。
+RackShift 是开源的裸金属全生命周期管理平台，功能覆盖裸金属服务器的发现、带外管理、RAID 配置、固件更新、操作系统安装等。
+RackShift 遵循 GPL v2 开源协议，使用 SpringBoot/Vue 进行开发，界面美观、用户体验好，集成并扩展 RackHD，支持的X86 服务器品牌包括浪潮、戴尔、华为、联想、惠普等。
 
 ![runoob](docs/pic/rs-main.png)
 
@@ -19,7 +20,7 @@ RackShift 是完全开源的裸金属服务器装机管理平台，功能覆盖�
 ```sh
 export serverIp=您用作PXE网卡的IP地址 && curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh | sh
 ```
-* 详细的离线&在线安装教程请看 [安装文档](https://rackshift-docs.fit2cloud.com/quick_start/)
+*  [安装文档](https://rackshift-docs.fit2cloud.com/quick_start/)
 
 ## 帮助文档
 - [帮助文档](https://rackshift-docs.fit2cloud.com/)
