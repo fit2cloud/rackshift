@@ -65,11 +65,6 @@ export default {
           index: '1'
         },
         {
-          name: 'help_doc',
-          value: 'help_doc',
-          index: '2'
-        },
-        {
           name: 'about',
           value: 'about',
           index: '3'
