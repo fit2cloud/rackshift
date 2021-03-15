@@ -45,7 +45,7 @@ jobs:
              * 准备一台不小于 8 G内存且可以访问互联网的 64位 Linux 主机；
              * 以 root 用户执行如下命令一键安装 RackShift。
             ```sh
-            curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh | sh
+            sh -c "$(curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh)"
             ```
 
             # 产品文档

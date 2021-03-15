@@ -383,7 +383,7 @@ export default {
     "创建Dell服务器磁盘Raid虚拟磁盘": "Create Dell RAID",
     "清空Dell服务器磁盘和Raid信息": "Erase Dell RAID",
     "搜集Dell服务器磁盘Raid信息": "Catalog Dell RAID",
-    "安装 RedHat7 64位版": "Install RedHat7 64",
+    "安装 RedHat7 64位版": "Install RHEL7 64",
     "安装 windowsServer 2012 标准版": "Install WindowsServer 2012 SE",
 
     "下发安装系统workflow": "Install OS Workflow",
@@ -433,7 +433,7 @@ export default {
     "scan_over": "Scan Over!",
     "confirm_to_del_endpoint": "Deleting node will delete all resources under the node at the same time. Confirm deletion?",
     "Centos 64位": "CentOS 64 Bit Version",
-    "RedHat 64位": "RedHat 64 Bit Version",
+    "RedHat 64位": "RHEL 64 Bit Version",
     "network_error": "Network Error，Please Check it out~",
     "cancelled": "cancelled",
     "netmask_validate_error": "Netmask is illegal!",

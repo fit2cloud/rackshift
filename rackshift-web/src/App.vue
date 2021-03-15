@@ -7,6 +7,7 @@
         </div>
         <div id="right-menu">
           <div class="align-right">
+            <HelpDoc></HelpDoc>
             <ChangeLanguage></ChangeLanguage>
             <ChangeInfo @about="about"></ChangeInfo>
             <AboutUs ref="about"></AboutUs>
@@ -27,17 +28,17 @@
             </el-submenu>
           </el-menu>
 
-          <div class="rs-divider">
-          </div>
+          <!--          <div class="rs-divider">-->
+          <!--          </div>-->
 
-          <a href="http://www.github.com/rackshift/rackshift" target="_blank" class="github">
-            <div>
-              <svg focusable="false" width="16" height="16">
-                <path d="M13,14H3c-0.6,0-1-0.4-1-1V3c0-0.6,0.4-1,1-1h5v1H3v10h10V8h1v5C14,13.6,13.6,14,13,14z"></path>
-                <path d="M10 1L10 2 13.3 2 9 6.3 9.7 7 14 2.7 14 6 15 6 15 1z"></path>
-              </svg>
-            </div>
-            <span class="text">GitHub</span></a>
+          <!--          <a href="http://www.github.com/rackshift/rackshift" target="_blank" class="github">-->
+          <!--            <div>-->
+          <!--              <svg focusable="false" width="16" height="16">-->
+          <!--                <path d="M13,14H3c-0.6,0-1-0.4-1-1V3c0-0.6,0.4-1,1-1h5v1H3v10h10V8h1v5C14,13.6,13.6,14,13,14z"></path>-->
+          <!--                <path d="M10 1L10 2 13.3 2 9 6.3 9.7 7 14 2.7 14 6 15 6 15 1z"></path>-->
+          <!--              </svg>-->
+          <!--            </div>-->
+          <!--            <span class="text">GitHub</span></a>-->
         </el-aside>
 
         <el-container>
@@ -55,6 +56,7 @@ import menu from './components/menu/menu'
 import HttpUtil from "./common/utils/HttpUtil";
 import ChangeLanguage from './common/submenu/Change-Language'
 import ChangeInfo from './common/submenu/Change-Info'
+import HelpDoc from './common/submenu/Help-Doc'
 import AboutUs from "@/common/about/AboutUs";
 
 export default {
@@ -72,7 +74,8 @@ export default {
   components: {
     ChangeLanguage,
     ChangeInfo,
-    AboutUs
+    AboutUs,
+    HelpDoc,
   }
   ,
   mounted() {

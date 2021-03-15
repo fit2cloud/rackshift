@@ -385,7 +385,7 @@ export default {
     "创建Dell服务器磁盘Raid虚拟磁盘": "創建 Dell 服務器 RAID",
     "清空Dell服务器磁盘和Raid信息": "清空 Dell 服務器 RAID",
     "搜集Dell服务器磁盘Raid信息": "搜集 Dell 服務器 RAID",
-    "安装 RedHat7 64位版": "安裝 RedHat7 64位版",
+    "安装 RedHat7 64位版": "安裝 RHEL7 64位版",
     "安装 windowsServer 2012 标准版": "安装 windowsServer 2012 標準版",
 
     "下发安装系统workflow": "安裝系統 WORKFLOW 事件",
@@ -435,7 +435,7 @@ export default {
     "scan_over": "掃描結束",
     "confirm_to_del_endpoint": "刪除節點將會同時刪除節點下的所有資源，確認刪除？",
     "Centos 64位": "CentOS 64位",
-    "RedHat 64位": "RedHat 64位",
+    "RedHat 64位": "RHEL 64位",
     "network_error": "網絡錯誤，請檢查網絡~",
     "cancelled": "已取消",
     "netmask_validate_error": "子網掩碼不合法！",
