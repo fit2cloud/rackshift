@@ -28,7 +28,7 @@ RackShift 遵循 GPL v2 开源协议，使用 SpringBoot/Vue 进行开发，界�
  * 以 root 用户执行如下命令一键安装 RackShift。
 
 ```sh
-export serverIp=您用作PXE网卡的IP地址 && curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh | sh
+curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh | sh
 ```
 
 *  [帮助文档](https://rackshift-docs.fit2cloud.com/) 
