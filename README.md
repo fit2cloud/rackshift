@@ -62,9 +62,6 @@ RackShift 遵循 GPL v2 开源协议，使用 SpringBoot/Vue 进行开发，界�
 - RabbitMQ: 各组件之间通信中间件；
 - DockerEngine：各组件的容器运行时。
 
-## 组件调用关系
-![runoob](docs/pic/rs-call2.jpg)
-
 ## 技术栈
 
 - 前端: [Vue.js](https://vuejs.org/)
