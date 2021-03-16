@@ -375,7 +375,7 @@ export default {
     "workflow_submitted": "工作流已下发，请到任务页面查看执行日志",
     "opt_fail_pxe": "操作失败！请先 PXE 启动机器等待物理机走完发现流程补充完整信息之后再补充带外信息",
 
-    "安装Centos7 64位版": "安装 Centos7 64位版",
+    "安装Centos7 64位版": "安装 CentOS7 64位版",
     "创建HPE服务器磁盘Raid虚拟磁盘": "创建 HPE 服务器 RAID",
     "搜集HPE服务器磁盘Raid信息": "搜集 HPE 服务器 RAID",
     "清空HPE服务器磁盘和Raid信息": "清空 HPE 服务器 RAID",
@@ -388,7 +388,7 @@ export default {
     "清空Dell服务器磁盘和Raid信息": "清空 Dell 服务器 RAID",
     "搜集Dell服务器磁盘Raid信息": "搜集 Dell 服务器 RAID",
     "安装 RedHat7 64位版": "安装 RHEL7 64位版",
-    "安装 windowsServer 2012 标准版": "安装 windowsServer 2012 标准版",
+    "安装 windowsServer 2012 标准版": "安装 WindowsServer 2012 标准版",
 
     "下发安装系统workflow": "安装系统 WORKFLOW 事件",
     "下发通用workflow": "通用 WORKFLOW 事件",
