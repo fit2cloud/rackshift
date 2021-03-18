@@ -4,7 +4,7 @@
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/rackshift/rackshift)](https://github.com/rackshift/rackshift/releases/latest)
 [![GitHub All Releases](https://img.shields.io/github/downloads/rackshift/rackshift/total)](https://github.com/rackshift/rackshift/releases)
 
-RackShift 是开源的裸金属服务器全生命周期管理平台，功能覆盖裸金属服务器的发现、带外管理、RAID 配置、固件更新、操作系统安装等。RackShift 要解决的问题包括：
+RackShift 是开源的裸金属服务器周期管理平台，功能覆盖裸金属服务器的发现、带外管理、RAID 配置、固件更新、操作系统安装等。RackShift 要解决的问题包括：
 
 - 各种网络环境下裸金属服务器的自动、手动发现；
 - 裸金属服务器的带外控制管理，包括开关机、重启、配置 PXE 等；
