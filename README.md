@@ -4,13 +4,17 @@
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/rackshift/rackshift)](https://github.com/rackshift/rackshift/releases/latest)
 [![GitHub All Releases](https://img.shields.io/github/downloads/rackshift/rackshift/total)](https://github.com/rackshift/rackshift/releases)
 
-RackShift 是开源的裸金属服务器管理平台，功能覆盖裸金属服务器的发现、带外管理、RAID 配置、固件更新、操作系统安装等。RackShift 要解决的问题包括：
+RackShift 是开源的裸金属服务器管理平台，功能覆盖裸金属服务器的发现、带外管理、RAID 配置、固件更新、操作系统安装等。
+
+RackShift 要解决的问题包括：
 
 - 各种网络环境下裸金属服务器的自动、手动发现；
 - 裸金属服务器的带外控制管理，包括开关机、重启、配置 PXE 等；
 - 裸金属服务器批量 RAID 配置、固件更新、装机等。
 
-RackShift 遵循 GPL v2 开源协议，使用 SpringBoot/Vue 进行开发，界面美观、用户体验好，集成并扩展 RackHD，支持的X86 服务器品牌包括浪潮、戴尔、华为、联想、惠普等。RackShift 的技术优势包括：
+RackShift 遵循 GPL v2 开源协议，使用 SpringBoot/Vue 进行开发，界面美观、用户体验好，集成并扩展 RackHD，支持的X86 服务器品牌包括浪潮、戴尔、华为、联想、惠普等。
+
+RackShift 的技术优势包括：
 
 - 全生命周期: 能够覆盖裸金属服务器从发现、配置、装机、重置的全生命周期管理；
 - 自动化：基于 PXE 或者带外协议实现远程自动化，解放机房运维人员；
