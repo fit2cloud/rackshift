@@ -114,7 +114,7 @@ export default {
         this.aboutUsVisible = true;
         this.$emit('about');
       } else {
-        window.open("https://rackshift-docs.fit2cloud.com/");
+        window.open("https://docs.rackshift.io/");
       }
     },
     change() {

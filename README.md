@@ -31,7 +31,7 @@ RackShift 遵循 GPL v2 开源协议，使用 SpringBoot/Vue 进行开发，界�
 sh -c "$(curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh)"
 ```
 
-*  [帮助文档](https://rackshift-docs.fit2cloud.com/) 
+*  [帮助文档](https://docs.rackshift.io/) 
 
 ## 微信群
 

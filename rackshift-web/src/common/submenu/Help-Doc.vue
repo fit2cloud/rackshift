@@ -30,7 +30,7 @@ export default {
       }
     },
     helpDoc() {
-      window.open("https://rackshift-docs.fit2cloud.com/");
+      window.open("https://docs.rackshift.io/");
     }
   }
 }
