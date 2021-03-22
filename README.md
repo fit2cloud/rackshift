@@ -20,6 +20,7 @@ RackShift 的技术优势包括：
 - 自动化：基于 PXE 或者带外协议实现远程自动化，解放机房运维人员；
 - 易操作: 浏览器可视化操作界面，易于操作和管理。
 
+![runnoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rackshift-component.png)
 ## UI 界面展示
 
 ![runoob](docs/pic/rs-main.png)
