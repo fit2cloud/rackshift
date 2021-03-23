@@ -35,8 +35,10 @@ RackShift 的技术优势包括：
 ```sh
 sh -c "$(curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh)"
 ```
+文档和演示视频：  
 
-*  [帮助文档](https://docs.rackshift.io/) 
+-  [帮助文档](https://docs.rackshift.io/) 
+-  [演示视频](https://www.bilibili.com/video/BV19y4y1t75E)
 
 ## 微信群
 
