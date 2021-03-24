@@ -129,7 +129,7 @@ public class DHCPService {
         fw.write(sw.toString());
         fw.close();
         sw.close();
-        if (dockerClientService.restartContainer("rackhd/isc-dhcp-server")) {
+        if (dockerClientService.restartContainer("isc-dhcp-server")) {
             return true;
         }
         return false;
