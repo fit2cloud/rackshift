@@ -23,7 +23,7 @@ RackShift 的技术优势包括：
 ![runnoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rackshift-component.png)
 ## UI 界面展示
 
-![runoob](docs/pic/rs-main.png)
+![runoob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rackshift-main.png)
 
 ## 快速开始
 
