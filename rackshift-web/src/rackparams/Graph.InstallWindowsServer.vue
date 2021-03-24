@@ -162,7 +162,7 @@ export default {
             "productkey": null,
             "smbUser": "onrack",
             "smbPassword": "onrack",
-            "smbRepo": "\\172.31.128.1\windowsServer2012",
+            "smbRepo": "\\\\172.31.128.1\\windowsServer2012",
             "repo": null
           }
         }
