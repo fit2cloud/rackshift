@@ -978,17 +978,26 @@ export default {
       delete request.friendlyNameInternational;
       return request;
     },
-    saveParamsAjax() {
-      this.selectedWorkflow[this.editWorkflowIndex].params = this.directCom ? this.$refs.currentWfParamTemplate.payLoad : this.$refs.currentWfParamTemplate.$children[0].payLoad;
-      this.selectedWorkflow[this.editWorkflowIndex].extraParams = this.directCom ? this.$refs.currentWfParamTemplate.extraParams : this.$refs.currentWfParamTemplate.$children[0].extraParams;
-      this.fillWfParamsLoading = true;
-      HttpUtil.post("/workflow/params", this.buildRequest(this.selectedWorkflow[this.editWorkflowIndex]), (res) => {
-        this.fillWfParamsLoading = false;
-        this.fillWfParams = false;
-      });
-    },
     saveParams() {
-      this.saveParamsAjax();
+      let canSave = true;
+      if (this.directCom) {
+        if (!this.$refs.currentWfParamTemplate.valid()) {
+          canSave = false;
+        }
+      } else {
+        if (!this.$refs.currentWfParamTemplate.$children[0].valid()) {
+          canSave = false;
+        }
+      }
+      if (canSave) {
+        this.selectedWorkflow[this.editWorkflowIndex].params = this.directCom ? this.$refs.currentWfParamTemplate.payLoad : this.$refs.currentWfParamTemplate.$children[0].payLoad;
+        this.selectedWorkflow[this.editWorkflowIndex].extraParams = this.directCom ? this.$refs.currentWfParamTemplate.extraParams : this.$refs.currentWfParamTemplate.$children[0].extraParams;
+        this.fillWfParamsLoading = true;
+        HttpUtil.post("/workflow/params", this.buildRequest(this.selectedWorkflow[this.editWorkflowIndex]), (res) => {
+          this.fillWfParamsLoading = false;
+          this.fillWfParams = false;
+        });
+      }
     },
     copy(obj) {
       return JSON.parse(JSON.stringify(obj));
@@ -1007,7 +1016,7 @@ export default {
       this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.$t(this.selectedWorkflow[index].friendlyName) + " " + this.$t('param_config');
       this.fillWfParams = true;
 
-      if (isInherit(this.selectedWorkflow[index].workflowName )) {
+      if (isInherit(this.selectedWorkflow[index].workflowName)) {
         this.directCom = false;
       } else {
         this.directCom = true;
