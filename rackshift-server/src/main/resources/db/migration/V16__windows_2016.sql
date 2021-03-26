@@ -1,4 +1,9 @@
-update workflow set brands = '[\'DELL\', \'HP\', \'Inspur\',\'ZTE\', \'Huawei\']' where injectable_name in ('Graph.InstallCentOS', 'Graph.InstallRHEL');
+update workflow
+set brands = '[\'DELL\', \'HP\', \'Inspur\',\'ZTE\', \'Huawei\']'
+where injectable_name in ('Graph.InstallCentOS'
+    , 'Graph.InstallRHEL'
+    , 'Graph.InstallWindowsServer'
+    , 'Graph.InstallWindowsServer2016');
 
 insert into workflow
 values (13,
@@ -33,4 +38,4 @@ values (13,
       "repo": null
     }
   }
-}','enable', now());
+}', 'enable', now());

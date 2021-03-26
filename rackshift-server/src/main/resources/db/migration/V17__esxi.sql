@@ -1,8 +1,16 @@
-{
+insert into workflow
+values (14,
+        'system',
+        'Graph.InstallESXi',
+        '安装 ESXI 6.7',
+        'POST_OS_WORKFLOW_START',
+        '[\'DELL\', \'HP\', \'Inspur\',\'ZTE\',\'Huawei\']',
+        'true',
+        '{
   "options": {
     "defaults": {
-      "version": "6.0",
-      "repo": "http://172.31.128.1:8080/esxi/6.0",
+      "version": "6.7",
+      "repo": "http://172.31.128.1:8080/esxi/6.7",
       "rootPassword": "RackHDRocks!",
       "hostname": "rackhd-node",
       "domain": "example.com",
@@ -10,10 +18,8 @@
         {
           "name": "rackhd1",
           "password": "123456",
-          "sshKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJQ631/sw3D40h/6JfA+PFVy5Ofz6eu7caxbv0zdw4fTJsrFcOliHZTEtAvqx7Oa8gqSC6d7v61M0croQxtt1DGUcH2G4yhfdZOlK4pr5McwtX0T/APACdAr1HtP7Bt7u43mgHpUG4bHGc+NoY7cWCISkxl4apkYWbvcoJy/5bQn0uRgLuHUNXxK/XuLT5vG76xxY+1xRa5+OIoJ6l78nglNGrj2V+jH3+9yZxI43S9I3NOCl4BvX5Cp3CFMHyt80gk2yM1BJpQZZ4GHewkI/XOIFPU3rR5+toEYXHz7kzykZsqt1PtbaTwG3TX9GJI4C7aWyH9H+9Bt76vH/pLBIn rackhd@rackhd-demo"
         }
       ],
-      "rootSshKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJQ631/sw3D40h/6JfA+PFVy5Ofz6eu7caxbv0zdw4fTJsrFcOliHZTEtAvqx7Oa8gqSC6d7v61M0croQxtt1DGUcH2G4yhfdZOlK4pr5McwtX0T/APACdAr1HtP7Bt7u43mgHpUG4bHGc+NoY7cWCISkxl4apkYWbvcoJy/5bQn0uRgLuHUNXxK/XuLT5vG76xxY+1xRa5+OIoJ6l78nglNGrj2V+jH3+9yZxI43S9I3NOCl4BvX5Cp3CFMHyt80gk2yM1BJpQZZ4GHewkI/XOIFPU3rR5+toEYXHz7kzykZsqt1PtbaTwG3TX9GJI4C7aWyH9H+9Bt76vH/pLBIn rackhd@rackhd-demo",
       "dnsServers": [
         "172.12.88.91",
         "192.168.20.77"
@@ -36,7 +42,7 @@
           "esxSwitchName": "vSwitch0"
         }
       ],
-      "installDisk": "t10.ATA_____SATADOM2DSH_TYPE_C_3SE___________________20151007AA8511725043",
+      "installDisk": "/dev/sda",
       "switchDevices": [
         {
           "switchName": "vSwitch0",
@@ -52,3 +58,4 @@
     }
   }
 }
+', 'enable', now());

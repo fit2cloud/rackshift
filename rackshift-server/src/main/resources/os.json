@@ -4,13 +4,7 @@
     "name": "Centos 64位",
     "versions": [
       {
-        "name": "7"
-      },
-      {
-        "name": "7.4"
-      },
-      {
-        "name": "7.6"
+        "name": "7.X"
       }
     ]
   },
@@ -20,6 +14,15 @@
     "versions": [
       {
         "name": "7.X"
+      }
+    ]
+  },
+  {
+    "id": "esxi",
+    "name": "esxi",
+    "versions": [
+      {
+        "name": "6.7"
       }
     ]
   }
