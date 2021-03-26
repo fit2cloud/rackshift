@@ -19,7 +19,7 @@
   },
   {
     "id": "esxi",
-    "name": "esxi",
+    "name": "ESXI",
     "versions": [
       {
         "name": "6.7"

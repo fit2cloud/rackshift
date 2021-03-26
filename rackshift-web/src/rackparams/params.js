@@ -5,6 +5,7 @@ import Graph_InstallWindowsServer_2016 from './Graph.InstallWindowsServer2016'
 import Graph_Raid_Create_AdaptecRAID from './Graph.Raid.Create.AdaptecRAID'
 import Graph_Raid_Create_HpssaRAID from './Graph.Raid.Create.HpssaRAID'
 import Graph_Raid_Create_PercRAID from './Graph.Raid.Create.PercRAID'
+import Graph_InstallESXi from './Graph.InstallESXi'
 
 const paramMap = {
     'Graph.InstallCentOS': Graph_InstallCentOS,
@@ -14,6 +15,7 @@ const paramMap = {
     'Graph.Raid.Create.AdaptecRAID': Graph_Raid_Create_AdaptecRAID,
     'Graph.Raid.Create.HpssaRAID': Graph_Raid_Create_HpssaRAID,
     'Graph.Raid.Create.PercRAID': Graph_Raid_Create_PercRAID,
+    'Graph.InstallESXi': Graph_InstallESXi,
 }
 
 // 继承的 vue 单文件需要特殊判定
