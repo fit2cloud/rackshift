@@ -448,4 +448,11 @@ export default {
     "true": "是",
     "false": "否",
     "params_not_valid_json": "参数不是标准 json 格式！",
+    "cannot_add_more": "不能添加更多网卡配置了！",
+    "pls_input_vlan": "请输入vlanId，多个请用英文”，“隔开！",
+    "like_vlan": "例如：vlanId = 1， 填写 ‘1’ 即可，多个请用英文逗号分隔",
+    "must_be_number": "只能是数字",
+    "i18n_mac_dup": "mac 地址不能重复",
+    "add_network_card": "添加网卡",
+    "del_network_card": "删除网卡",
 }

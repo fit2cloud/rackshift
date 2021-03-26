@@ -442,4 +442,10 @@ export default {
     "not_discoveryed": "active discovery has not been completed, please restart the server by PXE! ",
     "is_pxe": "PXE Card",
     "params_not_valid_json": "params is not valid json format!",
+    "pls_input_vlan": "Input vlanId please，use comma to split multiple vlan",
+    "like_vlan": "1",
+    "must_be_number": "Must be number",
+    "i18n_mac_dup": "Duplicated mac !",
+    "add_network_card": "Add network",
+    "del_network_card": "Del network",
 }

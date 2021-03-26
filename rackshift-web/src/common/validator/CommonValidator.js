@@ -1,5 +1,7 @@
 import {checkMask} from "@/common/utils/CommonUtil";
 
+let _ = require("lodash");
+
 function requiredValidator(rule, value, callback) {
     if (value === '' || !value) {
         if (rule.field == "userName") {
@@ -99,9 +101,23 @@ function ipValidator(rule, value, callback) {
     callback();
 }
 
-function maskValidator(rule, value, callback) {
+function vlanValidator(rule, value, callback) {
     if (value === '' || !value) {
         callback(new Error(rule.vue.$t('cannt_be_null')));
+    }
+    let vlanIds = _.uniqBy(value);
+    if (vlanIds.length != value.length)
+        callback(new Error(rule.vue.$t("")));
+    for (let i = 0; i < value.length; i++)
+        if (!/\d+$/.test(value[i])) {
+            callback(new Error(rule.vue.$t('must_be_number')));
+        }
+    callback();
+}
+
+function maskValidator(rule, value, callback) {
+    if (value === '' || !value) {
+        callback();
     }
     if (!/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value)) {
         callback(new Error(rule.vue.$t('ip_invalid_format')));
@@ -120,5 +136,6 @@ export {
     requiredSelectValidator,
     emailValidator,
     phoneValidator,
-    maskValidator
+    maskValidator,
+    vlanValidator
 }
