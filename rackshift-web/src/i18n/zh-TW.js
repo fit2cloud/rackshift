@@ -458,4 +458,6 @@ export default {
     "add_switch": "添加 vSwitch",
     "del_switch": "刪除 vSwitch",
     "i18n_at_least_sw0": "至少有一个 vSwitch0",
+    "i18n_at_least_dns": "至少有一个 dns",
+    "i18n_at_least_ntp": "至少有一个 ntp",
 }

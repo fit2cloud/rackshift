@@ -88,6 +88,12 @@
                        allow-create
                        default-first-option></el-select>
           </el-form-item>
+          <el-form-item :label="$t('ntpServers')" prop="ntpServers">
+            <el-select v-model="payLoad.options.defaults.ntpServers" multiple
+                       filterable
+                       allow-create
+                       default-first-option></el-select>
+          </el-form-item>
 
           <el-form-item :label="$t('vSwitch')">
             <RSButton @click="addSwitch" type="add" :tip="$t('add_switch')"></RSButton>
@@ -141,7 +147,7 @@ import {isAnyBlank} from "@/common/utils/CommonUtil";
 import {
   hostnameValidator,
   repoSelectValidator,
-  domainValidator ,
+  domainValidator,
   dnsValidator,
   ipValidator,
   requiredSelectValidator,
@@ -171,6 +177,9 @@ export default {
           {validator: domainValidator, trigger: 'blur', vue: this},
         ],
         dnsServers: [
+          {validator: dnsValidator, trigger: 'change', vue: this},
+        ],
+        ntpServers: [
           {validator: dnsValidator, trigger: 'change', vue: this},
         ],
         rootPassword: [
@@ -401,6 +410,16 @@ export default {
           this.$message.error(this.$t("i18n_at_least_sw0"));
           that.validateResult = false;
         }
+      }
+
+      if (this.payLoad.options.defaults.dnsServers && this.payLoad.options.defaults.dnsServers.length == 0) {
+        this.$message.error(this.$t("i18n_at_least_dns"));
+        that.validateResult = false;
+      }
+
+      if (this.payLoad.options.defaults.ntpServers && this.payLoad.options.defaults.ntpServers.length == 0) {
+        this.$message.error(this.$t("i18n_at_least_ntp"));
+        that.validateResult = false;
       }
 
       return this.validateResult;

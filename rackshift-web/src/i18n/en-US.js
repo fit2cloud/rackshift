@@ -452,4 +452,6 @@ export default {
     "add_switch": "Add vSwitch",
     "del_switch": "Del vSwitch",
     "i18n_at_least_sw0": "At least one vSwitch0",
+    "i18n_at_least_dns": "At least one dns",
+    "i18n_at_least_ntp": "At least one ntp",
 }
