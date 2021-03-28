@@ -1013,14 +1013,14 @@ export default {
           this.currentWfParamTemplate = this.selectedWorkflowComponent[comId];
         }
       }
-      this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.$t(this.selectedWorkflow[index].friendlyName) + " " + this.$t('param_config');
-      this.fillWfParams = true;
-
       if (isInherit(this.selectedWorkflow[index].workflowName)) {
         this.directCom = false;
       } else {
         this.directCom = true;
       }
+
+      this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.$t(this.selectedWorkflow[index].friendlyName) + " " + this.$t('param_config');
+      this.fillWfParams = true;
     },
     power(opt, row) {
       this.$confirm(this.$t('confirm') + this.$t('power_' + opt) + '?', this.$t('tips'), {

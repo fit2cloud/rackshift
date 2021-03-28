@@ -90,6 +90,7 @@ import {isAnyBlank} from "@/common/utils/CommonUtil";
 import {
   hostnameValidator,
   ipValidator,
+  domainValidator,
   requiredSelectValidator,
   requiredValidator
 } from "@/common/validator/CommonValidator";
@@ -114,7 +115,7 @@ export default {
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
         domain: [
-          {validator: requiredValidator, trigger: 'blur', vue: this},
+          {validator: domainValidator, trigger: 'blur', vue: this},
         ],
         username: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
@@ -253,6 +254,7 @@ export default {
             this.payLoad.options.defaults.repo = centosImage.url;
           } else {
             this.$message.error(this.$t('no_valid_image!'));
+            this.allImages = _.filter(this.allImages, i => i.os == 'windows_server');
           }
         }
       });

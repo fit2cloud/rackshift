@@ -111,6 +111,7 @@ export default {
     "OBM": "帶外",
     "change_pwd": "修改密碼",
     "ip_invalid_format": "IP 格式錯誤",
+    "invalid_format": "格式錯誤",
     "OverView": "概覽",
     "param_check_error": "慘數校驗失敗！",
     "mask": "子網掩碼",
@@ -453,4 +454,8 @@ export default {
     "i18n_mac_dup": "mac 地址不能重複",
     "add_network_card": "添加網卡",
     "del_network_card": "删除網卡",
+    "esxSwitchName": "vSwitch",
+    "add_switch": "添加 vSwitch",
+    "del_switch": "刪除 vSwitch",
+    "i18n_at_least_sw0": "至少有一个 vSwitch0",
 }

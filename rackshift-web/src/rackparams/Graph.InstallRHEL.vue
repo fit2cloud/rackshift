@@ -12,7 +12,9 @@
                       show-password maxlength="10"></el-input>
           </el-form-item>
           <el-form-item :label="$t('image')" prop="repo">
-            <el-select v-model="payLoad.options.defaults.repo" class="input-element">
+            <el-select v-model="payLoad.options.defaults.repo" class="input-element" filterable
+                       allow-create
+                       default-first-option>
               <el-option v-for="g in allImages" :label="g.name"
                          :value="g.url"></el-option>
             </el-select>
@@ -148,6 +150,7 @@ import HttpUtil from "../common/utils/HttpUtil";
 import {isAnyBlank} from "@/common/utils/CommonUtil";
 import {
   hostnameValidator,
+  repoSelectValidator,
   ipValidator,
   requiredSelectValidator,
   requiredValidator,
@@ -175,7 +178,7 @@ export default {
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
         repo: [
-          {validator: requiredSelectValidator, trigger: 'blur', vue: this, name: 'image'},
+          {validator: repoSelectValidator, trigger: 'blur', vue: this, name: 'image'},
         ]
       },
       nicRules: {
@@ -469,6 +472,7 @@ export default {
             this.payLoad.options.defaults.repo = centosImage.url;
           } else {
             this.$message.error(this.$t('no_valid_image!'));
+            this.allImages = _.filter(this.allImages, i => i.os == 'redhat');
           }
         }
       });

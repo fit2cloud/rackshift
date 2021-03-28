@@ -7,27 +7,36 @@
             <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"
                       maxlength="10"></el-input>
           </el-form-item>
+          <el-form-item :label="$t('domain')" prop="domain">
+            <el-input v-model="payLoad.options.defaults.domain" autocomplete="off" aria-required="true"
+                      maxlength="10"></el-input>
+          </el-form-item>
           <el-form-item :label="$t('root_pwd')" prop="rootPassword">
             <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
                       show-password maxlength="10"></el-input>
           </el-form-item>
           <el-form-item :label="$t('image')" prop="repo">
-            <el-select v-model="payLoad.options.defaults.repo" class="input-element">
+            <el-select v-model="payLoad.options.defaults.repo" class="input-element" filterable
+                       allow-create
+                       default-first-option>
               <el-option v-for="g in allImages" :label="g.name"
                          :value="g.url"></el-option>
             </el-select>
           </el-form-item>
-        </el-col>
-        <el-col :span="13">
           <el-form-item :label="$t('network_card')">
             <RSButton @click="addNet" type="add" :tip="$t('add_network_card')"></RSButton>
 
-            <el-collapse v-model="activeNames">
+            <el-collapse v-model="nicActiveNames">
               <el-collapse-item v-for="(d, $index) in payLoad.options.defaults.networkDevices"
                                 :title="getNetworkName(d)" :name="$index + ''">
                 <RSButton @click="delNet" type="del" :tip="$t('del_network_card')"></RSButton>
                 <el-form :model="d" :rules="nicRules"
                          ref="nicForm" label-position="right" label-width="185px">
+
+                  <el-form-item prop="esxSwitchName" :label="$t('esxSwitchName')">
+                    <el-input v-model="d.esxSwitchName" class="input-element" disabled>
+                    </el-input>
+                  </el-form-item>
 
                   <el-form-item prop="device" :label="$t('pls_select_') + $t('network_card')">
                     <el-select v-model="d.device" class="input-element">
@@ -56,7 +65,7 @@
                       <el-input v-model="d.ipv4.netmask"></el-input>
                     </el-form-item>
 
-                    <el-form-item prop="vlanIds" :label="$t('vlan')">
+                    <el-form-item prop="vlanIds" :label="$t('VLAN')">
                       <el-select
                           v-model="d.ipv4.vlanIds"
                           multiple
@@ -72,6 +81,48 @@
             </el-collapse>
           </el-form-item>
         </el-col>
+        <el-col :span="13">
+          <el-form-item :label="$t('DNS')" prop="dnsServers">
+            <el-select v-model="payLoad.options.defaults.dnsServers" multiple
+                       filterable
+                       allow-create
+                       default-first-option></el-select>
+          </el-form-item>
+
+          <el-form-item :label="$t('vSwitch')">
+            <RSButton @click="addSwitch" type="add" :tip="$t('add_switch')"></RSButton>
+
+            <el-collapse v-model="switchActiveNames">
+              <el-collapse-item v-for="(d, $index) in payLoad.options.defaults.switchDevices"
+                                :title="d.switchName" :name="'switch' + $index + ''">
+                <RSButton @click="delSwitch" type="del" :tip="$t('del_switch')"></RSButton>
+                <el-form :model="d" :rules="nicRules"
+                         ref="nicForm" label-position="right" label-width="185px">
+
+                  <el-form-item prop="esxSwitchName" :label="$t('esxSwitchName')">
+                    <el-input v-model="d.switchName" class="input-element">
+                    </el-input>
+                  </el-form-item>
+
+                  <el-form-item prop="uplinks" :label="$t('pls_select_') + $t('network_card')">
+                    <el-select v-model="d.uplinks" class="input-element" multiple @change="changeSwitchName(d, $event)">
+                      <el-option :value="n.mac" v-for="n in nics">
+                  <span>
+                    {{
+                      n.number + '(' + n.mac + ')'
+                    }}
+                    <span style="color:red" v-if="n.pxe">{{ ' ' + $t('is_pxe') }}</span>
+                  </span>
+
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+
+                </el-form>
+              </el-collapse-item>
+            </el-collapse>
+          </el-form-item>
+        </el-col>
       </el-row>
 
       <el-row>
@@ -82,7 +133,6 @@
       </el-row>
 
     </el-form>
-    <!--    </el-card>-->
   </div>
 </template>
 <script>
@@ -90,6 +140,9 @@ import HttpUtil from "../common/utils/HttpUtil";
 import {isAnyBlank} from "@/common/utils/CommonUtil";
 import {
   hostnameValidator,
+  repoSelectValidator,
+  domainValidator ,
+  dnsValidator,
   ipValidator,
   requiredSelectValidator,
   requiredValidator,
@@ -108,16 +161,23 @@ export default {
   },
   data() {
     return {
-      activeNames: '0',
+      nicActiveNames: '0',
+      switchActiveNames: 'switch0',
       rules: {
         hostname: [
           {validator: hostnameValidator, trigger: 'blur', vue: this},
+        ],
+        domain: [
+          {validator: domainValidator, trigger: 'blur', vue: this},
+        ],
+        dnsServers: [
+          {validator: dnsValidator, trigger: 'change', vue: this},
         ],
         rootPassword: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
         repo: [
-          {validator: requiredSelectValidator, trigger: 'blur', vue: this, name: 'image'},
+          {validator: repoSelectValidator, trigger: 'blur', vue: this, name: 'image'},
         ]
       },
       nicRules: {
@@ -135,6 +195,12 @@ export default {
         ],
         vlanIds: [
           {validator: vlanValidator, trigger: 'change', vue: this},
+        ],
+        switchName: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        uplinks: [
+          {validator: requiredValidator, trigger: 'change', vue: this},
         ],
       },
       uefi: false,
@@ -162,7 +228,7 @@ export default {
             ],
             "networkDevices": [
               {
-                "device": "vmnic4",
+                "device": null,
                 "ipv4": {
                   "ipAddr": "172.31.128.7",
                   "gateway": "172.31.128.1",
@@ -212,6 +278,16 @@ export default {
   }
   ,
   methods: {
+    changeSwitchName(d) {
+      _.forEach(this.payLoad.options.defaults.networkDevices, (m) => {
+        if (m.device) {
+          if (d.uplinks && d.uplinks.indexOf(m.device) != -1) {
+            m.esxSwitchName = d.switchName;
+          }
+        }
+      })
+      console.log(d);
+    },
     getNetworkName(d) {
       return !d.device ? this.$t("network_card_mac") : this.$t("network_card_mac") + " " + d.device;
     },
@@ -232,6 +308,21 @@ export default {
           "gateway": "192.168.1.1",
           "netmask": "255.255.255.0"
         }
+      })
+    },
+    delSwitch(index) {
+      if (this.payLoad.options.defaults.switchDevices.length - 1 > 0) {
+        this.payLoad.options.defaults.switchDevices.splice(this.payLoad.options.defaults.switchDevices.length - 1, 1);
+      }
+    },
+    addSwitch() {
+      if (this.payLoad.options.defaults.switchDevices && this.payLoad.options.defaults.switchDevices.length == this.nics.length) {
+        this.$message.warning(this.$t("cannot_add_more"));
+        return;
+      }
+      this.payLoad.options.defaults.switchDevices.push({
+        "switchName": "vSwitch" + this.payLoad.options.defaults.switchDevices.length,
+        "uplinks": []
       })
     },
     restoreParams: function () {
@@ -304,6 +395,14 @@ export default {
           that.validateResult = false;
         }
       })
+
+      if (this.payLoad.options.defaults.switchDevices && this.payLoad.options.defaults.switchDevices.length > 0) {
+        if (_.filter(this.payLoad.options.defaults.switchDevices, (s) => s.switchName == 'vSwitch0').length == 0) {
+          this.$message.error(this.$t("i18n_at_least_sw0"));
+          that.validateResult = false;
+        }
+      }
+
       return this.validateResult;
     }
     ,
@@ -319,7 +418,9 @@ export default {
           if (centosImage) {
             this.payLoad.options.defaults.repo = centosImage.url;
           } else {
+
             this.$message.error(this.$t('no_valid_image!'));
+            this.allImages = _.filter(this.allImages, i => i.os == 'esxi');
           }
         }
       });

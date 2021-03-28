@@ -111,6 +111,7 @@ export default {
     "OBM": "Out of Band",
     "change_pwd": "Change Password",
     "ip_invalid_format": "IP format error",
+    "invalid_format": "Format error",
     "OverView": "Overview",
     "param_check_error": "The miserable check failed!",
     "mask": "Subnet Mask",
@@ -448,4 +449,7 @@ export default {
     "i18n_mac_dup": "Duplicated mac !",
     "add_network_card": "Add network",
     "del_network_card": "Del network",
+    "add_switch": "Add vSwitch",
+    "del_switch": "Del vSwitch",
+    "i18n_at_least_sw0": "At least one vSwitch0",
 }

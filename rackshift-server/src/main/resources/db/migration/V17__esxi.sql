@@ -10,45 +10,29 @@ values (14,
     "options": {
     "defaults": {
         "version": "6.7",
-            "repo": "http://172.31.128.1:8080/esxi/6.7",
+            "repo": null,
             "rootPassword": "RackHDRocks!",
             "hostname": "rackhd-node",
             "domain": "example.com",
-            "users": [
-            {
-                "name": "rackhd1",
-                "password": "123456"
-            }
-        ],
-            "dnsServers": [
-            "172.12.88.91",
-            "192.168.20.77"
-        ],
-            "ntpServers": [
-            "0.vmware.pool.ntp.org",
-            "1.vmware.pool.ntp.org"
-        ],
+            "dnsServers": [],
+            "ntpServers": [],
             "networkDevices": [
             {
-                "device": "vmnic4",
+                "device": null,
                 "ipv4": {
-                    "ipAddr": "172.31.128.7",
-                    "gateway": "172.31.128.1",
+                    "ipAddr": null,
+                    "gateway": null,
                     "netmask": "255.255.255.0",
-                    "vlanIds": [
-                        10
-                    ]
+                    "vlanIds": []
                 },
                 "esxSwitchName": "vSwitch0"
             }
         ],
-            "installDisk": "/dev/sda",
+            "installDisk": "firstdisk",
             "switchDevices": [
             {
                 "switchName": "vSwitch0",
-                "uplinks": [
-                    "vmnic4"
-                ]
+                "uplinks": []
             }
         ],
             "postInstallCommands": [
