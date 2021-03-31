@@ -11,8 +11,8 @@ values (14,
     "defaults": {
         "version": "6.7",
             "repo": null,
-            "rootPassword": "RackHDRocks!",
-            "hostname": "rackhd-node",
+            "rootPassword": "RackShift",
+            "hostname": "rackshift-node",
             "domain": "example.com",
             "dnsServers": [],
             "ntpServers": [],
@@ -42,3 +42,34 @@ values (14,
     }
 }
 }', 'enable', now());
+
+UPDATE workflow
+SET default_params = '{
+  "options": {
+    "defaults": {
+      "hostname": "localhost",
+      "domain": "rackshift",
+      "password": "RackShift",
+      "username": "onrack",
+      "firewallDisable": true,
+      "networkDevices": [
+        {
+          "device": null,
+          "ipv4": {
+            "ipAddr": "172.31.128.152",
+            "gateway": "172.31.128.5",
+            "netmask": "255.255.255.0"
+          }
+        }
+      ],
+      "productkey": null,
+      "smbUser": "onrack",
+      "smbPassword": "onrack",
+      "smbRepo": null,
+      "repo": null
+    }
+  }
+}'
+WHERE
+        injectable_name = 'Graph.InstallWindowsServer'
+   OR injectable_name = 'Graph.InstallWindowsServer2016';

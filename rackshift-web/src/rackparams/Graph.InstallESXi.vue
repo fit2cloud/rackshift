@@ -5,15 +5,15 @@
         <el-col :span="11">
           <el-form-item :label="$t('hostname')" prop="hostname">
             <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"
-                      maxlength="10"></el-input>
+                      maxlength="20"></el-input>
           </el-form-item>
           <el-form-item :label="$t('domain')" prop="domain">
             <el-input v-model="payLoad.options.defaults.domain" autocomplete="off" aria-required="true"
-                      maxlength="10"></el-input>
+                      maxlength="20"></el-input>
           </el-form-item>
           <el-form-item :label="$t('root_pwd')" prop="rootPassword">
             <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
-                      show-password maxlength="10"></el-input>
+                      show-password maxlength="20"></el-input>
           </el-form-item>
           <el-form-item :label="$t('image')" prop="repo">
             <el-select v-model="payLoad.options.defaults.repo" class="input-element" filterable
@@ -39,7 +39,8 @@
                   </el-form-item>
 
                   <el-form-item prop="device" :label="$t('pls_select_') + $t('network_card')">
-                    <el-select v-model="d.device" class="input-element">
+                    <el-select v-model="d.device" class="input-element"
+                               @change="changeSwitchName()">
                       <el-option :value="n.mac" v-for="n in nics">
                   <span>
                     {{
@@ -72,7 +73,15 @@
                           filterable
                           allow-create
                           default-first-option
+                          @change="changeInt(d)"
                           :placeholder="$t('pls_input_vlan')">
+                        <el-option
+                            v-for="item in objs"
+                            :label="item.name"
+                            :value="item.value"
+                        >
+
+                        </el-option>
                       </el-select>
                     </el-form-item>
                   </el-form>
@@ -106,12 +115,12 @@
                          ref="nicForm" label-position="right" label-width="185px">
 
                   <el-form-item prop="esxSwitchName" :label="$t('esxSwitchName')">
-                    <el-input v-model="d.switchName" class="input-element">
+                    <el-input v-model="d.switchName" class="input-element" @input="changeSwitchName()">
                     </el-input>
                   </el-form-item>
 
                   <el-form-item prop="uplinks" :label="$t('pls_select_') + $t('network_card')">
-                    <el-select v-model="d.uplinks" class="input-element" multiple @change="changeSwitchName(d, $event)">
+                    <el-select v-model="d.uplinks" class="input-element" multiple @change="changeSwitchName()">
                       <el-option :value="n.mac" v-for="n in nics">
                   <span>
                     {{
@@ -167,14 +176,21 @@ export default {
   },
   data() {
     return {
+      objs: [
+        {
+          name: '1',
+          value: 1
+        },
+        {
+          name: '2',
+          value: 2
+        },
+      ],
       nicActiveNames: '0',
       switchActiveNames: 'switch0',
       rules: {
         hostname: [
           {validator: hostnameValidator, trigger: 'blur', vue: this},
-        ],
-        domain: [
-          {validator: domainValidator, trigger: 'blur', vue: this},
         ],
         dnsServers: [
           {validator: dnsValidator, trigger: 'change', vue: this},
@@ -287,15 +303,20 @@ export default {
   }
   ,
   methods: {
-    changeSwitchName(d) {
+    changeInt(arr) {
+      let a = [];
+      arr.ipv4.vlanIds.forEach(v => a.push(Number(v)));
+      arr.ipv4.vlanIds = a;
+    },
+    changeSwitchName() {
       _.forEach(this.payLoad.options.defaults.networkDevices, (m) => {
-        if (m.device) {
-          if (d.uplinks && d.uplinks.indexOf(m.device) != -1) {
-            m.esxSwitchName = d.switchName;
-          }
-        }
+        _.forEach(this.payLoad.options.defaults.switchDevices, (s) => {
+          if (m.device)
+            if (s.uplinks && s.uplinks.indexOf(m.device) != -1) {
+              m.esxSwitchName = s.switchName;
+            }
+        });
       })
-      console.log(d);
     },
     getNetworkName(d) {
       return !d.device ? this.$t("network_card_mac") : this.$t("network_card_mac") + " " + d.device;
@@ -306,6 +327,10 @@ export default {
       }
     },
     addNet() {
+      if (this.nics.length == 0) {
+        this.$message.warning(this.$t("nic_not_found"));
+        return;
+      }
       if (this.payLoad.options.defaults.networkDevices && this.payLoad.options.defaults.networkDevices.length == this.nics.length) {
         this.$message.warning(this.$t("cannot_add_more"));
         return;
@@ -404,6 +429,31 @@ export default {
           that.validateResult = false;
         }
       })
+
+      if (this.payLoad.options.defaults.switchDevices && this.payLoad.options.defaults.switchDevices.length > 0) {
+        let swicthMap = {};
+        let macMap = {};
+
+        _.forEach(this.payLoad.options.defaults.switchDevices, d => swicthMap[d.switchName] ? swicthMap[d.switchName] = swicthMap[d.switchName] + 1 : swicthMap[d.switchName] = 1)
+        Object.keys(swicthMap).forEach(s => {
+          if (swicthMap[s] > 1) {
+            that.$message.error(s + that.$t("multiple"));
+            that.validateResult = false;
+            return;
+          }
+        })
+
+        _.forEach(this.payLoad.options.defaults.switchDevices, s => {
+          _.forEach(s.uplinks, m => macMap[m] ? macMap[m] = macMap[m] + 1 : macMap[m] = 1);
+        })
+        Object.keys(macMap).forEach(m => {
+          if (macMap[m] > 1) {
+            that.$message.error(m + that.$t("multiple"));
+            that.validateResult = false;
+            return;
+          }
+        })
+      }
 
       if (this.payLoad.options.defaults.switchDevices && this.payLoad.options.defaults.switchDevices.length > 0) {
         if (_.filter(this.payLoad.options.defaults.switchDevices, (s) => s.switchName == 'vSwitch0').length == 0) {

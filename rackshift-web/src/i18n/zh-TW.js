@@ -388,7 +388,8 @@ export default {
     "搜集Dell服务器磁盘Raid信息": "搜集 Dell 服務器 RAID",
     "安装 RedHat7 64位版": "安裝 RHEL7 64位版",
     "安装 windowsServer 2012 标准版": "安装 WindowsServer 2012 標準版",
-
+    "安装 windowsServer 2016 标准版": "安装 WindowsServer 2016 標準版",
+    "安装 ESXI 6.7": "安装 ESXI 6.7",
     "下发安装系统workflow": "安裝系統 WORKFLOW 事件",
     "下发通用workflow": "通用 WORKFLOW 事件",
     "补充OBM信息": "補充 OBM 信息",
@@ -448,6 +449,7 @@ export default {
     "false": "否",
     "params_not_valid_json": "參數不是標準 json 格式！",
     "cannot_add_more": "不能添加更多網卡配置了！",
+    "cannot_add_more_vs": "不能添加更多vSwitch配置了！",
     "pls_input_vlan": "请输入vlanId，多个请用英文”，“隔开！",
     "like_vlan": "例如：vlanId = 1， 填寫 ‘1’ 即可，多個請用英文逗號分隔",
     "must_be_number": "只能是數字",
@@ -460,4 +462,6 @@ export default {
     "i18n_at_least_sw0": "至少有一个 vSwitch0",
     "i18n_at_least_dns": "至少有一个 dns",
     "i18n_at_least_ntp": "至少有一个 ntp",
+    "multiple": " 重複",
+    "nic_not_found": "沒有找到網卡",
 }

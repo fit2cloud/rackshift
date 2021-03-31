@@ -5,11 +5,11 @@
         <el-col :span="11">
           <el-form-item :label="$t('hostname')" prop="hostname">
             <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"
-                      maxlength="10"></el-input>
+                      maxlength="20"></el-input>
           </el-form-item>
           <el-form-item :label="$t('root_pwd')" prop="rootPassword">
             <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
-                      show-password maxlength="10"></el-input>
+                      show-password maxlength="20"></el-input>
           </el-form-item>
           <el-form-item :label="$t('image')" prop="repo">
             <el-select v-model="payLoad.options.defaults.repo" class="input-element" filterable
@@ -122,6 +122,7 @@
                           multiple
                           filterable
                           allow-create
+                          @change="changeInt(d)"
                           default-first-option
                           :placeholder="$t('pls_input_vlan')">
                       </el-select>
@@ -278,6 +279,11 @@ export default {
   }
   ,
   methods: {
+    changeInt(arr) {
+      let a = [];
+      arr.ipv4.vlanIds.forEach(v => a.push(Number(v)));
+      arr.ipv4.vlanIds = a;
+    },
     getNetworkName(d) {
       return !d.device ? this.$t("network_card_mac") : this.$t("network_card_mac") + " " + d.device;
     },
@@ -287,6 +293,10 @@ export default {
       }
     },
     addNet() {
+      if(this.nics.length == 0){
+        this.$message.warning(this.$t("nic_not_found"));
+        return;
+      }
       if (this.payLoad.options.defaults.networkDevices && this.payLoad.options.defaults.networkDevices.length == this.nics.length) {
         this.$message.warning(this.$t("cannot_add_more"));
         return;

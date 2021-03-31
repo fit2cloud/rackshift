@@ -386,7 +386,8 @@ export default {
     "搜集Dell服务器磁盘Raid信息": "Catalog Dell RAID",
     "安装 RedHat7 64位版": "Install RHEL7 64",
     "安装 windowsServer 2012 标准版": "Install WindowsServer 2012 SE",
-
+    "安装 windowsServer 2016 标准版": "Install WindowsServer 2016 SE",
+    "安装 ESXI 6.7": "Install ESXI 6.7",
     "下发安装系统workflow": "Install OS Workflow",
     "下发通用workflow": "Normal Workflow",
     "补充OBM信息": "OBM Info",
@@ -454,4 +455,8 @@ export default {
     "i18n_at_least_sw0": "At least one vSwitch0",
     "i18n_at_least_dns": "At least one dns",
     "i18n_at_least_ntp": "At least one ntp",
+    "multiple": " duplicate",
+    "nic_not_found": "Cannot find Nic",
+    "cannot_add_more": "Cannot add more nic!",
+    "cannot_add_more_vs": "Cannot add more vSwitch!",
 }
