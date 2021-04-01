@@ -77,7 +77,7 @@
                           :placeholder="$t('pls_input_vlan')">
                         <el-option
                             v-for="item in objs"
-                            :label="item.name"
+                            :label="$t(item.name)"
                             :value="item.value"
                         >
 
@@ -178,13 +178,9 @@ export default {
     return {
       objs: [
         {
-          name: '1',
-          value: 1
-        },
-        {
-          name: '2',
-          value: 2
-        },
+          name: 'no_vlan',
+          value: 0
+        }
       ],
       nicActiveNames: '0',
       switchActiveNames: 'switch0',
@@ -219,7 +215,7 @@ export default {
           {validator: ipValidator, trigger: 'blur', vue: this},
         ],
         vlanIds: [
-          {validator: vlanValidator, trigger: 'change', vue: this},
+          {validator: vlanValidator, trigger: 'change', vue: this, require: true},
         ],
         switchName: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
@@ -311,10 +307,14 @@ export default {
     changeSwitchName() {
       _.forEach(this.payLoad.options.defaults.networkDevices, (m) => {
         _.forEach(this.payLoad.options.defaults.switchDevices, (s) => {
-          if (m.device)
+          if (m.device) {
             if (s.uplinks && s.uplinks.indexOf(m.device) != -1) {
               m.esxSwitchName = s.switchName;
             }
+          }
+          if (s.uplinks && s.uplinks.indexOf(m.device) == -1 && s.switchName == m.esxSwitchName) {
+            s.uplinks.push(m.device);
+          }
         });
       })
     },
@@ -472,12 +472,18 @@ export default {
         that.validateResult = false;
       }
 
+      if (!this.payLoad.options.defaults.rootPassword || this.payLoad.options.defaults.rootPassword.length < 7) {
+        this.$message.error(this.$t("i18n_ms_7_long"));
+        that.validateResult = false;
+      }
+
+
       return this.validateResult;
     }
     ,
     getAllImage: function () {
       HttpUtil.post("/image/list/" + 1 + "/" + 1000, {}, (res) => {
-        this.allImages = res.data.listObject;
+        this.allImages = _.filter(res.data.listObject, i => i.os == 'esxi');
         if (!this.allImages) {
           this.$message.error(this.$t('no_valid_image!'));
           return;
@@ -487,9 +493,7 @@ export default {
           if (centosImage) {
             this.payLoad.options.defaults.repo = centosImage.url;
           } else {
-
             this.$message.error(this.$t('no_valid_image!'));
-            this.allImages = _.filter(this.allImages, i => i.os == 'esxi');
           }
         }
       });

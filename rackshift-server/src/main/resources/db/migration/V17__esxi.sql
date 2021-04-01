@@ -13,7 +13,7 @@ values (14,
             "repo": null,
             "rootPassword": "RackShift",
             "hostname": "rackshift-node",
-            "domain": "example.com",
+            "domain": null,
             "dnsServers": [],
             "ntpServers": [],
             "networkDevices": [
@@ -70,6 +70,5 @@ SET default_params = '{
     }
   }
 }'
-WHERE
-        injectable_name = 'Graph.InstallWindowsServer'
+WHERE injectable_name = 'Graph.InstallWindowsServer'
    OR injectable_name = 'Graph.InstallWindowsServer2016';

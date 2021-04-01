@@ -464,4 +464,7 @@ export default {
     "i18n_at_least_ntp": "至少有一个 ntp",
     "multiple": " 重複",
     "nic_not_found": "沒有找到網卡",
+    "i18n_ms_7_long": "必須大於等於7個字符",
+    "no_vlan": " 無 vlan",
+    "must_between_0_4095": "必須是 0 - 4095",
 }

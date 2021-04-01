@@ -148,7 +148,7 @@ export default {
     "id": "ID",
     "proc_num_cores": "Number of processor cores",
     "view_detail": "View Details",
-    "selected_workflows": "Workflows to be Execute",
+    "selected_workflows": "Workflows to be Executed",
     "IP": "IP",
     "ip": "IP",
     "pls_input_phone": "Please enter the phone number",
@@ -459,4 +459,7 @@ export default {
     "nic_not_found": "Cannot find Nic",
     "cannot_add_more": "Cannot add more nic!",
     "cannot_add_more_vs": "Cannot add more vSwitch!",
+    "i18n_ms_7_long": "at least be 7 characters long",
+    "no_vlan": " no vlan",
+    "must_between_0_4095": "must between 0 - 4095",
 }
