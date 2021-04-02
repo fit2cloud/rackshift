@@ -4,8 +4,8 @@
 name: build rackshift image with maven & node
 
 on:
-  create:
-    branches: [ master ]
+  push:
+    branches: [ v1.0.1 ]
 
 jobs:
   build:
@@ -51,4 +51,4 @@ jobs:
           cd ./rackshift-server
           sudo docker build -t rackshift/rackshift:actions .
           sudo docker login --username=${{secrets.DH_USERNAME}} --password=${{ secrets.DH_PWD }}
-          sudo docker push rackshift/rackshift:actions
+          sudo docker push rackshift/rackshift:v1.0.1
