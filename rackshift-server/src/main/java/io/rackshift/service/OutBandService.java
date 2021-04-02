@@ -1,17 +1,18 @@
 package io.rackshift.service;
 
+import io.rackshift.constants.RackHDConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.OutBandDTO;
 import io.rackshift.model.RSException;
+import io.rackshift.model.ResultHolder;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.domain.OutBandExample;
 import io.rackshift.mybatis.mapper.OutBandMapper;
 import io.rackshift.utils.BeanUtils;
+import io.rackshift.utils.IPMIUtil;
 import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -175,5 +176,63 @@ public class OutBandService {
         OutBandExample e = new OutBandExample();
         e.createCriteria().andBareMetalIdEqualTo(id);
         outBandMapper.deleteByExample(e);
+    }
+
+    public ResultHolder changePwd(String[] ids, String pwd) throws Exception {
+        int success = 0;
+        ResultHolder resultHolder = null;
+        for (String id : ids) {
+            BareMetal pm = bareMetalManager.getBareMetalById(id);
+
+            if (pm == null) {
+                throw new RuntimeException("物理机不存在！或者RackHD nodeid没有设置！");
+            }
+
+            OutBandExample outbandExample = new OutBandExample();
+            outbandExample.createCriteria().andBareMetalIdEqualTo(id);
+
+            List<OutBand> outBands = outBandMapper.selectByExample(outbandExample);
+            if (outBands.size() < 1) {
+                RSException.throwExceptions("请先配置带外信息！");
+            }
+
+            IPMIUtil.Account account = IPMIUtil.Account.build(outBands.get(0));
+            account.setNewPwd(pwd);
+            resultHolder = changePwd(account, outBands.get(0), pm);
+            if (resultHolder.isSuccess())
+                success++;
+        }
+        return ResultHolder.success("执行结果:成功" + success + "台，失败" + (ids.length - success) + "台!");
+    }
+
+    private ResultHolder changePwd(IPMIUtil.Account account, OutBand outBand, BareMetal bm) throws Exception {
+        try {
+            String brand = IPMIUtil.exeCommandForBrand(account);
+            String userIndex = IPMIUtil.exeCommandForUserIndex(brand, account);
+            int tryTimes = 0;
+            do {
+                if (userIndex.contains("Error")) {
+                    userIndex = IPMIUtil.exeCommandForUserIndex(bm.getMachineBrand(), account);
+                } else {
+                    break;
+                }
+                tryTimes++;
+            } while (tryTimes < 5);
+            IPMIUtil.exeCommand(account, String.format("user set password %s %s", userIndex, account.getNewPwd()));
+        } catch (Exception e) {
+        } finally {
+            try {
+                String powerResult = IPMIUtil.exeCommand(account, "power status");
+                if (powerResult.contains(RackHDConstants.PM_POWER_ON) || powerResult.contains(RackHDConstants.PM_POWER_OFF)) {
+                    outBand.setPwd(account.getNewPwd());
+                    fillOBMS(bm.getId(), outBand);
+                    return ResultHolder.success("修改密码成功！");
+                } else {
+                    return ResultHolder.error("修改密码失败！合法的密码应该包含大小写字母数字特殊字符，总共不少于8个");
+                }
+            } catch (Exception e) {
+                return ResultHolder.error("修改密码失败！");
+            }
+        }
     }
 }

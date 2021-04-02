@@ -31,6 +31,11 @@ public class OutBandController {
         return ResultHolder.success("");
     }
 
+    @PostMapping("/changePwd")
+    public ResultHolder changePwd(@RequestBody String[] ids, @RequestParam String pwd) throws Exception {
+        return outBandService.changePwd(ids, pwd);
+    }
+
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @PostMapping("list/{page}/{pageSize}")
     public ResultHolder list(@PathVariable int page, @PathVariable int pageSize, @RequestBody OutBandDTO queryVO) {

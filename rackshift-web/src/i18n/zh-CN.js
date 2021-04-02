@@ -110,6 +110,7 @@ export default {
     "GB": "GB",
     "OBM": "带外",
     "change_pwd": "修改密码",
+    "change": "修改",
     "ip_invalid_format": "IP 格式错误",
     "OverView": "概览",
     "param_check_error": "参数校验失败！",
@@ -449,4 +450,6 @@ export default {
     "false": "否",
     "params_not_valid_json": "参数不是标准 json 格式！",
     "custom": "自定义",
+    "change_ipmipwd": "修改 IPMI 密码",
+    "twp_pwd_notsame": "两次密码不一致",
 }

@@ -27,6 +27,8 @@
               </el-dropdown-item>
               <el-dropdown-item @click.native="fillOBM('obm', 'batch')">{{ $t('OBM') + $t('info') }}
               </el-dropdown-item>
+              <el-dropdown-item @click.native="openChangeOBM()">{{ $t("change") + $t('OBM') + $t('pwd') }}
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-button-group>
@@ -552,6 +554,24 @@
     </drawer>
     <!-- 执行器 end -->
 
+
+    <!--obm-->
+    <el-dialog :title="$t('change_ipmipwd')" :visible.sync="changeObm" width="35vw" :close-on-click-modal="false">
+      <el-form :model="form">
+        <el-form-item :label="$t('pwd')" :label-width="formLabelWidth">
+          <el-input v-model="curObm.pwd" autocomplete="off" show-password maxlength="30"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('confirm-password')" :label-width="formLabelWidth">
+          <el-input v-model="curObm.confirmPwd" autocomplete="off" show-password maxlength="30"></el-input>
+        </el-form-item>
+      </el-form>
+      <template v-slot:footer>
+        <div class="dialog-footer">
+          <el-button @click="changeObm = false">{{ $t('cancel') }}</el-button>
+          <el-button type="primary" @click="changeOBM()" :loading="obmLoading">{{ $t('confirm') }}</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </el-tabs>
 </template>
 
@@ -577,6 +597,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      changeObm: false,
       rules: {
         gateway: [
           {validator: ipValidator, trigger: 'blur', vue: this},
@@ -1049,6 +1070,47 @@ export default {
           });
         });
       }
+    },
+    openChangeOBM() {
+      if (!this.getSelectedIds().length) {
+        this.$message.error(this.$t('pls_select_') + this.$t('Bare Metal Server') + "!");
+        return;
+      }
+      this.changeObm = true;
+    },
+    changeOBM(id) {
+      this.$confirm(this.$t('confirm') + '?', this.$t('tips'), {
+        type: "warning"
+      }).then(() => {
+        let that = this;
+        let ids = that.getSelectedIds();
+        if (id) {
+          ids = [].concat(id);
+        }
+        if (!ids.length) {
+          this.$message.error(this.$t('pls_select_') + this.$t('Bare Metal Server') + "!");
+          return;
+        }
+
+        if (this.curObm.confirmPwd !== this.curObm.pwd) {
+          this.$message.error(this.$t("twp_pwd_notsame"));
+          return;
+        }
+
+        that.loadingList = true;
+        HttpUtil.post("/outband/changePwd?pwd=" + this.curObm.pwd, ids, (res) => {
+          if (res.success) {
+            this.$message.success(this.$t('success'));
+            this.curObm = {};
+          } else {
+            this.$message.error(res.message);
+          }
+          that.loadingList = false;
+        }, (msg) => {
+          that.$alert(msg);
+          that.loadingList = false;
+        });
+      });
     },
     getHardware() {
       HttpUtil.get("/bare-metal/hardwares/" + this.machine.id, null, (res) => {

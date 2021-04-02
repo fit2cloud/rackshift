@@ -442,4 +442,6 @@ export default {
     "not_discoveryed": "active discovery has not been completed, please restart the server by PXE! ",
     "is_pxe": "PXE Card",
     "params_not_valid_json": "params is not valid json format!",
+    "change_ipmipwd": "Reset IPMI password",
+    "twp_pwd_notsame": "Two password not the same!",
 }
