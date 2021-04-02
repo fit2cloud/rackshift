@@ -337,7 +337,7 @@ export default {
         this.editObj.credentialParam = [];
       this.editObj.credentialParam.push(
           {
-            "protocol": "SNMP",
+            "protocol": "IPMI+Rest",
           }
       );
     },
