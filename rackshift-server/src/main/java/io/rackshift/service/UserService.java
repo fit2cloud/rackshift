@@ -41,7 +41,7 @@ public class UserService {
             return null;
         }
         if (StringUtils.equals(UserStatus.DISABLED, user.getStatus())) {
-            RSException.throwExceptions(Translator.get("user has bean deleted!"));
+            RSException.throwExceptions(Translator.get("user_has_bean_deleted!"));
         }
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.createCriteria().andUserIdEqualTo(userName);
