@@ -557,11 +557,11 @@
 
     <!--obm-->
     <el-dialog :title="$t('change_ipmipwd')" :visible.sync="changeObm" width="35vw" :close-on-click-modal="false">
-      <el-form :model="form">
-        <el-form-item :label="$t('pwd')" :label-width="formLabelWidth">
+      <el-form :model="curObm" :rules="rules" ref="ipmiForm">
+        <el-form-item :label="$t('pwd')" :label-width="formLabelWidth" prop="pwd">
           <el-input v-model="curObm.pwd" autocomplete="off" show-password maxlength="30"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('confirm-password')" :label-width="formLabelWidth">
+        <el-form-item :label="$t('confirm-password')" :label-width="formLabelWidth" prop="confirmPwd">
           <el-input v-model="curObm.confirmPwd" autocomplete="off" show-password maxlength="30"></el-input>
         </el-form-item>
       </el-form>
@@ -588,7 +588,7 @@ import axios from 'axios'
 import {getIPRange} from 'get-ip-range'
 import bus from '../../common/bus/bus'
 import paramMap from '../../rackparams/params'
-import {ipValidator, maskValidator} from "@/common/validator/CommonValidator";
+import {ipValidator, maskValidator, requiredValidator} from "@/common/validator/CommonValidator";
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -610,6 +610,12 @@ export default {
         ],
         netmask: [
           {validator: maskValidator, trigger: 'blur', vue: this},
+        ],
+        pwd: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
+        ],
+        confirmPwd: [
+          {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
       },
       fillOBMMode: 'single',
@@ -1080,10 +1086,21 @@ export default {
       this.changeObm = true;
     },
     changeOBM(id) {
+      this.validateResult = true;
+      this.$refs.ipmiForm.validate((f) => {
+        if (!f) {
+          this.validateResult = false;
+        }
+      });
+      if (!this.validateResult) {
+        this.$message.error(this.$t('opt_fail'));
+        return;
+      }
       this.$confirm(this.$t('confirm') + '?', this.$t('tips'), {
         type: "warning"
       }).then(() => {
         let that = this;
+
         let ids = that.getSelectedIds();
         if (id) {
           ids = [].concat(id);
