@@ -1076,6 +1076,7 @@ export default {
         this.$message.error(this.$t('pls_select_') + this.$t('Bare Metal Server') + "!");
         return;
       }
+      this.curObm = {};
       this.changeObm = true;
     },
     changeOBM(id) {
@@ -1100,11 +1101,12 @@ export default {
         that.loadingList = true;
         HttpUtil.post("/outband/changePwd?pwd=" + this.curObm.pwd, ids, (res) => {
           if (res.success) {
-            this.$message.success(this.$t('success'));
+            this.$message.info(res.data);
             this.curObm = {};
           } else {
             this.$message.error(res.message);
           }
+          this.changeObm = false;
           that.loadingList = false;
         }, (msg) => {
           that.$alert(msg);

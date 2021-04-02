@@ -222,6 +222,7 @@ public class OutBandService {
         } catch (Exception e) {
         } finally {
             try {
+                account.setPwd(account.getNewPwd());
                 String powerResult = IPMIUtil.exeCommand(account, "power status");
                 if (powerResult.contains(RackHDConstants.PM_POWER_ON) || powerResult.contains(RackHDConstants.PM_POWER_OFF)) {
                     outBand.setPwd(account.getNewPwd());
