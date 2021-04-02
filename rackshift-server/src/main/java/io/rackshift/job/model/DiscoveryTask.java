@@ -117,7 +117,7 @@ public class DiscoveryTask extends Thread {
                                 entity = convert(iMetalProvider.getMachineEntity(JSONObject.toJSONString(request)));
                             }
                         } catch (Exception e) {
-                            LogUtil.info("爬虫抓取硬件信息失败！" + ExceptionUtils.getExceptionDetail(e));
+                            LogUtil.error("爬虫抓取硬件信息失败！" + ExceptionUtils.getExceptionDetail(e));
                         }
                         if (entity != null) {
                             entity.setProviderId(iMetalProvider.getName());
@@ -137,7 +137,7 @@ public class DiscoveryTask extends Thread {
                                 outBandService.saveOrUpdate(o, false);
                             }
                         } else {
-                            LogUtil.info("使用插件探测裸金属失败！" + JSONObject.toJSONString(request));
+                            LogUtil.error("使用插件探测裸金属失败！" + JSONObject.toJSONString(request));
                             if (ServiceConstants.IPMI_Rest.equalsIgnoreCase(request.getProtocol())) {
                                 onlyExtractIPMI(request, bareMetalRule);
                             }
@@ -159,45 +159,49 @@ public class DiscoveryTask extends Thread {
     }
 
     private void onlyExtractIPMI(ProtocolRequest request, BareMetalRule bareMetalRule) throws Exception {
-        IPMIUtil.Account account = IPMIUtil.Account.build(request.getHost(), request.getUserName(), request.getPwd());
-        //获取通用硬件信息
-        String commandResult = IPMIUtil.exeCommand(account, "fru");
-        JSONObject fruObj = IPMIUtil.transform(commandResult);
-        //获取bmc网卡信息
-        String bmcResult = IPMIUtil.exeCommand(account, "lan print");
-        JSONObject lanObj = IPMIUtil.transform(bmcResult);
+        try {
+            IPMIUtil.Account account = IPMIUtil.Account.build(request.getHost(), request.getUserName(), request.getPwd());
+            //获取通用硬件信息
+            String commandResult = IPMIUtil.exeCommand(account, "fru");
+            JSONObject fruObj = IPMIUtil.transform(commandResult);
+            //获取bmc网卡信息
+            String bmcResult = IPMIUtil.exeCommand(account, "lan print");
+            JSONObject lanObj = IPMIUtil.transform(bmcResult);
 
-        String powerResult = IPMIUtil.exeCommand(account, "power status");
+            String powerResult = IPMIUtil.exeCommand(account, "power status");
 
-        String machineBrand = fruObj.getString("Product Manufacturer");
-        String machineSn = fruObj.getString("Product Serial");
-        String name = machineBrand + " " + fruObj.getString("Product Name");
+            String machineBrand = fruObj.getString("Product Manufacturer");
+            String machineSn = fruObj.getString("Product Serial");
+            String name = machineBrand + " " + fruObj.getString("Product Name");
 
-        BareMetal physicalMachine = new BareMetal();
-        if (StringUtils.isNotBlank(name)) {
-            physicalMachine.setMachineModel(name);
+            BareMetal physicalMachine = new BareMetal();
+            if (StringUtils.isNotBlank(name)) {
+                physicalMachine.setMachineModel(name);
+            }
+            physicalMachine.setId(UUIDUtil.newUUID());
+            if (powerResult.contains(RackHDConstants.PM_POWER_ON)) {
+                physicalMachine.setPower(RackHDConstants.PM_POWER_ON);
+            } else if (powerResult.contains(RackHDConstants.PM_POWER_OFF)) {
+                physicalMachine.setPower(RackHDConstants.PM_POWER_OFF);
+            } else {
+                physicalMachine.setPower(RackHDConstants.PM_POWER_UNKNOWN);
+            }
+            physicalMachine.setManagementIp(account.getHost());
+            physicalMachine.setMachineSn(machineSn);
+            if (PluginConstants.DELL.equalsIgnoreCase(machineBrand)) {
+                physicalMachine.setMachineModel(PluginConstants.DELL + " " + fruObj.getString("Board Product"));
+            }
+            physicalMachine.setMachineBrand(machineBrand);
+            physicalMachine.setBmcMac(lanObj.getString("MAC Address"));
+            physicalMachine.setRuleId(bareMetalRule.getId());
+            //插入ipmi发现的物理机之前 再次用序列号查询一次 没有重复的才能插入
+            physicalMachine.setProviderId("");
+            physicalMachine.setStatus(LifeStatus.onrack.name());
+            boolean r = bareMetalManager.addToBareMetal(physicalMachine);
+            saveOutBand(account, physicalMachine, r);
+        } catch (Exception e) {
+            LogUtil.error("ipmi爬取信息失败", ExceptionUtils.getExceptionDetail(e));
         }
-        physicalMachine.setId(UUIDUtil.newUUID());
-        if (powerResult.contains(RackHDConstants.PM_POWER_ON)) {
-            physicalMachine.setPower(RackHDConstants.PM_POWER_ON);
-        } else if (powerResult.contains(RackHDConstants.PM_POWER_OFF)) {
-            physicalMachine.setPower(RackHDConstants.PM_POWER_OFF);
-        } else {
-            physicalMachine.setPower(RackHDConstants.PM_POWER_UNKNOWN);
-        }
-        physicalMachine.setManagementIp(account.getHost());
-        physicalMachine.setMachineSn(machineSn);
-        if (PluginConstants.DELL.equalsIgnoreCase(machineBrand)) {
-            physicalMachine.setMachineModel(PluginConstants.DELL + " " + fruObj.getString("Board Product"));
-        }
-        physicalMachine.setMachineBrand(machineBrand);
-        physicalMachine.setBmcMac(lanObj.getString("MAC Address"));
-        physicalMachine.setRuleId(bareMetalRule.getId());
-        //插入ipmi发现的物理机之前 再次用序列号查询一次 没有重复的才能插入
-        physicalMachine.setProviderId("");
-        physicalMachine.setStatus(LifeStatus.onrack.name());
-        boolean r = bareMetalManager.addToBareMetal(physicalMachine);
-        saveOutBand(account, physicalMachine, r);
     }
 
     private void saveOutBand(IPMIUtil.Account account, BareMetal bareMetal, boolean r) {
