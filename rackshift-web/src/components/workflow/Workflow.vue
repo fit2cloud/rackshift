@@ -260,6 +260,8 @@ export default {
     },
     getValidProText(row, column, cellValue, index) {
       if (column.property == 'type') {
+        if(cellValue == "user")
+          return this.$t("custom");
         return this.$t(cellValue);
       }
       if (cellValue === true) {

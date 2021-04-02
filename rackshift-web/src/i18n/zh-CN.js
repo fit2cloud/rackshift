@@ -305,9 +305,9 @@ export default {
     "click_to_upload": "点击上传",
     "uefi_boot": "UEFI 引导",
 
-    "not_detected": "未在位",
+    "not_detected": "不可用",
     "not_exists": "未检测到",
-    "detected": "在位",
+    "detected": "可用",
     "obm_not_exists": "带外信息未配置",
     "help_doc": "帮助文档",
 
@@ -448,4 +448,5 @@ export default {
     "true": "是",
     "false": "否",
     "params_not_valid_json": "参数不是标准 json 格式！",
+    "custom": "自定义",
 }
