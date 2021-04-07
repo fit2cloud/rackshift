@@ -152,7 +152,7 @@
                        default-first-option></el-select>
           </el-form-item>
 
-          <el-form-item :label="$t('ntp')" prop="ntp">
+          <el-form-item :label="$t('NTP')" prop="ntp">
             <el-input v-model="payLoad.options.defaults.ntp"></el-input>
           </el-form-item>
 
@@ -430,6 +430,60 @@ export default {
         return false;
       }
 
+      let exists = 0;
+      for (let j = 0; j < this.payLoad.options.defaults.installPartitions.length; j++) {
+        let p = this.payLoad.options.defaults.installPartitions[j];
+        if (!p.mountPoint) {
+          this.$message.error(this.$t('i18n_mount_point_cant_be_null'));
+          this.validateResult = false;
+        }
+        if (!p.size) {
+          this.$message.error(this.$t('i18n_capacity_cant_be_null'));
+          this.validateResult = false;
+        }
+        if (!p.fsType) {
+          this.$message.error(this.$t('i18n_file_type_cant_be_null'));
+          this.validateResult = false;
+        }
+        if (p.mountPoint != 'biosboot' && ((this.unit == 'GB' && p.size < 1) || (this.unit == 'MB' && p.size < 1024))) {
+          this.$message.error(this.$t('i18n_all_greater_than_1_gb'));
+          this.validateResult = false;
+        }
+        if (p.size && !/^[0-9]*$/.test(p.size)) {
+          if (p.size != 'auto') {
+            this.$message.error(this.$t('i18n_auto_or_number_0_or_1'));
+            this.validateResult = false;
+          }
+        }
+        if (p.size != 'auto' && !/\d+/.test(p.size)) {
+          this.$message.error(this.$t('i18n_must_be_auto_or_number'));
+          this.validateResult = false;
+        }
+        if (p.mountPoint == '/' || p.mountPoint == '/boot' || p.mountPoint == 'swap' || p.mountPoint == 'biosboot' || p.mountPoint == '/boot/efi') {
+          exists++;
+          if (p.mountPoint == 'swap' && p.fsType != 'swap') {
+            this.$message.error(this.$t('i18n_swap_must'));
+            this.validateResult = false;
+          }
+
+          if ((this.unit == 'GB' && p.size < 1 && p.mountPoint != 'biosboot' && p.mountPoint != '/boot/efi') || (this.unit == 'MB' && p.size < 1024 && p.mountPoint != 'biosboot' && p.mountPoint != '/boot/efi')) {
+            this.$message.error(this.$t('i18n_must_be_root_swap_boot'));
+            this.validateResult = false;
+          }
+        }
+      }
+      if (exists != 4) {
+        this.$message.error(this.$t('i18n_mut_only_one'));
+        this.validateResult = false;
+        return;
+      }
+
+      if (this.payLoad.options.defaults.installPartitions.length < 4) {
+        this.$message.error(this.$t('i18n_must_be_root_swap_boot'));
+        this.validateResult = false;
+        return;
+      }
+
       let macs = [];
       if (this.payLoad.options.defaults.networkDevices && this.payLoad.options.defaults.networkDevices.length > 0) {
         for (let a = 0; a < this.payLoad.options.defaults.networkDevices.length; a++) {
@@ -438,7 +492,6 @@ export default {
           }
         }
       }
-
       macs = _.groupBy(macs, function (b) {
         return b
       })

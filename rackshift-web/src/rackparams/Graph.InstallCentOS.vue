@@ -379,11 +379,13 @@ export default {
       if (exists != 4) {
         this.$message.error(this.$t('i18n_mut_only_one'));
         this.validateResult = false;
+        return;
       }
 
       if (this.payLoad.options.defaults.installPartitions.length < 4) {
         this.$message.error(this.$t('i18n_must_be_root_swap_boot'));
-        return false;
+        this.validateResult = false;
+        return;
       }
 
       return this.validateResult;
