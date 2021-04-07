@@ -482,7 +482,12 @@ export default {
         }
       }
 
-      if (this.payLoad.options.defaults.ntpServers && this.payLoad.options.defaults.ntpServers.length == 0) {
+      if (this.payLoad.options.defaults.dnsServers && this.payLoad.options.defaults.dnsServers.length == 0) {
+        this.$message.error(this.$t("i18n_at_least_dns"));
+        that.validateResult = false;
+      }
+
+      if (!this.payLoad.options.defaults.ntp || this.payLoad.options.defaults.ntp.length === 0) {
         this.$message.error(this.$t("i18n_at_least_ntp"));
         that.validateResult = false;
       }
@@ -497,13 +502,13 @@ export default {
     ,
     getAllImage: function () {
       HttpUtil.post("/image/list/" + 1 + "/" + 1000, {}, (res) => {
-        this.allImages = _.filter(res.data.listObject, i => i.os == 'esxi');
+        this.allImages = _.filter(res.data.listObject, i => i.os == 'ubuntu');
         if (!this.allImages) {
           this.$message.error(this.$t('no_valid_image!'));
           return;
         }
         if (!this.payLoad.options.defaults.repo) {
-          let centosImage = _.find(this.allImages, i => i.os == 'esxi');
+          let centosImage = _.find(this.allImages, i => i.os == 'ubuntu');
           if (centosImage) {
             this.payLoad.options.defaults.repo = centosImage.url;
           } else {

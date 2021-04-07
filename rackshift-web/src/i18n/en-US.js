@@ -464,4 +464,5 @@ export default {
     "must_between_0_4095": "must between 0 - 4095",
     "change_ipmipwd": "Reset IPMI password",
     "twp_pwd_notsame": "Two password not the same!",
+    "安装 Ubuntu 18.04 64位版": "Install Ubuntu 18.04 64",
 }
