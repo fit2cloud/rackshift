@@ -19,7 +19,7 @@
   },
   {
     "id": "ubuntu",
-    "name": "Ubuntu 18.04 64位",
+    "name": "Ubuntu 64位",
     "versions": [
       {
         "name": "18.04"
