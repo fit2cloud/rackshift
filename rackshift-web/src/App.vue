@@ -406,4 +406,8 @@ a.github:hover {
   border-spacing: 0px !important;
   width: 100%;
 }
+
+.el-form-item .el-form-item {
+  margin-bottom: 18px!important;
+}
 </style>

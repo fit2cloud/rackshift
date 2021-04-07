@@ -13,7 +13,7 @@ values (12,
     "defaults": {
       "hostname": "localhost",
       "domain": "rackhd",
-      "password": "RackHDRocks!",
+      "password": "RackShift",
       "username": "onrack",
       "firewallDisable": true,
       "networkDevices": [

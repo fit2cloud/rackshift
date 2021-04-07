@@ -1478,7 +1478,7 @@ export default {
           }
 
           let params = {};
-          let extraParams = {};
+          let extraParams = null;
           if (that.workflowParamList.length) {
             let paramTemplate = _.find(that.workflowParamList, function (p) {
               return p.bareMetalId == that.multipleSelection[k].id;
