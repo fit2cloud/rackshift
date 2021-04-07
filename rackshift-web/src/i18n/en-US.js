@@ -462,4 +462,6 @@ export default {
     "i18n_ms_7_long": "at least be 7 characters long",
     "no_vlan": " no vlan",
     "must_between_0_4095": "must between 0 - 4095",
+    "change_ipmipwd": "Reset IPMI password",
+    "twp_pwd_notsame": "Two password not the same!",
 }

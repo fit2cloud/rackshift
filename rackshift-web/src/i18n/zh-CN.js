@@ -471,5 +471,7 @@ export default {
     "i18n_ms_7_long": "必须大于等于7个字符",
     "no_vlan": " 无 vlan",
     "must_between_0_4095": "必须是 0 - 4095",
-
+    "change": "修改",
+    "change_ipmipwd": "修改 IPMI 密码",
+    "twp_pwd_notsame": "两次密码不一致",
 }
