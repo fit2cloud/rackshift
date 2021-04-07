@@ -133,10 +133,17 @@ public abstract class AbstractHandler implements IStateHandler {
     }
 
     protected void notifyWebSocket(BareMetal bareMetal, Task task) {
-        template.convertAndSend("/topic/lifecycle", String.format("裸金属：%s,状态变更为：%s", bareMetal.getMachineModel() + " " + bareMetal.getManagementIp(), bareMetal.getStatus()));
-        String msg = String.format("裸金属：%s,任务终止：%s,状态变更为：%s", bareMetal.getMachineModel() + " " + bareMetal.getManagementIp(), workflowService.getFriendlyName(task.getWorkFlowId()), task.getStatus());
+        String status = bareMetal.getStatus();
+        String taskStatus = task.getStatus();
+        try {
+            status = Translator.get(status);
+            taskStatus = Translator.get(taskStatus);
+        } catch (Exception e) {
+        }
+        template.convertAndSend("/topic/lifecycle", String.format("裸金属：%s,状态变更为：%s", bareMetal.getMachineModel() + " " + bareMetal.getManagementIp(), status));
+        String msg = String.format("裸金属：%s,任务终止：%s,状态变更为：%s", bareMetal.getMachineModel() + " " + bareMetal.getManagementIp(), workflowService.getFriendlyName(task.getWorkFlowId()), taskStatus);
         if (ServiceConstants.TaskStatusEnum.running.name().equalsIgnoreCase(task.getStatus())) {
-            msg = String.format("裸金属：%s,任务开始：%s,状态变更为：%s", bareMetal.getMachineModel() + " " + bareMetal.getManagementIp(), workflowService.getFriendlyName(task.getWorkFlowId()), task.getStatus());
+            msg = String.format("裸金属：%s,任务开始：%s,状态变更为：%s", bareMetal.getMachineModel() + " " + bareMetal.getManagementIp(), workflowService.getFriendlyName(task.getWorkFlowId()), taskStatus);
         }
         template.convertAndSend("/topic/taskLifecycle", msg);
     }
