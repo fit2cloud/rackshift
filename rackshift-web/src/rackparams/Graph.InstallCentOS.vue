@@ -129,6 +129,7 @@ import HttpUtil from "../common/utils/HttpUtil";
 import {isAnyBlank} from "@/common/utils/CommonUtil";
 import {
   hostnameValidator,
+  repoSelectValidator,
   ipValidator,
   requiredSelectValidator,
   requiredValidator
@@ -154,7 +155,7 @@ export default {
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
         repo: [
-          {validator: requiredSelectValidator, trigger: 'blur', vue: this, name: 'image'},
+          {validator: repoSelectValidator, trigger: 'blur', vue: this, name: 'image'},
         ]
       },
       nicRules: {
