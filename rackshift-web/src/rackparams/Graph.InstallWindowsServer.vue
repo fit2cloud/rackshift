@@ -242,7 +242,7 @@ export default {
     ,
     getAllImage: function () {
       HttpUtil.post("/image/list/" + 1 + "/" + 1000, {}, (res) => {
-        this.allImages = res.data.listObject;
+        this.allImages = _.filter(res.data.listObject, i => i.os == 'windows_server');
         if (!this.allImages) {
           this.$message.error(this.$t('no_valid_image!'));
           return;
