@@ -1,5 +1,6 @@
 package io.rackshift.service;
 
+import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.RackHDConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.OutBandDTO;
@@ -223,7 +224,7 @@ public class OutBandService {
             IPMIUtil.Account a = new IPMIUtil.Account();
             BeanUtils.copyBean(a, account);
             a.setPwd("******");
-            LogUtil.info(r, a);
+            LogUtil.info(String.format("ipmitool result:【%s】,account:【%s】", r, JSONObject.toJSONString(a)));
         } catch (Exception e) {
         } finally {
             try {
