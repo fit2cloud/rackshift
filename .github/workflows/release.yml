@@ -59,12 +59,12 @@ jobs:
 
             ## bug 修复
              - DHCP 服务重启故障
-             - IPMI 扫描
+             - 自定义分区单位切换故障
 
             # 产品文档
             点击 [完整文档](https://rackshift.github.io/rackshift-docs-static/) 查看完整的安装和使用文档
             # 离线安装包
-            - 百度网盘下载链接: https://pan.baidu.com/s/1BwdVF9DFT7QLSzqtsH1LQQ 提取码: 3ux1
+            - 百度网盘下载链接: https://pan.baidu.com/s/1h2bmaYWgk1PnXkTVofdiwg 提取码: js7z
 
       - name: Upload Release Asset
         id: upload-release-asset
