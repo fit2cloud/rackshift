@@ -3,7 +3,7 @@ name: upload release asset
 on:
   create:
     tag:
-      - "v1.0.0"
+      - "v1.0.1"
 
 jobs:
   build:
@@ -48,6 +48,20 @@ jobs:
             sh -c "$(curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh)"
             ```
 
+            #新增功能
+             - Ubuntu 18.04 安装
+             - 批量修改 IPMI 密码
+             - 装机支持外部 repo
+
+            #功能优化
+             - 系统日志打印
+             - 后端国际化
+
+            # bug 修复
+             - DHCP 服务重启故障
+             - IPMI 扫描
+
+            3.
             # 产品文档
             点击 [完整文档](https://rackshift.github.io/rackshift-docs-static/) 查看完整的安装和使用文档
             # 离线安装包
