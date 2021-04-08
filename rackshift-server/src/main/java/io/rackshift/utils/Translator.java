@@ -4,6 +4,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.Resource;
+import java.util.Locale;
 
 public class Translator {
 
@@ -15,6 +16,6 @@ public class Translator {
     }
 
     public static String get(String key) {
-        return messageSource.getMessage(key, null, "not exists key:" + key, LocaleContextHolder.getLocale());
+        return messageSource.getMessage(key, null, "not exists key:" + key, Locale.CHINA);
     }
 }
