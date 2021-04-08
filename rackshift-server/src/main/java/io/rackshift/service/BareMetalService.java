@@ -137,7 +137,7 @@ public class BareMetalService {
 
     public boolean addToBareMetal(BareMetalDTO bareMetalDTO) {
         if (StringUtils.isAnyBlank(bareMetalDTO.getMachineSn(), bareMetalDTO.getMachineModel(), bareMetalDTO.getRuleId())) {
-            RSException.throwExceptions(Translator.get("i18n_param_error"));
+            RSException.throwExceptions(Translator.get("parameter_error"));
         }
         BareMetal bareMetal = new BareMetal();
         BeanUtils.copyBean(bareMetal, bareMetalDTO);

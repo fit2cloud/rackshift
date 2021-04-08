@@ -72,7 +72,7 @@ public class ShiroDBRealm extends AuthorizingRealm {
         }
         if (!"local".equals(runMode)) {
             if (!userService.checkPassword(userName, password)) {
-                RSException.throwExceptions("i18n_passowrd_wrong");
+                RSException.throwExceptions("password_wrong");
             }
         }
 

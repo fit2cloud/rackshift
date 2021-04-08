@@ -130,7 +130,7 @@ public class OutBandService {
     public void fillOBMS(OutBandDTO outBand) {
         OutBand obm = outBand.getObm();
         if (StringUtils.isAnyBlank(obm.getUserName(), obm.getPwd())) {
-            RSException.throwExceptions(Translator.get("i18n_error"));
+            RSException.throwExceptions(Translator.get("error"));
             return;
         }
         for (String id : outBand.getIds()) {

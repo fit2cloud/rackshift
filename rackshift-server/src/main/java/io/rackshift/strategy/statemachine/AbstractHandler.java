@@ -118,7 +118,7 @@ public abstract class AbstractHandler implements IStateHandler {
     }
 
     protected void beforeChange(LifeStatus curStatus) {
-        if (!preStatus.contains(curStatus)) RSException.throwExceptions(Translator.get("i18n_status_not_valid"));
+        if (!preStatus.contains(curStatus)) RSException.throwExceptions(Translator.get("status_not_valid"));
     }
 
     protected void changeStatus(LifeEvent event, LifeStatus status, boolean needCheckStatus) {

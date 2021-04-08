@@ -25,7 +25,7 @@ public class RoleService {
 
     public boolean update(RoleDTO queryVO) {
         if (StringUtils.isBlank(queryVO.getId())) {
-            RSException.throwExceptions(Translator.get("i18n_error"));
+            RSException.throwExceptions(Translator.get("error"));
         }
         roleMapper.updateByPrimaryKey(queryVO);
         return true;
@@ -33,7 +33,7 @@ public class RoleService {
 
     public boolean del(String id) {
         if (StringUtils.isBlank(id)) {
-            RSException.throwExceptions(Translator.get("i18n_error"));
+            RSException.throwExceptions(Translator.get("error"));
         }
         roleMapper.deleteByPrimaryKey(id);
         return true;
@@ -47,7 +47,7 @@ public class RoleService {
 
     public boolean del(String[] ids) {
         if (ids == null) {
-            RSException.throwExceptions(Translator.get("i18n_error"));
+            RSException.throwExceptions(Translator.get("error"));
         }
         Arrays.stream(ids).filter(id -> StringUtils.isNotBlank(id)).collect(Collectors.toList()).toArray(ids);
         for (String id : ids) {

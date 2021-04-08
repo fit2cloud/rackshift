@@ -74,11 +74,11 @@ public class WorkflowService {
                 String bareMetalId = requestDTO.getBareMetalId();
                 String workflowName = requestDTO.getWorkflowName();
                 if (StringUtils.isAnyBlank(bareMetalId, workflowName)) {
-                    RSException.throwExceptions(Translator.get("i18n_error"));
+                    RSException.throwExceptions(Translator.get("error"));
                 }
                 BareMetal bareMetal = bareMetalManager.getBareMetalById(bareMetalId);
                 if (bareMetal == null) {
-                    RSException.throwExceptions(Translator.get("i18n_error"));
+                    RSException.throwExceptions(Translator.get("error"));
                 }
 
                 events.add(LifeEvent.builder().withWorkflowRequestDTO(requestDTO).withEventType(LifeEventType.fromStartType(workflowName)));
