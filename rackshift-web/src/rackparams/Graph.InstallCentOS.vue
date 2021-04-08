@@ -12,7 +12,9 @@
                       show-password maxlength="10"></el-input>
           </el-form-item>
           <el-form-item :label="$t('image')" prop="repo">
-            <el-select v-model="payLoad.options.defaults.repo" class="input-element">
+            <el-select v-model="payLoad.options.defaults.repo" class="input-element" filterable
+                       allow-create
+                       default-first-option>
               <el-option v-for="g in allImages" :label="g.name"
                          :value="g.url"></el-option>
             </el-select>
