@@ -169,6 +169,9 @@ public class IPMIUtil {
             return new Account(ip, userName, passowrd);
         }
 
+        public Account() {
+        }
+
         public Account(String host, String userName, String pwd) {
             this.host = host;
             this.userName = userName;
