@@ -11,6 +11,7 @@ import io.rackshift.mybatis.domain.OutBandExample;
 import io.rackshift.mybatis.mapper.OutBandMapper;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.IPMIUtil;
+import io.rackshift.utils.LogUtil;
 import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -218,7 +219,11 @@ public class OutBandService {
                 }
                 tryTimes++;
             } while (tryTimes < 5);
-            IPMIUtil.exeCommand(account, String.format("user set password %s %s", userIndex, account.getNewPwd()));
+            String r = IPMIUtil.exeCommand(account, String.format("user set password %s %s", userIndex, account.getNewPwd()));
+            IPMIUtil.Account a = new IPMIUtil.Account();
+            BeanUtils.copyBean(a, account);
+            a.setPwd("******");
+            LogUtil.info(r, a);
         } catch (Exception e) {
         } finally {
             try {

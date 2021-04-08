@@ -568,7 +568,7 @@
       <template v-slot:footer>
         <div class="dialog-footer">
           <el-button @click="changeObm = false">{{ $t('cancel') }}</el-button>
-          <el-button type="primary" @click="changeOBM()" :loading="obmLoading">{{ $t('confirm') }}</el-button>
+          <el-button type="primary" @click="changeOBM()" :loading="ipmipwdLoading">{{ $t('confirm') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -597,6 +597,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      ipmipwdLoading: false,
       changeObm: false,
       rules: {
         gateway: [
@@ -1100,7 +1101,6 @@ export default {
         type: "warning"
       }).then(() => {
         let that = this;
-
         let ids = that.getSelectedIds();
         if (id) {
           ids = [].concat(id);
@@ -1115,7 +1115,7 @@ export default {
           return;
         }
 
-        that.loadingList = true;
+        that.ipmipwdLoading = true;
         HttpUtil.post("/outband/changePwd?pwd=" + this.curObm.pwd, ids, (res) => {
           if (res.success) {
             this.$message.info(res.data);
@@ -1124,10 +1124,11 @@ export default {
             this.$message.error(res.message);
           }
           this.changeObm = false;
-          that.loadingList = false;
+          that.ipmipwdLoading = false;
+          that.getData();
         }, (msg) => {
           that.$alert(msg);
-          that.loadingList = false;
+          that.ipmipwdLoading = false;
         });
       });
     },
