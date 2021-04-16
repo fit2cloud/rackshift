@@ -5,19 +5,19 @@
         <el-col :span="11">
           <el-form-item :label="$t('hostname')" prop="hostname">
             <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"
-                      maxlength="10"></el-input>
+                      maxlength="20"></el-input>
           </el-form-item>
           <el-form-item :label="$t('domain')" prop="domain">
             <el-input v-model="payLoad.options.defaults.domain" autocomplete="off" aria-required="true"
-                      maxlength="10"></el-input>
+                      maxlength="20"></el-input>
           </el-form-item>
           <el-form-item :label="$t('username')" prop="username">
             <el-input v-model="payLoad.options.defaults.username" autocomplete="off" aria-required="true"
-                      maxlength="10"></el-input>
+                      maxlength="20"></el-input>
           </el-form-item>
           <el-form-item :label="$t('root_pwd')" prop="password">
             <el-input v-model="payLoad.options.defaults.password" autocomplete="off"
-                      show-password maxlength="10"></el-input>
+                      show-password maxlength="20"></el-input>
           </el-form-item>
 
           <el-form-item :label="$t('samba')" prop="smbRepo">
@@ -90,6 +90,7 @@ import {isAnyBlank} from "@/common/utils/CommonUtil";
 import {
   hostnameValidator,
   ipValidator,
+  domainValidator,
   requiredSelectValidator,
   requiredValidator
 } from "@/common/validator/CommonValidator";
@@ -114,7 +115,7 @@ export default {
           {validator: requiredValidator, trigger: 'blur', vue: this},
         ],
         domain: [
-          {validator: requiredValidator, trigger: 'blur', vue: this},
+          {validator: domainValidator, trigger: 'blur', vue: this},
         ],
         username: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
@@ -162,7 +163,7 @@ export default {
             "productkey": null,
             "smbUser": "onrack",
             "smbPassword": "onrack",
-            "smbRepo": "\\172.31.128.1\windowsServer2012",
+            "smbRepo": "\\\\172.31.128.1\\windowsServer2012",
             "repo": null
           }
         }

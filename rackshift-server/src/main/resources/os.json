@@ -25,5 +25,23 @@
         "name": "18.04"
       }
     ]
+  },
+  {
+    "id": "ubuntu",
+    "name": "Ubuntu 64位",
+    "versions": [
+      {
+        "name": "18.04"
+      }
+    ]
+  },
+  {
+    "id": "esxi",
+    "name": "ESXI",
+    "versions": [
+      {
+        "name": "6.7"
+      }
+    ]
   }
 ]

@@ -587,7 +587,7 @@ import PowerStatus from '../../common/powerstatus/Power-Status'
 import axios from 'axios'
 import {getIPRange} from 'get-ip-range'
 import bus from '../../common/bus/bus'
-import paramMap from '../../rackparams/params'
+import {paramMap, isInherit} from '../../rackparams/params'
 import {ipValidator, maskValidator, requiredValidator} from "@/common/validator/CommonValidator";
 
 Vue.filter('statusFilter', function (row) {
@@ -597,6 +597,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      directCom: true,
       ipmipwdLoading: false,
       changeObm: false,
       rules: {
@@ -989,7 +990,10 @@ export default {
       return (c.expandLanguage && c.expandLanguage == localStorage.getItem('lang')) ? '100px' : '90px';
     },
     restoreParams() {
-      this.$refs.currentWfParamTemplate.restoreParams();
+      if (this.directCom)
+        this.$refs.currentWfParamTemplate.restoreParams();
+      else
+        this.$refs.currentWfParamTemplate.$children[0].restoreParams();
     },
     buildRequest(workflow) {
       let request = JSON.parse(JSON.stringify(workflow));
@@ -1003,9 +1007,19 @@ export default {
       return request;
     },
     saveParams() {
-      if (this.$refs.currentWfParamTemplate.valid()) {
-        this.selectedWorkflow[this.editWorkflowIndex].params = this.$refs.currentWfParamTemplate.payLoad;
-        this.selectedWorkflow[this.editWorkflowIndex].extraParams = this.$refs.currentWfParamTemplate.extraParams;
+      let canSave = true;
+      if (this.directCom) {
+        if (!this.$refs.currentWfParamTemplate.valid()) {
+          canSave = false;
+        }
+      } else {
+        if (!this.$refs.currentWfParamTemplate.$children[0].valid()) {
+          canSave = false;
+        }
+      }
+      if (canSave) {
+        this.selectedWorkflow[this.editWorkflowIndex].params = this.directCom ? this.$refs.currentWfParamTemplate.payLoad : this.$refs.currentWfParamTemplate.$children[0].payLoad;
+        this.selectedWorkflow[this.editWorkflowIndex].extraParams = this.directCom ? this.$refs.currentWfParamTemplate.extraParams : this.$refs.currentWfParamTemplate.$children[0].extraParams;
         this.fillWfParamsLoading = true;
         HttpUtil.post("/workflow/params", this.buildRequest(this.selectedWorkflow[this.editWorkflowIndex]), (res) => {
           this.fillWfParamsLoading = false;
@@ -1026,6 +1040,11 @@ export default {
         } else {
           this.currentWfParamTemplate = this.selectedWorkflowComponent[comId];
         }
+      }
+      if (isInherit(this.selectedWorkflow[index].workflowName)) {
+        this.directCom = false;
+      } else {
+        this.directCom = true;
       }
       this.currentParamConfig = this.selectedWorkflow[index].machineModel + ' ' + this.$t(this.selectedWorkflow[index].friendlyName) + " " + this.$t('param_config');
       this.fillWfParams = true;
