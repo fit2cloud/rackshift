@@ -1,16 +1,15 @@
 <template>
   <div>
-    <!--    <el-card>-->
-    <el-form label-width="110px" :rules="rules" :model="payLoad.options.defaults" ref="form" label-position="right">
+    <el-form label-width="130px" :rules="rules" :model="payLoad.options.defaults" ref="form" label-position="right">
       <el-row>
         <el-col :span="11">
           <el-form-item :label="$t('hostname')" prop="hostname">
             <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"
-                      maxlength="10"></el-input>
+                      maxlength="20"></el-input>
           </el-form-item>
           <el-form-item :label="$t('root_pwd')" prop="rootPassword">
             <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
-                      show-password maxlength="10"></el-input>
+                      show-password maxlength="20"></el-input>
           </el-form-item>
           <el-form-item :label="$t('image')" prop="repo">
             <el-select v-model="payLoad.options.defaults.repo" class="input-element" filterable
@@ -49,7 +48,7 @@
               </thead>
               <tbody>
               <tr v-for="(partition, index) in payLoad.options.defaults.installPartitions"
-                  v-show="partition.mountPoint != 'biosboot'">
+                  v-show="partition.mountPoint != 'biosboot' && partition.mountPoint != '/boot/efi'">
                 <td>
                   <el-input v-model="partition.mountPoint"
                             :disabled="partition.mountPoint == 'biosboot'"></el-input>
@@ -80,12 +79,19 @@
           </el-form-item>
         </el-col>
         <el-col :span="13">
-          <el-form v-for="d in payLoad.options.defaults.networkDevices" :model="d" :rules="nicRules"
-                   ref="nicForm" label-position="right" label-width="150px">
+          <el-form-item :label="$t('network_card')">
+            <RSButton @click="addNet" type="add" :tip="$t('add_network_card')"></RSButton>
 
-            <el-form-item prop="device" :label="$t('network_card_mac')">
-              <el-select v-model="d.device" class="input-element">
-                <el-option :value="n.mac" v-for="n in nics">
+            <el-collapse v-model="activeNames">
+              <el-collapse-item v-for="(d, $index) in payLoad.options.defaults.networkDevices"
+                                :title="getNetworkName(d)" :name="$index + ''">
+                <RSButton @click="delNet" type="del" :tip="$t('del_network_card')"></RSButton>
+                <el-form :model="d" :rules="nicRules"
+                         ref="nicForm" label-position="right" label-width="185px">
+
+                  <el-form-item prop="device" :label="$t('pls_select_') + $t('network_card')">
+                    <el-select v-model="d.device" class="input-element">
+                      <el-option :value="n.mac" v-for="n in nics">
                   <span>
                     {{
                       n.number + '(' + n.mac + ')'
@@ -93,25 +99,39 @@
                     <span style="color:red" v-if="n.pxe">{{ ' ' + $t('is_pxe') }}</span>
                   </span>
 
-                </el-option>
-              </el-select>
-            </el-form-item>
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
 
-            <el-form :model="d.ipv4" :rules="nicRules" ref="nic2Form" label-position="right" label-width="150px">
-              <el-form-item prop="ipAddr" :label="$t('ip_addr')">
-                <el-input v-model="d.ipv4.ipAddr"></el-input>
-              </el-form-item>
+                  <el-form :model="d.ipv4" :rules="nicRules" ref="nic2Form" label-position="right" label-width="185px">
+                    <el-form-item prop="ipAddr" :label="$t('ip_addr')">
+                      <el-input v-model="d.ipv4.ipAddr"></el-input>
+                    </el-form-item>
 
-              <el-form-item prop="gateway" :label="$t('gateway')">
-                <el-input v-model="d.ipv4.gateway"></el-input>
-              </el-form-item>
+                    <el-form-item prop="gateway" :label="$t('gateway')">
+                      <el-input v-model="d.ipv4.gateway"></el-input>
+                    </el-form-item>
 
-              <el-form-item prop="netmask" :label="$t('netmask')">
-                <el-input v-model="d.ipv4.netmask"></el-input>
-              </el-form-item>
-            </el-form>
-          </el-form>
+                    <el-form-item prop="netmask" :label="$t('netmask')">
+                      <el-input v-model="d.ipv4.netmask"></el-input>
+                    </el-form-item>
 
+                    <el-form-item prop="vlanIds" :label="$t('vlan')">
+                      <el-select
+                          v-model="d.ipv4.vlanIds"
+                          multiple
+                          filterable
+                          allow-create
+                          @change="changeInt(d)"
+                          default-first-option
+                          :placeholder="$t('pls_input_vlan')">
+                      </el-select>
+                    </el-form-item>
+                  </el-form>
+                </el-form>
+              </el-collapse-item>
+            </el-collapse>
+          </el-form-item>
         </el-col>
       </el-row>
 
@@ -134,7 +154,8 @@ import {
   repoSelectValidator,
   ipValidator,
   requiredSelectValidator,
-  requiredValidator
+  requiredValidator,
+  vlanValidator
 } from "@/common/validator/CommonValidator";
 
 let _ = require('lodash');
@@ -149,6 +170,7 @@ export default {
   },
   data() {
     return {
+      activeNames: '0',
       rules: {
         hostname: [
           {validator: hostnameValidator, trigger: 'blur', vue: this},
@@ -172,8 +194,12 @@ export default {
         ],
         gateway: [
           {validator: ipValidator, trigger: 'blur', vue: this},
-        ]
+        ],
+        vlanIds: [
+          {validator: vlanValidator, trigger: 'change', vue: this},
+        ],
       },
+      uefi: false,
       defaultPayLoad: {
         "options": {
           "defaults": {
@@ -231,7 +257,6 @@ export default {
       ],
       fsType: ['ext3', 'ext4', 'swap', 'xfs', 'biosboot'],
       validateResult: false,
-      uefi: false
     };
   },
   mounted() {
@@ -254,6 +279,37 @@ export default {
   }
   ,
   methods: {
+    changeInt(arr) {
+      let a = [];
+      arr.ipv4.vlanIds.forEach(v => a.push(Number(v)));
+      arr.ipv4.vlanIds = a;
+    },
+    getNetworkName(d) {
+      return !d.device ? this.$t("network_card_mac") : this.$t("network_card_mac") + " " + d.device;
+    },
+    delNet(index) {
+      if (this.payLoad.options.defaults.networkDevices.length - 1 > 0) {
+        this.payLoad.options.defaults.networkDevices.splice(this.payLoad.options.defaults.networkDevices.length - 1, 1);
+      }
+    },
+    addNet() {
+      if (this.nics.length == 0) {
+        this.$message.warning(this.$t("nic_not_found"));
+        return;
+      }
+      if (this.payLoad.options.defaults.networkDevices && this.payLoad.options.defaults.networkDevices.length == this.nics.length) {
+        this.$message.warning(this.$t("cannot_add_more"));
+        return;
+      }
+      this.payLoad.options.defaults.networkDevices.push({
+        "device": null,
+        "ipv4": {
+          "ipAddr": "192.168.1.10",
+          "gateway": "192.168.1.1",
+          "netmask": "255.255.255.0"
+        }
+      })
+    },
     changeUefiBoot: function () {
       if (this.extraParams.uefi) {
         if (this.payLoad.options.defaults.installPartitions) {
@@ -384,15 +440,32 @@ export default {
       if (exists != 4) {
         this.$message.error(this.$t('i18n_mut_only_one'));
         this.validateResult = false;
-        return;
       }
 
       if (this.payLoad.options.defaults.installPartitions.length < 4) {
         this.$message.error(this.$t('i18n_must_be_root_swap_boot'));
         this.validateResult = false;
-        return;
       }
 
+      let macs = [];
+      if (this.payLoad.options.defaults.networkDevices && this.payLoad.options.defaults.networkDevices.length > 0) {
+        for (let a = 0; a < this.payLoad.options.defaults.networkDevices.length; a++) {
+          if (this.payLoad.options.defaults.networkDevices[a].device) {
+            macs.push(this.payLoad.options.defaults.networkDevices[a].device);
+          }
+        }
+      }
+
+      macs = _.groupBy(macs, function (b) {
+        return b
+      })
+
+      _.forEach(macs, (mac) => {
+        if (mac.length > 1) {
+          this.$message.error(this.$t("i18n_mac_dup"));
+          that.validateResult = false;
+        }
+      })
       return this.validateResult;
     }
     ,
