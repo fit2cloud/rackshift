@@ -38,7 +38,7 @@
         percent
         from task
         left join bare_metal on task.bare_metal_id = bare_metal.id
-        left join workflow on task.work_flow_id = workflow.injectable_name
+        left join workflow on task.work_flow_id = workflow.id
         left join user on task.user_id = user.id
         <where>
             <if test="searchKey != null and searchKey != ''">

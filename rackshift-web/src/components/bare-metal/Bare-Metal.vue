@@ -1520,6 +1520,7 @@ export default {
                 machineModel: that.multipleSelection[k].machineModel,
                 machineSn: that.multipleSelection[k].machineSn,
                 workflowName: that.getWorkflowById().injectableName,
+                workflowId: that.getWorkflowById().id,
                 friendlyName: originWf.friendlyName,
                 friendlyNameInternational: this.$t(originWf.friendlyName),
                 settable: originWf.settable,

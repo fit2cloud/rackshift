@@ -6,6 +6,7 @@ public class WorkflowRequestDTO {
     private String bareMetalId;
     private String taskId;
     private String workflowName;
+    private String workflowId;
     private JSONObject params;
     private JSONObject extraParams;
 
@@ -64,5 +65,13 @@ public class WorkflowRequestDTO {
 
     public void setTaskId(String taskId) {
         this.taskId = taskId;
+    }
+
+    public String getWorkflowId() {
+        return workflowId;
+    }
+
+    public void setWorkflowId(String workflowId) {
+        this.workflowId = workflowId;
     }
 }

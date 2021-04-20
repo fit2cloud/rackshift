@@ -122,7 +122,7 @@ public class TaskService {
                 TaskWithBLOBs task = new TaskWithBLOBs();
                 task.setId(UUIDUtil.newUUID());
                 task.setBareMetalId(entry.getKey());
-                task.setWorkFlowId(e.getWorkflowRequestDTO().getWorkflowName());
+                task.setWorkFlowId(e.getWorkflowRequestDTO().getWorkflowId());
                 task.setUserId(SessionUtil.getUser().getId());
                 task.setParams(Optional.ofNullable(e.getWorkflowRequestDTO().getParams()).orElse(new JSONObject()).toJSONString());
                 task.setExtparams(Optional.ofNullable(e.getWorkflowRequestDTO().getExtraParams()).orElse(new JSONObject()).toJSONString());
