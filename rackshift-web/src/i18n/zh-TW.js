@@ -471,4 +471,7 @@ export default {
     "change_ipmipwd": "修改 IPMI 密碼",
     "twp_pwd_notsame": "兩次密碼不一致",
     "安装 Ubuntu 18.04 64位版": "安裝 Ubuntu 18.04 64位版",
+    "add_bond": "添加 BOND",
+    "del_bond": "刪除 BOND",
+    "deviceName": "Linux 設備名",
 }

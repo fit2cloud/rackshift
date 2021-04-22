@@ -85,7 +85,7 @@
             <el-collapse v-model="activeNames">
               <el-collapse-item v-for="(d, $index) in payLoad.options.defaults.networkDevices"
                                 :title="getNetworkName(d)" :name="$index + ''">
-                <RSButton @click="delNet" type="del" :tip="$t('del_network_card')"></RSButton>
+                <RSButton @click="delNet($index)" type="del" :tip="$t('del_network_card')"></RSButton>
                 <el-form :model="d" :rules="nicRules"
                          ref="nicForm" label-position="right" label-width="185px">
 
@@ -132,6 +132,66 @@
               </el-collapse-item>
             </el-collapse>
           </el-form-item>
+
+          <el-form-item :label="$t('BOND4(802.3ad)')">
+            <RSButton @click="addBond" type="add" :tip="$t('add_bond')"></RSButton>
+
+            <el-collapse v-model="bondActiveNames">
+              <el-collapse-item v-for="(d, $index) in payLoad.options.defaults.bonds"
+                                :title="d.name" :name="'bond' + $index + ''">
+                <RSButton @click="delBond($index)" type="del" :tip="$t('del_bond')"></RSButton>
+                <el-form :model="d" :rules="nicRules"
+                         ref="nicForm" label-position="right" label-width="185px">
+
+                  <el-form-item prop="name" :label="$t('deviceName')">
+                    <el-input v-model="d.name" class="input-element">
+                    </el-input>
+                  </el-form-item>
+
+                  <el-form-item prop="nics" :label="$t('pls_select_') + $t('network_card')">
+                    <el-select v-model="d.nics" class="input-element" multiple>
+                      <el-option :value="n.mac" v-for="n in nics">
+                  <span>
+                    {{
+                      n.number + '(' + n.mac + ')'
+                    }}
+                    <span style="color:red" v-if="n.pxe">{{ ' ' + $t('is_pxe') }}</span>
+                  </span>
+
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+
+                  <el-form :model="d.ipv4" :rules="nicRules" ref="nic2Form" label-position="right" label-width="185px">
+                    <el-form-item prop="ipAddr" :label="$t('ip_addr')">
+                      <el-input v-model="d.ipv4.ipAddr"></el-input>
+                    </el-form-item>
+
+                    <el-form-item prop="gateway" :label="$t('gateway')">
+                      <el-input v-model="d.ipv4.gateway"></el-input>
+                    </el-form-item>
+
+                    <el-form-item prop="netmask" :label="$t('netmask')">
+                      <el-input v-model="d.ipv4.netmask"></el-input>
+                    </el-form-item>
+                  </el-form>
+
+                  <el-form-item prop="bondvlaninterfaces" :label="$t('vlan')">
+                    <el-select
+                        v-model="d.bondvlaninterfaces"
+                        multiple
+                        filterable
+                        allow-create
+                        @change="changeInt(d)"
+                        default-first-option
+                        :placeholder="$t('pls_input_vlan')">
+                    </el-select>
+                  </el-form-item>
+
+                </el-form>
+              </el-collapse-item>
+            </el-collapse>
+          </el-form-item>
         </el-col>
       </el-row>
 
@@ -171,6 +231,7 @@ export default {
   data() {
     return {
       activeNames: '0',
+      bondActiveNames: 'bond0',
       rules: {
         hostname: [
           {validator: hostnameValidator, trigger: 'blur', vue: this},
@@ -239,7 +300,8 @@ export default {
                 "size": "1",
                 "fsType": "biosboot"
               }
-            ]
+            ],
+            "bonds": []
           }
         }
       },
@@ -279,21 +341,39 @@ export default {
   }
   ,
   methods: {
+    addBond() {
+      if (!this.payLoad.options.defaults.bonds)
+        this.$set(this.payLoad.options.defaults, "bonds", []);
+      this.payLoad.options.defaults.bonds.push({
+        "name": null,
+        "nics": [],
+        "ipv4": {},
+        "bondvlaninterfaces": []
+      });
+
+    },
+    delBond(index) {
+      this.payLoad.options.defaults.bonds.splice(index, 1);
+    },
     changeInt(arr) {
       let a = [];
-      arr.ipv4.vlanIds.forEach(v => a.push(Number(v)));
-      arr.ipv4.vlanIds = a;
+      arr.bondvlaninterfaces.forEach(v => a.push(Number(v)));
+      arr.bondvlaninterfaces = a;
     },
     getNetworkName(d) {
       return !d.device ? this.$t("network_card_mac") : this.$t("network_card_mac") + " " + d.device;
     },
     delNet(index) {
-      if (this.payLoad.options.defaults.networkDevices.length - 1 > 0) {
-        this.payLoad.options.defaults.networkDevices.splice(this.payLoad.options.defaults.networkDevices.length - 1, 1);
+      if (this.payLoad.options.defaults.bonds.length > 0) {
+        this.payLoad.options.defaults.networkDevices.splice(index, 1);
+      } else {
+        if (this.payLoad.options.defaults.networkDevices.length - 1 > 0) {
+          this.payLoad.options.defaults.networkDevices.splice(index, 1);
+        }
       }
     },
     addNet() {
-      if(this.nics.length == 0){
+      if (this.nics.length == 0) {
         this.$message.warning(this.$t("nic_not_found"));
         return;
       }
@@ -466,6 +546,10 @@ export default {
           that.validateResult = false;
         }
       })
+
+      if (this.payLoad.options.defaults.bonds && this.payLoad.options.defaults.bonds.length == 0) {
+        delete this.payLoad.options.defaults.bonds;
+      }
       return this.validateResult;
     }
     ,
