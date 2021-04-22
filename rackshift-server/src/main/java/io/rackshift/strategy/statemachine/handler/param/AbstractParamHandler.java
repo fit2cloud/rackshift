@@ -19,6 +19,7 @@ public class AbstractParamHandler {
     @PostConstruct
     public void initMap() {
         handlerMap.put("Graph.InstallWindowsServer", windowsHandler);
+        handlerMap.put("Graph.InstallWindowsServer2016", windowsHandler);
         handlerMap.put("Graph.InstallCentOS", linuxHandler);
         handlerMap.put("Graph.InstallRHEL", linuxHandler);
     }

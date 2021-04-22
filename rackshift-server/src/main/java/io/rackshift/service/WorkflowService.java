@@ -151,4 +151,8 @@ public class WorkflowService {
     public String getFriendlyName(String workflowId) {
         return workflowManager.getFriendlyName(workflowId);
     }
+
+    public Workflow getById(String workFlowId) {
+        return workflowMapper.selectByPrimaryKey(workFlowId);
+    }
 }

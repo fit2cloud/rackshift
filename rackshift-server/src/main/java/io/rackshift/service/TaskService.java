@@ -44,6 +44,8 @@ public class TaskService {
     private ExecutionLogDetailsMapper executionLogDetailsMapper;
     @Resource
     private EndpointService endpointService;
+    @Resource
+    private WorkflowService workflowService;
     @Autowired
     private SimpMessagingTemplate template;
 
@@ -86,9 +88,9 @@ public class TaskService {
                 requestDTO.setParams(JSONObject.parseObject("{ \"result\" : false}"));
 
                 requestDTO.setBareMetalId(task.getBareMetalId());
-                LifeEventType type = LifeEventType.fromEndType(task.getWorkFlowId());
-                LifeEvent event = LifeEvent.builder().withEventType(type);
-                event.withWorkflowRequestDTO(requestDTO);
+                Workflow workflow = workflowService.getById(task.getWorkFlowId());
+                LifeEventType type = LifeEventType.valueOf(workflow.getEventType().replace("START", "END"));
+                LifeEvent event = LifeEvent.builder().withEventType(type).withWorkflowRequestDTO(requestDTO);
                 stateMachine.sendEvent(event);
 
                 taskMapper.deleteByPrimaryKey(id);

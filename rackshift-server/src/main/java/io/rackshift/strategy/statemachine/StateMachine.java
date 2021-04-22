@@ -4,11 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.ExecutionLogConstants;
 import io.rackshift.constants.ServiceConstants;
+import io.rackshift.model.RSException;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.Task;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
+import io.rackshift.mybatis.domain.Workflow;
 import io.rackshift.service.ExecutionLogService;
 import io.rackshift.service.TaskService;
+import io.rackshift.service.WorkflowService;
 import io.rackshift.utils.LogUtil;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +27,8 @@ public class StateMachine {
     private ExecutionLogService executionLogService;
     @Resource
     private TaskService taskService;
+    @Resource
+    private WorkflowService workflowService;
     private ConcurrentHashMap<LifeEventType, IStateHandler> handlerMap = new ConcurrentHashMap<>();
     private static List<String> endStatusList = new ArrayList<String>() {{
         add(ServiceConstants.TaskStatusEnum.cancelled.name());
@@ -60,11 +65,15 @@ public class StateMachine {
     }
 
     private LifeEvent buildEvent(TaskWithBLOBs task) {
-        LifeEventType type = LifeEventType.fromStartType(task.getWorkFlowId());
+        Workflow workflow = workflowService.getById(task.getWorkFlowId());
+        if (workflow == null) {
+            RSException.throwExceptions(String.format("not exist workflow %s", task.getWorkFlowId()));
+        }
+        LifeEventType type = LifeEventType.fromStartType(workflow.getInjectableName());
         WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
         requestDTO.setBareMetalId(task.getBareMetalId());
         requestDTO.setTaskId(task.getId());
-        requestDTO.setWorkflowName(task.getWorkFlowId());
+        requestDTO.setWorkflowName(workflow.getInjectableName());
         requestDTO.setParams(JSONObject.parseObject(Optional.ofNullable(task.getParams()).orElse("{}")));
         requestDTO.setExtraParams(JSONObject.parseObject(Optional.ofNullable(task.getExtparams()).orElse("{}")));
         return LifeEvent.builder().withEventType(type).withWorkflowRequestDTO(requestDTO);

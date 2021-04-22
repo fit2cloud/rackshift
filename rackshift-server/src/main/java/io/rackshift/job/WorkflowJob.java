@@ -10,6 +10,7 @@ import io.rackshift.mybatis.mapper.ExecutionLogDetailsMapper;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.service.EndpointService;
 import io.rackshift.service.RackHDService;
+import io.rackshift.service.WorkflowService;
 import io.rackshift.strategy.statemachine.LifeEvent;
 import io.rackshift.strategy.statemachine.LifeEventType;
 import io.rackshift.strategy.statemachine.LifeStatus;
@@ -42,6 +43,8 @@ public class WorkflowJob {
     private RackHDService rackHDService;
     @Resource
     private StateMachine stateMachine;
+    @Resource
+    private WorkflowService workflowService;
     @Autowired
     private SimpMessagingTemplate template;
     @Resource
@@ -148,9 +151,9 @@ public class WorkflowJob {
                         requestDTO.setParams(JSONObject.parseObject("{ \"result\" : true}"));
                     }
                     requestDTO.setBareMetalId(task.getBareMetalId());
-                    LifeEventType type = LifeEventType.fromEndType(task.getWorkFlowId());
-                    LifeEvent event = LifeEvent.builder().withEventType(type);
-                    event.withWorkflowRequestDTO(requestDTO);
+                    Workflow workflow = workflowService.getById(task.getWorkFlowId());
+                    LifeEventType type = LifeEventType.valueOf(workflow.getEventType());
+                    LifeEvent event = LifeEvent.builder().withEventType(type).withWorkflowRequestDTO(requestDTO);
                     stateMachine.sendEvent(event);
                 }
 
