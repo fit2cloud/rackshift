@@ -152,7 +152,7 @@ public class WorkflowJob {
                     }
                     requestDTO.setBareMetalId(task.getBareMetalId());
                     Workflow workflow = workflowService.getById(task.getWorkFlowId());
-                    LifeEventType type = LifeEventType.valueOf(workflow.getEventType());
+                    LifeEventType type = LifeEventType.valueOf(workflow.getEventType().replace("START", "END"));
                     LifeEvent event = LifeEvent.builder().withEventType(type).withWorkflowRequestDTO(requestDTO);
                     stateMachine.sendEvent(event);
                 }
