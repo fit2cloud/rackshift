@@ -29,7 +29,7 @@
             <el-collapse v-model="nicActiveNames">
               <el-collapse-item v-for="(d, $index) in payLoad.options.defaults.networkDevices"
                                 :title="getNetworkName(d)" :name="$index + ''">
-                <RSButton @click="delNet" type="del" :tip="$t('del_network_card')"></RSButton>
+                <RSButton @click="delNet($index)" type="del" :tip="$t('del_network_card')"></RSButton>
                 <el-form :model="d" :rules="nicRules"
                          ref="nicForm" label-position="right" label-width="185px">
 
@@ -110,7 +110,7 @@
             <el-collapse v-model="switchActiveNames">
               <el-collapse-item v-for="(d, $index) in payLoad.options.defaults.switchDevices"
                                 :title="d.switchName" :name="'switch' + $index + ''">
-                <RSButton @click="delSwitch" type="del" :tip="$t('del_switch')"></RSButton>
+                <RSButton @click="delSwitch($index)" type="del" :tip="$t('del_switch')"></RSButton>
                 <el-form :model="d" :rules="nicRules"
                          ref="nicForm" label-position="right" label-width="185px">
 
@@ -323,7 +323,7 @@ export default {
     },
     delNet(index) {
       if (this.payLoad.options.defaults.networkDevices.length - 1 > 0) {
-        this.payLoad.options.defaults.networkDevices.splice(this.payLoad.options.defaults.networkDevices.length - 1, 1);
+        this.payLoad.options.defaults.networkDevices.splice(index, 1);
       }
     },
     addNet() {
@@ -346,7 +346,7 @@ export default {
     },
     delSwitch(index) {
       if (this.payLoad.options.defaults.switchDevices.length - 1 > 0) {
-        this.payLoad.options.defaults.switchDevices.splice(this.payLoad.options.defaults.switchDevices.length - 1, 1);
+        this.payLoad.options.defaults.switchDevices.splice(index, 1);
       }
     },
     addSwitch() {

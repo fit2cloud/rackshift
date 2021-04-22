@@ -85,7 +85,7 @@
             <el-collapse v-model="activeNames">
               <el-collapse-item v-for="(d, $index) in payLoad.options.defaults.networkDevices"
                                 :title="getNetworkName(d)" :name="$index + ''">
-                <RSButton @click="delNet" type="del" :tip="$t('del_network_card')"></RSButton>
+                <RSButton @click="delNet($index)" type="del" :tip="$t('del_network_card')"></RSButton>
                 <el-form :model="d" :rules="nicRules"
                          ref="nicForm" label-position="right" label-width="185px">
 
@@ -289,7 +289,7 @@ export default {
     },
     delNet(index) {
       if (this.payLoad.options.defaults.networkDevices.length - 1 > 0) {
-        this.payLoad.options.defaults.networkDevices.splice(this.payLoad.options.defaults.networkDevices.length - 1, 1);
+        this.payLoad.options.defaults.networkDevices.splice(index, 1);
       }
     },
     addNet() {
