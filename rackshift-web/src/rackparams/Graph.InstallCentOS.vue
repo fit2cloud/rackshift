@@ -177,15 +177,34 @@
                   </el-form>
 
                   <el-form-item prop="bondvlaninterfaces" :label="$t('vlan')">
-                    <el-select
-                        v-model="d.bondvlaninterfaces"
-                        multiple
-                        filterable
-                        allow-create
-                        @change="changeInt(d)"
-                        default-first-option
-                        :placeholder="$t('pls_input_vlan')">
-                    </el-select>
+                    <RSButton @click="addBondVlan(d)" type="add" :tip="$t('add_vlan')"></RSButton>
+                    <el-collapse-item v-for="(db, $index) in d.bondvlaninterfaces">
+                      <RSButton @click="delBondVlan(d.bondvlaninterfaces, $index)" type="del"
+                                :tip="$t('del_bond')"></RSButton>
+                      <el-form :model="db" :rules="nicRules"
+                               ref="nicForm" label-position="right" label-width="185px">
+
+                        <el-form :model="db.ipv4" :rules="nicRules" ref="nic2Form" label-position="right"
+                                 label-width="185px">
+                          <el-form-item prop="ipAddr" :label="$t('ip_addr')">
+                            <el-input v-model="db.ipv4.ipAddr"></el-input>
+                          </el-form-item>
+
+                          <el-form-item prop="gateway" :label="$t('gateway')">
+                            <el-input v-model="db.ipv4.gateway"></el-input>
+                          </el-form-item>
+
+                          <el-form-item prop="netmask" :label="$t('netmask')">
+                            <el-input v-model="db.ipv4.netmask"></el-input>
+                          </el-form-item>
+                        </el-form>
+
+                        <el-form-item prop="vlanid" :label="$t('vlan')">
+                          <el-input type="number" v-model="db.vlanid" @change="changeVlanId(db)"></el-input>
+                        </el-form-item>
+
+                      </el-form>
+                    </el-collapse-item>
                   </el-form-item>
 
                 </el-form>
@@ -258,6 +277,9 @@ export default {
         ],
         vlanIds: [
           {validator: vlanValidator, trigger: 'change', vue: this},
+        ],
+        vlanid: [
+          {validator: requiredValidator, trigger: 'change', vue: this},
         ],
       },
       uefi: false,
@@ -350,15 +372,30 @@ export default {
         "ipv4": {},
         "bondvlaninterfaces": []
       });
-
+    },
+    addBondVlan(bond) {
+      bond.bondvlaninterfaces.push({
+        "vlanid": null,
+        "ipv4": {
+          "ipAddr": null,
+          "gateway": null,
+          "netmask": null,
+        }
+      });
     },
     delBond(index) {
       this.payLoad.options.defaults.bonds.splice(index, 1);
     },
+    delBondVlan(db, index) {
+      db.splice(index, 1);
+    },
     changeInt(arr) {
       let a = [];
-      arr.bondvlaninterfaces.forEach(v => a.push(Number(v)));
-      arr.bondvlaninterfaces = a;
+      arr.ipv4.vlanIds.forEach(v => a.push(Number(v)));
+      arr.ipv4.vlanIds = a;
+    },
+    changeVlanId(db) {
+      db.vlanid = Number(db.vlanid);
     },
     getNetworkName(d) {
       return !d.device ? this.$t("network_card_mac") : this.$t("network_card_mac") + " " + d.device;
@@ -462,11 +499,18 @@ export default {
 
       let hostname = this.payLoad.options.defaults.hostname;
       let rootPassword = this.payLoad.options.defaults.rootPassword;
-      let nic = this.payLoad.options.defaults.networkDevices[0].device;
-      let ip = this.payLoad.options.defaults.networkDevices[0].ipv4.ipAddr;
-      let gateway = this.payLoad.options.defaults.networkDevices[0].ipv4.gateway;
-      let netmask = this.payLoad.options.defaults.networkDevices[0].ipv4.netmask;
-      if (isAnyBlank(hostname, rootPassword, nic, ip, gateway, netmask)) {
+      if (this.payLoad.options.defaults.networkDevices && this.payLoad.options.defaults.networkDevices.length > 0) {
+        let nic = this.payLoad.options.defaults.networkDevices[0].device;
+        let ip = this.payLoad.options.defaults.networkDevices[0].ipv4.ipAddr;
+        let gateway = this.payLoad.options.defaults.networkDevices[0].ipv4.gateway;
+        let netmask = this.payLoad.options.defaults.networkDevices[0].ipv4.netmask;
+        if (isAnyBlank(nic, ip, gateway, netmask)) {
+          this.$message.error(this.$t("param_cannot_be_null!"));
+          return false;
+        }
+      }
+
+      if (isAnyBlank(hostname, rootPassword)) {
         this.$message.error(this.$t("param_cannot_be_null!"));
         return false;
       }
@@ -578,7 +622,7 @@ export default {
         this.disks = res.data.disks;
         this.nics = res.data.nics;
 
-        if (this.payLoad.options.defaults.networkDevices[0].device == 'em1' && this.nics.length > 0) {
+        if (this.payLoad.options.defaults.networkDevices && this.payLoad.options.defaults.networkDevices[0].device == 'em1' && this.nics.length > 0) {
           this.payLoad.options.defaults.networkDevices[0].device = this.nics[0].mac;
         }
       })
