@@ -10,6 +10,8 @@ import io.rackshift.service.TaskService;
 import io.rackshift.strategy.statemachine.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @EventHandlerAnnotation(LifeEventType.POST_OS_WORKFLOW_END)
 public class OsWorkflowEndHandler extends AbstractHandler {
@@ -25,8 +27,25 @@ public class OsWorkflowEndHandler extends AbstractHandler {
         BareMetal bareMetal = getBareMetalById(event.getBareMetalId());
         TaskWithBLOBs task = taskService.getById(event.getWorkflowRequestDTO().getTaskId());
 
+        JSONObject defaults = JSONObject.parseObject(task.getParams()).getJSONObject("options").getJSONObject("defaults");
+        List ipArrayLst = new ArrayList<String>();
+        if (defaults.containsKey("networkDevices")) {
+            defaults.getJSONArray("networkDevices").forEach(d -> {
+                if (((JSONObject) d).containsKey("ipv4")) {
+                    ipArrayLst.add(((JSONObject) d).getJSONObject("ipv4").getString("ipAddr"));
+                }
+            });
+        }
+        if (defaults.containsKey("bonds")) {
+            defaults.getJSONArray("bonds").forEach(d -> {
+                if (((JSONObject) d).containsKey("ipv4")) {
+                    ipArrayLst.add(((JSONObject) d).getJSONObject("ipv4").getString("ipAddr"));
+                }
+            });
+        }
+        String ipArray = String.join(",", ipArrayLst);
         if (result) {
-            bareMetal.setIpArray(JSONObject.parseObject(task.getParams()).getJSONObject("options").getJSONObject("defaults").getJSONArray("networkDevices").getJSONObject(0).getJSONObject("ipv4").getString("ipAddr"));
+            bareMetal.setIpArray(ipArray);
             bareMetal.setStatus(LifeStatus.deployed.name());
             task.setStatus(ServiceConstants.TaskStatusEnum.succeeded.name());
             executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.END.name(), event.getBareMetalId(), String.format("裸金属服务器:%s,部署成功！业务IP:%s", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn(), bareMetal.getIpArray()));
