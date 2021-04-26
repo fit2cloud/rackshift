@@ -401,7 +401,7 @@ export default {
       return !d.device ? this.$t("network_card_mac") : this.$t("network_card_mac") + " " + d.device;
     },
     delNet(index) {
-      if (this.payLoad.options.defaults.bonds.length > 0) {
+      if (this.payLoad.options.defaults.bonds && this.payLoad.options.defaults.bonds.length > 0) {
         this.payLoad.options.defaults.networkDevices.splice(index, 1);
       } else {
         if (this.payLoad.options.defaults.networkDevices.length - 1 > 0) {
