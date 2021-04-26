@@ -301,7 +301,7 @@ export default {
     "i18n_all_greater_than_1_gb": "所有分区最低容量不能小于1GB！",
     "i18n_mut_only_one": "必须有且仅有一个根，swap和/boot分区！",
 
-    "only_iso_no_more_than_10g": "只能上传ISO文件，且不超过10GB,只支持完整版镜像，不支持 Minimal 版！",
+    "only_iso_no_more_than_10g": "只能上传ISO文件，且不超过10GB,默认支持官方完整版镜像，如果需要 Minimal 版本，请到 https://docs.rackshift.io/iso/ 下载 ！",
     "drag_file_into_or": "将文件拖到此处，或",
     "click_to_upload": "点击上传",
     "uefi_boot": "UEFI 引导",
