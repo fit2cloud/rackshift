@@ -456,6 +456,10 @@ export default {
         }
       }
 
+      if (this.payLoad.options.defaults.bonds && this.payLoad.options.defaults.bonds.length == 0) {
+        delete this.payLoad.options.defaults.bonds;
+      }
+
       macs = _.groupBy(macs, function (b) {
         return b
       })
