@@ -577,6 +577,10 @@ export default {
           if (this.payLoad.options.defaults.networkDevices[a].device) {
             macs.push(this.payLoad.options.defaults.networkDevices[a].device);
           }
+
+          if (this.payLoad.options.defaults.networkDevices[a].ipv4.vlanIds && this.payLoad.options.defaults.networkDevices[a].ipv4.vlanIds.length == 0) {
+            delete this.payLoad.options.defaults.networkDevices[a].ipv4.vlanIds;
+          }
         }
       }
 

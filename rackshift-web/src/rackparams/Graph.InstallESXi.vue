@@ -478,6 +478,14 @@ export default {
       }
 
 
+      if (this.payLoad.options.defaults.networkDevices && this.payLoad.options.defaults.networkDevices.length > 0) {
+        for (let a = 0; a < this.payLoad.options.defaults.networkDevices.length; a++) {
+          if (this.payLoad.options.defaults.networkDevices[a].ipv4.vlanIds && this.payLoad.options.defaults.networkDevices[a].ipv4.vlanIds.length == 0) {
+            delete this.payLoad.options.defaults.networkDevices[a].ipv4.vlanIds;
+          }
+        }
+      }
+
       return this.validateResult;
     }
     ,
