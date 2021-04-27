@@ -280,12 +280,7 @@ export default {
                 "mountPoint": "/boot",
                 "size": "4096",
                 "fsType": "ext3"
-              },
-              {
-                "mountPoint": "biosboot",
-                "size": "1",
-                "fsType": "biosboot"
-              },
+              }
             ]
           }
         }
@@ -356,19 +351,6 @@ export default {
         });
         if (index != -1) {
           this.payLoad.options.defaults.installPartitions.splice(index, 1);
-        }
-
-        index = _.findIndex(this.payLoad.options.defaults.installPartitions, function (o) {
-          return o.mountPoint == "biosboot"
-        });
-        if (index == -1) {
-          this.payLoad.options.defaults.installPartitions.push(
-              {
-                "mountPoint": "biosboot",
-                "size": "1",
-                "fsType": "biosboot"
-              }
-          );
         }
       }
       console.table(this.payLoad.options.defaults.installPartitions);
@@ -497,13 +479,13 @@ export default {
           }
         }
       }
-      if (exists != 4) {
+      if (exists != 3) {
         this.$message.error(this.$t('i18n_mut_only_one'));
         this.validateResult = false;
         return;
       }
 
-      if (this.payLoad.options.defaults.installPartitions.length < 4) {
+      if (this.payLoad.options.defaults.installPartitions.length < 3) {
         this.$message.error(this.$t('i18n_must_be_root_swap_boot'));
         this.validateResult = false;
         return;

@@ -42,11 +42,6 @@ SET default_params = '{
                     "mountPoint": "/",
                     "size": "auto",
                     "fsType": "ext4"
-                },
-                {
-                    "mountPoint": "biosboot",
-                    "size": "1",
-                    "fsType": "biosboot"
                 }
             ]
         }
