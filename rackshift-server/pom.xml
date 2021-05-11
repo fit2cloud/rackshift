@@ -273,6 +273,22 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>7.8.2</version>
+                <configuration>
+                    <url>jdbc:mysql://127.0.0.1:3306?serverTimezone=UTC</url>
+                    <user>root</user>
+                    <schemas>
+                        <defaultSchema>rackshift</defaultSchema>
+                    </schemas>
+                    <password>admin</password>
+                    <locations>
+                        <location>classpath:db/migration</location>
+                    </locations>
+                </configuration>
+            </plugin>
             <!--            <plugin>-->
             <!--                <groupId>org.apache.maven.plugins</groupId>-->
             <!--                <artifactId>maven-antrun-plugin</artifactId>-->

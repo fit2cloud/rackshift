@@ -14,6 +14,7 @@ import Discovery from "../discovery/Discovery"
 import Task from "../task/Task"
 import OBM from "../obm/Obm"
 import Plugin from "../plugin/Plugin"
+import Switch from "../switch/switch"
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,7 @@ const routes = [
     {path: '/endpoint', component: Endpoint},
     {path: '/discovery', component: Discovery},
     {path: '/task', component: Task},
+    {path: '/switch', component: Switch},
 ]
 const router = new VueRouter({
     routes: routes
