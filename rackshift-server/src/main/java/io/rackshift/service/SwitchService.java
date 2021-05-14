@@ -33,7 +33,12 @@ public class SwitchService {
     }
 
     private SwitchExample buildExample(SwitchQueryVO queryVO) {
-        return new SwitchExample();
+        SwitchExample e = new SwitchExample();
+        if (StringUtils.isNotBlank(queryVO.getSearchKey())) {
+            e.createCriteria().andNameLike("%" + queryVO.getSearchKey() + "%");
+            e.or().andIpLike("%" + queryVO.getSearchKey() + "%");
+        }
+        return e;
     }
 
     public boolean del(String[] ids) {

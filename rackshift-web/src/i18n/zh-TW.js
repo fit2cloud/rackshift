@@ -120,6 +120,7 @@ export default {
     "not_supported_brand!": "不支持品牌-",
     "Info": "個人信息",
     "input_key_search": "型號/序列號/IP",
+    "input_key_search_switch": "名稱/IP",
     "add_endpoint": "添加節點",
     "pxeboot": "PXE 重啟",
     "edit_fail": "編輯失敗",

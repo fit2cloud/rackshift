@@ -120,6 +120,7 @@ export default {
     "not_supported_brand!": "The brand is not supported-",
     "Info": "Personal Information",
     "input_key_search": "model/serial number/IP",
+    "input_key_search_switch": "Name/IP",
     "add_endpoint": "Add node",
     "pxeboot": "PXE reboot",
     "edit_fail": "Edit failed",

@@ -96,6 +96,7 @@ public class SwitchDiscoveryTask extends Thread {
                                 SnmpWorker snmpWorker = new SnmpWorker(ip, request.getCommunity(), request.getPort());
                                 request.setHost(ip);
                                 Switch switchDevice = switchService.getMachineEntity(request, switchRule, snmpWorker);
+                                switchDevice.setRuleId(switchRule.getId());
                                 switchService.saveOrUpdate(switchDevice);
                                 //
                                 queryPortAndBondMacAddress(snmpWorker, switchDevice);
