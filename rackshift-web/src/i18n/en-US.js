@@ -468,4 +468,16 @@ export default {
     "add_bond": "Add BOND",
     "del_bond": "Del BOND",
     "deviceName": "Linux deviceName",
+
+    "switch_port": "Switch Port",
+    "switch_name": "Switch Name",
+    "Switch": "Switch",
+    "switch": "Switch",
+    "snmp_community": "SNMP Community",
+    "snmp_port": "SNMP Port",
+    "ssh_port": "SSH Port",
+    "telnet_port": "Telent Port",
+    "view_vendor": "View vendor",
+    "Switch_Discovery_Rule": "Switch Discovery Rule",
+    "edit_switch-discovery": "Edit Switch Rule",
 }

@@ -16,6 +16,7 @@ import io.rackshift.metal.sdk.util.*;
 import io.rackshift.plugin.dell.utils.*;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -329,5 +330,10 @@ public class DellMetalProvider extends AbstractMetalProvider {
             return "iDRAC8";
         }
         return "iDRAC7";
+    }
+
+    public static void main(String[] args) throws IOException {
+        SnmpWorker snmpWorker = new SnmpWorker("192.168.1.1", "admin123", 161);
+        snmpWorker.walk("1.3.6.1.2.1.2.2.1.2");
     }
 }

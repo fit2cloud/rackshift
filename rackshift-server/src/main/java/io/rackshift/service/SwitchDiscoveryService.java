@@ -37,6 +37,8 @@ public class SwitchDiscoveryService {
     private CloudProviderManager metalProviderManager;
     @Resource
     private OutBandService outBandService;
+    @Resource
+    private SwitchService switchService;
 
     public Object add(SwitchRuleDTO queryVO) {
         SwitchRule switchRule = new SwitchRule();
@@ -44,7 +46,7 @@ public class SwitchDiscoveryService {
         switchRule.setProviderId("");
         switchRule.setLastSyncTimestamp(System.currentTimeMillis());
         switchRuleMapper.insertSelective(switchRule);
-        new Thread(new SwitchDiscoveryTask(switchRule, switchRuleMapper, bareMetalManager, template, metalProviderManager, outBandService)).start();
+        new Thread(new SwitchDiscoveryTask(switchRule, switchRuleMapper, bareMetalManager, template, metalProviderManager, outBandService, switchService)).start();
         return true;
     }
 
@@ -95,7 +97,7 @@ public class SwitchDiscoveryService {
 //        }
         rule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.PENDING.name());
         switchRuleMapper.updateByPrimaryKey(rule);
-        new Thread(new SwitchDiscoveryTask(rule, switchRuleMapper, bareMetalManager, template, metalProviderManager, outBandService)).start();
+        new Thread(new SwitchDiscoveryTask(rule, switchRuleMapper, bareMetalManager, template, metalProviderManager, outBandService, switchService)).start();
         return true;
     }
 }

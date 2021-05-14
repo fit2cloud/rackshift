@@ -9,6 +9,8 @@ public class Switch implements Serializable {
 
     private String ip;
 
+    private String name;
+
     private String ruleId;
 
     private String vendor;

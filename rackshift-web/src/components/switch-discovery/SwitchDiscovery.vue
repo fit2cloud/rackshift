@@ -166,21 +166,6 @@ export default {
       websocket: null,
       protocols: [
         {
-          "name": "IPMI+Rest",
-          params: [
-            {
-              "type": "text",
-              "prop": "userName",
-              "label": "user_name",
-            },
-            {
-              "type": "text",
-              "prop": "pwd",
-              "label": "pwd"
-            },
-          ]
-        },
-        {
           "name": "SNMP",
           params: [
             {

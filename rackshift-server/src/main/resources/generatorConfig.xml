@@ -71,6 +71,7 @@
 <!--        <table tableName="instruction"/>-->
         <table tableName="switch_rule"/>
         <table tableName="switch"/>
+        <table tableName="switch_port"/>
 <!--        <table tableName="ip"/>-->
 
     </context>

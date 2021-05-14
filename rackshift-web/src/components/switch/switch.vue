@@ -30,6 +30,11 @@
           </template>
         </el-table-column>
 
+        <el-table-column prop="vendor" :label="$t('vendor')" align="left">
+          <template slot-scope="scope">
+            <el-link type="primary" @click="showVendor(scope.row.vendor)">{{ $t('show') }}</el-link>
+          </template>
+        </el-table-column>
 
         <el-table-column prop="createTime" :label="$t('create_time')" align="left">
           <template slot-scope="scope">
@@ -514,6 +519,18 @@
         </div>
       </template>
     </el-dialog>
+
+    <el-dialog
+        :title="$t('view_vendor')"
+        :visible.sync="showVendorVisible"
+        width="60%"
+        :before-close="handleClose">
+      <el-row>
+        <el-col :span="24">
+          <span>{{ currentVendor }} </span>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </el-tabs>
 </template>
 
@@ -537,6 +554,8 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      currentVendor: null,
+      showVendorVisible: false,
       directCom: true,
       ipmipwdLoading: false,
       changeObm: false,
@@ -609,36 +628,16 @@ export default {
           prop: "ip"
         },
         {
-          label: 'vendor',
-          prop: "vendor"
+          label: 'name',
+          prop: "name"
         },
         {
           label: 'snmp_community',
-          prop: "snmp_community"
+          prop: "snmpCommunity"
         },
         {
           label: 'snmp_port',
-          prop: "snmp_port"
-        },
-        {
-          label: 'ssh_port',
-          prop: "ssh_port"
-        },
-        {
-          label: 'telnet_port',
-          prop: "telnet_port"
-        },
-        {
-          label: 'web_port',
-          prop: "web_port"
-        },
-        {
-          label: 'room',
-          prop: "room"
-        },
-        {
-          label: 'rack',
-          prop: "rack"
+          prop: "snmpPort"
         },
       ],
       detailDrawer: false,
@@ -705,6 +704,10 @@ export default {
   }
   ,
   methods: {
+    showVendor(vendor) {
+      this.showVendorVisible = true;
+      this.currentVendor = vendor;
+    },
     refreshWorkflow() {
       if (this.selectedWorkflow.length) {
         let that = this;
@@ -921,7 +924,7 @@ export default {
       }
     },
     resizeWith(c) {
-      return (c.expandLanguage && c.expandLanguage == localStorage.getItem('lang')) ? '100px' : '90px';
+      return (c.expandLanguage && c.expandLanguage == localStorage.getItem('lang')) ? '130px' : '140px';
     },
     restoreParams() {
       if (this.directCom)
@@ -1207,6 +1210,7 @@ export default {
       this.detailDrawer = false;
       this.actionDrawer = false;
       this.discoveryVisible = false;
+      this.showVendorVisible = false;
     }
     ,
     handleCloseExecutionLog() {

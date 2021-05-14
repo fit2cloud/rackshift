@@ -474,4 +474,16 @@ export default {
     "add_bond": "添加 BOND",
     "del_bond": "刪除 BOND",
     "deviceName": "Linux 設備名",
+
+    "switch_port": "交換機端口號",
+    "switch_name": "交換機名稱",
+    "Switch": "交換機",
+    "switch": "交換機",
+    "snmp_community": "SNMP 社區",
+    "snmp_port": "SNMP 端口",
+    "ssh_port": "SSH 端口",
+    "telnet_port": "TELNET 端口",
+    "view_vendor": "設備制造商",
+    "Switch_Discovery_Rule": "交換機掃描規則",
+    "edit_switch-discovery": "編輯交換機掃描規則",
 }

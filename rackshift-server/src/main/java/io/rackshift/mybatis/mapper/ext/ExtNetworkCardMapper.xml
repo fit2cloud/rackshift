@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.mybatis.mapper.ext.ExtNetworkCardMapper">
+    <select id="getNicsById" parameterType="String"
+            resultType="io.rackshift.model.NetworkCardDTO">
+        SELECT nc.*,
+               s.NAME  switchName,
+               sp.PORT switchPort
+        FROM bare_metal bm
+                 LEFT JOIN network_card nc ON bm.id = nc.bare_metal_id
+                 LEFT JOIN switch_port sp ON nc.mac = sp.mac
+                 LEFT JOIN switch s ON sp.switch_id = s.id
+        where bm.id = #{id}
+    </select>
+</mapper>

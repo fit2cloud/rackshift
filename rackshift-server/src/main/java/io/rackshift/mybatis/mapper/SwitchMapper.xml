@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="io.rackshift.mybatis.domain.Switch">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="rule_id" jdbcType="VARCHAR" property="ruleId" />
     <result column="vendor" jdbcType="VARCHAR" property="vendor" />
     <result column="snmp_community" jdbcType="VARCHAR" property="snmpCommunity" />
@@ -76,7 +77,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, ip, rule_id, vendor, snmp_community, snmp_port, room, rack, u_number, telnet_port, 
+    id, ip, NAME, rule_id, vendor, snmp_community, snmp_port, room, rack, u_number, telnet_port, 
     ssh_port, web_port, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.SwitchExample" resultMap="BaseResultMap">
@@ -110,16 +111,18 @@
     </if>
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.Switch">
-    insert into switch (id, ip, rule_id, 
-      vendor, snmp_community, snmp_port, 
-      room, rack, u_number, 
-      telnet_port, ssh_port, web_port, 
-      create_time, update_time)
-    values (#{id,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{ruleId,jdbcType=VARCHAR}, 
-      #{vendor,jdbcType=VARCHAR}, #{snmpCommunity,jdbcType=VARCHAR}, #{snmpPort,jdbcType=VARCHAR}, 
-      #{room,jdbcType=VARCHAR}, #{rack,jdbcType=VARCHAR}, #{uNumber,jdbcType=VARCHAR}, 
-      #{telnetPort,jdbcType=VARCHAR}, #{sshPort,jdbcType=VARCHAR}, #{webPort,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=BIGINT}, #{updateTime,jdbcType=BIGINT})
+    insert into switch (id, ip, NAME, 
+      rule_id, vendor, snmp_community, 
+      snmp_port, room, rack, 
+      u_number, telnet_port, ssh_port, 
+      web_port, create_time, update_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{ruleId,jdbcType=VARCHAR}, #{vendor,jdbcType=VARCHAR}, #{snmpCommunity,jdbcType=VARCHAR}, 
+      #{snmpPort,jdbcType=VARCHAR}, #{room,jdbcType=VARCHAR}, #{rack,jdbcType=VARCHAR}, 
+      #{uNumber,jdbcType=VARCHAR}, #{telnetPort,jdbcType=VARCHAR}, #{sshPort,jdbcType=VARCHAR}, 
+      #{webPort,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{updateTime,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.Switch">
     insert into switch
@@ -129,6 +132,9 @@
       </if>
       <if test="ip != null">
         ip,
+      </if>
+      <if test="name != null">
+        NAME,
       </if>
       <if test="ruleId != null">
         rule_id,
@@ -173,6 +179,9 @@
       </if>
       <if test="ip != null">
         #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="ruleId != null">
         #{ruleId,jdbcType=VARCHAR},
@@ -227,6 +236,9 @@
       <if test="record.ip != null">
         ip = #{record.ip,jdbcType=VARCHAR},
       </if>
+      <if test="record.name != null">
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
       <if test="record.ruleId != null">
         rule_id = #{record.ruleId,jdbcType=VARCHAR},
       </if>
@@ -272,6 +284,7 @@
     update switch
     set id = #{record.id,jdbcType=VARCHAR},
       ip = #{record.ip,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
       rule_id = #{record.ruleId,jdbcType=VARCHAR},
       vendor = #{record.vendor,jdbcType=VARCHAR},
       snmp_community = #{record.snmpCommunity,jdbcType=VARCHAR},
@@ -293,6 +306,9 @@
     <set>
       <if test="ip != null">
         ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
       </if>
       <if test="ruleId != null">
         rule_id = #{ruleId,jdbcType=VARCHAR},
@@ -336,6 +352,7 @@
   <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.Switch">
     update switch
     set ip = #{ip,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
       rule_id = #{ruleId,jdbcType=VARCHAR},
       vendor = #{vendor,jdbcType=VARCHAR},
       snmp_community = #{snmpCommunity,jdbcType=VARCHAR},
