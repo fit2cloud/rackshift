@@ -36,6 +36,12 @@
           </template>
         </el-table-column>
 
+        <el-table-column prop="active_ports" :label="$t('active_ports')" align="left">
+          <template slot-scope="scope">
+            <el-link type="primary" @click="showActivePorts(scope.row.id)">{{ $t('show') }}</el-link>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="createTime" :label="$t('create_time')" align="left">
           <template slot-scope="scope">
             {{ scope.row.createTime | dateFormat }}
@@ -57,15 +63,6 @@
                 :placeholder="$t('input_key_search_switch')" v-on:change="getData()"/>
           </template>
           <template slot-scope="scope">
-            <el-dropdown>
-              <el-button type="primary">
-                {{ $t('opt') }}<i class="el-icon-arrow-down el-icon--right"></i>
-              </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click.native="fillOBM(scope.row)"> {{ $t('OBM') + $t('info') }}
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -104,7 +101,7 @@
         :wrapperClosable="false"
 
         :before-close="handleClose">
-      <Discovery class="bare-discovery" @back="discoveryVisible =false"
+      <Discovery class="bare-discovery" @back="discoveryVisible =false" @queryByRuleId="queryByRuleId"
                  ref="discoveryCom"></Discovery>
     </el-drawer>
   </el-tabs>
@@ -280,6 +277,12 @@ export default {
   }
   ,
   methods: {
+    queryByRuleId(e) {
+      if (e) {
+        this.queryVO.searchKey = e;
+        this.getData();
+      }
+    },
     openDiscover() {
       this.discoveryVisible = true;
       if (this.$refs.discoveryCom)

@@ -481,4 +481,6 @@ export default {
     "view_vendor": "View vendor",
     "Switch_Discovery_Rule": "Switch Discovery Rule",
     "edit_switch-discovery": "Edit Switch Rule",
+    "vendor": "Vendor",
+    "active_ports": "Active Ports",
 }

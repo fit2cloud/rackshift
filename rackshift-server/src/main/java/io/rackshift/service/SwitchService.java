@@ -37,6 +37,7 @@ public class SwitchService {
         if (StringUtils.isNotBlank(queryVO.getSearchKey())) {
             e.createCriteria().andNameLike("%" + queryVO.getSearchKey() + "%");
             e.or().andIpLike("%" + queryVO.getSearchKey() + "%");
+            e.or().andRuleIdEqualTo(queryVO.getSearchKey());
         }
         return e;
     }

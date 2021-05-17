@@ -487,4 +487,6 @@ export default {
     "view_vendor": "設備制造商",
     "Switch_Discovery_Rule": "交換機掃描規則",
     "edit_switch-discovery": "編輯交換機掃描規則",
+    "vendor": "製造商",
+    "active_ports": "活躍端口",
 }

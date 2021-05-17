@@ -491,4 +491,6 @@ export default {
     "view_vendor": "设备制造商",
     "Switch_Discovery_Rule": "交换机扫描规则",
     "edit_switch-discovery": "编辑交换机扫描规则",
+    "vendor": "制造商",
+    "active_ports": "活跃端口",
 }
