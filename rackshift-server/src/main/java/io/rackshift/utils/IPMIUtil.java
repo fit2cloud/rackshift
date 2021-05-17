@@ -153,6 +153,41 @@ public class IPMIUtil {
         return re;
     }
 
+    public static void main(String[] args) {
+        System.out.println(transform("Set in Progress         : Set Complete\n" +
+                "Auth Type Support       : MD5 \n" +
+                "Auth Type Enable        : Callback : MD5 \n" +
+                "                        : User     : MD5 \n" +
+                "                        : Operator : MD5 \n" +
+                "                        : Admin    : MD5 \n" +
+                "                        : OEM      : MD5 \n" +
+                "IP Address Source       : DHCP Address\n" +
+                "IP Address              : 43.14.101.5\n" +
+                "Subnet Mask             : 255.255.255.0\n" +
+                "MAC Address             : 84:65:69:5c:a2:a4\n" +
+                "SNMP Community String   : AMI\n" +
+                "IP Header               : TTL=0x40 Flags=0x40 Precedence=0x00 TOS=0x10\n" +
+                "BMC ARP Control         : ARP Responses Enabled, Gratuitous ARP Disabled\n" +
+                "Gratituous ARP Intrvl   : 0.0 seconds\n" +
+                "Default Gateway IP      : 43.14.101.254\n" +
+                "Default Gateway MAC     : 3c:d2:e5:36:ca:01\n" +
+                "Backup Gateway IP       : 0.0.0.0\n" +
+                "Backup Gateway MAC      : 00:00:00:00:00:00\n" +
+                "802.1q VLAN ID          : Disabled\n" +
+                "802.1q VLAN Priority    : 0\n" +
+                "RMCP+ Cipher Suites     : 0,1,2,3,6,7,8,11,12,15,16,17\n" +
+                "Cipher Suite Priv Max   : caaaaaaaaaaaXXX\n" +
+                "                        :     X=Cipher Suite Unused\n" +
+                "                        :     c=CALLBACK\n" +
+                "                        :     u=USER\n" +
+                "                        :     o=OPERATOR\n" +
+                "                        :     a=ADMIN\n" +
+                "                        :     O=OEM\n" +
+                "Bad Password Threshold  : 0\n" +
+                "Invalid password disable: no\n" +
+                "Attempt Count Reset Int.: 0\n" +
+                "User Lockout Interval   : 0"));
+    }
     public static class Account {
         String host;
         String userName;

@@ -30,12 +30,19 @@ export default {
                     "order": "4",
                     "icon": "el-icon-monitor"
                 },
+                {
+                    "name": 'Switch',
+                    "router": "/switch",
+                    "requireRole": "user,admin",
+                    "order": "5",
+                    "icon": "el-icon-s-promotion"
+                },
 
                 {
                     "name": 'Image',
                     "router": "/Image",
                     "requireRole": "user,admin",
-                    "order": "5",
+                    "order": "6",
                     "icon": "el-icon-view"
                 },
             ]

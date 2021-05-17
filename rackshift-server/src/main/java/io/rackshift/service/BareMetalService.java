@@ -1,12 +1,10 @@
 package io.rackshift.service;
 
 import io.rackshift.manager.BareMetalManager;
-import io.rackshift.model.BareMetalDTO;
-import io.rackshift.model.BareMetalQueryVO;
-import io.rackshift.model.RSException;
-import io.rackshift.model.ResultHolder;
+import io.rackshift.model.*;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.*;
+import io.rackshift.mybatis.mapper.ext.ExtNetworkCardMapper;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
 import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.*;
@@ -46,6 +44,8 @@ public class BareMetalService {
     private OutBandService outBandService;
     @Resource
     private InstructionLogService instructionLogService;
+    @Resource
+    private ExtNetworkCardMapper extNetworkCardMapper;
 
     public List<BareMetalDTO> list(BareMetalQueryVO queryVO) {
         return bareMetalManager.list(queryVO);
@@ -99,8 +99,7 @@ public class BareMetalService {
         List<Cpu> cpus = cpuMapper.selectByExample(cpuExample);
         List<Memory> memories = memoryMapper.selectByExample(memoryExample);
         List<Disk> disks = diskMapper.selectByExample(diskExample);
-        List<NetworkCard> nics = networkCardMapper.selectByExample(networkCardExample);
-
+        List<NetworkCardDTO> nics = extNetworkCardMapper.getNicsById(bareId);
 
         r.put("cpus", cpus);
         r.put("memories", memories);

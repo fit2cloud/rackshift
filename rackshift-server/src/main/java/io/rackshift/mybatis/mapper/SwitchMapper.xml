@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.mybatis.mapper.SwitchMapper">
+  <resultMap id="BaseResultMap" type="io.rackshift.mybatis.domain.Switch">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="rule_id" jdbcType="VARCHAR" property="ruleId" />
+    <result column="vendor" jdbcType="VARCHAR" property="vendor" />
+    <result column="snmp_community" jdbcType="VARCHAR" property="snmpCommunity" />
+    <result column="snmp_port" jdbcType="VARCHAR" property="snmpPort" />
+    <result column="room" jdbcType="VARCHAR" property="room" />
+    <result column="rack" jdbcType="VARCHAR" property="rack" />
+    <result column="u_number" jdbcType="VARCHAR" property="uNumber" />
+    <result column="telnet_port" jdbcType="VARCHAR" property="telnetPort" />
+    <result column="ssh_port" jdbcType="VARCHAR" property="sshPort" />
+    <result column="web_port" jdbcType="VARCHAR" property="webPort" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, ip, NAME, rule_id, vendor, snmp_community, snmp_port, room, rack, u_number, telnet_port, 
+    ssh_port, web_port, create_time, update_time
+  </sql>
+  <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.SwitchExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from switch
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from switch
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from switch
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="io.rackshift.mybatis.domain.SwitchExample">
+    delete from switch
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="io.rackshift.mybatis.domain.Switch">
+    insert into switch (id, ip, NAME, 
+      rule_id, vendor, snmp_community, 
+      snmp_port, room, rack, 
+      u_number, telnet_port, ssh_port, 
+      web_port, create_time, update_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{ruleId,jdbcType=VARCHAR}, #{vendor,jdbcType=VARCHAR}, #{snmpCommunity,jdbcType=VARCHAR}, 
+      #{snmpPort,jdbcType=VARCHAR}, #{room,jdbcType=VARCHAR}, #{rack,jdbcType=VARCHAR}, 
+      #{uNumber,jdbcType=VARCHAR}, #{telnetPort,jdbcType=VARCHAR}, #{sshPort,jdbcType=VARCHAR}, 
+      #{webPort,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{updateTime,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.Switch">
+    insert into switch
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="ruleId != null">
+        rule_id,
+      </if>
+      <if test="vendor != null">
+        vendor,
+      </if>
+      <if test="snmpCommunity != null">
+        snmp_community,
+      </if>
+      <if test="snmpPort != null">
+        snmp_port,
+      </if>
+      <if test="room != null">
+        room,
+      </if>
+      <if test="rack != null">
+        rack,
+      </if>
+      <if test="uNumber != null">
+        u_number,
+      </if>
+      <if test="telnetPort != null">
+        telnet_port,
+      </if>
+      <if test="sshPort != null">
+        ssh_port,
+      </if>
+      <if test="webPort != null">
+        web_port,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleId != null">
+        #{ruleId,jdbcType=VARCHAR},
+      </if>
+      <if test="vendor != null">
+        #{vendor,jdbcType=VARCHAR},
+      </if>
+      <if test="snmpCommunity != null">
+        #{snmpCommunity,jdbcType=VARCHAR},
+      </if>
+      <if test="snmpPort != null">
+        #{snmpPort,jdbcType=VARCHAR},
+      </if>
+      <if test="room != null">
+        #{room,jdbcType=VARCHAR},
+      </if>
+      <if test="rack != null">
+        #{rack,jdbcType=VARCHAR},
+      </if>
+      <if test="uNumber != null">
+        #{uNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="telnetPort != null">
+        #{telnetPort,jdbcType=VARCHAR},
+      </if>
+      <if test="sshPort != null">
+        #{sshPort,jdbcType=VARCHAR},
+      </if>
+      <if test="webPort != null">
+        #{webPort,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="io.rackshift.mybatis.domain.SwitchExample" resultType="java.lang.Long">
+    select count(*) from switch
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update switch
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ip != null">
+        ip = #{record.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ruleId != null">
+        rule_id = #{record.ruleId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.vendor != null">
+        vendor = #{record.vendor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.snmpCommunity != null">
+        snmp_community = #{record.snmpCommunity,jdbcType=VARCHAR},
+      </if>
+      <if test="record.snmpPort != null">
+        snmp_port = #{record.snmpPort,jdbcType=VARCHAR},
+      </if>
+      <if test="record.room != null">
+        room = #{record.room,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rack != null">
+        rack = #{record.rack,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uNumber != null">
+        u_number = #{record.uNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.telnetPort != null">
+        telnet_port = #{record.telnetPort,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sshPort != null">
+        ssh_port = #{record.sshPort,jdbcType=VARCHAR},
+      </if>
+      <if test="record.webPort != null">
+        web_port = #{record.webPort,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update switch
+    set id = #{record.id,jdbcType=VARCHAR},
+      ip = #{record.ip,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      rule_id = #{record.ruleId,jdbcType=VARCHAR},
+      vendor = #{record.vendor,jdbcType=VARCHAR},
+      snmp_community = #{record.snmpCommunity,jdbcType=VARCHAR},
+      snmp_port = #{record.snmpPort,jdbcType=VARCHAR},
+      room = #{record.room,jdbcType=VARCHAR},
+      rack = #{record.rack,jdbcType=VARCHAR},
+      u_number = #{record.uNumber,jdbcType=VARCHAR},
+      telnet_port = #{record.telnetPort,jdbcType=VARCHAR},
+      ssh_port = #{record.sshPort,jdbcType=VARCHAR},
+      web_port = #{record.webPort,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="io.rackshift.mybatis.domain.Switch">
+    update switch
+    <set>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleId != null">
+        rule_id = #{ruleId,jdbcType=VARCHAR},
+      </if>
+      <if test="vendor != null">
+        vendor = #{vendor,jdbcType=VARCHAR},
+      </if>
+      <if test="snmpCommunity != null">
+        snmp_community = #{snmpCommunity,jdbcType=VARCHAR},
+      </if>
+      <if test="snmpPort != null">
+        snmp_port = #{snmpPort,jdbcType=VARCHAR},
+      </if>
+      <if test="room != null">
+        room = #{room,jdbcType=VARCHAR},
+      </if>
+      <if test="rack != null">
+        rack = #{rack,jdbcType=VARCHAR},
+      </if>
+      <if test="uNumber != null">
+        u_number = #{uNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="telnetPort != null">
+        telnet_port = #{telnetPort,jdbcType=VARCHAR},
+      </if>
+      <if test="sshPort != null">
+        ssh_port = #{sshPort,jdbcType=VARCHAR},
+      </if>
+      <if test="webPort != null">
+        web_port = #{webPort,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.Switch">
+    update switch
+    set ip = #{ip,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      rule_id = #{ruleId,jdbcType=VARCHAR},
+      vendor = #{vendor,jdbcType=VARCHAR},
+      snmp_community = #{snmpCommunity,jdbcType=VARCHAR},
+      snmp_port = #{snmpPort,jdbcType=VARCHAR},
+      room = #{room,jdbcType=VARCHAR},
+      rack = #{rack,jdbcType=VARCHAR},
+      u_number = #{uNumber,jdbcType=VARCHAR},
+      telnet_port = #{telnetPort,jdbcType=VARCHAR},
+      ssh_port = #{sshPort,jdbcType=VARCHAR},
+      web_port = #{webPort,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

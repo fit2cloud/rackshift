@@ -1,9 +1,9 @@
 name: upload release asset
 
 on:
-  create:
+  push:
     tag:
-      - "v1.1.0"
+      - "v1.2.0"
 
 jobs:
   build:

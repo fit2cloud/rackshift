@@ -69,7 +69,9 @@
 <!--        <table tableName="workflow"/>-->
 <!--        <table tableName="bare_metal_rule"/>-->
 <!--        <table tableName="instruction"/>-->
-        <table tableName="network_card"/>
+        <table tableName="switch_rule"/>
+        <table tableName="switch"/>
+        <table tableName="switch_port"/>
 <!--        <table tableName="ip"/>-->
 
     </context>
