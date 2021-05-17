@@ -489,4 +489,5 @@ export default {
     "edit_switch-discovery": "編輯交換機掃描規則",
     "vendor": "製造商",
     "active_ports": "活躍端口",
+    "port_detail": "端口詳情",
 }

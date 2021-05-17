@@ -493,4 +493,5 @@ export default {
     "edit_switch-discovery": "编辑交换机扫描规则",
     "vendor": "制造商",
     "active_ports": "活跃端口",
+    "port_detail": "端口详情",
 }

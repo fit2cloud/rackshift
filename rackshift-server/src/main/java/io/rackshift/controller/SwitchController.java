@@ -33,4 +33,10 @@ public class SwitchController {
     public ResultHolder del(@RequestBody String[] ids) {
         return ResultHolder.success(switchService.del(ids));
     }
+
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @GetMapping("/{id}/ports")
+    public ResultHolder switchPorts(@PathVariable String id) {
+        return ResultHolder.success(switchService.switchPorts(id));
+    }
 }

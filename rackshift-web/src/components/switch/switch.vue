@@ -104,29 +104,60 @@
       <Discovery class="bare-discovery" @back="discoveryVisible =false" @queryByRuleId="queryByRuleId"
                  ref="discoveryCom"></Discovery>
     </el-drawer>
+
+
+    <drawer
+        :visible.sync="detailDrawer"
+        direction="rtl"
+        :with-header="false"
+        size="50%"
+        :before-close="handleClose">
+
+      <div class="demo-drawer__content">
+        <el-tabs v-model="detailShowName">
+          <el-tab-pane :label="$t('port_detail')" name="portDetail" class="detail-pane">
+            <table class="detail-info">
+              <tr>
+                <td>{{ $t('port') }}</td>
+                <td>{{ $t('mac') }}</td>
+                <td>{{ $t('switch_name') }}</td>
+                <td>{{ $t('Bare Metal Server') + $t('machine_brand') }}</td>
+                <td>{{ $t('Bare Metal Server') + $t('machine_model') }}</td>
+                <td>{{ $t('Bare Metal Server') + $t('machine_sn') }}</td>
+                <td>{{ $t('create_time') }}</td>
+                <td>{{ $t('update_time') }}</td>
+              </tr>
+              <tr v-for="c in switchPorts">
+                <td>{{ c.port }}</td>
+                <td>{{ c.mac }}</td>
+                <td>{{ c.switchName }}</td>
+                <td>{{ c.machineBrand }}</td>
+                <td>{{ c.machineModel }}</td>
+                <td>{{ c.machineSn }}</td>
+                <td>{{ c.createTime | dateFormat }}</td>
+                <td>{{ c.updateTime | dateFormat }}</td>
+              </tr>
+            </table>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+    </drawer>
   </el-tabs>
 </template>
 
 <script>
 import HttpUtil from "../../common/utils/HttpUtil";
-import {isAnyBlank} from "../../common/utils/CommonUtil";
 import OBM from "../obm/Obm"
 import Discovery from "../switch-discovery/SwitchDiscovery"
 import Vue from "vue"
-import i18n from "@/i18n/i18n";
 import PowerStatus from '../../common/powerstatus/Power-Status'
-import axios from 'axios'
-import {getIPRange} from 'get-ip-range'
-import {paramMap, isInherit} from '../../rackparams/params'
 import {ipValidator, maskValidator, requiredValidator} from "@/common/validator/CommonValidator";
 
-Vue.filter('statusFilter', function (row) {
-  return i18n.t('PXE') + ' ' + i18n.t(row.status);
-});
 let _ = require('lodash');
 export default {
   data() {
     return {
+      switchPorts: [],
       currentVendor: null,
       showVendorVisible: false,
       directCom: true,
@@ -241,7 +272,7 @@ export default {
       obmLoading: false,
       fillWfParamsLoading: false,
       machine: {},
-      detailShowName: 'detail',
+      detailShowName: 'portDetail',
       cpuLoading: false,
       cpus: [],
       memories: [],
@@ -291,6 +322,15 @@ export default {
     showVendor(vendor) {
       this.showVendorVisible = true;
       this.currentVendor = vendor;
+    },
+    getSwitchPorts(id) {
+      HttpUtil.get("/switch/" + id + "/ports/", null, (res) => {
+        this.switchPorts = res.data;
+      })
+    },
+    showActivePorts(switchId) {
+      this.detailDrawer = true;
+      this.getSwitchPorts(switchId);
     },
     handleChange(val) {
 

@@ -1,24 +1,20 @@
 package io.rackshift.service;
 
 import io.rackshift.job.model.ProtocolRequest;
-import io.rackshift.manager.BareMetalManager;
 import io.rackshift.metal.sdk.util.SnmpWorker;
-import io.rackshift.model.*;
+import io.rackshift.model.SwitchPortDTO;
+import io.rackshift.model.SwitchQueryVO;
 import io.rackshift.mybatis.domain.*;
-import io.rackshift.mybatis.mapper.*;
-import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
-import io.rackshift.strategy.statemachine.LifeStatus;
-import io.rackshift.utils.*;
+import io.rackshift.mybatis.mapper.SwitchMapper;
+import io.rackshift.mybatis.mapper.SwitchPortMapper;
+import io.rackshift.mybatis.mapper.ext.ExtSwitchPortMapper;
+import io.rackshift.utils.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class SwitchService {
@@ -26,6 +22,8 @@ public class SwitchService {
     private SwitchMapper switchMapper;
     @Resource
     private SwitchPortMapper switchPortMapper;
+    @Resource
+    private ExtSwitchPortMapper extSwitchPortMapper;
 
     public List<Switch> list(SwitchQueryVO queryVO) {
         SwitchExample e = buildExample(queryVO);
@@ -102,5 +100,9 @@ public class SwitchService {
             p.setUpdateTime(System.currentTimeMillis());
             switchPortMapper.insertSelective(p);
         });
+    }
+
+    public List<SwitchPortDTO> switchPorts(String id) {
+        return extSwitchPortMapper.getPortsById(id);
     }
 }

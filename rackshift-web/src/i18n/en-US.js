@@ -483,4 +483,5 @@ export default {
     "edit_switch-discovery": "Edit Switch Rule",
     "vendor": "Vendor",
     "active_ports": "Active Ports",
+    "port_detail": "Port Detail",
 }
