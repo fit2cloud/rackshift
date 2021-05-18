@@ -269,8 +269,7 @@ export default {
       return '/switch-discovery/upload?fileName=' + this.fileName;
     }
   },
-  components: {
-  },
+  components: {},
   mounted() {
     if (!this.websocket) {
       this.websocket = new WebSocketUtil();
@@ -319,7 +318,7 @@ export default {
         this.editObj.credentialParam = [];
       this.editObj.credentialParam.push(
           {
-            "protocol": "IPMI+Rest",
+            "protocol": "SNMP",
           }
       );
     },
