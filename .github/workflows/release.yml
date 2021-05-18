@@ -1,7 +1,7 @@
 name: upload release asset
 
 on:
-  push:
+  create:
     tag:
       - "v1.2.0"
 
