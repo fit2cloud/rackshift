@@ -74,6 +74,22 @@ public class BareMetalManager {
     }
 
     public int delBareMetalById(String id) {
+        CpuExample c = new CpuExample();
+        c.createCriteria().andBareMetalIdEqualTo(id);
+        cpuMapper.deleteByExample(c);
+
+        MemoryExample m = new MemoryExample();
+        m.createCriteria().andBareMetalIdEqualTo(id);
+        memoryMapper.deleteByExample(m);
+
+        DiskExample d = new DiskExample();
+        d.createCriteria().andBareMetalIdEqualTo(id);
+        diskMapper.deleteByExample(d);
+
+        NetworkCardExample n = new NetworkCardExample();
+        n.createCriteria().andBareMetalIdEqualTo(id);
+        networkCardMapper.deleteByExample(n);
+
         return bareMetalMapper.deleteByPrimaryKey(id);
     }
 
