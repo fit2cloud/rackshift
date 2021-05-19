@@ -494,4 +494,9 @@ export default {
     "vendor": "制造商",
     "active_ports": "活跃端口",
     "port_detail": "端口详情",
+    "api_key": "API KEY",
+    "create": "创建",
+    "access_key": "Access Key",
+    "secret_key": "Secret Key",
+    "hide": "隐藏",
 }

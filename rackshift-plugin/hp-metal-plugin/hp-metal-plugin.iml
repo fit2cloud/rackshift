@@ -42,7 +42,7 @@
     <orderEntry type="library" name="Maven: org.soulwing.snmp:tnm4j:1.0.7" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.slf4j:log4j-over-slf4j:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: net.percederberg.mibble:mibble-mibs:2.9.3" level="project" />
-    <orderEntry type="library" name="Maven: org.snmp4j:snmp4j:3.0.6" level="project" />
+    <orderEntry type="library" name="Maven: org.snmp4j:snmp4j:2.8.7" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.okhttp3:okhttp:3.11.0" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.14.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-commons:2.0.2.RELEASE" level="project" />

@@ -490,4 +490,9 @@ export default {
     "vendor": "製造商",
     "active_ports": "活躍端口",
     "port_detail": "端口詳情",
+    "api_key": "API KEY",
+    "create": "創建",
+    "access_key": "Access Key",
+    "secret_key": "Secret Key",
+    "hide": "隱藏",
 }

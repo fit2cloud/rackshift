@@ -175,4 +175,8 @@ public class UserService {
         }
         return false;
     }
+
+    public User getUserById(String userId) {
+        return userMapper.selectByPrimaryKey(userId);
+    }
 }

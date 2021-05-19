@@ -484,4 +484,9 @@ export default {
     "vendor": "Vendor",
     "active_ports": "Active Ports",
     "port_detail": "Port Detail",
+    "api_key": "API KEY",
+    "create": "Create",
+    "access_key": "Access Key",
+    "secret_key": "Secret Key",
+    "hide": "HIDE",
 }
