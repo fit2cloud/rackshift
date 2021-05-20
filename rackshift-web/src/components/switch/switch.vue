@@ -42,14 +42,14 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="createTime" :label="$t('create_time')" align="left">
+        <el-table-column prop="createTime" :label="$t('create_time')" align="left" width="160px">
           <template slot-scope="scope">
             {{ scope.row.createTime | dateFormat }}
           </template>
         </el-table-column>
 
 
-        <el-table-column prop="updateTime" :label="$t('update_time')" align="left">
+        <el-table-column prop="updateTime" :label="$t('update_time')" align="left" width="160px">
           <template slot-scope="scope">
             {{ scope.row.updateTime | dateFormat }}
           </template>

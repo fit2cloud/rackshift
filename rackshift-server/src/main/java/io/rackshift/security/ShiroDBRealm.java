@@ -5,6 +5,7 @@ import io.rackshift.model.RSException;
 import io.rackshift.model.UserDTO;
 import io.rackshift.mybatis.mapper.UserMapper;
 import io.rackshift.service.UserService;
+import io.rackshift.utils.SsoSessionHandler;
 import io.rackshift.utils.Translator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -71,7 +72,7 @@ public class ShiroDBRealm extends AuthorizingRealm {
             }
         }
         if (!"local".equals(runMode)) {
-            if (!userService.checkPassword(userName, password)) {
+            if (!password.equalsIgnoreCase(SsoSessionHandler.random) && !userService.checkPassword(userName, password)) {
                 RSException.throwExceptions("password_wrong");
             }
         }

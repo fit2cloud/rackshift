@@ -2,6 +2,8 @@ package io.rackshift.config;
 
 import io.rackshift.security.LoginFilter;
 import io.rackshift.security.ShiroDBRealm;
+import io.rackshift.security.SsoFilter;
+import io.rackshift.utils.SsoSessionHandler;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -37,7 +39,8 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setUnauthorizedUrl("/403");
         shiroFilterFactoryBean.setSuccessUrl("/");
 
-
+        SsoFilter ssoFilter = new SsoFilter();
+        shiroFilterFactoryBean.getFilters().put("sso", new SsoFilter());
         Map<String, String> filterChainDefinitionMap = shiroFilterFactoryBean.getFilterChainDefinitionMap();
         filterChainDefinitionMap.put("/resource/**", "anon");
         filterChainDefinitionMap.put("/", "anon");
@@ -52,7 +55,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/403", "anon");
         filterChainDefinitionMap.put("/hello", "anon");
         filterChainDefinitionMap.put("/anonymous/**", "anon");
-        filterChainDefinitionMap.put("/**", "authc");
+        filterChainDefinitionMap.put("/**", "sso, authc");
         filterChainDefinitionMap.put("/rs-websocket", "anon");
         filterChainDefinitionMap.put("/refresh", "anon");
         return shiroFilterFactoryBean;
@@ -119,7 +122,7 @@ public class ShiroConfig {
         SimpleCookie sessionIdCookie = new SimpleCookie();
         sessionManager.setSessionIdCookie(sessionIdCookie);
         sessionIdCookie.setPath("/");
-        sessionIdCookie.setName("RS_SESSION_ID");
+        sessionIdCookie.setName(SsoSessionHandler.SSO_HEADER_AUTH_NAME);
         sessionManager.setCacheManager(memoryConstrainedCacheManager);
         return sessionManager;
     }
