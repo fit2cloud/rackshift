@@ -4,20 +4,31 @@
     <select id="getPortsById" parameterType="String"
             resultType="io.rackshift.model.SwitchPortDTO">
         SELECT
-        s.name switchName,
+        s. NAME switchName,
         sp.id,
         sp.mac,
-        sp.port,
+        sp. PORT,
         sp.create_time createTime,
         sp.update_time updateTime,
-        bm.machine_sn machineSn,
-        bm.machine_model machineModel,
-        bm.machine_brand machineBrand
+        ifnull(
+        bm.machine_sn,
+        bm2.machine_sn
+        ) machineSn,
+        ifnull(
+        bm.machine_model,
+        bm2.machine_model
+        ) machineModel,
+        ifnull(
+        bm.machine_brand,
+        bm2.machine_brand
+        ) machineBrand,
+        IFNULL(bm2.id, 'no') outband
         FROM
         switch_port sp
         LEFT JOIN network_card nc ON sp.mac = nc.mac
+        LEFT JOIN bare_metal bm2 ON bm2.bmc_mac = sp.mac
         LEFT JOIN bare_metal bm ON bm.id = nc.bare_metal_id
-        LEFT JOIN switch s on sp.switch_id = s.id
+        LEFT JOIN switch s ON sp.switch_id = s.id
         <where>
             <if test="id != null and id != ''">
                 sp.switch_id = #{id}

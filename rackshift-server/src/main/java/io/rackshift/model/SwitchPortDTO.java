@@ -8,6 +8,7 @@ public class SwitchPortDTO extends SwitchPort {
     private String machineBrand;
     private String machineModel;
     private String machineSn;
+    private String outband;
 
     public String getSwitchName() {
         return switchName;
@@ -39,5 +40,13 @@ public class SwitchPortDTO extends SwitchPort {
 
     public void setMachineSn(String machineSn) {
         this.machineSn = machineSn;
+    }
+
+    public String getOutband() {
+        return outband;
+    }
+
+    public void setOutband(String outband) {
+        this.outband = outband;
     }
 }

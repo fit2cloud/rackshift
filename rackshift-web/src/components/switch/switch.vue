@@ -124,6 +124,7 @@
                 <td>{{ $t('Bare Metal Server') + $t('machine_brand') }}</td>
                 <td>{{ $t('Bare Metal Server') + $t('machine_model') }}</td>
                 <td>{{ $t('Bare Metal Server') + $t('machine_sn') }}</td>
+                <td>{{ $t('OBM') }}</td>
                 <td>{{ $t('create_time') }}</td>
                 <td>{{ $t('update_time') }}</td>
               </tr>
@@ -134,6 +135,7 @@
                 <td>{{ c.machineBrand }}</td>
                 <td>{{ c.machineModel }}</td>
                 <td>{{ c.machineSn }}</td>
+                <td>{{ c.outband == 'no' ? $t("disabled") : $t("enabled") }}</td>
                 <td>{{ c.createTime | dateFormat }}</td>
                 <td>{{ c.updateTime | dateFormat }}</td>
               </tr>
