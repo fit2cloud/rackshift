@@ -49,26 +49,21 @@ jobs:
             ```
 
             ## 新增功能
-            - WindowsServer 2016 安装
-            - ESXi 6.7 安装
-            - CentOS Minimal 版本安装
-            - CentOS/RHEL 多网卡 IP/ VLAN  配置
-            - CentOS 多网卡链路聚合 BOND4 802.3ad / VLAN
+            - 华为交换机管理
+            - 支持 AK/SK 外部访问
+            - 重构 API 外部调用接口
+            - 对接 FIT2CLOUD CloudExplorer 3.0 物理机模块
 
             ## 功能优化
-            - 删除任务状态变化慢的问题
-            - 指定删除 Ubuntu 网卡的问题
+            - 裸金属服务器发现速度
 
             ## 问题修复
-            - 插件选择物理机页面分页问题
-            - 任务列表查询显示重复问题
-            - 插件镜像问题
-            - Ubuntu 自定义分区报错问题
+            - 华三机器发现不了的问题
 
             # 产品文档
             点击 [完整文档](https://rackshift.github.io/rackshift-docs-static/) 查看完整的安装和使用文档
             # 离线安装包
-            - 百度网盘下载链接: https://pan.baidu.com/s/1TA6SuxDjIPNBRmBlieOVMg 提取码: hrbr
+            - 百度网盘下载链接: https://pan.baidu.com/s/1P-R4U2zTw9xfsRshfEqd3A 提取码: nmbz
 
       - name: Upload Release Asset
         id: upload-release-asset
