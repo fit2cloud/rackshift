@@ -44,8 +44,6 @@ public class BareMetalService {
     private OutBandService outBandService;
     @Resource
     private InstructionLogService instructionLogService;
-    @Resource
-    private ExtNetworkCardMapper extNetworkCardMapper;
 
     public List<BareMetalDTO> list(BareMetalQueryVO queryVO) {
         return bareMetalManager.list(queryVO);
@@ -83,30 +81,7 @@ public class BareMetalService {
     }
 
     public ResultHolder hardwares(String bareId) {
-        Map r = new HashMap();
-        CpuExample cpuExample = new CpuExample();
-        cpuExample.createCriteria().andBareMetalIdEqualTo(bareId);
-
-        MemoryExample memoryExample = new MemoryExample();
-        memoryExample.createCriteria().andBareMetalIdEqualTo(bareId);
-
-        DiskExample diskExample = new DiskExample();
-        diskExample.createCriteria().andBareMetalIdEqualTo(bareId);
-
-        NetworkCardExample networkCardExample = new NetworkCardExample();
-        networkCardExample.createCriteria().andBareMetalIdEqualTo(bareId);
-
-        List<Cpu> cpus = cpuMapper.selectByExample(cpuExample);
-        List<Memory> memories = memoryMapper.selectByExample(memoryExample);
-        List<Disk> disks = diskMapper.selectByExample(diskExample);
-        List<NetworkCardDTO> nics = extNetworkCardMapper.getNicsById(bareId);
-
-        r.put("cpus", cpus);
-        r.put("memories", memories);
-        r.put("disks", disks);
-        r.put("nics", nics);
-
-        return ResultHolder.success(r);
+        return ResultHolder.success(bareMetalManager.hardwares(bareId));
     }
 
     public boolean del(String[] ids) {
@@ -151,5 +126,9 @@ public class BareMetalService {
             power(id, power);
         }
         return ResultHolder.success("");
+    }
+
+    public Object all() {
+        return bareMetalManager.all();
     }
 }

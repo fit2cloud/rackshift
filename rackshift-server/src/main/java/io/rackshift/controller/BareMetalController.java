@@ -25,6 +25,11 @@ public class BareMetalController {
         return ResultHolder.success(PageUtils.setPageInfo(pager, bareMetalService.list(queryVO)));
     }
 
+    @GetMapping("/all")
+    public ResultHolder all() {
+        return ResultHolder.success(bareMetalService.all());
+    }
+
     @GetMapping("/power/{id}/{power}")
     public ResultHolder power(@PathVariable String id, @PathVariable String power) {
         return bareMetalService.power(id, power);

@@ -1,15 +1,11 @@
 package io.rackshift.manager;
 
-import io.rackshift.model.BareMetalDTO;
-import io.rackshift.model.BareMetalQueryVO;
-import io.rackshift.model.MachineEntity;
-import io.rackshift.model.RSException;
+import io.rackshift.model.*;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.*;
+import io.rackshift.mybatis.mapper.ext.ExtNetworkCardMapper;
 import io.rackshift.service.RackHDService;
-import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
 import io.rackshift.strategy.statemachine.LifeStatus;
-import io.rackshift.strategy.statemachine.StateMachine;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.LogUtil;
@@ -19,10 +15,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class BareMetalManager {
@@ -42,6 +35,8 @@ public class BareMetalManager {
     private OutBandManager outBandManager;
     @Autowired
     private SimpMessagingTemplate template;
+    @Resource
+    private ExtNetworkCardMapper extNetworkCardMapper;
 
     public BareMetal getBareMetalBySn(String sn) {
         if (StringUtils.isBlank(sn)) {
@@ -256,5 +251,47 @@ public class BareMetalManager {
         BareMetalExample e = new BareMetalExample();
         e.createCriteria().andIdIn(Arrays.asList(bareMetalIds));
         return bareMetalMapper.selectByExample(e);
+    }
+
+    public List<BareMetalDTO> all() {
+        BareMetalExample bareMetalExample = buildParams(new BareMetalQueryVO());
+        List<BareMetal> list = bareMetalMapper.selectByExample(bareMetalExample);
+        List<BareMetalDTO> r = new LinkedList<>();
+        list.forEach(b -> {
+            BareMetalDTO bareMetalDTO = new BareMetalDTO();
+            BeanUtils.copyBean(bareMetalDTO, b);
+            bareMetalDTO.setOutBandList(outBandManager.getByBareMetalId(b.getId()));
+            bareMetalDTO.setHardware(hardwares(b.getId()));
+            r.add(bareMetalDTO);
+        });
+
+        return r;
+    }
+
+    public Map hardwares(String bareId) {
+        Map r = new HashMap();
+        CpuExample cpuExample = new CpuExample();
+        cpuExample.createCriteria().andBareMetalIdEqualTo(bareId);
+
+        MemoryExample memoryExample = new MemoryExample();
+        memoryExample.createCriteria().andBareMetalIdEqualTo(bareId);
+
+        DiskExample diskExample = new DiskExample();
+        diskExample.createCriteria().andBareMetalIdEqualTo(bareId);
+
+        NetworkCardExample networkCardExample = new NetworkCardExample();
+        networkCardExample.createCriteria().andBareMetalIdEqualTo(bareId);
+
+        List<Cpu> cpus = cpuMapper.selectByExample(cpuExample);
+        List<Memory> memories = memoryMapper.selectByExample(memoryExample);
+        List<Disk> disks = diskMapper.selectByExample(diskExample);
+        List<NetworkCardDTO> nics = extNetworkCardMapper.getNicsById(bareId);
+
+        r.put("cpus", cpus);
+        r.put("memories", memories);
+        r.put("disks", disks);
+        r.put("nics", nics);
+
+        return r;
     }
 }
