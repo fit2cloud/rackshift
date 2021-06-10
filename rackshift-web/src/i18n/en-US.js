@@ -489,4 +489,7 @@ export default {
     "access_key": "Access Key",
     "secret_key": "Secret Key",
     "hide": "HIDE",
+    "param": "PARAM",
+    "copy": "COPY",
+    "copied": "COP",
 }

@@ -58,6 +58,12 @@
           <el-table-column prop="userId" :label="$t('user')" align="left" sortable="custom">
           </el-table-column>
 
+          <el-table-column prop="params" :label="$t('param')" align="left">
+            <template slot-scope="scope">
+              <el-link @click="viewParam(scope.row.params)">查看</el-link>
+            </template>
+          </el-table-column>
+
           <el-table-column prop="status" :label="$t('status')" align="left">
             <template slot-scope="scope">
               <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
@@ -130,7 +136,12 @@
             </div>
           </div>
         </el-drawer>
-
+        <el-dialog
+            :title="$t('param')"
+            :append-to-body="true"
+            :visible.sync="paramVisable" class="about-us">
+          <json-viewer :value="jsonData" :expand-depth=6 :copyable="{copyText: $t('copy'), copiedText: $t('copied'), timeout: 2000}"></json-viewer>
+        </el-dialog>
       </div>
     </el-tab-pane>
   </el-tabs>
@@ -141,11 +152,16 @@
 import HttpUtil from "../../common/utils/HttpUtil"
 import {ipValidator, requiredValidator} from "@/common/validator/CommonValidator";
 import {humpToLine} from "@/common/utils/CommonUtil"
-
+import JsonViewer from 'vue-json-viewer'
+import Vue from 'vue'
+// Import JsonViewer as a Vue.js plugin
+Vue.use(JsonViewer)
 let _ = require('lodash');
 export default {
   data() {
     return {
+      paramVisable: false,
+      jsonData: {},
       queryVO: {},
       refreshOne: false,
       refreshSubTaskPointer: null,
@@ -220,6 +236,25 @@ export default {
     this.getData();
   },
   methods: {
+    copy(e) {
+      e.preventDefault();
+      var content = JSON.stringify(this.jsonData);
+      let oInput = document.createElement('input')
+      oInput.value = content;
+      document.body.appendChild(oInput);
+      oInput.select();
+      document.execCommand("Copy");
+      oInput.style.display = 'none';
+      document.body.removeChild(oInput);
+      this.$message.success(this.$t('copy_success'));
+    },
+    close() {
+      this.paramVisable = false;
+    },
+    viewParam(param) {
+      this.jsonData = JSON.parse(param);
+      this.paramVisable = true;
+    },
     sortChange(val) {
       if (val.order) {
         this.queryVO.sort = humpToLine(val.prop) + " " + val.order.replace("ending", "");

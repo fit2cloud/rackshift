@@ -499,4 +499,7 @@ export default {
     "access_key": "Access Key",
     "secret_key": "Secret Key",
     "hide": "隐藏",
+    "param": "参数",
+    "copy": "复制",
+    "copied": "已复制",
 }

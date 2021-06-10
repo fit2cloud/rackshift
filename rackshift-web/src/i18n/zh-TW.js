@@ -495,4 +495,7 @@ export default {
     "access_key": "Access Key",
     "secret_key": "Secret Key",
     "hide": "隱藏",
+    "param": "參數",
+    "copy": "複製",
+    "copied": "已複製",
 }
