@@ -10,6 +10,6 @@
                  LEFT JOIN network_card nc ON bm.id = nc.bare_metal_id
                  LEFT JOIN switch_port sp ON nc.mac = sp.mac
                  LEFT JOIN switch s ON sp.switch_id = s.id
-        where bm.id = #{id}
+        where bm.id = #{id} and nc.id is not null
     </select>
 </mapper>
