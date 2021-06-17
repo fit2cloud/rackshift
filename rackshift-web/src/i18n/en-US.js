@@ -492,4 +492,10 @@ export default {
     "param": "PARAM",
     "copy": "COPY",
     "copied": "COP",
+    "device_type": "Device Type",
+    "volume_group": "Volume Group",
+    "lvm": "LVM",
+    "standard_partition": "Standard Partition",
+    "lvm_name": "LVM Name",
+    "partition_tips": "default kickstart autopart",
 }

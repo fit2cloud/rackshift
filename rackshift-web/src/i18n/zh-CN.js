@@ -502,4 +502,10 @@ export default {
     "param": "参数",
     "copy": "复制",
     "copied": "已复制",
+    "device_type": "设备类型",
+    "volume_group": "LVM 卷组",
+    "lvm": "LVM",
+    "standard_partition": "标准分区",
+    "lvm_name": "LVM 卷名",
+    "partition_tips": "默认等于 kickstart autopart，自定义分区默认只操作第一块磁盘 不管是 standard 标准设备还是 lvm 逻辑设备",
 }

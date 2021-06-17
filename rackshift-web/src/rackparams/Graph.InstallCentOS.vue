@@ -24,6 +24,9 @@
             <el-switch
                 v-model="extraParams.customPartition">
             </el-switch>
+            <el-tooltip class="dark" :content="partitionTips">
+              <i class="el-icon-question" style="font-size: 20px; "></i>
+            </el-tooltip>
             <table class="detail-info-rack" v-show="extraParams.customPartition">
               <thead>
               <tr>
@@ -39,6 +42,9 @@
                   </el-row>
                 </th>
                 <th>{{ $t('fs_type') }}</th>
+                <th>{{ $t('device_type') }}</th>
+                <th>{{ $t('volume_group') }}</th>
+                <th>{{ $t('lvm_name') }}</th>
                 <th>
                   <el-button type="primary" icon="el-icon-plus" circle
                              @click="payLoad.options.defaults.installPartitions.push({})">
@@ -63,6 +69,25 @@
                                :value="x"><span>{{ x }}</span>
                     </el-option>
                   </el-select>
+                </td>
+                <td>
+                  <el-select v-model="partition.deviceType" :disabled="partition.mountPoint == 'biosboot'">
+                    <el-option v-for="x in deviceType"
+                               :value="x.value"><span>{{ x.value }}</span>
+                    </el-option>
+                  </el-select>
+                </td>
+                <td>
+                  <el-select v-model="partition.volumeGroup"
+                             :disabled="partition.mountPoint == 'biosboot' || partition.deviceType == 'standard'">
+                    <el-option v-for="x in volumeGroup"
+                               :value="x"><span>{{ x }}</span>
+                    </el-option>
+                  </el-select>
+                </td>
+                <td>
+                  <el-input v-model="partition.lvmName"
+                            :disabled="partition.mountPoint == 'biosboot' || partition.deviceType == 'standard'"></el-input>
                 </td>
                 <td>
                   <el-button type="primary" icon="el-icon-minus" circle
@@ -249,6 +274,7 @@ export default {
   },
   data() {
     return {
+      partitionTips: this.$t("partition_tips"),
       activeNames: '0',
       bondActiveNames: 'bond0',
       rules: {
@@ -305,22 +331,26 @@ export default {
               {
                 "mountPoint": "/",
                 "size": "auto",
-                "fsType": "ext3"
+                "fsType": "ext3",
+                "deviceType": "standard"
               },
               {
                 "mountPoint": "swap",
                 "size": "4096",
-                "fsType": "swap"
+                "fsType": "swap",
+                "deviceType": "standard"
               },
               {
                 "mountPoint": "/boot",
                 "size": "4096",
-                "fsType": "ext3"
+                "fsType": "ext3",
+                "deviceType": "standard"
               },
               {
                 "mountPoint": "biosboot",
                 "size": "1",
-                "fsType": "biosboot"
+                "fsType": "biosboot",
+                "deviceType": "standard"
               }
             ],
             "bonds": []
@@ -340,6 +370,11 @@ export default {
         'GB', 'MB'
       ],
       fsType: ['ext3', 'ext4', 'swap', 'xfs', 'biosboot'],
+      deviceType: [{"name": this.$t("lvm"), "value": "lvm"}, {
+        "name": this.$t("standard_partition"),
+        "value": "standard"
+      }],
+      volumeGroup: ["rootvg"],
       validateResult: false,
     };
   },

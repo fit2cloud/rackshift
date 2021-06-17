@@ -775,6 +775,16 @@ export default {
   }
   ,
   methods: {
+    setPartition(params) {
+      if (params.options.defaults.installPartitions && params.options.defaults.installPartitions.length) {
+        for (let i = 0; i < params.options.defaults.installPartitions.length; i++) {
+          let part = params.options.defaults.installPartitions[i];
+          if (!part.deviceType) {
+            part.deviceType = 'standard';
+          }
+        }
+      }
+    },
     refreshWorkflow() {
       if (this.selectedWorkflow.length) {
         let that = this;
@@ -1517,6 +1527,7 @@ export default {
             params = _.cloneDeep(originWf.defaultParams);
           }
 
+          this.setPartition(params);
           that.selectedWorkflow.push(
               {
                 componentId: that.getWorkflowById().injectableName + "-" + that.multipleSelection[k].id,

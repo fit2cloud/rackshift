@@ -158,17 +158,18 @@ function vlanValidator(rule, value, callback) {
         if (value === '' || !value || value.length === 0) {
             callback(new Error(rule.vue.$t('cannt_be_null')));
         }
+
+        let vlanIds = _.uniqBy(value);
+        if (value && vlanIds.length != value.length)
+            callback(new Error(rule.vue.$t("")));
+        for (let i = 0; i < value.length; i++)
+            if (!/\d+$/.test(value[i])) {
+                callback(new Error(rule.vue.$t('must_be_number')));
+            } else {
+                if (value[i] < 0 || value[i] > 4095)
+                    callback(new Error(rule.vue.$t('must_between_0_4095')));
+            }
     }
-    let vlanIds = _.uniqBy(value);
-    if (vlanIds.length != value.length)
-        callback(new Error(rule.vue.$t("")));
-    for (let i = 0; i < value.length; i++)
-        if (!/\d+$/.test(value[i])) {
-            callback(new Error(rule.vue.$t('must_be_number')));
-        } else {
-            if (value[i] < 0 || value[i] > 4095)
-                callback(new Error(rule.vue.$t('must_between_0_4095')));
-        }
     callback();
 }
 
