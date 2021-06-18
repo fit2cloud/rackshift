@@ -503,5 +503,5 @@ export default {
     "lvm": "LVM",
     "standard_partition": "標準分區",
     "lvm_name": "LVM 卷名",
-    "partition_tips": "默認等於 kickstart autopart，自定義分區默認只操作第一塊磁盤 不管是 standard 標准設備還是 lvm 邏輯設備",
+    "partition_tips": "自動分配等於 kickstart autopart，自定義分區默認只操作第一塊磁盤 不管是 standard 標准設備還是 lvm 邏輯設備",
 }
