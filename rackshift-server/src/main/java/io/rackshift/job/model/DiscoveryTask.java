@@ -20,6 +20,7 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import sun.rmi.runtime.Log;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -197,6 +198,14 @@ public class DiscoveryTask extends Thread {
             //插入ipmi发现的物理机之前 再次用序列号查询一次 没有重复的才能插入
             physicalMachine.setProviderId("");
             physicalMachine.setStatus(LifeStatus.onrack.name());
+            if (StringUtils.isBlank(physicalMachine.getManagementIp())) {
+                physicalMachine.setManagementIp("unknown ip");
+                if (StringUtils.isNotBlank(physicalMachine.getMachineSn())) {
+                    LogUtil.warn(String.format("带外 ip 不存在的序列号:%s", physicalMachine.getMachineSn()));
+                } else {
+                    LogUtil.warn(String.format("带外 ip 序列号都不存在的机器:%s", JSONObject.toJSONString(physicalMachine)));
+                }
+            }
             boolean r = bareMetalManager.addToBareMetal(physicalMachine);
             saveOutBand(account, physicalMachine, r);
         } catch (Exception e) {
