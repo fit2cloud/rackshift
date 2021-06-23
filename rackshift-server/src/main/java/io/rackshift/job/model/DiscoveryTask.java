@@ -123,6 +123,7 @@ public class DiscoveryTask extends Thread {
                         if (entity != null) {
                             entity.setProviderId(iMetalProvider.getName());
                             entity.setRuleId(bareMetalRule.getId());
+                            entity.setStatus(LifeStatus.onrack.name());
                             BareMetal bareMetal = bareMetalManager.saveOrUpdateEntity(entity);
                             if (bareMetal == null) {
                                 LogUtil.error("保存machineEntity失敗！" + ip);
