@@ -776,6 +776,9 @@ export default {
   ,
   methods: {
     setPartition(params) {
+      if (!params) {
+        return;
+      }
       if (params.options.defaults.installPartitions && params.options.defaults.installPartitions.length) {
         for (let i = 0; i < params.options.defaults.installPartitions.length; i++) {
           let part = params.options.defaults.installPartitions[i];
