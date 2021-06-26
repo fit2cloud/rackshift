@@ -556,10 +556,10 @@ export default {
         that.validateResult = false;
       }
 
-      if (!this.payLoad.options.defaults.rootPassword || this.payLoad.options.defaults.rootPassword.length < 7) {
-        this.$message.error(this.$t("i18n_ms_7_long"));
-        that.validateResult = false;
-      }
+      // if (!this.payLoad.options.defaults.rootPassword || this.payLoad.options.defaults.rootPassword.length < 7) {
+      //   this.$message.error(this.$t("i18n_ms_7_long"));
+      //   that.validateResult = false;
+      // }
 
       return this.validateResult;
     }
