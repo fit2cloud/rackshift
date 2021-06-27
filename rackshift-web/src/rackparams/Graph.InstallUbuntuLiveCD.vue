@@ -7,16 +7,16 @@
             <el-input v-model="payLoad.options.defaults.hostname" autocomplete="off" aria-required="true"
                       maxlength="20"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('domain')" prop="domain">
-            <el-input v-model="payLoad.options.defaults.domain" autocomplete="off" aria-required="true"
-                      maxlength="20"></el-input>
-          </el-form-item>
+          <!--          <el-form-item :label="$t('domain')" prop="domain">-->
+          <!--            <el-input v-model="payLoad.options.defaults.domain" autocomplete="off" aria-required="true"-->
+          <!--                      maxlength="20"></el-input>-->
+          <!--          </el-form-item>-->
           <el-form-item :label="$t('root_pwd')" prop="rootPassword">
             <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
                       show-password maxlength="20"></el-input>
           </el-form-item>
           <el-form-item :label="$t('image')" prop="repo">
-            <el-select v-model="payLoad.options.defaults.repo" class="input-element" filterable
+            <el-select v-model="payLoad.options.defaults.repo" class="input-element" filterable @change="setISOUrl"
                        allow-create
                        default-first-option>
               <el-option v-for="g in allImages" :label="g.name"
@@ -24,63 +24,63 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item :label="$t('custom_partition')">
-            <el-switch
-                v-model="extraParams.customPartition">
-            </el-switch>
-            <table class="detail-info-rack" v-show="extraParams.customPartition">
-              <thead>
-              <tr>
-                <th>{{ $t('mount_point') }}</th>
-                <th>
-                  <el-row>
-                    <el-col :span="12">{{ $t('capacity') }}</el-col>
-                    <el-col :span="12">
-                      <el-select v-model="extraParams.unit">
-                        <el-option :value="unit" :key="unit" v-for="unit in  units"></el-option>
-                      </el-select>
-                    </el-col>
-                  </el-row>
-                </th>
-                <th>{{ $t('fs_type') }}</th>
-                <th>
-                  <el-button type="primary" icon="el-icon-plus" circle
-                             @click="payLoad.options.defaults.installPartitions.push({})">
-                  </el-button>
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="(partition, index) in payLoad.options.defaults.installPartitions"
-                  v-show="partition.mountPoint != 'biosboot' && partition.mountPoint != '/boot/efi'">
-                <td>
-                  <el-input v-model="partition.mountPoint"
-                            :disabled="partition.mountPoint == 'biosboot'"></el-input>
-                </td>
-                <td>
-                  <el-input v-model="partition.size" :disabled="partition.mountPoint == 'biosboot'"
-                            :title="partition.mountPoint == 'biosboot' ? 'MB' : extraParams.unit"></el-input>
-                </td>
-                <td>
-                  <el-select v-model="partition.fsType" :disabled="partition.mountPoint == 'biosboot'">
-                    <el-option v-for="x in fsType"
-                               :value="x"><span>{{ x }}</span>
-                    </el-option>
-                  </el-select>
-                </td>
-                <td>
-                  <el-button type="primary" icon="el-icon-minus" circle
-                             @click="payLoad.options.defaults.installPartitions.splice(index, 1)">
-                  </el-button>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </el-form-item>
+          <!--          <el-form-item :label="$t('custom_partition')">-->
+          <!--            <el-switch-->
+          <!--                v-model="extraParams.customPartition">-->
+          <!--            </el-switch>-->
+          <!--            <table class="detail-info-rack" v-show="extraParams.customPartition">-->
+          <!--              <thead>-->
+          <!--              <tr>-->
+          <!--                <th>{{ $t('mount_point') }}</th>-->
+          <!--                <th>-->
+          <!--                  <el-row>-->
+          <!--                    <el-col :span="12">{{ $t('capacity') }}</el-col>-->
+          <!--                    <el-col :span="12">-->
+          <!--                      <el-select v-model="extraParams.unit">-->
+          <!--                        <el-option :value="unit" :key="unit" v-for="unit in  units"></el-option>-->
+          <!--                      </el-select>-->
+          <!--                    </el-col>-->
+          <!--                  </el-row>-->
+          <!--                </th>-->
+          <!--                <th>{{ $t('fs_type') }}</th>-->
+          <!--                <th>-->
+          <!--                  <el-button type="primary" icon="el-icon-plus" circle-->
+          <!--                             @click="payLoad.options.defaults.installPartitions.push({})">-->
+          <!--                  </el-button>-->
+          <!--                </th>-->
+          <!--              </tr>-->
+          <!--              </thead>-->
+          <!--              <tbody>-->
+          <!--              <tr v-for="(partition, index) in payLoad.options.defaults.installPartitions"-->
+          <!--                  v-show="partition.mountPoint != 'biosboot' && partition.mountPoint != '/boot/efi'">-->
+          <!--                <td>-->
+          <!--                  <el-input v-model="partition.mountPoint"-->
+          <!--                            :disabled="partition.mountPoint == 'biosboot'"></el-input>-->
+          <!--                </td>-->
+          <!--                <td>-->
+          <!--                  <el-input v-model="partition.size" :disabled="partition.mountPoint == 'biosboot'"-->
+          <!--                            :title="partition.mountPoint == 'biosboot' ? 'MB' : extraParams.unit"></el-input>-->
+          <!--                </td>-->
+          <!--                <td>-->
+          <!--                  <el-select v-model="partition.fsType" :disabled="partition.mountPoint == 'biosboot'">-->
+          <!--                    <el-option v-for="x in fsType"-->
+          <!--                               :value="x"><span>{{ x }}</span>-->
+          <!--                    </el-option>-->
+          <!--                  </el-select>-->
+          <!--                </td>-->
+          <!--                <td>-->
+          <!--                  <el-button type="primary" icon="el-icon-minus" circle-->
+          <!--                             @click="payLoad.options.defaults.installPartitions.splice(index, 1)">-->
+          <!--                  </el-button>-->
+          <!--                </td>-->
+          <!--              </tr>-->
+          <!--              </tbody>-->
+          <!--            </table>-->
+          <!--          </el-form-item>-->
 
-          <el-form-item :label="$t('uefi_boot')">
-            <el-switch v-model="extraParams.uefi" @change="changeUefiBoot"></el-switch>
-          </el-form-item>
+          <!--          <el-form-item :label="$t('uefi_boot')">-->
+          <!--            <el-switch v-model="extraParams.uefi" @change="changeUefiBoot"></el-switch>-->
+          <!--          </el-form-item>-->
 
 
         </el-col>
@@ -121,24 +121,24 @@
                       <el-input v-model="d.ipv4.netmask"></el-input>
                     </el-form-item>
 
-                    <el-form-item prop="vlanIds" :label="$t('VLAN')">
-                      <el-select
-                          v-model="d.ipv4.vlanIds"
-                          multiple
-                          filterable
-                          allow-create
-                          default-first-option
-                          @change="changeInt(d)"
-                          :placeholder="$t('pls_input_vlan')">
-                        <el-option
-                            v-for="item in objs"
-                            :label="$t(item.name)"
-                            :value="item.value"
-                        >
+                    <!--                    <el-form-item prop="vlanIds" :label="$t('VLAN')">-->
+                    <!--                      <el-select-->
+                    <!--                          v-model="d.ipv4.vlanIds"-->
+                    <!--                          multiple-->
+                    <!--                          filterable-->
+                    <!--                          allow-create-->
+                    <!--                          default-first-option-->
+                    <!--                          @change="changeInt(d)"-->
+                    <!--                          :placeholder="$t('pls_input_vlan')">-->
+                    <!--                        <el-option-->
+                    <!--                            v-for="item in objs"-->
+                    <!--                            :label="$t(item.name)"-->
+                    <!--                            :value="item.value"-->
+                    <!--                        >-->
 
-                        </el-option>
-                      </el-select>
-                    </el-form-item>
+                    <!--                        </el-option>-->
+                    <!--                      </el-select>-->
+                    <!--                    </el-form-item>-->
                   </el-form>
                 </el-form>
               </el-collapse-item>
@@ -152,9 +152,9 @@
                        default-first-option></el-select>
           </el-form-item>
 
-          <el-form-item :label="$t('NTP')" prop="ntp">
-            <el-input v-model="payLoad.options.defaults.ntp"></el-input>
-          </el-form-item>
+          <!--          <el-form-item :label="$t('NTP')" prop="ntp">-->
+          <!--            <el-input v-model="payLoad.options.defaults.ntp"></el-input>-->
+          <!--          </el-form-item>-->
 
         </el-col>
       </el-row>
@@ -321,6 +321,15 @@ export default {
   }
   ,
   methods: {
+    setISOUrl: function (e) {
+      let image = _.find(this.allImages, i => i.url == e);
+      if (image && image.url) {
+        this.payLoad.options.defaults.isoUrl = image.url.substr(0, image.url.lastIndexOf("/")) + "/" + image.originalName;
+      } else {
+        this.payLoad.options.defaults.isoUrl = image.url;
+      }
+      console.log(JSON.stringify(image))
+    },
     changeUefiBoot: function () {
 
       if (this.extraParams.uefi) {
@@ -566,7 +575,7 @@ export default {
     ,
     getAllImage: function () {
       HttpUtil.post("/image/list/" + 1 + "/" + 1000, {}, (res) => {
-        this.allImages = _.filter(res.data.listObject, i => i.os == 'ubuntu' && i.osVersion == '18.04 Legacy');
+        this.allImages = _.filter(res.data.listObject, i => i.os == 'ubuntu' && i.osVersion == '20.04 liveCD');
         if (!this.allImages) {
           this.$message.error(this.$t('no_valid_image!'));
           return;
@@ -575,6 +584,7 @@ export default {
           let centosImage = _.find(this.allImages, i => i.os == 'ubuntu');
           if (centosImage) {
             this.payLoad.options.defaults.repo = centosImage.url;
+            this.payLoad.options.defaults.isoUrl = centosImage.url.substr(0, centosImage.url.lastIndexOf("/")) + "/" + centosImage.originalName;
           } else {
             this.$message.error(this.$t('no_valid_image!'));
           }

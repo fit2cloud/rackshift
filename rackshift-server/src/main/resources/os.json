@@ -22,7 +22,10 @@
     "name": "Ubuntu 64位",
     "versions": [
       {
-        "name": "18.04"
+        "name": "18.04 Legacy"
+      },
+      {
+        "name": "20.04 liveCD"
       }
     ]
   },

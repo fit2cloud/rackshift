@@ -25,7 +25,7 @@ public class RackHDController {
     @GetMapping("/allOsAndVersion")
     public ResultHolder allOsAndVersion() throws IOException {
         InputStream in = this.getClass().getClassLoader().getResourceAsStream("os.json");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
         StringBuffer sb = new StringBuffer();
         String line = null;
         while ((line = reader.readLine()) != null) {
