@@ -12,8 +12,7 @@
           <!--                      maxlength="20"></el-input>-->
           <!--          </el-form-item>-->
           <el-form-item :label="$t('root_pwd')" prop="rootPassword">
-            <el-input v-model="payLoad.options.defaults.rootPassword" autocomplete="off"
-                      show-password maxlength="20"></el-input>
+            <el-input :value="$t('ubuntu_pwd')" autocomplete="off" maxlength="20" disabled></el-input>
           </el-form-item>
           <el-form-item :label="$t('image')" prop="repo">
             <el-select v-model="payLoad.options.defaults.repo" class="input-element" filterable @change="setISOUrl"
@@ -240,7 +239,7 @@ export default {
             "osName": "ubuntu",
             "repo": null,
             "baseUrl": "install/netboot/ubuntu-installer/amd64",
-            "rootPassword": "RackHDRocks!",
+            "rootPassword": "root",
             "hostname": "rackhd-node",
             "domain": "example.com",
             "dnsServers": [

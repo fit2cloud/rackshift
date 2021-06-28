@@ -498,4 +498,5 @@ export default {
     "standard_partition": "Standard Partition",
     "lvm_name": "LVM Name",
     "partition_tips": "default kickstart autopart",
+    "ubuntu_pwd": "Default user/pwd ubuntu/root",
 }

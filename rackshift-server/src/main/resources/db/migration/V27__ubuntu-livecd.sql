@@ -13,7 +13,7 @@ values (16, 'system',
             "repo": null,
             "baseUrl": "install/netboot/ubuntu-installer/amd64",
             "isoUrl": "http://192.168.1.3:9090/common/ubuntu-20.04.2-live-server-amd64.iso",
-            "rootPassword": "RackShift",
+            "rootPassword": "root",
             "hostname": "rackshift-node",
             "domain": null,
             "dnsServers": [
