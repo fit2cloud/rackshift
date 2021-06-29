@@ -1,5 +1,4 @@
-﻿
-insert into workflow
+﻿insert into workflow
 values (20,
         'system',
         'Graph.InstallWindowsServer2016',
@@ -33,3 +32,14 @@ values (20,
     }
   }
 }', 'enable', now());
+
+update workflow
+set brands = '[\'DELL\', \'HP\', \'Inspur\',\'ZTE\', \'Huawei\', \'New H3C Technologies Co., Ltd.\']'
+where injectable_name in (
+      'Graph.InstallCentOS'
+    , 'Graph.InstallESXi'
+    , 'Graph.InstallRHEL'
+    , 'Graph.InstallUbuntuLiveCD'
+    , 'Graph.InstallWindowsServer'
+    , 'Graph.InstallWindowsServer2016'
+    , 'Graph.InstallWindowsServer2019');
