@@ -49,21 +49,32 @@ jobs:
             ```
 
             ## 新增功能
-            - 华为交换机管理
-            - 支持 AK/SK 外部访问
-            - 重构 API 外部调用接口
-            - 对接 FIT2CLOUD CloudExplorer 3.0 物理机模块
+            - CentOS 支持自定义 LVM
+            - 支持 WindowsServer 2019 安装
+            - 支持 Ubuntu20.04 LiveCD subiquity 安装
+            - 支持 H3C RAID
+            - 支持 SuperMicro 服务器的发现
 
             ## 功能优化
-            - 裸金属服务器发现速度
+            - 优化安装包大小
+            - 兼容无带外 Ip 机器发现
+            - 可以查看任务的执行参数
 
             ## 问题修复
-            - 华三机器发现不了的问题
+            - 发现机器后有时候没有自动填入带外信息
+            - 裸金属侧边栏无法关闭
+
+            后面版本内容:
+            1.Inspur NF5280M5 RAID
+            2.曙光服务器发现装机 RAID
+            3.装机脚本优化和升级
+            4.使用流程优化
+            5.现有功能的优化
 
             # 产品文档
             点击 [完整文档](https://rackshift.github.io/rackshift-docs-static/) 查看完整的安装和使用文档
             # 离线安装包
-            - 百度网盘下载链接: https://pan.baidu.com/s/1P-R4U2zTw9xfsRshfEqd3A 提取码: nmbz
+            - 百度网盘下载链接: https://pan.baidu.com/s/1jWO3B-ThCdU9RwmQSHHELw 提取码: 5nvx
 
       - name: Upload Release Asset
         id: upload-release-asset
