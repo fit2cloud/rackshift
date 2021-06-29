@@ -26,7 +26,7 @@ import static io.rackshift.metal.sdk.constants.RackHDConstants.workflowPostUrl;
 public class H3CMetalProvider extends AbstractMetalProvider {
 
     public H3CMetalProvider() {
-        super.name = "3c-metal-plugin";
+        super.name = "h3c-metal-plugin";
     }
 
 
