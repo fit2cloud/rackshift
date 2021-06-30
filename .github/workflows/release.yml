@@ -72,9 +72,9 @@ jobs:
             5.现有功能的优化
 
             # 产品文档
-            点击 [完整文档](https://rackshift.github.io/rackshift-docs-static/) 查看完整的安装和使用文档
+            点击 [完整文档](https://rackshift.io) 查看完整的安装和使用文档
             # 离线安装包
-            - 百度网盘下载链接: https://pan.baidu.com/s/1jWO3B-ThCdU9RwmQSHHELw 提取码: 5nvx
+            - 百度网盘下载链接: https://pan.baidu.com/s/1sTQ9ch1pKPGYYUEI7uGY-Q 提取码: 3v1i
 
       - name: Upload Release Asset
         id: upload-release-asset
