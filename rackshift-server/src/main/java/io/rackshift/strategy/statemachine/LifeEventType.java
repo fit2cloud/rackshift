@@ -29,6 +29,8 @@ public enum LifeEventType {
         add("Graph.InstallWindowsServer");
         add("Graph.InstallWindowsServer2016");
         add("Graph.InstallESXi");
+        add("Graph.InstallWindowsServer2019");
+        add("Graph.InstallUbuntuLiveCD");
     }}),
     POST_OS_WORKFLOW_CANCEL("取消安装系统workflow");
     @JSONField(name = "desc")
