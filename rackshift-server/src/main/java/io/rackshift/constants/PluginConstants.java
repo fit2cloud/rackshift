@@ -44,8 +44,6 @@ public class PluginConstants {
                     add("HP");
                 }},
                 new LinkedHashMap<String, String>() {{
-                    put("cmpuser", "Szse@ipmi307");
-                    put("administrator", "Bo1701@sse");
                 }}
         ),
 
@@ -55,8 +53,6 @@ public class PluginConstants {
                     add("Dell Inc.");
                 }},
                 new LinkedHashMap<String, String>() {{
-                    put("cmpuser", "Szse@ipmi307");
-                    put("root", "Bo1701@sse");
                     put("root", "calvin");
                 }}),
 
@@ -72,8 +68,6 @@ public class PluginConstants {
                     add("Inspur");
                 }},
                 new LinkedHashMap<String, String>() {{
-                    put("cmpuser", "Szse@ipmi307");
-                    put("admin", "Bo1701@sse");
                     put("admin", "admin");
                 }}),
 
@@ -84,8 +78,6 @@ public class PluginConstants {
                     }
                 },
                 new LinkedHashMap<String, String>() {{
-                    put("cmpuser", "Szse@ipmi307");
-                    put("Administrator", "Bo1701@sse");
                     put("Administrator", "admin");
                 }}
         ),
@@ -97,8 +89,6 @@ public class PluginConstants {
                     }
                 },
                 new LinkedHashMap<String, String>() {{
-                    put("cmpuser", "Szse@ipmi307");
-                    put("USERID", "Bo1701@sse");
                 }});
 
         private String pluginName;
