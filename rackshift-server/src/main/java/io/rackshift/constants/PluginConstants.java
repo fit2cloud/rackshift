@@ -60,6 +60,13 @@ public class PluginConstants {
                     put("root", "calvin");
                 }}),
 
+        H3C_METAL_PLUGIN("h3c-metal-plugin",
+                new ArrayList<String>() {{
+                    add("New H3C Technologies Co., Ltd.");
+                }},
+                new LinkedHashMap<String, String>() {{
+                }}),
+
         INSPUR_METAL_PLUGIN("inspur-metal-plugin",
                 new ArrayList<String>() {{
                     add("Inspur");
