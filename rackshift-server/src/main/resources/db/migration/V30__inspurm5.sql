@@ -1,5 +1,4 @@
-﻿
-insert into workflow
+﻿insert into workflow
 values (21,
         'system',
         'Graph.Quanta.storcli.Catalog',
@@ -65,3 +64,14 @@ values (23,
 }',
         'enable',
         now());
+
+update workflow
+set brands = '[\'DELL\', \'HP\', \'Inspur\',\'ZTE\', \'Huawei\', \'New H3C Technologies Co., Ltd.\', \'Lenovo\']'
+where injectable_name in (
+    'Graph.InstallCentOS'
+    , 'Graph.InstallESXi'
+    , 'Graph.InstallRHEL'
+    , 'Graph.InstallUbuntuLiveCD'
+    , 'Graph.InstallWindowsServer'
+    , 'Graph.InstallWindowsServer2016'
+    , 'Graph.InstallWindowsServer2019');
