@@ -1,5 +1,6 @@
 package io.rackshift.service;
 
+import io.rackshift.config.PluginConfig;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.job.model.DiscoveryTask;
 import io.rackshift.manager.BareMetalManager;
@@ -32,7 +33,7 @@ public class DiscoveryService {
     @Autowired
     private SimpMessagingTemplate template;
     @Resource
-    private CloudProviderManager metalProviderManager;
+    private PluginConfig pluginConfig;
     @Resource
     private OutBandService outBandService;
 
@@ -42,7 +43,7 @@ public class DiscoveryService {
         bareMetalRule.setProviderId("");
         bareMetalRule.setLastSyncTimestamp(System.currentTimeMillis());
         bareMetalRuleMapper.insertSelective(bareMetalRule);
-        new Thread(new DiscoveryTask(bareMetalRule, bareMetalRuleMapper, bareMetalManager, template, metalProviderManager, outBandService)).start();
+        new Thread(new DiscoveryTask(bareMetalRule, bareMetalRuleMapper, bareMetalManager, template, pluginConfig, outBandService)).start();
         return true;
     }
 
@@ -93,7 +94,7 @@ public class DiscoveryService {
 //        }
         rule.setSyncStatus(ServiceConstants.DiscoveryStatusEnum.PENDING.name());
         bareMetalRuleMapper.updateByPrimaryKey(rule);
-        new Thread(new DiscoveryTask(rule, bareMetalRuleMapper, bareMetalManager, template, metalProviderManager, outBandService)).start();
+        new Thread(new DiscoveryTask(rule, bareMetalRuleMapper, bareMetalManager, template, pluginConfig, outBandService)).start();
         return true;
     }
 }

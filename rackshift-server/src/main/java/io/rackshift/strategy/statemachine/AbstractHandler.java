@@ -1,6 +1,7 @@
 package io.rackshift.strategy.statemachine;
 
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.config.PluginConfig;
 import io.rackshift.constants.ExecutionLogConstants;
 import io.rackshift.constants.PluginConstants;
 import io.rackshift.constants.ServiceConstants;
@@ -40,6 +41,8 @@ public abstract class AbstractHandler implements IStateHandler {
     private TaskService taskService;
     @Resource
     private WorkflowService workflowService;
+    @Resource
+    private PluginConfig pluginConfig;
 
     protected BareMetal getBareMetalById(String id) {
         return bareMetalManager.getBareMetalById(id);
@@ -98,7 +101,8 @@ public abstract class AbstractHandler implements IStateHandler {
                 WorkflowRequestDTO workflowRequestDTO = event.getWorkflowRequestDTO();
                 JSONObject params = workflowRequestDTO.getParams();
 
-                IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(getBareMetalById(event.getBareMetalId()).getMachineBrand()));
+                IMetalProvider iMetalProvider = pluginConfig.getPlugin(getBareMetalById(event.getBareMetalId()));
+//                        metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginName(getBareMetalById(event.getBareMetalId())));
                 if (params != null) {
                     JSONObject param = iMetalProvider.getRaidPayLoad(params.toJSONString());
                     executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), String.format("调用插件处理后参数为:%s", (Optional.ofNullable(param).orElse(new JSONObject())).toJSONString()));

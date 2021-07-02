@@ -98,6 +98,18 @@ public class HpMetalProvider extends AbstractMetalProvider {
         super.name = "hp-metal-plugin";
     }
 
+    @Override
+    public List<String> getSupportedBrands() {
+        return new ArrayList<String>() {{
+            add("HP");
+        }};
+    }
+
+    @Override
+    public List<String> getSupportedModels() {
+        return new ArrayList<>();
+    }
+
 
     @Override
     public Map<String, String> getHeader(String ip) {

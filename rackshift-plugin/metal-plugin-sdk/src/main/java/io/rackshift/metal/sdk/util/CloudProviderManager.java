@@ -77,6 +77,9 @@ public final class CloudProviderManager extends BaseManager {
         return null;
     }
 
+    public List<Object> getCloudProviders() {
+        return this.cloudProviders;
+    }
 }
 
 

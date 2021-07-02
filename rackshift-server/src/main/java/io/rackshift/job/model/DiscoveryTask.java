@@ -2,6 +2,7 @@ package io.rackshift.job.model;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.config.PluginConfig;
 import io.rackshift.constants.PluginConstants;
 import io.rackshift.constants.RackHDConstants;
 import io.rackshift.constants.ServiceConstants;
@@ -37,26 +38,26 @@ public class DiscoveryTask extends Thread {
     private BareMetalRuleMapper bareMetalRuleMapper;
     private CountDownLatch countDownLatch;
     private Cache cache;
-    private CloudProviderManager cloudProviderManager;
+    private PluginConfig pluginConfig;
     private OutBandService outBandService;
 
-    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, CloudProviderManager cloudProviderManager, OutBandService outBandService) {
+    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, PluginConfig pluginConfig, OutBandService outBandService) {
         this.bareMetalRule = bareMetalRule;
         this.bareMetalManager = bareMetalManager;
         this.template = template;
         this.bareMetalRuleMapper = bareMetalRuleMapper;
-        this.cloudProviderManager = cloudProviderManager;
+        this.pluginConfig = pluginConfig;
         this.outBandService = outBandService;
     }
 
-    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, CountDownLatch countDownLatch, Cache cache, CloudProviderManager cloudProviderManager, OutBandService outBandService) {
+    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, CountDownLatch countDownLatch, Cache cache, PluginConfig pluginConfig, OutBandService outBandService) {
         this.bareMetalRule = bareMetalRule;
         this.bareMetalManager = bareMetalManager;
         this.template = template;
         this.bareMetalRuleMapper = bareMetalRuleMapper;
         this.countDownLatch = countDownLatch;
         this.cache = cache;
-        this.cloudProviderManager = cloudProviderManager;
+        this.pluginConfig = pluginConfig;
         this.outBandService = outBandService;
     }
 
@@ -99,7 +100,7 @@ public class DiscoveryTask extends Thread {
 
                     IMetalProvider iMetalProvider = null;
                     try {
-                        iMetalProvider = cloudProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(brand));
+                        iMetalProvider = pluginConfig.getPluginByBrand(brand);
                     } catch (Exception e) {
                         LogUtil.error(String.format("根据品牌获取插件出错!ip:%s", ip));
                     }

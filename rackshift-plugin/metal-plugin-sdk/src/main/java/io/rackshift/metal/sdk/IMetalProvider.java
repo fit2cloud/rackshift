@@ -15,6 +15,12 @@ public interface IMetalProvider {
      **/
     String getName();
 
+    // 获取插件支持的品牌比如 Inspur
+    public List<String> getSupportedBrands();
+
+    //获取插件支持的型号比如 Inspur NF5280M4
+    public List<String> getSupportedModels();
+
     /**
      * 获取某台机器对应的Cookie
      **/

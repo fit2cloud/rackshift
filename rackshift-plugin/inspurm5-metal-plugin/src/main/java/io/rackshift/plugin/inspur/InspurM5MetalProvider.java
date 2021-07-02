@@ -27,7 +27,7 @@ import static io.rackshift.metal.sdk.constants.RackHDConstants.workflowPostUrl;
 
 
 @MetalPlugin
-public class InspurMetalProvider extends AbstractMetalProvider {
+public class InspurM5MetalProvider extends AbstractMetalProvider {
 
     private static Map<String, IMSRestApi> spiderMap = new HashMap() {{
         put("NF5280M4", new IMS5280M4RestSpider());
@@ -47,7 +47,7 @@ public class InspurMetalProvider extends AbstractMetalProvider {
         }
     }
 
-    public InspurMetalProvider() {
+    public InspurM5MetalProvider() {
         super.name = "inspur-metal-plugin";
     }
 
@@ -60,7 +60,13 @@ public class InspurMetalProvider extends AbstractMetalProvider {
 
     @Override
     public List<String> getSupportedModels() {
-        return new ArrayList<>();
+        return new ArrayList<String>() {{
+            add("Inspur NF5180M5");
+            add("Inspur NF5280M5");
+            add("Inspur NF5270M5");
+            add("Inspur NF5266M5");
+            add("Inspur NF8480M5");
+        }};
     }
 
     @Override
@@ -187,7 +193,15 @@ public class InspurMetalProvider extends AbstractMetalProvider {
             JSONObject c = createRaid.getJSONArray("raidList").getJSONObject(i);
             JSONObject raidConfigObj = new JSONObject();
             raidConfigObj.put("type", getValidRaidType(c.getString("type")));
-            raidConfigObj.put("drives", c.getJSONArray("drives").stream().sorted().map(s -> ((String) s).replace("-", " ")).collect(Collectors.joining(" ")));
+            raidConfigObj.put("drives", c.getJSONArray("drives"));
+            raidConfigObj.put("name", c.getString("name"));
+            raidConfigObj.put("enclosure", c.getIntValue("enclosure"));
+
+            if ("raid10".equalsIgnoreCase(getValidRaidType(c.getString("type"))) ||
+                    "raid50".equalsIgnoreCase(getValidRaidType(c.getString("type"))) ||
+                    "raid60".equalsIgnoreCase(getValidRaidType(c.getString("type")))) {
+                raidConfigObj.put("drivePerArray", 2);
+            }
             raidList.add(raidConfigObj);
         }
         createRaid.put("raidList", raidList);
@@ -206,22 +220,22 @@ public class InspurMetalProvider extends AbstractMetalProvider {
 
     @Override
     public String getRaidWorkFlow() {
-        return workflowPostUrl + "Graph.Raid.Create.AdaptecRAID";
+        return workflowPostUrl + "Graph.Raid.Create.PercRAID";
     }
 
     @Override
     public String getDeleteRaidWorkFlow() {
-        return workflowPostUrl + "Graph.Raid.Delete.AdaptecRAID";
+        return workflowPostUrl + "Graph.Raid.Delete.MegaRAID";
     }
 
     @Override
     public String getCatalogRaidWorkFlow() {
-        return workflowPostUrl + "Graph.Raid.Catalog.AdaptecRAID";
+        return workflowPostUrl + "Graph.Quanta.storcli.Catalog";
     }
 
     @Override
     public String getValidRaidType(String raidType) throws MetalPluginException {
-        return raidType.replace("raid", "");
+        return raidType;
     }
 
     @Override
