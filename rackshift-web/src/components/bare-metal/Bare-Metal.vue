@@ -779,7 +779,7 @@ export default {
       if (!params) {
         return;
       }
-      if (params.options.defaults.installPartitions && params.options.defaults.installPartitions.length) {
+      if (params.options && params.options.defaults && params.options.defaults.installPartitions && params.options.defaults.installPartitions.length) {
         for (let i = 0; i < params.options.defaults.installPartitions.length; i++) {
           let part = params.options.defaults.installPartitions[i];
           if (!part.deviceType) {
@@ -1493,8 +1493,8 @@ export default {
     ,
     addToSelectedWorkflow() {
       let that = this;
-      if (that.getWorkflowById().injectableName) {
-        let originWf = _.find(that.supportedWorkflow, s => s.injectableName == that.getWorkflowById().injectableName);
+      if (that.getWorkflowById()) {
+        let originWf = _.find(that.supportedWorkflow, s => s.id == that.getWorkflowById().id);
         for (let k = 0; k < that.multipleSelection.length; k++) {
           if (!that.multipleSelection[k].serverId) {
             that.$message.warning(that.multipleSelection[k].machineModel + ' [' + that.multipleSelection[k].machineSn + ']' + that.$t('not_discoveryed'));
