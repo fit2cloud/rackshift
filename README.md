@@ -1,8 +1,14 @@
-# RackShift 开源裸金属服务器管理平台
+<p align="center"><a href="https://rackshift.io"><img src="https://fit2cloud2-offline-installer.oss-cn-beijing.aliyuncs.com/rackshift/img/RackShift-04.png" alt="RackShift" width="300" /></a></p>
+<h3 align="center">开源裸金属服务器管理平台</h3>
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/956d688c965044d49ec807817efd3ca0)](https://app.codacy.com/gh/rackshift/rackshift?utm_source=github.com&utm_medium=referral&utm_content=rackshift/rackshift&utm_campaign=Badge_Grade)
-[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/rackshift/rackshift)](https://github.com/rackshift/rackshift/releases/latest)
-[![GitHub All Releases](https://img.shields.io/github/downloads/rackshift/rackshift/total)](https://github.com/rackshift/rackshift/releases)
+<p align="center">
+  <a href="https://app.codacy.com/gh/rackshift/rackshift?utm_source=github.com&utm_medium=referral&utm_content=rackshift/rackshift&utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/956d688c965044d49ec807817efd3ca0" alt="A"></a>
+  <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0"><img src="https://img.shields.io/github/license/rackshift/rackshift?color=%00468F&style=flat-square" alt="License: GPL v2"></a>
+  <a href="https://github.com/rackshift/rackshift/releases/latest"><img src="https://img.shields.io/github/v/release/rackshift/rackshift" alt=""></a>
+  <a href="https://github.com/rackshift/rackshift"><img src="https://img.shields.io/github/stars/rackshift/rackshift?color=%231890FF&style=flat-square" alt=""></a>
+  <a href="https://github.com/rackshift/rackshift/releases"><img src="https://img.shields.io/github/downloads/rackshift/rackshift/total" alt=""></a>
+</p>
+<hr />
 
 RackShift 是开源的裸金属服务器管理平台，功能覆盖裸金属服务器的发现、带外管理、RAID 配置、固件更新、操作系统安装等。
 
