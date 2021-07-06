@@ -142,8 +142,8 @@
               </el-table>
               <div class="pagination">
                 <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handlePageChange"
+                    @size-change="handleBareMetalSizeChange"
+                    @current-change="handleBareMetalPageChange"
                     :current-page="query.pageIndex"
                     :page-sizes="[10, 20, 50, 100]"
                     :page-size="10"
@@ -468,6 +468,10 @@ export default {
       this.query.pageSize = val;
       this.handlePageChange(this.query.pageIndex);
     },
+    handleBareMetalSizeChange(val) {
+      this.bareMetalQuery.pageSize = val;
+      this.handleBareMetalPageChange(this.bareMetalQuery.pageIndex);
+    },
     handleClose() {
       this.editDialogVisible = false;
     },
@@ -613,6 +617,10 @@ export default {
     handlePageChange(val) {
       this.$set(this.query, 'pageIndex', val);
       this.getData();
+    }
+    , handleBareMetalPageChange(val) {
+      this.$set(this.bareMetalQuery, 'pageIndex', val);
+      this.getBareMetalData();
     }
     ,
   }
