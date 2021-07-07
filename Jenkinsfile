@@ -7,8 +7,7 @@ pipeline {
     options { quietPeriod(600) }
     environment { 
         IMAGE_NAME = 'rackshift'
-        ORG = 'x-lab'
-        IMAGE_PREFIX = 'registry.cn-qingdao.aliyuncs.com/rackshift'
+        IMAGE_PREFIX = 'registry.cn-qingdao.aliyuncs.com/x-lab'
         DOCKER = credentials('x-lab')
     }
     stages {
@@ -30,8 +29,8 @@ pipeline {
                 sh '''
                     docker login registry.cn-qingdao.aliyuncs.com -u ${DOCKER_USR} -p ${DOCKER_PSW}
                     cd ${WORKSPACE}/rackshift-server
-                    docker build -t ${IMAGE_PREFIX}/${ORG}/${IMAGE_NAME}:v${BRANCH_NAME}-dev .
-                    docker push ${IMAGE_PREFIX}/${ORG}/${IMAGE_NAME}:v${BRANCH_NAME}-dev
+                    docker build -t ${IMAGE_PREFIX}/${IMAGE_NAME}:v${BRANCH_NAME}-dev .
+                    docker push ${IMAGE_PREFIX}/${IMAGE_NAME}:v${BRANCH_NAME}-dev
                    '''
             }
         }
