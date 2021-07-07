@@ -17,7 +17,7 @@ pipeline {
                 sh "cd ${WORKSPACE}/rackshift-web"
                 sh "npm install cnpm -g"
                 sh "cnpm install"
-                sh "cp -r ${WORKSPACE}/rackshift/rackshift-web/dist/* ${WORKSPACE}/rackshift/rackshift-server/src/main/resources/static"
+                sh "cp -r ${WORKSPACE}/rackshift-web/dist/* ${WORKSPACE}/rackshift-server/src/main/resources/static"
                 sh "cd ${WORKSPACE}/rackshift-server"
                 sh "mvn clean install -DskipTests"
             }
