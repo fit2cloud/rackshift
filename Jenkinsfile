@@ -1,7 +1,7 @@
 pipeline {
     agent {
         node {
-            label 'rackshift'
+            label 'metersphere'
         }
     }
     options { quietPeriod(600) }
@@ -10,18 +10,22 @@ pipeline {
         IMAGE_PREFIX = 'registry.cn-qingdao.aliyuncs.com/rackshift'
     }
     stages {
-        stage('Build/Test') {
+        stage('Build') {
             steps {
-                configFileProvider([configFile(fileId: 'rackshift-maven', targetLocation: 'settings.xml')]) {
-                    sh "mvn clean package --settings ./settings.xml"
-                }
+                sh "rm -rf ${WORKSPACE}/rackshift-server/src/main/resources/static"
+                sh "mkdir -p ${WORKSPACE}/rackshift-server/src/main/resources/static"
+                sh "cd ${WORKSPACE}/rackshift-web"
+                sh "npm install cnpm -g"
+                sh "cnpm install"
+                sh "cp -r ${WORKSPACE}/rackshift/rackshift-web/dist/* ${WORKSPACE}/rackshift/rackshift-server/src/main/resources/static"
+                sh "cd ${WORKSPACE}/rackshift-server"
+                sh "mvn clean install -DskipTests"
             }
         }
         stage('Docker build & push') {
             steps {
-                sh "docker build --build-arg MS_VERSION=\${TAG_NAME:-\$BRANCH_NAME}-\${GIT_COMMIT:0:8} -t ${IMAGE_NAME}:\${TAG_NAME:-\$BRANCH_NAME} ."
-                sh "docker tag ${IMAGE_NAME}:\${TAG_NAME:-\$BRANCH_NAME} ${IMAGE_PREFIX}/${IMAGE_NAME}:\${TAG_NAME:-\$BRANCH_NAME}"
-                sh "docker push ${IMAGE_PREFIX}/${IMAGE_NAME}:\${TAG_NAME:-\$BRANCH_NAME}"
+                sh "docker build -t ${IMAGE_PREFIX}/${IMAGE_NAME}:v${BRANCH_NAME}-dev ."
+                sh "docker push ${IMAGE_PREFIX}/${IMAGE_NAME}:v${BRANCH_NAME}-dev"
             }
         }
     }
