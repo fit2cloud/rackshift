@@ -1,27 +1,37 @@
 pipeline {
     agent {
         node {
-            label 'rackshift'
+            label 'metersphere'
         }
     }
     options { quietPeriod(600) }
-    environment { 
+    environment {
         IMAGE_NAME = 'rackshift'
-        IMAGE_PREFIX = 'registry.cn-qingdao.aliyuncs.com/rackshift'
+        IMAGE_PREFIX = 'registry.cn-qingdao.aliyuncs.com/x-lab'
+        DOCKER = credentials('x-lab')
     }
     stages {
-        stage('Build/Test') {
+        stage('Build') {
             steps {
-                configFileProvider([configFile(fileId: 'rackshift-maven', targetLocation: 'settings.xml')]) {
-                    sh "mvn clean package --settings ./settings.xml"
-                }
+                sh '''
+                    rm -rf ${WORKSPACE}/rackshift-server/src/main/resources/static
+                    mkdir -p ${WORKSPACE}/rackshift-server/src/main/resources/static
+                    cd ${WORKSPACE}/rackshift-web
+                    cnpm install
+                    cnpm run build
+                    cp -r ${WORKSPACE}/rackshift-web/dist/* ${WORKSPACE}/rackshift-server/src/main/resources/static
+                    mvn clean install -DskipTests
+                   '''
             }
         }
         stage('Docker build & push') {
             steps {
-                sh "docker build --build-arg MS_VERSION=\${TAG_NAME:-\$BRANCH_NAME}-\${GIT_COMMIT:0:8} -t ${IMAGE_NAME}:\${TAG_NAME:-\$BRANCH_NAME} ."
-                sh "docker tag ${IMAGE_NAME}:\${TAG_NAME:-\$BRANCH_NAME} ${IMAGE_PREFIX}/${IMAGE_NAME}:\${TAG_NAME:-\$BRANCH_NAME}"
-                sh "docker push ${IMAGE_PREFIX}/${IMAGE_NAME}:\${TAG_NAME:-\$BRANCH_NAME}"
+                sh '''
+                    docker login registry.cn-qingdao.aliyuncs.com -u ${DOCKER_USR} -p ${DOCKER_PSW}
+                    cd ${WORKSPACE}/rackshift-server
+                    docker build -t ${IMAGE_PREFIX}/${IMAGE_NAME}:v${BRANCH_NAME}-dev .
+                    docker push ${IMAGE_PREFIX}/${IMAGE_NAME}:v${BRANCH_NAME}-dev
+                   '''
             }
         }
     }
