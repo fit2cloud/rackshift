@@ -48,7 +48,7 @@ sh -c "$(curl -sSL https://github.com/rackshift/rackshift/releases/latest/downlo
 
 ## 微信群
 
-![runnob](https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-qr-code-mini.png) 
+<img src="https://f2c-south.oss-cn-shenzhen.aliyuncs.com/RackHD-dont-del/RackShift/rs-qr-code-mini.png" width="156" height="156"/>
 
 ## 技术架构
 
