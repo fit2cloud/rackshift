@@ -124,7 +124,8 @@
                     <el-form :rules="protocolRules" ref="protocolForm" :model="p">
                       <el-form-item v-if="p && p.protocol" v-for="param in findProtocol(p)" :label="$t(param.label)"
                                     :prop="param.prop">
-                        <el-input :type="param.type" v-model="p[param.prop]"></el-input>
+                        <el-input :type="param.type" v-model="p[param.prop]"  show-password v-if="param.type == 'password'"></el-input>
+                        <el-input :type="param.type" v-model="p[param.prop]" v-if="param.type != 'password'"></el-input>
                       </el-form-item>
                     </el-form>
                   </td>

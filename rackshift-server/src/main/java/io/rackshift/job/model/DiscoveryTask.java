@@ -140,7 +140,10 @@ public class DiscoveryTask extends Thread {
                                 outBandService.saveOrUpdate(o, false);
                             }
                         } else {
-                            LogUtil.error("使用插件探测裸金属失败！" + JSONObject.toJSONString(request));
+                            ProtocolRequest r = new ProtocolRequest();
+                            BeanUtils.copyBean(r, request);
+                            r.setPwd("******");
+                            LogUtil.error("使用插件探测裸金属失败！" + JSONObject.toJSONString(r));
                             if (ServiceConstants.IPMI_Rest.equalsIgnoreCase(request.getProtocol())) {
                                 onlyExtractIPMI(request, bareMetalRule);
                             }
