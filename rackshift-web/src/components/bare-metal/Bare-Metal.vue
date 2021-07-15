@@ -778,12 +778,15 @@ export default {
   ,
   methods: {
     webKVM(bareMetal) {
+      this.loadingList = true;
+      let that = this;
       HttpUtil.get("/bare-metal/webkvm?id=" + bareMetal.id + "&host=" + window.location.origin, {}, (res) => {
-        if (res.success) {
-          window.open(res.data);
-        } else {
-          this.$message.warn(res.msg);
-        }
+        window.open(res.data);
+        that.loadingList = false;
+      }, (res) => {
+        if (res.message)
+          that.$alert(res.message);
+        that.loadingList = false;
       });
     },
     setPartition(params) {
