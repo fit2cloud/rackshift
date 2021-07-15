@@ -139,14 +139,14 @@ public class DockerClientService {
         instructionLogMapper.insertSelective(log);
     }
 
-    public CreateContainerResponse createContainer(String image, String exposedPort, String innerPort, List<String> envs) {
-        ExposedPort exposedPort1 = ExposedPort.tcp(Integer.parseInt(exposedPort));
+    public CreateContainerResponse createContainer(String image, String innerPort, String exposedPort, List<String> envs) {
+        ExposedPort innerExposedPort = ExposedPort.tcp(Integer.parseInt(innerPort));
         Ports ports = new Ports();
-        ports.bind(exposedPort1, Ports.Binding.bindPort(Integer.parseInt(innerPort)));
+        ports.bind(innerExposedPort, Ports.Binding.bindPort(Integer.parseInt(exposedPort)));
         CreateContainerResponse r = client.createContainerCmd(image)
                 .withHostConfig(new HostConfig().withPortBindings(ports))
                 .withEnv(envs)
-                .withExposedPorts(exposedPort1).exec();
+                .withExposedPorts(innerExposedPort).exec();
         return r;
     }
 
