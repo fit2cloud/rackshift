@@ -781,8 +781,10 @@ export default {
       this.loadingList = true;
       let that = this;
       HttpUtil.get("/bare-metal/webkvm?id=" + bareMetal.id + "&host=" + window.location.origin, {}, (res) => {
-        window.open(res.data);
-        that.loadingList = false;
+        setTimeout(function () {
+          window.open(res.data);
+          that.loadingList = false;
+        }, 2000);
       }, (res) => {
         if (res.message)
           that.$alert(res.message);
