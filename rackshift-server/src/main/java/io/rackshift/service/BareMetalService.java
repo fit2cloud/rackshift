@@ -181,8 +181,8 @@ public class BareMetalService {
         KVMInfo info = new KVMInfo(id, ob, exposedPort, r.getId());
         e = new Element(id, info);
         cache.put(e);
-        if (host.contains(":"))
-            host = host.substring(0, host.indexOf(":"));
+        if (host.replace("://", "").contains(":"))
+            host = host.substring(0, host.lastIndexOf(":"));
         return ResultHolder.success(host + ":" + ((KVMInfo) e.getObjectValue()).getPort());
     }
 
