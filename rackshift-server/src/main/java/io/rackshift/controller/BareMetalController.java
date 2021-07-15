@@ -51,4 +51,10 @@ public class BareMetalController {
     public ResultHolder del(@RequestBody String[] ids) {
         return ResultHolder.success(bareMetalService.del(ids));
     }
+
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @GetMapping("webkvm")
+    public ResultHolder webkvm(@RequestParam String id, @RequestParam String host) {
+        return bareMetalService.webkvm(id, host);
+    }
 }

@@ -1,5 +1,6 @@
 package io.rackshift.service;
 
+import com.github.dockerjava.api.command.CreateContainerResponse;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.*;
 import io.rackshift.mybatis.domain.*;
@@ -8,13 +9,13 @@ import io.rackshift.mybatis.mapper.ext.ExtNetworkCardMapper;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
 import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.*;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.Element;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BareMetalService {
@@ -44,6 +45,14 @@ public class BareMetalService {
     private OutBandService outBandService;
     @Resource
     private InstructionLogService instructionLogService;
+    @Resource
+    private Cache cache;
+    @Resource
+    private DockerClientService dockerClientService;
+    @Resource
+    private SystemParameterMapper systemParameterMapper;
+    private Set<String> portSet = new HashSet<>();
+    private Random random = new Random();
 
     public List<BareMetalDTO> list(BareMetalQueryVO queryVO) {
         return bareMetalManager.list(queryVO);
@@ -130,5 +139,59 @@ public class BareMetalService {
 
     public Object all() {
         return bareMetalManager.all();
+    }
+
+    public ResultHolder webkvm(String id, String host) {
+        BareMetal bareMetal = bareMetalManager.getBareMetalById(id);
+        if (bareMetal == null) {
+            return ResultHolder.error(Translator.get("BareMetal Server Not exists"));
+        }
+        OutBand ob = outBandService.getByBareMetalId(id);
+
+        if (ob == null) {
+            return ResultHolder.error(Translator.get("OB Not exists"));
+        }
+
+        IPMIUtil.Account account = IPMIUtil.Account.build(ob);
+        try {
+            IPMIUtil.exeCommand(account, "power status");
+        } catch (Exception e) {
+            return ResultHolder.error(Translator.get("OB wrong!"));
+        }
+
+        Element e = cache.get(id);
+        SystemParameter kvmImage = systemParameterMapper.selectByPrimaryKey(bareMetal.getMachineBrand() + ".kvm.image");
+
+        if (kvmImage == null) {
+            return ResultHolder.error(Translator.get("kvm image not exists! please contact RackShift Wechat zhangdahai!"));
+        }
+        //每次打开都重启容器
+        if (e != null) {
+            KVMInfo info = (KVMInfo) e.getObjectValue();
+            dockerClientService.stopAndRemoveContainer(info.getContainerId());
+        }
+        List<String> envs = new LinkedList<>();
+        envs.add(String.format("HOST=%s", ob.getIp()));
+        envs.add(String.format("USER=%s", ob.getUserName()));
+        envs.add(String.format("PASSWD=%s", ob.getPwd()));
+        envs.add(String.format("APP_NAME=%s", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn() + " " + bareMetal.getManagementIp()));
+        String exposedPort = chooseSinglePort();
+        CreateContainerResponse r = dockerClientService.createContainer(kvmImage.getParamValue(), exposedPort, "5800", envs);
+        dockerClientService.startContainer(r.getId());
+        KVMInfo info = new KVMInfo(id, ob, exposedPort, r.getId());
+        e = new Element(id, info);
+        cache.put(e);
+
+        host = host.substring(0, host.indexOf(":"));
+        return ResultHolder.success(host + ":" + ((KVMInfo) e.getObjectValue()).getPort());
+    }
+
+    private synchronized String chooseSinglePort() {
+        String port = "";
+        do {
+            port = String.valueOf(10000 + random.nextInt(10000));
+        } while (portSet.contains(port));
+        portSet.add(port);
+        return port;
     }
 }

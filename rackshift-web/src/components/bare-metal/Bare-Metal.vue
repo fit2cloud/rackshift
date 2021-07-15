@@ -125,6 +125,8 @@
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="fillOBM(scope.row)"> {{ $t('OBM') + $t('info') }}
                 </el-dropdown-item>
+                <el-dropdown-item @click.native="webKVM(scope.row)"> {{ $t('open_webkvm') }}
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -775,6 +777,15 @@ export default {
   }
   ,
   methods: {
+    webKVM(bareMetal) {
+      HttpUtil.get("/bare-metal/webkvm?id=" + bareMetal.id + "&ip=" + window.location.host, {}, (res) => {
+        if (res.success) {
+          window.open(res.data);
+        } else {
+          this.$message.warn(res.msg);
+        }
+      });
+    },
     setPartition(params) {
       if (!params) {
         return;

@@ -499,4 +499,5 @@ export default {
     "lvm_name": "LVM Name",
     "partition_tips": "default kickstart autopart",
     "ubuntu_pwd": "Default user/pwd ubuntu/root",
+    "open_webkvm": "Open WEBKVM",
 }

@@ -2,13 +2,13 @@ package io.rackshift.service;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
+import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.exception.DockerException;
-import com.github.dockerjava.api.model.Container;
-import com.github.dockerjava.api.model.Frame;
-import com.github.dockerjava.api.model.Image;
+import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.InvocationBuilder;
+import com.google.gson.annotations.Expose;
 import io.rackshift.metal.sdk.util.LogUtil;
 import io.rackshift.mybatis.domain.Instruction;
 import io.rackshift.mybatis.domain.InstructionLog;
@@ -137,5 +137,25 @@ public class DockerClientService {
         }
         log.setBareMetalId(bareMetalId);
         instructionLogMapper.insertSelective(log);
+    }
+
+    public CreateContainerResponse createContainer(String image, String exposedPort, String innerPort, List<String> envs) {
+        ExposedPort exposedPort1 = ExposedPort.tcp(Integer.parseInt(exposedPort));
+        Ports ports = new Ports();
+        ports.bind(exposedPort1, Ports.Binding.bindPort(Integer.parseInt(innerPort)));
+        CreateContainerResponse r = client.createContainerCmd(image)
+                .withHostConfig(new HostConfig().withPortBindings(ports))
+                .withEnv(envs)
+                .withExposedPorts(exposedPort1).exec();
+        return r;
+    }
+
+    public void startContainer(String containerId) {
+        client.startContainerCmd(containerId).exec();
+    }
+
+    public void stopAndRemoveContainer(String containerId) {
+        client.stopContainerCmd(containerId).exec();
+        client.removeContainerCmd(containerId).exec();
     }
 }

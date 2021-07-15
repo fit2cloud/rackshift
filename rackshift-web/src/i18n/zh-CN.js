@@ -509,4 +509,5 @@ export default {
     "lvm_name": "LVM 卷名",
     "partition_tips": "自动分配默认等于 kickstart autopart，自定义分区默认只操作第一块磁盘 不管是 standard 标准设备还是 lvm 逻辑设备",
     "ubuntu_pwd": "默认账号密码 ubuntu/root",
+    "open_webkvm": "打开 WEBKVM",
 }
