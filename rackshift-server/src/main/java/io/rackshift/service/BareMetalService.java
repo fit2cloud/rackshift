@@ -176,13 +176,13 @@ public class BareMetalService {
         envs.add(String.format("PASSWD=%s", ob.getPwd()));
         envs.add(String.format("APP_NAME=%s", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn() + " " + bareMetal.getManagementIp()));
         String exposedPort = chooseSinglePort();
-        CreateContainerResponse r = dockerClientService.createContainer(kvmImage.getParamValue(), exposedPort, "5800", envs);
+        CreateContainerResponse r = dockerClientService.createContainer(kvmImage.getParamValue(), "5800", exposedPort, envs);
         dockerClientService.startContainer(r.getId());
         KVMInfo info = new KVMInfo(id, ob, exposedPort, r.getId());
         e = new Element(id, info);
         cache.put(e);
-
-        host = host.substring(0, host.indexOf(":"));
+        if (host.contains(":"))
+            host = host.substring(0, host.indexOf(":"));
         return ResultHolder.success(host + ":" + ((KVMInfo) e.getObjectValue()).getPort());
     }
 
