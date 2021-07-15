@@ -778,7 +778,7 @@ export default {
   ,
   methods: {
     webKVM(bareMetal) {
-      HttpUtil.get("/bare-metal/webkvm?id=" + bareMetal.id + "&ip=" + window.location.host, {}, (res) => {
+      HttpUtil.get("/bare-metal/webkvm?id=" + bareMetal.id + "&host=" + window.location.host, {}, (res) => {
         if (res.success) {
           window.open(res.data);
         } else {
