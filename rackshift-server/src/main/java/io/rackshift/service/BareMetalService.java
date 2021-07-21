@@ -167,13 +167,22 @@ public class BareMetalService {
         if (kvmImage == null) {
             return ResultHolder.error(Translator.get("kvm_image_not_exists"));
         }
+
+        //曾经打开的容器
+        if (StringUtils.isNotBlank(bareMetal.getContainerId())) {
+            if (dockerClientService.getState(bareMetal.getContainerId()).getRunning()) {
+                return ResultHolder.success(host + ":" + dockerClientService.getExposedPort(bareMetal.getContainerId()));
+            } else {
+                dockerClientService.removeContainer(bareMetal.getContainerId());
+            }
+        }
         //每次打开都重启容器
         if (e != null) {
             KVMInfo info = (KVMInfo) e.getObjectValue();
             if (dockerClientService.getState(info.getContainerId()).getRunning()) {
                 return ResultHolder.success(host + ":" + info.getPort());
             } else {
-                dockerClientService.stopAndRemoveContainer(info.getContainerId());
+                dockerClientService.removeContainer(info.getContainerId());
             }
         }
         List<String> envs = new LinkedList<>();
@@ -188,6 +197,8 @@ public class BareMetalService {
         KVMInfo info = new KVMInfo(id, ob, exposedPort, r.getId());
         e = new Element(id, info);
         cache.put(e);
+        bareMetal.setContainerId(r.getId());
+        bareMetalManager.update(bareMetal);
         try {
             Thread.sleep(2500);
         } catch (InterruptedException interruptedException) {

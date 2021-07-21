@@ -159,6 +159,10 @@ public class DockerClientService {
         return client.inspectContainerCmd(containerId).exec().getState();
     }
 
+    public Ports.Binding[] getExposedPort(String containerId) {
+        return client.inspectContainerCmd(containerId).exec().getHostConfig().getPortBindings().getBindings().get("5800");
+    }
+
     public void removeContainer(String containerId) {
         client.removeContainerCmd(containerId).exec();
     }

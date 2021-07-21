@@ -36,6 +36,7 @@
     <result column="apply_user" jdbcType="VARCHAR" property="applyUser" />
     <result column="create_time" jdbcType="BIGINT" property="createTime" />
     <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    <result column="container_id" jdbcType="VARCHAR" property="containerId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -100,7 +101,7 @@
     memory_type, disk_type, disk, management_ip, bmc_mac, ip_array, os_type, os_version, 
     machine_brand, machine_model, server_id, machine_sn, status, power, workspace_id, 
     recycled_time, ssh_user, ssh_pwd, ssh_port, provider_id, rule_id, apply_user, create_time, 
-    update_time
+    update_time, container_id
   </sql>
   <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.BareMetalExample" resultMap="BaseResultMap">
     select
@@ -144,7 +145,7 @@
       workspace_id, recycled_time, ssh_user, 
       ssh_pwd, ssh_port, provider_id, 
       rule_id, apply_user, create_time, 
-      update_time)
+      update_time, container_id)
     values (#{id,jdbcType=VARCHAR}, #{endpointId,jdbcType=VARCHAR}, #{hostname,jdbcType=VARCHAR}, 
       #{machineType,jdbcType=VARCHAR}, #{cpu,jdbcType=INTEGER}, #{cpuType,jdbcType=VARCHAR}, 
       #{cpuFre,jdbcType=VARCHAR}, #{core,jdbcType=INTEGER}, #{thread,jdbcType=INTEGER}, 
@@ -156,7 +157,7 @@
       #{workspaceId,jdbcType=VARCHAR}, #{recycledTime,jdbcType=BIGINT}, #{sshUser,jdbcType=VARCHAR}, 
       #{sshPwd,jdbcType=VARCHAR}, #{sshPort,jdbcType=INTEGER}, #{providerId,jdbcType=VARCHAR}, 
       #{ruleId,jdbcType=VARCHAR}, #{applyUser,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, 
-      #{updateTime,jdbcType=BIGINT})
+      #{updateTime,jdbcType=BIGINT}, #{containerId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.BareMetal">
     insert into bare_metal
@@ -263,6 +264,9 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="containerId != null">
+        container_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -366,6 +370,9 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="containerId != null">
+        #{containerId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -480,6 +487,9 @@
       <if test="record.updateTime != null">
         update_time = #{record.updateTime,jdbcType=BIGINT},
       </if>
+      <if test="record.containerId != null">
+        container_id = #{record.containerId,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -520,7 +530,8 @@
       rule_id = #{record.ruleId,jdbcType=VARCHAR},
       apply_user = #{record.applyUser,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=BIGINT},
-      update_time = #{record.updateTime,jdbcType=BIGINT}
+      update_time = #{record.updateTime,jdbcType=BIGINT},
+      container_id = #{record.containerId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -627,6 +638,9 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=BIGINT},
       </if>
+      <if test="containerId != null">
+        container_id = #{containerId,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -664,7 +678,8 @@
       rule_id = #{ruleId,jdbcType=VARCHAR},
       apply_user = #{applyUser,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT},
-      update_time = #{updateTime,jdbcType=BIGINT}
+      update_time = #{updateTime,jdbcType=BIGINT},
+      container_id = #{containerId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

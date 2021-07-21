@@ -2,9 +2,8 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.BareMetalExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface BareMetalMapper {
     long countByExample(BareMetalExample example);
@@ -28,6 +27,4 @@ public interface BareMetalMapper {
     int updateByPrimaryKeySelective(BareMetal record);
 
     int updateByPrimaryKey(BareMetal record);
-
-    List<BareMetal> getByIds(String[] bareMetalIds);
 }

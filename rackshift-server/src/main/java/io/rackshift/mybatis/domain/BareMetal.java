@@ -1,8 +1,7 @@
 package io.rackshift.mybatis.domain;
 
-import lombok.Data;
-
 import java.io.Serializable;
+import lombok.Data;
 
 @Data
 public class BareMetal implements Serializable {
@@ -73,6 +72,8 @@ public class BareMetal implements Serializable {
     private Long createTime;
 
     private Long updateTime;
+
+    private String containerId;
 
     private static final long serialVersionUID = 1L;
 }

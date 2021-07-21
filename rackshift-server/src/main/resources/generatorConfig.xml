@@ -60,7 +60,7 @@
         <!--要生成的数据库表 -->
 
 <!--        <table tableName="endpoint"/>-->
-<!--        <table tableName="bare_me2tal"/>-->
+        <table tableName="bare_metal"/>
 <!--        <table tableName="network"/>-->
 <!--        <table tableName="bare_metal_rule"/>-->
 <!--        <table tableName="cpu"/>-->
@@ -72,7 +72,7 @@
 <!--        <table tableName="switch_rule"/>-->
 <!--        <table tableName="switch"/>-->
 <!--        <table tableName="switch_port"/>-->
-        <table tableName="user_key"/>
+<!--        <table tableName="user_key"/>-->
 <!--        <table tableName="ip"/>-->
 
     </context>
