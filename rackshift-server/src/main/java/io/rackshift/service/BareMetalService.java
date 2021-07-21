@@ -50,8 +50,9 @@ public class BareMetalService {
     private DockerClientService dockerClientService;
     @Resource
     private SystemParameterMapper systemParameterMapper;
-    private Set<String> portSet = new HashSet<>();
+    private Set<Integer> portSet = new HashSet<>();
     private Random random = new Random();
+    private int novncPort = 5800;
 
     public List<BareMetalDTO> list(BareMetalQueryVO queryVO) {
         return bareMetalManager.list(queryVO);
@@ -171,7 +172,7 @@ public class BareMetalService {
         //曾经打开的容器
         if (StringUtils.isNotBlank(bareMetal.getContainerId())) {
             if (dockerClientService.getState(bareMetal.getContainerId()).getRunning()) {
-                return ResultHolder.success(host + ":" + dockerClientService.getExposedPort(bareMetal.getContainerId()));
+                return ResultHolder.success(host + ":" + dockerClientService.getExposedPort(bareMetal.getContainerId(), novncPort));
             } else {
                 dockerClientService.removeContainer(bareMetal.getContainerId());
             }
@@ -191,8 +192,8 @@ public class BareMetalService {
         envs.add(String.format("USER=%s", ob.getUserName()));
         envs.add(String.format("PASSWD=%s", ob.getPwd()));
         envs.add(String.format("APP_NAME=%s", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn() + " " + bareMetal.getManagementIp()));
-        String exposedPort = chooseSinglePort();
-        CreateContainerResponse r = dockerClientService.createContainer(kvmImage.getParamValue(), "5800", exposedPort, envs);
+        int exposedPort = chooseSinglePort();
+        CreateContainerResponse r = dockerClientService.createContainer(kvmImage.getParamValue(), novncPort, exposedPort, envs);
         dockerClientService.startContainer(r.getId());
         KVMInfo info = new KVMInfo(id, ob, exposedPort, r.getId());
         e = new Element(id, info);
@@ -207,10 +208,10 @@ public class BareMetalService {
         return ResultHolder.success(host + ":" + exposedPort);
     }
 
-    private synchronized String chooseSinglePort() {
-        String port = "";
+    private synchronized int chooseSinglePort() {
+        int port = 0;
         do {
-            port = String.valueOf(10000 + random.nextInt(10000));
+            port = 10000 + random.nextInt(10000);
         } while (portSet.contains(port));
         portSet.add(port);
         return port;

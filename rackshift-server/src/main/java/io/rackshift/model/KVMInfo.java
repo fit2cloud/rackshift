@@ -5,10 +5,10 @@ import io.rackshift.mybatis.domain.OutBand;
 public class KVMInfo {
     private String bareMetalId;
     private OutBand outBand;
-    private String port;
+    private int port;
     private String containerId;
 
-    public KVMInfo(String bareMetalId, OutBand outBand, String port, String containerId) {
+    public KVMInfo(String bareMetalId, OutBand outBand, int port, String containerId) {
         this.bareMetalId = bareMetalId;
         this.outBand = outBand;
         this.containerId = containerId;
@@ -39,11 +39,11 @@ public class KVMInfo {
         this.outBand = outBand;
     }
 
-    public String getPort() {
+    public int getPort() {
         return port;
     }
 
-    public void setPort(String port) {
+    public void setPort(int port) {
         this.port = port;
     }
 }

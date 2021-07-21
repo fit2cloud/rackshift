@@ -140,10 +140,10 @@ public class DockerClientService {
         instructionLogMapper.insertSelective(log);
     }
 
-    public CreateContainerResponse createContainer(String image, String innerPort, String exposedPort, List<String> envs) {
-        ExposedPort innerExposedPort = ExposedPort.tcp(Integer.parseInt(innerPort));
+    public CreateContainerResponse createContainer(String image, int innerPort, int exposedPort, List<String> envs) {
+        ExposedPort innerExposedPort = ExposedPort.tcp(innerPort);
         Ports ports = new Ports();
-        ports.bind(innerExposedPort, Ports.Binding.bindPort(Integer.parseInt(exposedPort)));
+        ports.bind(innerExposedPort, Ports.Binding.bindPort(exposedPort));
         CreateContainerResponse r = client.createContainerCmd(image)
                 .withHostConfig(new HostConfig().withPortBindings(ports))
                 .withEnv(envs)
@@ -159,8 +159,8 @@ public class DockerClientService {
         return client.inspectContainerCmd(containerId).exec().getState();
     }
 
-    public Ports.Binding[] getExposedPort(String containerId) {
-        return client.inspectContainerCmd(containerId).exec().getHostConfig().getPortBindings().getBindings().get("5800");
+    public String getExposedPort(String containerId, int novncPort) {
+        return (client.inspectContainerCmd(containerId).exec().getHostConfig().getPortBindings().getBindings().get(new ExposedPort(novncPort)))[0].getHostPortSpec();
     }
 
     public void removeContainer(String containerId) {
