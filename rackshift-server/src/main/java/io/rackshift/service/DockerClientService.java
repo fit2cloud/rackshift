@@ -3,6 +3,7 @@ package io.rackshift.service;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.exception.DockerException;
 import com.github.dockerjava.api.model.*;
@@ -154,8 +155,16 @@ public class DockerClientService {
         client.startContainerCmd(containerId).exec();
     }
 
+    public InspectContainerResponse.ContainerState getState(String containerId) {
+        return client.inspectContainerCmd(containerId).exec().getState();
+    }
+
+    public void removeContainer(String containerId) {
+        client.removeContainerCmd(containerId).exec();
+    }
+
     public void stopAndRemoveContainer(String containerId) {
         client.stopContainerCmd(containerId).exec();
-        client.removeContainerCmd(containerId).exec();
+        this.removeContainer(containerId);
     }
 }

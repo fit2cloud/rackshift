@@ -5,7 +5,6 @@ import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.*;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.*;
-import io.rackshift.mybatis.mapper.ext.ExtNetworkCardMapper;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
 import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.*;
@@ -142,6 +141,9 @@ public class BareMetalService {
     }
 
     public ResultHolder webkvm(String id, String host) {
+        if (host.replace("://", "").contains(":"))
+            host = host.substring(0, host.lastIndexOf(":"));
+
         BareMetal bareMetal = bareMetalManager.getBareMetalById(id);
         if (bareMetal == null) {
             return ResultHolder.error(Translator.get("BareMetal_Server_Not_exists"));
@@ -160,7 +162,7 @@ public class BareMetalService {
         }
 
         Element e = cache.get(id);
-        SystemParameter kvmImage = systemParameterMapper.selectByPrimaryKey(bareMetal.getMachineBrand() + ".kvm.image");
+        SystemParameter kvmImage = systemParameterMapper.selectByPrimaryKey("kvm.image");
 
         if (kvmImage == null) {
             return ResultHolder.error(Translator.get("kvm_image_not_exists"));
@@ -168,9 +170,14 @@ public class BareMetalService {
         //每次打开都重启容器
         if (e != null) {
             KVMInfo info = (KVMInfo) e.getObjectValue();
-            dockerClientService.stopAndRemoveContainer(info.getContainerId());
+            if (dockerClientService.getState(info.getContainerId()).getRunning()) {
+                return ResultHolder.success(host + ":" + info.getPort());
+            } else {
+                dockerClientService.stopAndRemoveContainer(info.getContainerId());
+            }
         }
         List<String> envs = new LinkedList<>();
+        envs.add(String.format("VENDOR=%s", bareMetal.getMachineBrand()));
         envs.add(String.format("HOST=%s", ob.getIp()));
         envs.add(String.format("USER=%s", ob.getUserName()));
         envs.add(String.format("PASSWD=%s", ob.getPwd()));
@@ -181,8 +188,7 @@ public class BareMetalService {
         KVMInfo info = new KVMInfo(id, ob, exposedPort, r.getId());
         e = new Element(id, info);
         cache.put(e);
-        if (host.replace("://", "").contains(":"))
-            host = host.substring(0, host.lastIndexOf(":"));
+
         return ResultHolder.success(host + ":" + exposedPort);
     }
 

@@ -784,7 +784,7 @@ export default {
         setTimeout(function () {
           window.open(res.data);
           that.loadingList = false;
-        }, 2000);
+        }, 2500);
       }, (res) => {
         if (res.message)
           that.$alert(res.message);
