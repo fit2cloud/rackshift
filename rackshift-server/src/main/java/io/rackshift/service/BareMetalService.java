@@ -188,7 +188,11 @@ public class BareMetalService {
         KVMInfo info = new KVMInfo(id, ob, exposedPort, r.getId());
         e = new Element(id, info);
         cache.put(e);
-
+        try {
+            Thread.sleep(2500);
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
+        }
         return ResultHolder.success(host + ":" + exposedPort);
     }
 
