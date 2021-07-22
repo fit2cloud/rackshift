@@ -1,10 +1,12 @@
 package io.rackshift.service;
 
 import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.model.Volume;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.*;
-import io.rackshift.mybatis.domain.*;
+import io.rackshift.mybatis.domain.BareMetal;
+import io.rackshift.mybatis.domain.OutBand;
+import io.rackshift.mybatis.domain.OutBandExample;
+import io.rackshift.mybatis.domain.SystemParameter;
 import io.rackshift.mybatis.mapper.*;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
 import io.rackshift.strategy.statemachine.LifeStatus;
