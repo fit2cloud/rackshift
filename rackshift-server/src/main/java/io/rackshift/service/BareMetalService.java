@@ -194,8 +194,8 @@ public class BareMetalService {
         envs.add(String.format("PASSWD=%s", ob.getPwd()));
         envs.add(String.format("APP_NAME=%s", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn() + " " + bareMetal.getManagementIp()));
         int exposedPort = chooseSinglePort();
-        Volume v = new Volume("/opt/rackshift/rackhd/files/mount/common:/vmedia");
-        CreateContainerResponse r = dockerClientService.createContainer(kvmImage.getParamValue(), novncPort, exposedPort, envs, v);
+        String src = "/opt/rackshift/rackhd/files/mount/common";
+        CreateContainerResponse r = dockerClientService.createContainer(kvmImage.getParamValue(), novncPort, exposedPort, envs, src, "/vmedia");
         dockerClientService.startContainer(r.getId());
         KVMInfo info = new KVMInfo(id, ob, exposedPort, r.getId());
         e = new Element(id, info);
