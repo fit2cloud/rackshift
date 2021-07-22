@@ -98,7 +98,7 @@
                          :filter-method="filterPower"
                          filter-placement="bottom-end">
           <template slot-scope="scope">
-            <PowerStatus :content="$t('power_text')" :status="scope.row.power"></PowerStatus>
+            <PowerStatus :content="$t('power_text')" :status="scope.row.power" :bareMetalId="scope.row.id" :callback="getData"></PowerStatus>
           </template>
         </el-table-column>
 

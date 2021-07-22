@@ -1,6 +1,7 @@
 package io.rackshift.service;
 
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import io.rackshift.constants.RackHDConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.*;
 import io.rackshift.mybatis.domain.BareMetal;
@@ -231,5 +232,28 @@ public class BareMetalService {
         } while (portSet.contains(port));
         portSet.add(port);
         return port;
+    }
+
+    public ResultHolder refreshPower(String id) {
+        OutBand o = outBandService.getByBareMetalId(id);
+        if (o == null) {
+            return ResultHolder.error("没有配置带外信息!");
+        }
+        IPMIUtil.Account account = IPMIUtil.Account.build(o);
+        BareMetal b = bareMetalManager.getBareMetalById(id);
+        try {
+            String status = IPMIUtil.exeCommand(account, "power status");
+            if (status.contains(RackHDConstants.PM_POWER_ON)) {
+                b.setPower(RackHDConstants.PM_POWER_ON);
+            } else if (status.contains(RackHDConstants.PM_POWER_OFF)) {
+                b.setPower(RackHDConstants.PM_POWER_OFF);
+            } else {
+                b.setPower(RackHDConstants.PM_POWER_UNKNOWN);
+            }
+            bareMetalManager.update(b);
+        } catch (Exception e) {
+            return ResultHolder.error("带外链接失败！");
+        }
+        return ResultHolder.success("");
     }
 }

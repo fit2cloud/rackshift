@@ -34,6 +34,10 @@ public class BareMetalController {
     public ResultHolder power(@PathVariable String id, @PathVariable String power) {
         return bareMetalService.power(id, power);
     }
+    @GetMapping("/refreshPower/{id}")
+    public ResultHolder refreshPower(@PathVariable String id) {
+        return bareMetalService.refreshPower(id);
+    }
 
     @PostMapping("/power/{power}")
     public ResultHolder powerBatch(@RequestBody String[] ids, @PathVariable String power) {
