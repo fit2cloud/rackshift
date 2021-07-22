@@ -25,6 +25,7 @@ import sun.rmi.runtime.Log;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
@@ -178,7 +179,8 @@ public class DiscoveryTask extends Thread {
 
             String machineBrand = fruObj.getString("Product Manufacturer");
             String machineSn = fruObj.getString("Product Serial");
-            String name = machineBrand + " " + fruObj.getString("Product Name");
+            String machineMo = Optional.ofNullable(Optional.ofNullable(fruObj.getString("Product Name")).orElse(fruObj.getString("Product Part Number"))).orElse("Unknown Model");
+            String name = machineBrand + " " + machineMo;
 
             BareMetal physicalMachine = new BareMetal();
             if (StringUtils.isNotBlank(name)) {
