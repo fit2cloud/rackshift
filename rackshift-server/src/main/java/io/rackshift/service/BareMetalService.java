@@ -171,7 +171,7 @@ public class BareMetalService {
 
         //曾经打开的容器
         if (StringUtils.isNotBlank(bareMetal.getContainerId())) {
-            if (dockerClientService.getState(bareMetal.getContainerId()).getRunning()) {
+            if (dockerClientService.isRunning(bareMetal.getContainerId())) {
                 return ResultHolder.success(host + ":" + dockerClientService.getExposedPort(bareMetal.getContainerId(), novncPort));
             } else {
                 cleanContainer(bareMetal.getContainerId(), bareMetal);
@@ -180,7 +180,7 @@ public class BareMetalService {
         //每次打开都重启容器
         if (e != null) {
             KVMInfo info = (KVMInfo) e.getObjectValue();
-            if (dockerClientService.getState(info.getContainerId()).getRunning()) {
+            if (dockerClientService.isRunning(info.getContainerId())) {
                 return ResultHolder.success(host + ":" + info.getPort());
             } else {
                 cleanContainer(info.getContainerId(), bareMetal);

@@ -164,11 +164,11 @@ public class DockerClientService {
         return false;
     }
 
-    public InspectContainerResponse.ContainerState getState(String containerId) {
+    public boolean isRunning(String containerId) {
         if (exist(containerId)) {
-            return client.inspectContainerCmd(containerId).exec().getState();
+            return client.inspectContainerCmd(containerId).exec().getState().getRunning();
         }
-        return new InspectContainerResponse().new ContainerState();
+        return false;
     }
 
     public String getExposedPort(String containerId, int novncPort) {
