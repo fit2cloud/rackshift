@@ -174,7 +174,7 @@ public class BareMetalService {
             if (dockerClientService.getState(bareMetal.getContainerId()).getRunning()) {
                 return ResultHolder.success(host + ":" + dockerClientService.getExposedPort(bareMetal.getContainerId(), novncPort));
             } else {
-                dockerClientService.removeContainer(bareMetal.getContainerId());
+                cleanContainer(bareMetal.getContainerId(), bareMetal);
             }
         }
         //每次打开都重启容器
@@ -183,7 +183,7 @@ public class BareMetalService {
             if (dockerClientService.getState(info.getContainerId()).getRunning()) {
                 return ResultHolder.success(host + ":" + info.getPort());
             } else {
-                dockerClientService.removeContainer(info.getContainerId());
+                cleanContainer(info.getContainerId(), bareMetal);
             }
         }
         List<String> envs = new LinkedList<>();
@@ -206,6 +206,16 @@ public class BareMetalService {
             interruptedException.printStackTrace();
         }
         return ResultHolder.success(host + ":" + exposedPort);
+    }
+
+    private void cleanContainer(String containerId, BareMetal bareMetal) {
+        try {
+            dockerClientService.removeContainer(containerId);
+        } catch (Exception e) {
+        }
+        cache.remove(bareMetal.getId());
+        bareMetal.setContainerId(null);
+        bareMetalManager.update(bareMetal);
     }
 
     private synchronized int chooseSinglePort() {

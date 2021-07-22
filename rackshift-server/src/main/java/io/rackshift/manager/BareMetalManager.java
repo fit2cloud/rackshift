@@ -102,7 +102,7 @@ public class BareMetalManager {
     }
 
     public void update(BareMetal bareMetal) {
-        bareMetalMapper.updateByPrimaryKeySelective(bareMetal);
+        bareMetalMapper.updateByPrimaryKey(bareMetal);
     }
 
     public BareMetal saveOrUpdateEntity(MachineEntity e) {

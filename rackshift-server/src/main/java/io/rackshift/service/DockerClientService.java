@@ -164,7 +164,8 @@ public class DockerClientService {
     }
 
     public void removeContainer(String containerId) {
-        client.removeContainerCmd(containerId).exec();
+        if (!client.inspectContainerCmd(containerId).exec().getState().getRunning())
+            client.removeContainerCmd(containerId).exec();
     }
 
     public void stopAndRemoveContainer(String containerId) {
