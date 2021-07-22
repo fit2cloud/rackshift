@@ -157,7 +157,7 @@ public class DockerClientService {
 
     public boolean exist(String containerId) {
         for (Container c : client.listContainersCmd().exec()) {
-            if (c.getId() == containerId) {
+            if (c.getId().equalsIgnoreCase(containerId)) {
                 return true;
             }
         }
