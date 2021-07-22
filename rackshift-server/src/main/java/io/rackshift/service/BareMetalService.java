@@ -1,6 +1,7 @@
 package io.rackshift.service;
 
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.model.Volume;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.*;
 import io.rackshift.mybatis.domain.*;
@@ -193,7 +194,8 @@ public class BareMetalService {
         envs.add(String.format("PASSWD=%s", ob.getPwd()));
         envs.add(String.format("APP_NAME=%s", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn() + " " + bareMetal.getManagementIp()));
         int exposedPort = chooseSinglePort();
-        CreateContainerResponse r = dockerClientService.createContainer(kvmImage.getParamValue(), novncPort, exposedPort, envs);
+        Volume v = new Volume("/opt/rackshift/rackhd/files/mount/common:/vmedia");
+        CreateContainerResponse r = dockerClientService.createContainer(kvmImage.getParamValue(), novncPort, exposedPort, envs, v);
         dockerClientService.startContainer(r.getId());
         KVMInfo info = new KVMInfo(id, ob, exposedPort, r.getId());
         e = new Element(id, info);
