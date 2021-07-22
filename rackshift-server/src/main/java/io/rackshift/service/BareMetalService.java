@@ -210,7 +210,9 @@ public class BareMetalService {
 
     private void cleanContainer(String containerId, BareMetal bareMetal) {
         try {
-            dockerClientService.removeContainer(containerId);
+            if (dockerClientService.exist(containerId)) {
+                dockerClientService.removeContainer(containerId);
+            }
         } catch (Exception e) {
         }
         cache.remove(bareMetal.getId());

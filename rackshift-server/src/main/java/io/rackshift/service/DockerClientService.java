@@ -155,8 +155,20 @@ public class DockerClientService {
         client.startContainerCmd(containerId).exec();
     }
 
+    public boolean exist(String containerId) {
+        for (Container c : client.listContainersCmd().exec()) {
+            if (c.getId() == containerId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public InspectContainerResponse.ContainerState getState(String containerId) {
-        return client.inspectContainerCmd(containerId).exec().getState();
+        if (exist(containerId)) {
+            return client.inspectContainerCmd(containerId).exec().getState();
+        }
+        return new InspectContainerResponse().new ContainerState();
     }
 
     public String getExposedPort(String containerId, int novncPort) {
@@ -164,12 +176,13 @@ public class DockerClientService {
     }
 
     public void removeContainer(String containerId) {
-        if (!client.inspectContainerCmd(containerId).exec().getState().getRunning())
+        if (exist(containerId) && !client.inspectContainerCmd(containerId).exec().getState().getRunning())
             client.removeContainerCmd(containerId).exec();
     }
 
     public void stopAndRemoveContainer(String containerId) {
-        client.stopContainerCmd(containerId).exec();
+        if (exist(containerId) && client.inspectContainerCmd(containerId).exec().getState().getRunning())
+            client.stopContainerCmd(containerId).exec();
         this.removeContainer(containerId);
     }
 }
