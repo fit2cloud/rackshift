@@ -500,4 +500,6 @@ export default {
     "partition_tips": "default kickstart autopart",
     "ubuntu_pwd": "Default user/pwd ubuntu/root",
     "open_webkvm": "Open WEBKVM",
+    "post_install": "POST-INSTALL Script",
+    "view_example": "View Example"
 }

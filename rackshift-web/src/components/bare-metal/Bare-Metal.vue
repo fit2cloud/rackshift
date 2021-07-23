@@ -98,7 +98,8 @@
                          :filter-method="filterPower"
                          filter-placement="bottom-end">
           <template slot-scope="scope">
-            <PowerStatus :content="$t('power_text')" :status="scope.row.power" :bareMetalId="scope.row.id" :callback="getData"></PowerStatus>
+            <PowerStatus :content="$t('power_text')" :status="scope.row.power" :bareMetalId="scope.row.id"
+                         :callback="getData"></PowerStatus>
           </template>
         </el-table-column>
 
@@ -263,6 +264,12 @@
                   </el-option>
                 </el-select>
               </el-form-item>
+
+              <el-form-item :label="$t('post_install')" :label-width="formLabelWidth">
+                <RSCodeMirror v-model="bp.postInstallCommands"
+                              @receiveValue="receiveValue"></RSCodeMirror>
+              </el-form-item>
+
             </el-collapse-item>
 
             <el-collapse-item :title="$t('windwos_param')" name="windowsSamba">
@@ -595,6 +602,7 @@ import {getIPRange} from 'get-ip-range'
 import bus from '../../common/bus/bus'
 import {paramMap, isInherit} from '../../rackparams/params'
 import {ipValidator, maskValidator, requiredValidator} from "@/common/validator/CommonValidator";
+import RSCodeMirror from "@/common/script/RSCodeMirror";
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -746,6 +754,7 @@ export default {
     }
   },
   components: {
+    RSCodeMirror,
     OBM, Discovery, PowerStatus
   },
   computed: {},
@@ -777,6 +786,9 @@ export default {
   }
   ,
   methods: {
+    receiveValue(val) {
+      this.bp.postInstallCommands = val;
+    },
     webKVM(bareMetal) {
       this.loadingList = true;
       let that = this;
@@ -902,6 +914,9 @@ export default {
       }
       if (this.bp.nicNumber) {
         this.setNicNumber();
+      }
+      if (this.bp.postInstallCommands) {
+        this.setCommonParam('postInstallCommands', this.bp.postInstallCommands);
       }
       if (this.bp.hostname) {
         if (this.bp.increase) {
