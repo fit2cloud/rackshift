@@ -465,7 +465,12 @@ export default {
         this.editObj = {
           endpointId: mainEndPoint ? mainEndPoint.id : null,
           url: null,
-          credentialParam: []
+          config: true,
+          credentialParam: [
+            {
+              "protocol": "SNMP"
+            }
+          ]
         };
       }
     }
