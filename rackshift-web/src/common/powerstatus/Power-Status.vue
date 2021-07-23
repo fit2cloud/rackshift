@@ -1,7 +1,8 @@
 <template>
   <div>
-    <span :class="{ green : status == 'on', red : status == 'off', grey : status == 'unknown'}">
-      <el-tooltip class="dark" :content="$t('refresh')">
+    <span>
+      <el-tooltip :class="{ green : status == 'on', red : status == 'off', grey : status == 'unknown'}"
+                  :content="$t('refresh')">
         <el-link @click="refreshPower">{{ $t(status) }}</el-link>
       </el-tooltip>
     </span>
