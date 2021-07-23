@@ -1,9 +1,11 @@
 <template>
   <div>
     <span>
-      <el-tooltip :class="{ green : status == 'on', red : status == 'off', grey : status == 'unknown'}"
-                  :content="$t('refresh')">
-        <el-link @click="refreshPower">{{ $t(status) }}</el-link>
+      <el-tooltip :content="$t('refresh')">
+        <el-link @click="refreshPower"><span
+            :class="{ green : status == 'on', red : status == 'off', grey : status == 'unknown'}">{{
+            $t(status)
+          }}</span></el-link>
       </el-tooltip>
     </span>
     <el-tooltip class="dark" :content="content">
@@ -29,6 +31,8 @@ export default {
   }
 }
 </script>
-<style>
-
+<style scoped>
+.el-link.el-link--default {
+  color: none;
+}
 </style>
