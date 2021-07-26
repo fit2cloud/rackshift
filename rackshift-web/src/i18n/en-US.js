@@ -499,7 +499,7 @@ export default {
     "lvm_name": "LVM Name",
     "partition_tips": "default kickstart autopart",
     "ubuntu_pwd": "Default user/pwd ubuntu/root",
-    "open_webkvm": "Open WEBKVM",
+    "open_webkvm": "Remote KVM Console",
     "post_install": "POST-INSTALL Script",
     "view_example": "View Example"
 }
