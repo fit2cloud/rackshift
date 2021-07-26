@@ -231,11 +231,7 @@ export default {
         defaultParams: null
       },
       allEventType: [],
-      allBrands: [
-        'DELL',
-        'HP',
-        'Inspur'
-      ],
+      allBrands: ['DELL', 'HP', 'Inspur', 'ZTE', 'Huawei', 'New H3C Technologies Co., Ltd.', 'SuperMicro', 'Suma'],
       allRackHDWorkflows: [],
       workflowMap: {}
     };
@@ -260,7 +256,7 @@ export default {
     },
     getValidProText(row, column, cellValue, index) {
       if (column.property == 'type') {
-        if(cellValue == "user")
+        if (cellValue == "user")
           return this.$t("custom");
         return this.$t(cellValue);
       }
