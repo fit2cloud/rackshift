@@ -5,7 +5,7 @@ system_parameter values ('kvm.image', 'registry.cn-qingdao.aliyuncs.com/x-lab/kv
 
 
 update workflow
-set brands = '[\'DELL\', \'HP\', \'Inspur\', \'ZTE\', \'Huawei\', \'New H3C Technologies Co., Ltd.\', \'SuperMicro\', \'Suma\']'
+set brands = '[\'DELL\', \'HP\', \'Inspur\', \'ZTE\', \'Huawei\', \'New H3C Technologies Co., Ltd.\', \'SuperMicro\', \'Suma\', \'Lenovo\']'
 where injectable_name in (
     'Graph.InstallCentOS'
     , 'Graph.InstallESXi'

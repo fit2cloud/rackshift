@@ -231,7 +231,7 @@ export default {
         defaultParams: null
       },
       allEventType: [],
-      allBrands: ['DELL', 'HP', 'Inspur', 'ZTE', 'Huawei', 'New H3C Technologies Co., Ltd.', 'SuperMicro', 'Suma'],
+      allBrands: ['DELL', 'HP', 'Inspur', 'ZTE', 'Huawei', 'New H3C Technologies Co., Ltd.', 'SuperMicro', 'Suma', 'Lenovo'],
       allRackHDWorkflows: [],
       workflowMap: {}
     };
