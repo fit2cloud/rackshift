@@ -49,32 +49,26 @@ jobs:
             ```
 
             ## 新增功能
-            - CentOS 支持自定义 LVM
-            - 支持 WindowsServer 2019 安装
-            - 支持 Ubuntu20.04 LiveCD subiquity 安装
-            - 支持 H3C RAID
-            - 支持 SuperMicro 服务器的发现
+            - 支持 浪潮/SuperMicro/DELL/h3c/曙光 远程 KVM
+            - 开关机状态刷新
+            - 自定义 post-installation 脚本
+            - InspurM5 RAID
+            - Suma，Lenovo 装机支持
 
             ## 功能优化
-            - 优化安装包大小
-            - 兼容无带外 Ip 机器发现
-            - 可以查看任务的执行参数
+            - 密码打印脱敏
+            - 兼容超微服务器产品型号缺失
 
             ## 问题修复
-            - 发现机器后有时候没有自动填入带外信息
-            - 裸金属侧边栏无法关闭
-
-            后面版本内容:
-            1.Inspur NF5280M5 RAID
-            2.曙光服务器发现装机 RAID
-            3.装机脚本优化和升级
-            4.使用流程优化
-            5.现有功能的优化
+            - 插件选择裸金属分页问题
+            - h3c 磁盘 raid 失败的问题
+            - ubuntu 20.04 和 windows 2019 完成后状态显示错误的问题
+            - 重新执行安装脚本覆盖之前配置的问题
 
             # 产品文档
             点击 [完整文档](https://rackshift.io) 查看完整的安装和使用文档
             # 离线安装包
-            - 百度网盘下载链接: https://pan.baidu.com/s/1sTQ9ch1pKPGYYUEI7uGY-Q 提取码: 3v1i
+            - 百度网盘下载链接: https://pan.baidu.com/s/15cYvFoV-pm8UmeSI225eSA 提取码: j2uz
 
       - name: Upload Release Asset
         id: upload-release-asset
