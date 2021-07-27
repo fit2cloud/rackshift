@@ -398,6 +398,13 @@ export default {
     "主节点": "主節點",
     "从节点": "從節點",
     "version": "版本",
+    "搜集New H3C Technologies Co., Ltd.服务器磁盘Raid信息": "搜集 H3C 服務器 RAID",
+    "清空New H3C Technologies Co., Ltd.服务器磁盘和Raid信息": "清空 H3C 服務器 RAID",
+    "创建New H3C Technologies Co., Ltd.服务器磁盘Raid虚拟磁盘": "創建 H3C 服務器 RAID",
+
+    "搜集 InspurM5 服务器磁盘 Raid 信息": "搜集 InspurM5 服務器 RAID",
+    "清空 InspurM5 服务器磁盘 Raid 信息": "清空 InspurM5 服務器 RAID",
+    "创建 InspurM5 服务器磁盘 Raid 虚拟磁盘": "創建 InspurM5 服務器 RAID",
 
     "batch_params": "批量參數設置",
     "common_params": "通用裝機參數",
