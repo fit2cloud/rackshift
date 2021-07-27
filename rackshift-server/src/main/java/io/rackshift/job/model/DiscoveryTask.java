@@ -2,6 +2,7 @@ package io.rackshift.job.model;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.config.PluginConfig;
 import io.rackshift.constants.PluginConstants;
 import io.rackshift.constants.RackHDConstants;
 import io.rackshift.constants.ServiceConstants;
@@ -24,6 +25,7 @@ import sun.rmi.runtime.Log;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
@@ -37,26 +39,26 @@ public class DiscoveryTask extends Thread {
     private BareMetalRuleMapper bareMetalRuleMapper;
     private CountDownLatch countDownLatch;
     private Cache cache;
-    private CloudProviderManager cloudProviderManager;
+    private PluginConfig pluginConfig;
     private OutBandService outBandService;
 
-    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, CloudProviderManager cloudProviderManager, OutBandService outBandService) {
+    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, PluginConfig pluginConfig, OutBandService outBandService) {
         this.bareMetalRule = bareMetalRule;
         this.bareMetalManager = bareMetalManager;
         this.template = template;
         this.bareMetalRuleMapper = bareMetalRuleMapper;
-        this.cloudProviderManager = cloudProviderManager;
+        this.pluginConfig = pluginConfig;
         this.outBandService = outBandService;
     }
 
-    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, CountDownLatch countDownLatch, Cache cache, CloudProviderManager cloudProviderManager, OutBandService outBandService) {
+    public DiscoveryTask(BareMetalRule bareMetalRule, BareMetalRuleMapper bareMetalRuleMapper, BareMetalManager bareMetalManager, SimpMessagingTemplate template, CountDownLatch countDownLatch, Cache cache, PluginConfig pluginConfig, OutBandService outBandService) {
         this.bareMetalRule = bareMetalRule;
         this.bareMetalManager = bareMetalManager;
         this.template = template;
         this.bareMetalRuleMapper = bareMetalRuleMapper;
         this.countDownLatch = countDownLatch;
         this.cache = cache;
-        this.cloudProviderManager = cloudProviderManager;
+        this.pluginConfig = pluginConfig;
         this.outBandService = outBandService;
     }
 
@@ -99,7 +101,7 @@ public class DiscoveryTask extends Thread {
 
                     IMetalProvider iMetalProvider = null;
                     try {
-                        iMetalProvider = cloudProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(brand));
+                        iMetalProvider = pluginConfig.getPluginByBrand(brand);
                     } catch (Exception e) {
                         LogUtil.error(String.format("根据品牌获取插件出错!ip:%s", ip));
                     }
@@ -139,7 +141,10 @@ public class DiscoveryTask extends Thread {
                                 outBandService.saveOrUpdate(o, false);
                             }
                         } else {
-                            LogUtil.error("使用插件探测裸金属失败！" + JSONObject.toJSONString(request));
+                            ProtocolRequest r = new ProtocolRequest();
+                            BeanUtils.copyBean(r, request);
+                            r.setPwd("******");
+                            LogUtil.error("使用插件探测裸金属失败！" + JSONObject.toJSONString(r));
                             if (ServiceConstants.IPMI_Rest.equalsIgnoreCase(request.getProtocol())) {
                                 onlyExtractIPMI(request, bareMetalRule);
                             }
@@ -174,7 +179,8 @@ public class DiscoveryTask extends Thread {
 
             String machineBrand = fruObj.getString("Product Manufacturer");
             String machineSn = fruObj.getString("Product Serial");
-            String name = machineBrand + " " + fruObj.getString("Product Name");
+            String machineMo = Optional.ofNullable(Optional.ofNullable(fruObj.getString("Product Name")).orElse(fruObj.getString("Product Part Number"))).orElse("Unknown Model");
+            String name = machineBrand + " " + machineMo;
 
             BareMetal physicalMachine = new BareMetal();
             if (StringUtils.isNotBlank(name)) {

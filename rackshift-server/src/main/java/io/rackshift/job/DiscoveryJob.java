@@ -1,5 +1,6 @@
 package io.rackshift.job;
 
+import io.rackshift.config.PluginConfig;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.job.model.DiscoveryTask;
 import io.rackshift.manager.BareMetalManager;
@@ -34,6 +35,8 @@ public class DiscoveryJob {
     private BareMetalManager bareMetalManager;
     @Resource
     private OutBandService outBandService;
+    @Resource
+    private PluginConfig pluginConfig;
 
     @Scheduled(fixedDelay = 1000 * 60 * 120)
     public void run() {
@@ -42,7 +45,7 @@ public class DiscoveryJob {
             CountDownLatch c = new CountDownLatch(rules.size());
             rules.forEach(r -> {
                 if (ServiceConstants.DiscoveryStatusEnum.PENDING.name().equalsIgnoreCase(r.getSyncStatus())) {
-                    executors.submit(new DiscoveryTask(r, bareMetalRuleMapper, bareMetalManager, simpMessagingTemplate, c, cache, metalProviderManager, outBandService));
+                    executors.submit(new DiscoveryTask(r, bareMetalRuleMapper, bareMetalManager, simpMessagingTemplate, c, cache, pluginConfig, outBandService));
                 }
             });
             try {

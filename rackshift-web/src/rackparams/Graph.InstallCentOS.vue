@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form label-width="130px" :rules="rules" :model="payLoad.options.defaults" ref="form" label-position="right">
+    <el-form label-width="160px" :rules="rules" :model="payLoad.options.defaults" ref="form" label-position="right">
       <el-row>
         <el-col :span="11">
           <el-form-item :label="$t('hostname')" prop="hostname">
@@ -101,6 +101,11 @@
 
           <el-form-item :label="$t('uefi_boot')">
             <el-switch v-model="extraParams.uefi" @change="changeUefiBoot"></el-switch>
+          </el-form-item>
+
+          <el-form-item :label="$t('post_install')">
+            <RSCodeMirror v-model="payLoad.options.defaults.postInstallCommands"
+                          @receiveValue="receiveValue"></RSCodeMirror>
           </el-form-item>
         </el-col>
         <el-col :span="13">
@@ -261,6 +266,7 @@ import {
   requiredValidator,
   vlanValidator
 } from "@/common/validator/CommonValidator";
+import RSCodeMirror from "@/common/script/RSCodeMirror";
 
 let _ = require('lodash');
 export default {
@@ -272,8 +278,20 @@ export default {
   deactivated() {
 
   },
+  components: {
+    RSCodeMirror
+  },
   data() {
     return {
+      options: {
+        tabSize: 4,
+        styleActiveLine: true,
+        lineNumbers: true,
+        autoCloseTags: true,
+        line: true,
+        mode: 'text/html',
+        theme: 'ambiance'
+      },
       partitionTips: this.$t("partition_tips"),
       activeNames: '0',
       bondActiveNames: 'bond0',
@@ -398,6 +416,9 @@ export default {
   }
   ,
   methods: {
+    receiveValue(val) {
+      this.payLoad.options.defaults.postInstallCommands = val;
+    },
     addBond() {
       if (!this.payLoad.options.defaults.bonds)
         this.$set(this.payLoad.options.defaults, "bonds", []);

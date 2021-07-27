@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonArray;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
+import io.rackshift.config.PluginConfig;
 import io.rackshift.config.WorkflowConfig;
 import io.rackshift.constants.PluginConstants;
 import io.rackshift.constants.RackHDConstants;
@@ -41,6 +42,8 @@ public class RackHDService {
     private EndpointMapper endpointMapper;
     @Resource
     private OutBandService outBandService;
+    @Resource
+    private PluginConfig pluginConfig;
 
     private JSONArray getCatalogs(String nodeId) {
         JSONArray arr = new JSONArray();
@@ -180,7 +183,7 @@ public class RackHDService {
      * @return
      */
     public boolean executeRaidAndThenInstallOS(BareMetal pm, String url, String raidPayload, String raidAndInstallOsPayLoad, String os) {
-        IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(pm.getMachineBrand()));
+        IMetalProvider iMetalProvider = pluginConfig.getPluginByBrand(pm.getMachineBrand());
         RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + iMetalProvider.getRaidWorkFlow(), pm.getServerId()), raidPayload);
         if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
             throw new RuntimeException(String.format("做RAID失败!%s", response.getData()));
@@ -211,7 +214,7 @@ public class RackHDService {
     public boolean createRaidConfig(BareMetal physicalMachine, String url, String raidPayload) throws Exception {
         try {
             String nodeId = physicalMachine.getServerId();
-            IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(physicalMachine.getMachineBrand()));
+            IMetalProvider iMetalProvider = pluginConfig.getPluginByBrand(physicalMachine.getMachineBrand());
             RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + iMetalProvider.getRaidWorkFlow(), nodeId), raidPayload);
             if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
                 throw new RuntimeException(String.format("做RAID失败!%s", response.getData()));
@@ -238,7 +241,7 @@ public class RackHDService {
 
     public boolean deleteRaidConfig(BareMetal pm, String url, String deleteRaidPayload) {
         try {
-            IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(pm.getMachineBrand()));
+            IMetalProvider iMetalProvider = pluginConfig.getPluginByBrand(pm.getMachineBrand());
             RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + iMetalProvider.getDeleteRaidWorkFlow(), pm.getServerId()), deleteRaidPayload);
             if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
                 throw new RuntimeException("RAID擦除失败!" + response.getData());
@@ -267,7 +270,7 @@ public class RackHDService {
         WorkflowResponse workflowResponse;
 
         try {
-            IMetalProvider iMetalProvider = metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginByBrand(brand));
+            IMetalProvider iMetalProvider = pluginConfig.getPluginByBrand(brand);
             RackHDResponse response = RackHDHttpClientUtil.post(String.format(url + iMetalProvider.getCatalogRaidWorkFlow(), nodeId), "");
             if (response.getReCode() > RackHDConstants.ERROR_RE_CODE) {
                 throw new RuntimeException(String.format("同步时获取dell：「%s」磁盘信息失败！response「%s」", nodeId, response.getData()));

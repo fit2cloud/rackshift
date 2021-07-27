@@ -396,6 +396,13 @@ export default {
     "主节点": "Main Endpoint",
     "从节点": "Slave Endpoint",
     "version": "Version",
+    "搜集New H3C Technologies Co., Ltd.服务器磁盘Raid信息": "Catalog H3C RAID",
+    "清空New H3C Technologies Co., Ltd.服务器磁盘和Raid信息": "Erase H3C RAID",
+    "创建New H3C Technologies Co., Ltd.服务器磁盘Raid虚拟磁盘": "Create H3C RAID",
+
+    "搜集 InspurM5 服务器磁盘 Raid 信息": "Catalog InspurM5 RAID",
+    "清空 InspurM5 服务器磁盘 Raid 信息": "Erase InspurM5 RAID",
+    "创建 InspurM5 服务器磁盘 Raid 虚拟磁盘": "Create InspurM5 RAID",
 
     "batch_params": "Config Params",
     "common_params": "Common Params",
@@ -499,4 +506,7 @@ export default {
     "lvm_name": "LVM Name",
     "partition_tips": "default kickstart autopart",
     "ubuntu_pwd": "Default user/pwd ubuntu/root",
+    "open_webkvm": "Remote KVM Console",
+    "post_install": "POST-INSTALL Script",
+    "view_example": "View Example"
 }

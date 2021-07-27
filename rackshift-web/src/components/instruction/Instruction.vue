@@ -142,9 +142,9 @@
               </el-table>
               <div class="pagination">
                 <el-pagination
-                    @size-change="handleBareMetalSizeChange"
-                    @current-change="handleBareMetalPageChange"
-                    :current-page="query.pageIndex"
+                    @size-change="handleBMSizeChange"
+                    @current-change="handleBMPageChange"
+                    :current-page="bareMetalQuery.pageIndex"
                     :page-sizes="[10, 20, 50, 100]"
                     :page-size="10"
                     layout="total, sizes, prev, pager, next, jumper"
@@ -217,9 +217,10 @@
 import {requiredValidator} from "@/common/validator/CommonValidator";
 import {humpToLine} from "@/common/utils/CommonUtil";
 import {codemirror} from 'vue-codemirror'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/rubyblue.css'
-import 'codemirror/mode/python/python.js'
+import 'codemirror/mode/xml/xml.js'
+import 'codemirror/theme/ambiance.css'
+import 'codemirror/addon/selection/active-line.js'
+import 'codemirror/addon/edit/closetag.js'
 
 let _ = require('lodash');
 export default {
@@ -227,14 +228,13 @@ export default {
   data() {
     return {
       options: {
-        tabSize: 2, // 缩进格式
-        theme: 'rubyblue', // 主题，对应主题库 JS 需要提前引入
-        lineNumbers: true, // 显示行号
-        styleActiveLine: true, // 高亮选中行
-        readOnly: true,
-        hintOptions: {
-          completeSingle: true // 当匹配只有一项的时候是否自动补全
-        }
+        tabSize: 4,
+        styleActiveLine: true,
+        lineNumbers: true,
+        autoCloseTags: true,
+        line: true,
+        mode: 'text/html',
+        theme: 'ambiance'
       },
       loadingLogList: false,
       runLoading: false,
@@ -468,9 +468,9 @@ export default {
       this.query.pageSize = val;
       this.handlePageChange(this.query.pageIndex);
     },
-    handleBareMetalSizeChange(val) {
+    handleBMSizeChange(val) {
       this.bareMetalQuery.pageSize = val;
-      this.handleBareMetalPageChange(this.bareMetalQuery.pageIndex);
+      this.handleBMPageChange(this.bareMetalQuery.pageIndex);
     },
     handleClose() {
       this.editDialogVisible = false;
@@ -618,7 +618,7 @@ export default {
       this.$set(this.query, 'pageIndex', val);
       this.getData();
     }
-    , handleBareMetalPageChange(val) {
+    , handleBMPageChange(val) {
       this.$set(this.bareMetalQuery, 'pageIndex', val);
       this.getBareMetalData();
     }

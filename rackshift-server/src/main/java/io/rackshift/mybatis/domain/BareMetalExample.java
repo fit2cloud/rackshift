@@ -2393,6 +2393,76 @@ public class BareMetalExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andContainerIdIsNull() {
+            addCriterion("container_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdIsNotNull() {
+            addCriterion("container_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdEqualTo(String value) {
+            addCriterion("container_id =", value, "containerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdNotEqualTo(String value) {
+            addCriterion("container_id <>", value, "containerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdGreaterThan(String value) {
+            addCriterion("container_id >", value, "containerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdGreaterThanOrEqualTo(String value) {
+            addCriterion("container_id >=", value, "containerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdLessThan(String value) {
+            addCriterion("container_id <", value, "containerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdLessThanOrEqualTo(String value) {
+            addCriterion("container_id <=", value, "containerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdLike(String value) {
+            addCriterion("container_id like", value, "containerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdNotLike(String value) {
+            addCriterion("container_id not like", value, "containerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdIn(List<String> values) {
+            addCriterion("container_id in", values, "containerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdNotIn(List<String> values) {
+            addCriterion("container_id not in", values, "containerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdBetween(String value1, String value2) {
+            addCriterion("container_id between", value1, value2, "containerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andContainerIdNotBetween(String value1, String value2) {
+            addCriterion("container_id not between", value1, value2, "containerId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

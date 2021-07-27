@@ -29,6 +29,17 @@ public class H3CMetalProvider extends AbstractMetalProvider {
         super.name = "h3c-metal-plugin";
     }
 
+    @Override
+    public List<String> getSupportedBrands() {
+        return new ArrayList<String>() {{
+            add("New H3C Technologies Co., Ltd.");
+        }};
+    }
+
+    @Override
+    public List<String> getSupportedModels() {
+        return new ArrayList<>();
+    }
 
     private static Gson gson;
 

@@ -42,6 +42,19 @@ public class DellMetalProvider extends AbstractMetalProvider {
 
 
     @Override
+    public List<String> getSupportedBrands() {
+        return new ArrayList<String>() {{
+            add("DELL");
+            add("Dell Inc.");
+        }};
+    }
+
+    @Override
+    public List<String> getSupportedModels() {
+        return new ArrayList<>();
+    }
+
+    @Override
     public Map<String, String> getHeader(String ip) {
         return null;
     }

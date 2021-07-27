@@ -101,6 +101,10 @@ public class BareMetalManager {
         }
     }
 
+    public void update(BareMetal bareMetal) {
+        bareMetalMapper.updateByPrimaryKey(bareMetal);
+    }
+
     public BareMetal saveOrUpdateEntity(MachineEntity e) {
         if (StringUtils.isBlank(e.getSerialNo())) {
             return null;

@@ -398,6 +398,13 @@ export default {
     "主节点": "主節點",
     "从节点": "從節點",
     "version": "版本",
+    "搜集New H3C Technologies Co., Ltd.服务器磁盘Raid信息": "搜集 H3C 服務器 RAID",
+    "清空New H3C Technologies Co., Ltd.服务器磁盘和Raid信息": "清空 H3C 服務器 RAID",
+    "创建New H3C Technologies Co., Ltd.服务器磁盘Raid虚拟磁盘": "創建 H3C 服務器 RAID",
+
+    "搜集 InspurM5 服务器磁盘 Raid 信息": "搜集 InspurM5 服務器 RAID",
+    "清空 InspurM5 服务器磁盘 Raid 信息": "清空 InspurM5 服務器 RAID",
+    "创建 InspurM5 服务器磁盘 Raid 虚拟磁盘": "創建 InspurM5 服務器 RAID",
 
     "batch_params": "批量參數設置",
     "common_params": "通用裝機參數",
@@ -505,4 +512,7 @@ export default {
     "lvm_name": "LVM 卷名",
     "partition_tips": "自動分配等於 kickstart autopart，自定義分區默認只操作第一塊磁盤 不管是 standard 標准設備還是 lvm 邏輯設備",
     "ubuntu_pwd": "默認賬號密碼 ubuntu/root",
+    "open_webkvm": "遠程 KVM 控制台",
+    "post_install" : "POST-INSTALL 腳本",
+    "view_example": "查看實例"
 }

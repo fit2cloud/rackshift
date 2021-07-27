@@ -52,6 +52,18 @@ public class InspurMetalProvider extends AbstractMetalProvider {
     }
 
     @Override
+    public List<String> getSupportedBrands() {
+        return new ArrayList<String>() {{
+            add("Inspur");
+        }};
+    }
+
+    @Override
+    public List<String> getSupportedModels() {
+        return new ArrayList<>();
+    }
+
+    @Override
     public Map<String, String> getHeader(String ip) {
         return null;
     }

@@ -1,20 +1,24 @@
 package io.rackshift.service;
 
+import com.github.dockerjava.api.command.CreateContainerResponse;
+import io.rackshift.constants.RackHDConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.*;
-import io.rackshift.mybatis.domain.*;
+import io.rackshift.mybatis.domain.BareMetal;
+import io.rackshift.mybatis.domain.OutBand;
+import io.rackshift.mybatis.domain.OutBandExample;
+import io.rackshift.mybatis.domain.SystemParameter;
 import io.rackshift.mybatis.mapper.*;
-import io.rackshift.mybatis.mapper.ext.ExtNetworkCardMapper;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
 import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.*;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.Element;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BareMetalService {
@@ -44,6 +48,15 @@ public class BareMetalService {
     private OutBandService outBandService;
     @Resource
     private InstructionLogService instructionLogService;
+    @Resource
+    private Cache cache;
+    @Resource
+    private DockerClientService dockerClientService;
+    @Resource
+    private SystemParameterMapper systemParameterMapper;
+    private Set<Integer> portSet = new HashSet<>();
+    private Random random = new Random();
+    private int novncPort = 5800;
 
     public List<BareMetalDTO> list(BareMetalQueryVO queryVO) {
         return bareMetalManager.list(queryVO);
@@ -130,5 +143,117 @@ public class BareMetalService {
 
     public Object all() {
         return bareMetalManager.all();
+    }
+
+    public ResultHolder webkvm(String id, String host) {
+        if (host.replace("://", "").contains(":"))
+            host = host.substring(0, host.lastIndexOf(":"));
+
+        BareMetal bareMetal = bareMetalManager.getBareMetalById(id);
+        if (bareMetal == null) {
+            return ResultHolder.error(Translator.get("BareMetal_Server_Not_exists"));
+        }
+        OutBand ob = outBandService.getByBareMetalId(id);
+
+        if (ob == null) {
+            return ResultHolder.error(Translator.get("OB_Not_exists"));
+        }
+
+        IPMIUtil.Account account = IPMIUtil.Account.build(ob);
+        try {
+            IPMIUtil.exeCommand(account, "power status");
+        } catch (Exception e) {
+            return ResultHolder.error(e.getMessage());
+        }
+
+        Element e = cache.get(id);
+        SystemParameter kvmImage = systemParameterMapper.selectByPrimaryKey("kvm.image");
+
+        if (kvmImage == null) {
+            return ResultHolder.error(Translator.get("kvm_image_not_exists"));
+        }
+
+        //曾经打开的容器
+        if (StringUtils.isNotBlank(bareMetal.getContainerId())) {
+            if (dockerClientService.isRunning(bareMetal.getContainerId())) {
+                return ResultHolder.success(host + ":" + dockerClientService.getExposedPort(bareMetal.getContainerId(), novncPort));
+            } else {
+                cleanContainer(bareMetal.getContainerId(), bareMetal);
+            }
+        }
+        //每次打开都重启容器
+        if (e != null) {
+            KVMInfo info = (KVMInfo) e.getObjectValue();
+            if (dockerClientService.isRunning(info.getContainerId())) {
+                return ResultHolder.success(host + ":" + info.getPort());
+            } else {
+                cleanContainer(info.getContainerId(), bareMetal);
+            }
+        }
+        List<String> envs = new LinkedList<>();
+        envs.add(String.format("VENDOR=%s", bareMetal.getMachineBrand()));
+        envs.add(String.format("HOST=%s", ob.getIp()));
+        envs.add(String.format("USER=%s", ob.getUserName()));
+        envs.add(String.format("PASSWD=%s", ob.getPwd()));
+        envs.add(String.format("APP_NAME=%s", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn() + " " + bareMetal.getManagementIp()));
+        int exposedPort = chooseSinglePort();
+        String src = "/opt/rackshift/rackhd/files/mount/common";
+        CreateContainerResponse r = dockerClientService.createContainer(kvmImage.getParamValue(), novncPort, exposedPort, envs, src, "/vmedia");
+        dockerClientService.startContainer(r.getId());
+        KVMInfo info = new KVMInfo(id, ob, exposedPort, r.getId());
+        e = new Element(id, info);
+        cache.put(e);
+        bareMetal.setContainerId(r.getId());
+        bareMetalManager.update(bareMetal);
+        try {
+            Thread.sleep(2500);
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
+        }
+        return ResultHolder.success(host + ":" + exposedPort);
+    }
+
+    private void cleanContainer(String containerId, BareMetal bareMetal) {
+        try {
+            if (dockerClientService.exist(containerId)) {
+                dockerClientService.removeContainer(containerId);
+            }
+        } catch (Exception e) {
+        }
+        cache.remove(bareMetal.getId());
+        bareMetal.setContainerId(null);
+        bareMetalManager.update(bareMetal);
+    }
+
+    private synchronized int chooseSinglePort() {
+        int port = 0;
+        do {
+            port = 10000 + random.nextInt(10000);
+        } while (portSet.contains(port));
+        portSet.add(port);
+        return port;
+    }
+
+    public ResultHolder refreshPower(String id) {
+        OutBand o = outBandService.getByBareMetalId(id);
+        if (o == null) {
+            return ResultHolder.error("没有配置带外信息!");
+        }
+        IPMIUtil.Account account = IPMIUtil.Account.build(o);
+        BareMetal b = bareMetalManager.getBareMetalById(id);
+        try {
+            String status = IPMIUtil.exeCommand(account, "power status");
+            if (status.contains(RackHDConstants.PM_POWER_ON)) {
+                b.setPower(RackHDConstants.PM_POWER_ON);
+            } else if (status.contains(RackHDConstants.PM_POWER_OFF)) {
+                b.setPower(RackHDConstants.PM_POWER_OFF);
+            } else {
+                b.setPower(RackHDConstants.PM_POWER_UNKNOWN);
+            }
+            bareMetalManager.update(b);
+        } catch (Exception e) {
+            return ResultHolder.error("带外链接失败！");
+        }
+        return ResultHolder.success("");
     }
 }

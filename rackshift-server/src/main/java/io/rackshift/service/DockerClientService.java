@@ -2,13 +2,14 @@ package io.rackshift.service;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
+import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.exception.DockerException;
-import com.github.dockerjava.api.model.Container;
-import com.github.dockerjava.api.model.Frame;
-import com.github.dockerjava.api.model.Image;
+import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.InvocationBuilder;
+import com.google.gson.annotations.Expose;
 import io.rackshift.metal.sdk.util.LogUtil;
 import io.rackshift.mybatis.domain.Instruction;
 import io.rackshift.mybatis.domain.InstructionLog;
@@ -137,5 +138,52 @@ public class DockerClientService {
         }
         log.setBareMetalId(bareMetalId);
         instructionLogMapper.insertSelective(log);
+    }
+
+    public CreateContainerResponse createContainer(String image, int innerPort, int exposedPort, List<String> envs, String src, String des) {
+        ExposedPort innerExposedPort = ExposedPort.tcp(innerPort);
+        Ports ports = new Ports();
+        ports.bind(innerExposedPort, Ports.Binding.bindPort(exposedPort));
+        CreateContainerResponse r = client.createContainerCmd(image)
+                .withHostConfig(new HostConfig().withPortBindings(ports))
+                .withEnv(envs)
+                .withBinds(new Bind(src, new Volume(des)))
+                .withExposedPorts(innerExposedPort).exec();
+        return r;
+    }
+
+    public void startContainer(String containerId) {
+        client.startContainerCmd(containerId).exec();
+    }
+
+    public boolean exist(String containerId) {
+        for (Container c : client.listContainersCmd().withShowAll(true).exec()) {
+            if (c.getId().equalsIgnoreCase(containerId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isRunning(String containerId) {
+        if (exist(containerId)) {
+            return client.inspectContainerCmd(containerId).exec().getState().getRunning();
+        }
+        return false;
+    }
+
+    public String getExposedPort(String containerId, int novncPort) {
+        return (client.inspectContainerCmd(containerId).exec().getHostConfig().getPortBindings().getBindings().get(new ExposedPort(novncPort)))[0].getHostPortSpec();
+    }
+
+    public void removeContainer(String containerId) {
+        if (exist(containerId) && !client.inspectContainerCmd(containerId).exec().getState().getRunning())
+            client.removeContainerCmd(containerId).exec();
+    }
+
+    public void stopAndRemoveContainer(String containerId) {
+        if (exist(containerId) && client.inspectContainerCmd(containerId).exec().getState().getRunning())
+            client.stopContainerCmd(containerId).exec();
+        this.removeContainer(containerId);
     }
 }

@@ -28,6 +28,8 @@
         <module>dell-metal-plugin</module>
         <module>inspur-metal-plugin</module>
         <module>hp-metal-plugin</module>
+        <module>h3c-metal-plugin</module>
+        <module>inspurm5-metal-plugin</module>
     </modules>
 
 </project>
