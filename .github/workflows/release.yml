@@ -68,7 +68,7 @@ jobs:
             # 产品文档
             点击 [完整文档](https://rackshift.io) 查看完整的安装和使用文档
             # 离线安装包
-            - 百度网盘下载链接: https://pan.baidu.com/s/15cYvFoV-pm8UmeSI225eSA 提取码: j2uz
+            - 百度网盘下载链接: https://pan.baidu.com/s/1v0QYNZr1KGDlOxzlyoVGdA 提取码: ebz4
 
       - name: Upload Release Asset
         id: upload-release-asset
