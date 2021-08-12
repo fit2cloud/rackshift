@@ -8,6 +8,8 @@ public class ServiceConstants {
 
     public static final String IPMI_Rest = "IPMI+Rest";
     public static final String SNMP = "SNMP";
+    public static final String TYPE_SYS = "sys";
+    public static final String TYPE_USER = "user";
 
     public enum EndPointType {
         slave_endpoint("从节点", "slave_endpoint"), main_endpoint("主节点", "main_endpoint");

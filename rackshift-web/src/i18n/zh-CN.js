@@ -518,5 +518,7 @@ export default {
     "ubuntu_pwd": "默认账号密码 ubuntu/root",
     "open_webkvm": "远程 KVM 控制台",
     "post_install": "POST-INSTALL 脚本",
-    "view_example": "查看示例"
+    "view_example": "查看示例",
+    "Profile": "配置文件",
+    "InstallScript": "安装脚本"
 }

@@ -45,6 +45,20 @@ export default {
                     "order": "6",
                     "icon": "el-icon-view"
                 },
+                {
+                    "name": 'Profile',
+                    "router": "/Profile",
+                    "requireRole": "user,admin",
+                    "order": "7",
+                    "icon": "el-icon-view"
+                },
+                {
+                    "name": 'InstallScript',
+                    "router": "/InstallScript",
+                    "requireRole": "user,admin",
+                    "order": "6",
+                    "icon": "el-icon-view"
+                }
             ]
         },
         {

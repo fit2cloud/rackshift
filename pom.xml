@@ -13,6 +13,7 @@
         <module>rackshift-web</module>
         <module>rackshift-proxy</module>
         <module>rackshift-plugin</module>
+        <module>rackshift-dhcp-proxy</module>
     </modules>
 
     <properties>

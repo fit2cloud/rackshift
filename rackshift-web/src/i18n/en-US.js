@@ -508,5 +508,7 @@ export default {
     "ubuntu_pwd": "Default user/pwd ubuntu/root",
     "open_webkvm": "Remote KVM Console",
     "post_install": "POST-INSTALL Script",
-    "view_example": "View Example"
+    "view_example": "View Example",
+    "Profile": "Profile",
+    "InstallScript": "InstallScript"
 }

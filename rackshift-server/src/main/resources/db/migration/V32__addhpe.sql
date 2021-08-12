@@ -4,7 +4,7 @@ WHERE
     id IN (8, 9, 10);
 
 UPDATE workflow
-SET brands = '[\'DELL\', \'HP\', \'Inspur\',\'ZTE\', \'Huawei\', \'New H3C Technologies Co., Ltd.\', \'Lenovo\', \'HPE\',]'
+SET brands = '[\'DELL\', \'HP\', \'Inspur\',\'ZTE\', \'Huawei\', \'New H3C Technologies Co., Ltd.\', \'Lenovo\', \'HPE\', \'N/A\',]'
 WHERE
     injectable_name IN (
     'Graph.InstallCentOS',
