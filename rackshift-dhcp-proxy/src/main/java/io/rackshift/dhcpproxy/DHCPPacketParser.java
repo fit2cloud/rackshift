@@ -92,17 +92,17 @@ public class DHCPPacketParser {
                     break;
 
                 case 12:
-                    options.put("hostName", byteBuf.toString(offset, offset + len, Charset.forName("ascii")).trim());
+                    options.put("hostName", byteBuf.toString(offset, len, Charset.forName("ascii")).trim());
                     offset += len;
                     break;
 
                 case 15:
-                    options.put("domainName", byteBuf.toString(offset, offset + len, Charset.forName("ascii")).trim());
+                    options.put("domainName", byteBuf.toString(offset, len, Charset.forName("ascii")).trim());
                     offset += len;
                     break;
 
                 case 28:
-                    options.put("broadcastAddress", byteBuf.toString(offset, offset + len, Charset.forName("ascii")).trim());
+                    options.put("broadcastAddress", byteBuf.toString(offset, len, Charset.forName("ascii")).trim());
                     offset += len;
                     break;
 
@@ -148,7 +148,7 @@ public class DHCPPacketParser {
                     break;
 
                 case 60:
-                    options.put("vendorClassIdentifier", byteBuf.toString(offset, offset + len, Charset.forName("ascii")));
+                    options.put("vendorClassIdentifier", byteBuf.toString(offset, len, Charset.forName("ascii")));
                     offset += len;
                     break;
 
