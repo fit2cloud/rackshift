@@ -13,7 +13,7 @@ public class DHCPPacketParser {
         byteBuf.readBytes(dataByte);
         JSONObject packet = new JSONObject();
         int code = 0;
-        int offeset = 240;
+        int offset = 240;
         JSONArray unhandledOptions = new JSONArray();
         //rfc2132 解析 dhcp packet
         packet.put("op", DHCPProtocolConstants.MessageType.getByCode(Integer.valueOf(dataByte[0])));
@@ -32,37 +32,44 @@ public class DHCPPacketParser {
 
         //rfc2132 解析 dhcp packet options
         JSONObject options = new JSONObject();
-        while (code != 255 && dataByte.length > offeset) {
-            code = ByteUtil.readUInt8(dataByte, offeset);
-            offeset++;
+        while (code != 255 && dataByte.length > offset) {
+            code = ByteUtil.readUInt8(dataByte, offset);
+            offset++;
+            int len = 0;
             switch (code) {
                 case 0:
                     continue;
                 case 255:
                     break;
                 case 1:
-                    options.put("subnetMask", ByteUtil.readIp(dataByte, offeset));
-                    offeset += 4;
+                    options.put("subnetMask", ByteUtil.readIp(dataByte, offset));
+                    offset += 4;
                     break;
                 case 2:
-                    options.put("timeOffset", ByteUtil.readUInt32(dataByte, offeset));
-                    offeset += 4;
+                    options.put("timeOffset", ByteUtil.readUInt32(dataByte, offset));
+                    offset += 4;
                     break;
                 case 3:
                     JSONArray routerOptions = new JSONArray();
-                    int length = ByteUtil.readUInt8(dataByte, offeset);
-                    offeset++;
+                    int length = ByteUtil.readUInt8(dataByte, offset);
+                    offset++;
                     for (int i = 0; i < length; i++) {
-                        String ip = ByteUtil.readIp(dataByte, offeset);
+                        String ip = ByteUtil.readIp(dataByte, offset);
                         routerOptions.add(ip);
-                        offeset += 4;
+                        offset += 4;
                     }
                     options.put("routerOptions", routerOptions);
+                    break;
+                default: {
+                    len = ByteUtil.readUInt8(dataByte, offset);
+                    offset += 1;
+                    offset += len;
+                    break;
+                }
             }
+
+            packet.put("options", options);
+
+            return packet;
         }
-
-        packet.put("options", options);
-
-        return packet;
     }
-}
