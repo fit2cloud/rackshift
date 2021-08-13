@@ -22,7 +22,7 @@ public class DHCPProxyServer {
         EventLoopGroup g2 = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();
-            b.group(g1).channel(NioDatagramChannel.class).handler(new DHCPPocketHandler()).option(ChannelOption.SO_BROADCAST, true);
+            b.group(g1).channel(NioDatagramChannel.class).handler(new DHCPPacketHandler()).option(ChannelOption.SO_BROADCAST, true);
             ChannelFuture f = b.bind(port).sync();
             System.out.println("Server listening on:" + port);
             f.channel().closeFuture().sync();

@@ -15,7 +15,7 @@ public class DHCPPacketParser {
         int code = 0;
         int offeset = 240;
         JSONArray unhandledOptions = new JSONArray();
-
+        //rfc2132 解析 dhcp packet
         packet.put("op", DHCPProtocolConstants.MessageType.getByCode(Integer.valueOf(dataByte[0])));
         packet.put("hlen", ByteUtil.readUInt8(dataByte, 2));
         packet.put("hops", ByteUtil.readUInt8(dataByte, 3));
@@ -29,13 +29,39 @@ public class DHCPPacketParser {
         packet.put("chaddr", ByteUtil.readMAC(dataByte, 28, (Integer) packet.get("hlen")));
         packet.put("sname", byteBuf.toString(44, 64, Charset.forName("ascii")));
         packet.put("fname", byteBuf.toString(108, 128, Charset.forName("ascii")));
-//
-//        while (code != 255 && dataByte.length > offeset) {
-////            code = dataByte[offeset]
-//
-//
-//        }
 
+        //rfc2132 解析 dhcp packet options
+        JSONObject options = new JSONObject();
+        while (code != 255 && dataByte.length > offeset) {
+            code = ByteUtil.readUInt8(dataByte, offeset);
+            offeset++;
+            switch (code) {
+                case 0:
+                    continue;
+                case 255:
+                    break;
+                case 1:
+                    options.put("subnetMask", ByteUtil.readIp(dataByte, offeset));
+                    offeset += 4;
+                    break;
+                case 2:
+                    options.put("timeOffset", ByteUtil.readUInt32(dataByte, offeset));
+                    offeset += 4;
+                    break;
+                case 3:
+                    JSONArray routerOptions = new JSONArray();
+                    int length = ByteUtil.readUInt8(dataByte, offeset);
+                    offeset++;
+                    for (int i = 0; i < length; i++) {
+                        String ip = ByteUtil.readIp(dataByte, offeset);
+                        routerOptions.add(ip);
+                        offeset += 4;
+                    }
+                    options.put("routerOptions", routerOptions);
+            }
+        }
+
+        packet.put("options", options);
 
         return packet;
     }

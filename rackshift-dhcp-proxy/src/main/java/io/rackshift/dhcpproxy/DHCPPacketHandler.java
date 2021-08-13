@@ -5,7 +5,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
 
 
-public class DHCPPocketHandler extends SimpleChannelInboundHandler<DatagramPacket> {
+public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacket> {
 
     @Override
     protected void messageReceived(ChannelHandlerContext channelHandlerContext, DatagramPacket datagramPacket) throws Exception {
