@@ -31,7 +31,11 @@ public class ByteUtil {
             String s = "", t = "";
             while (hlen > 0) {
                 t = Integer.toHexString(data[skips] & 0xFF + 0x100);
-                s += t.substring(t.length() - 2, t.length());
+                if (t.length() == 1) {
+                    s += "0" + t;
+                } else {
+                    s += t.substring(t.length() - 2, t.length());
+                }
                 skips++;
                 hlen--;
                 if (hlen > 0) {
