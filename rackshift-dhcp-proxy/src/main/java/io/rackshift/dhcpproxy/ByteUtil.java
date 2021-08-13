@@ -1,5 +1,9 @@
 package io.rackshift.dhcpproxy;
 
+import io.netty.buffer.ByteBuf;
+
+import java.nio.charset.Charset;
+
 public class ByteUtil {
 
     public static int readUInt8(byte[] data, int skips) {
@@ -24,6 +28,11 @@ public class ByteUtil {
         if (skips < data.length)
             return getUInt(data[skips]) + "." + getUInt(data[skips + 1]) + "." + getUInt(data[skips + 2]) + "." + getUInt(data[skips + 3]);
         return null;
+    }
+
+    public static String readString(ByteBuf byteBuf, byte[] bytes, int offset) {
+        int len = readUInt8(bytes, offset - 1);
+        return byteBuf.toString(offset, len, Charset.forName("ascii")).trim();
     }
 
     public static String readMAC(byte[] data, int skips, int hlen) {

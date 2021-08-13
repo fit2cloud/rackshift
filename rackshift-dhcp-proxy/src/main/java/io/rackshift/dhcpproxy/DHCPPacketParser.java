@@ -92,17 +92,17 @@ public class DHCPPacketParser {
                     break;
 
                 case 12:
-                    options.put("hostName", byteBuf.toString(offset, len, Charset.forName("ascii")).trim());
+                    options.put("hostName", ByteUtil.readString(byteBuf, dataByte, offset));
                     offset += len;
                     break;
 
                 case 15:
-                    options.put("domainName", byteBuf.toString(offset, len, Charset.forName("ascii")).trim());
+                    options.put("domainName", ByteUtil.readString(byteBuf, dataByte, offset));
                     offset += len;
                     break;
 
                 case 28:
-                    options.put("broadcastAddress", byteBuf.toString(offset, len, Charset.forName("ascii")).trim());
+                    options.put("broadcastAddress", ByteUtil.readString(byteBuf, dataByte, offset));
                     offset += len;
                     break;
 
@@ -123,7 +123,7 @@ public class DHCPPacketParser {
                     break;
 
                 case 50:
-                    options.put("requestedIpAddress", byteBuf.toString(offset, offset + 4, Charset.forName("ascii")));
+                    options.put("requestedIpAddress", ByteUtil.readIp(dataByte, offset));
                     offset += len;
                     break;
 
@@ -148,7 +148,28 @@ public class DHCPPacketParser {
                     break;
 
                 case 60:
-                    options.put("vendorClassIdentifier", byteBuf.toString(offset, len, Charset.forName("ascii")));
+                    options.put("vendorClassIdentifier", ByteUtil.readString(byteBuf, dataByte, offset));
+                    offset += len;
+                    break;
+
+                case 61:
+                    offset++;
+                    options.put("clientIdentifier", ByteUtil.readMAC(dataByte, offset, len));
+                    offset += len;
+                    break;
+
+                case 67:
+                    options.put("bootFileName", ByteUtil.readString(byteBuf, dataByte, len));
+                    offset += len;
+                    break;
+
+                case 77:
+                    options.put("userClass", ByteUtil.readString(byteBuf, dataByte, len));
+                    offset += len;
+                    break;
+
+                case 93:
+                    options.put("archType", ByteUtil.readUInt16(dataByte, offset));
                     offset += len;
                     break;
 
