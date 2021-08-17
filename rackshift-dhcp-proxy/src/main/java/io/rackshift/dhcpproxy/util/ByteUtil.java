@@ -1,4 +1,4 @@
-package io.rackshift.dhcpproxy;
+package io.rackshift.dhcpproxy.util;
 
 import io.netty.buffer.ByteBuf;
 
@@ -60,7 +60,4 @@ public class ByteUtil {
         return origin & 0xFF;
     }
 
-    public static void main(String[] args) {
-        System.out.println(Integer.toHexString(149));
-    }
 }

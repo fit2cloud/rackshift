@@ -1,10 +1,13 @@
-package io.rackshift.dhcpproxy;
+package io.rackshift.dhcpproxy.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.buffer.ByteBuf;
+import io.rackshift.dhcpproxy.constants.DHCPProtocolConstants;
 
 import java.nio.charset.Charset;
+
+import io.netty.buffer.*;
 
 public class DHCPPacketParser {
 
@@ -16,6 +19,7 @@ public class DHCPPacketParser {
         int offset = 240;
         int len = 0;
         JSONArray unhandledOptions = new JSONArray();
+
         //rfc2132 解析 dhcp packet
         packet.put("op", DHCPProtocolConstants.MessageType.getByCode(Integer.valueOf(dataByte[0])));
         packet.put("hlen", ByteUtil.readUInt8(dataByte, 2));
@@ -183,7 +187,48 @@ public class DHCPPacketParser {
         packet.put("options", options);
 
         return packet;
+    }
 
+
+    public static JSONObject createDHCPPROXYAck(JSONObject dhcpPackets, String bootFileName) {
+
+        JSONObject packet = (JSONObject) dhcpPackets.clone();
+        boolean isPXEefi = false;
+
+        packet.put("op", DHCPProtocolConstants.MessageType.BOOTREPLY.getCode());
+        packet.put("fname", bootFileName);
+
+        // Necessary, at least on vbox
+        packet.put("siaddr", ConfigurationUtil.getConfig("tftpBindAddress", "172.31.128.1"));
+        // Not necessary, at least on vbox, but perhaps other clients will require these fields?
+        packet.put("sname", ConfigurationUtil.getConfig("tftpBindAddress", "172.31.128.1"));
+
+        //EFI PXE listen on a different port => tell the server
+        if ((dhcpPackets.getJSONObject("options").getString("userClass") == null) &&
+                (dhcpPackets.getJSONObject("options").getInteger("archType") == 6 || // EFI32
+                        dhcpPackets.getJSONObject("options").getInteger("archType") == 7 || dhcpPackets.getJSONObject("options").getInteger("archType") == 9)) { // EFIx64
+            isPXEefi = true;
+        }
+        packet.put("options", new JSONObject());
+        //EFI pxe use option 67 for bootfilename.
+        //Since option 67 doesn't include a field for string length,
+        //bootfilname needs to be null-terminated
+        packet.getJSONObject("options").put("bootFileName", bootFileName + "\0");
+
+        // DHCP MESSAGE TYPES
+        packet.getJSONObject("options").put("dhcpMessageType",
+                DHCPProtocolConstants.DHCPMessageType.DHCPACK.getCode());
+
+        return packet;
+    }
+
+    public static ByteBuf createDHCPPROXYAckBuffer(JSONObject dhcpAckPacket) {
+        ByteBuf byteBuf = ByteBufUtil.threadLocalDirectBuffer();
+
+        int i = 0;
+
+        ByteBufUtil.writeUtf8(byteBuf, String.valueOf(dhcpAckPacket.getInteger("op")));
+        return byteBuf;
 
     }
 }

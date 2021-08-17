@@ -1,15 +1,19 @@
-package io.rackshift.dhcpproxy;
+package io.rackshift.dhcpproxy.constants;
 
 public class DHCPProtocolConstants {
     public enum MessageType {
         BOOTREQUEST(1), BOOTREPLY(2);
         int code;
 
+        public int getCode() {
+            return code;
+        }
+
         MessageType(int code) {
             this.code = code;
         }
 
-        static MessageType getByCode(int code) {
+        public static MessageType getByCode(int code) {
             for (MessageType t : values()) {
                 if (t.code == code) {
                     return t;
@@ -32,7 +36,11 @@ public class DHCPProtocolConstants {
             this.code = code;
         }
 
-        static DHCPMessageType getByCode(int code) {
+        public int getCode() {
+            return code;
+        }
+
+        public static DHCPMessageType getByCode(int code) {
             for (DHCPMessageType t : values()) {
                 if (t.code == code) {
                     return t;
