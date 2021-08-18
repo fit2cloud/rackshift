@@ -270,8 +270,10 @@ public class DHCPPacketParser {
         for (String s : chaddr.split(":")) {
             byteBuf.writeByte(Integer.parseInt(s, 16));
         }
+        int length = 16  - chaddr.split(":").length;
+        byteBuf.writeZero(length);
 
-        int length = 64 - sname.length();
+        length = 64 - sname.length();
         for (byte aByte : sname.getBytes()) {
             byteBuf.writeByte(aByte);
         }
@@ -489,5 +491,12 @@ public class DHCPPacketParser {
             byteBuf.writeZero(remain);
         }
         return byteBuf.slice(0, byteBuf.writableBytes());
+    }
+
+    public static void main(String[] args){
+        for (byte aByte : "ab".getBytes()) {
+            System.out.println(aByte);
+        }
+        System.out.println("s");
     }
 }
