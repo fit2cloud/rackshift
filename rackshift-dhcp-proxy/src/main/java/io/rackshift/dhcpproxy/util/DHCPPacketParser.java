@@ -312,7 +312,7 @@ public class DHCPPacketParser {
 
         //option3
         JSONArray routerOptions = options.getJSONArray("routerOptions");
-        if (routerOptions.size() > 0) {
+        if (routerOptions != null && routerOptions.size() > 0) {
             byteBuf.writeByte(3);
             byteBuf.writeByte(routerOptions.size());
             for (int i = 0; i < routerOptions.size(); i++) {
@@ -324,7 +324,7 @@ public class DHCPPacketParser {
 
         //option4
         JSONArray timeServerOption = options.getJSONArray("timeServerOption");
-        if (timeServerOption.size() > 0) {
+        if (timeServerOption != null && timeServerOption.size() > 0) {
             byteBuf.writeByte(4);
             byteBuf.writeByte(timeServerOption.size());
             for (int i = 0; i < timeServerOption.size(); i++) {
@@ -336,7 +336,7 @@ public class DHCPPacketParser {
 
         //option5
         JSONArray nameServerOption = options.getJSONArray("nameServerOption");
-        if (nameServerOption.size() > 0) {
+        if (nameServerOption != null && nameServerOption.size() > 0) {
             byteBuf.writeByte(5);
             byteBuf.writeByte(nameServerOption.size());
             for (int i = 0; i < nameServerOption.size(); i++) {
@@ -348,7 +348,7 @@ public class DHCPPacketParser {
 
         //option6
         JSONArray domainServerOption = options.getJSONArray("domainServerOption");
-        if (domainServerOption.size() > 0) {
+        if (domainServerOption != null && domainServerOption.size() > 0) {
             byteBuf.writeByte(6);
             byteBuf.writeByte(domainServerOption.size());
             for (int i = 0; i < domainServerOption.size(); i++) {
@@ -385,7 +385,7 @@ public class DHCPPacketParser {
 
         //option43
         JSONArray vendorOptions = options.getJSONArray("vendorOptions");
-        if (vendorOptions.size() > 0) {
+        if (vendorOptions != null && vendorOptions.size() > 0) {
             byteBuf.writeByte(43);
             byteBuf.writeByte(vendorOptions.size());
             for (int i = 0; i < vendorOptions.size(); i++) {
