@@ -8,6 +8,7 @@ import io.rackshift.dhcpproxy.constants.DHCPProtocolConstants;
 import java.nio.charset.Charset;
 
 import io.netty.buffer.*;
+import org.apache.commons.lang.StringUtils;
 
 public class DHCPPacketParser {
 
@@ -225,7 +226,6 @@ public class DHCPPacketParser {
     public static ByteBuf createDHCPPROXYAckBuffer(JSONObject packet) {
         ByteBuf byteBuf = ByteBufUtil.threadLocalDirectBuffer();
 
-        DHCPProtocolConstants.MessageType messageType = (DHCPProtocolConstants.MessageType) packet.get("op");
         int hlen = packet.getInteger("hlen");
         int hops = packet.getInteger("hops");
         int xid = packet.getInteger("xid");
@@ -290,135 +290,168 @@ public class DHCPPacketParser {
         String subnetMask = options.getString("subnetMask");
         byteBuf.writeByte(1);
         byteBuf.writeByte(4);
-        for (String s : subnetMask.split(".")) {
-            byteBuf.writeByte(Integer.valueOf(s));
+        if (StringUtils.isNotBlank(subnetMask)) {
+            for (String s : subnetMask.split(".")) {
+                byteBuf.writeByte(Integer.valueOf(s));
+            }
+        } else {
+            byteBuf.writeZero(4);
         }
 
         //option2 Time Offset
         String timeOffset = options.getString("timeOffset");
         byteBuf.writeByte(2);
         byteBuf.writeByte(4);
-        for (String s : timeOffset.split(".")) {
-            byteBuf.writeByte(Integer.valueOf(s));
+        if (StringUtils.isNotBlank(timeOffset)) {
+            for (String s : timeOffset.split(".")) {
+                byteBuf.writeByte(Integer.valueOf(s));
+            }
+        } else {
+            byteBuf.writeZero(4);
         }
 
         //option3
         JSONArray routerOptions = options.getJSONArray("routerOptions");
-        byteBuf.writeByte(3);
-        byteBuf.writeByte(routerOptions.size());
-        for (int i = 0; i < routerOptions.size(); i++) {
-            for (String s : routerOptions.getString(i).split(".")) {
-                byteBuf.writeByte(Integer.valueOf(s));
+        if (routerOptions.size() > 0) {
+            byteBuf.writeByte(3);
+            byteBuf.writeByte(routerOptions.size());
+            for (int i = 0; i < routerOptions.size(); i++) {
+                for (String s : routerOptions.getString(i).split(".")) {
+                    byteBuf.writeByte(Integer.valueOf(s));
+                }
             }
         }
 
         //option4
         JSONArray timeServerOption = options.getJSONArray("timeServerOption");
-        byteBuf.writeByte(4);
-        byteBuf.writeByte(timeServerOption.size());
-        for (int i = 0; i < timeServerOption.size(); i++) {
-            for (String s : timeServerOption.getString(i).split(".")) {
-                byteBuf.writeByte(Integer.valueOf(s));
+        if (timeServerOption.size() > 0) {
+            byteBuf.writeByte(4);
+            byteBuf.writeByte(timeServerOption.size());
+            for (int i = 0; i < timeServerOption.size(); i++) {
+                for (String s : timeServerOption.getString(i).split(".")) {
+                    byteBuf.writeByte(Integer.valueOf(s));
+                }
             }
         }
 
         //option5
         JSONArray nameServerOption = options.getJSONArray("nameServerOption");
-        byteBuf.writeByte(5);
-        byteBuf.writeByte(nameServerOption.size());
-        for (int i = 0; i < nameServerOption.size(); i++) {
-            for (String s : nameServerOption.getString(i).split(".")) {
-                byteBuf.writeByte(Integer.valueOf(s));
+        if (nameServerOption.size() > 0) {
+            byteBuf.writeByte(5);
+            byteBuf.writeByte(nameServerOption.size());
+            for (int i = 0; i < nameServerOption.size(); i++) {
+                for (String s : nameServerOption.getString(i).split(".")) {
+                    byteBuf.writeByte(Integer.valueOf(s));
+                }
             }
         }
 
         //option6
         JSONArray domainServerOption = options.getJSONArray("domainServerOption");
-        byteBuf.writeByte(6);
-        byteBuf.writeByte(domainServerOption.size());
-        for (int i = 0; i < domainServerOption.size(); i++) {
-            for (String s : domainServerOption.getString(i).split(".")) {
-                byteBuf.writeByte(Integer.valueOf(s));
+        if (domainServerOption.size() > 0) {
+            byteBuf.writeByte(6);
+            byteBuf.writeByte(domainServerOption.size());
+            for (int i = 0; i < domainServerOption.size(); i++) {
+                for (String s : domainServerOption.getString(i).split(".")) {
+                    byteBuf.writeByte(Integer.valueOf(s));
+                }
             }
         }
 
         //option12
         String hostName = options.getString("hostName");
-        byteBuf.writeByte(12);
-        byteBuf.writeByte(hostName.length());
-        byteBuf.writeBytes(hostName.getBytes());
-
-
+        if (StringUtils.isNotBlank(hostName)) {
+            byteBuf.writeByte(12);
+            byteBuf.writeByte(hostName.length());
+            byteBuf.writeBytes(hostName.getBytes());
+        }
         //option15
         String domainName = options.getString("domainName");
-        byteBuf.writeByte(15);
-        byteBuf.writeByte(domainName.length());
-        byteBuf.writeBytes(domainName.getBytes());
+        if (StringUtils.isNotBlank(domainName)) {
+            byteBuf.writeByte(15);
+            byteBuf.writeByte(domainName.length());
+            byteBuf.writeBytes(domainName.getBytes());
+        }
 
         //option28
         String broadcastAddress = options.getString("broadcastAddress");
-        byteBuf.writeByte(28);
-        byteBuf.writeByte(4);
-        for (String s : broadcastAddress.split(".")) {
-            byteBuf.writeByte(Integer.valueOf(s));
+        if (StringUtils.isNotBlank(broadcastAddress)) {
+            byteBuf.writeByte(28);
+            byteBuf.writeByte(4);
+            for (String s : broadcastAddress.split(".")) {
+                byteBuf.writeByte(Integer.valueOf(s));
+            }
         }
 
         //option43
         JSONArray vendorOptions = options.getJSONArray("vendorOptions");
-        byteBuf.writeByte(43);
-        byteBuf.writeByte(vendorOptions.size());
-        for (int i = 0; i < vendorOptions.size(); i++) {
-            byteBuf.writeByte(vendorOptions.getJSONObject(i).getInteger("vendorOpt"));
-            byteBuf.writeByte(vendorOptions.getJSONObject(i).getString("optionContent").length());
-            byteBuf.writeBytes(vendorOptions.getJSONObject(i).getString("optionContent").getBytes());
+        if (vendorOptions.size() > 0) {
+            byteBuf.writeByte(43);
+            byteBuf.writeByte(vendorOptions.size());
+            for (int i = 0; i < vendorOptions.size(); i++) {
+                byteBuf.writeByte(vendorOptions.getJSONObject(i).getInteger("vendorOpt"));
+                byteBuf.writeByte(vendorOptions.getJSONObject(i).getString("optionContent").length());
+                byteBuf.writeBytes(vendorOptions.getJSONObject(i).getString("optionContent").getBytes());
+            }
         }
 
         //option50
         String requestedIpAddress = options.getString("requestedIpAddress");
-        byteBuf.writeByte(50);
-        byteBuf.writeByte(4);
-        for (String s : requestedIpAddress.split(".")) {
-            byteBuf.writeByte(Integer.valueOf(s));
+        if (StringUtils.isNotBlank(requestedIpAddress)) {
+            byteBuf.writeByte(50);
+            byteBuf.writeByte(4);
+            for (String s : requestedIpAddress.split(".")) {
+                byteBuf.writeByte(Integer.valueOf(s));
+            }
         }
 
         //option51
-        int ipAddressLeaseTime = options.getInteger("ipAddressLeaseTime");
-        byteBuf.writeByte(51);
-        byteBuf.writeByte(4);
-        byteBuf.writeInt(ipAddressLeaseTime);
+        Integer ipAddressLeaseTime = options.getInteger("ipAddressLeaseTime");
+        if (ipAddressLeaseTime != null) {
+            byteBuf.writeByte(51);
+            byteBuf.writeByte(4);
+            byteBuf.writeInt(ipAddressLeaseTime);
+        }
 
         //option52
-        int optionOverload = options.getInteger("optionOverload");
-        byteBuf.writeByte(52);
-        byteBuf.writeByte(1);
-        byteBuf.writeByte(optionOverload);
+        Integer optionOverload = options.getInteger("optionOverload");
+        if (optionOverload != null) {
+            byteBuf.writeByte(52);
+            byteBuf.writeByte(1);
+            byteBuf.writeByte(optionOverload);
+        }
 
         //option53
-        int dhcpMessageType = options.getInteger("dhcpMessageType");
         byteBuf.writeByte(53);
         byteBuf.writeByte(1);
         byteBuf.writeByte(DHCPProtocolConstants.DHCPMessageType.DHCPACK.getCode());
 
         //option54
         String serverIdentifier = options.getString("serverIdentifier");
-        byteBuf.writeByte(54);
-        byteBuf.writeByte(4);
-        for (String s : serverIdentifier.split(".")) {
-            byteBuf.writeByte(Integer.valueOf(s));
+        if (StringUtils.isNotBlank(serverIdentifier)) {
+            byteBuf.writeByte(54);
+            byteBuf.writeByte(4);
+            for (String s : serverIdentifier.split(".")) {
+                byteBuf.writeByte(Integer.valueOf(s));
+            }
         }
 
         //option60
         String vendorClassIdentifier = options.getString("vendorClassIdentifier");
-        byteBuf.writeByte(60);
-        byteBuf.writeByte(vendorClassIdentifier.length());
-        byteBuf.writeBytes(vendorClassIdentifier.getBytes());
+        if (StringUtils.isNotBlank(vendorClassIdentifier)) {
+            byteBuf.writeByte(60);
+            byteBuf.writeByte(vendorClassIdentifier.length());
+            byteBuf.writeBytes(vendorClassIdentifier.getBytes());
+        }
 
         //option61
         String clientIdentifier = options.getString("clientIdentifier");
-        byteBuf.writeByte(60);
-        byteBuf.writeByte(clientIdentifier.split(":").length);
-        for (String s : clientIdentifier.split(":")) {
-            byteBuf.writeByte(Integer.parseInt(s, 16));
+        if (StringUtils.isNotBlank(clientIdentifier)) {
+            byteBuf.writeByte(60);
+            byteBuf.writeByte(clientIdentifier.split(":").length);
+            for (String s : clientIdentifier.split(":")) {
+                byteBuf.writeByte(Integer.parseInt(s, 16));
+            }
         }
 
         //option67
@@ -429,15 +462,19 @@ public class DHCPPacketParser {
 
         //option77
         String userClass = options.getString("userClass");
-        byteBuf.writeByte(77);
-        byteBuf.writeByte(userClass.length());
-        byteBuf.writeBytes(userClass.getBytes());
+        if (StringUtils.isNotBlank(userClass)) {
+            byteBuf.writeByte(77);
+            byteBuf.writeByte(userClass.length());
+            byteBuf.writeBytes(userClass.getBytes());
+        }
 
         //option93
-        int archType = options.getInteger("archType");
-        byteBuf.writeByte(93);
-        byteBuf.writeByte(2);
-        byteBuf.writeShort(archType);
+        Integer archType = options.getInteger("archType");
+        if (archType != null) {
+            byteBuf.writeByte(93);
+            byteBuf.writeByte(2);
+            byteBuf.writeShort(archType);
+        }
 
         return byteBuf;
 
