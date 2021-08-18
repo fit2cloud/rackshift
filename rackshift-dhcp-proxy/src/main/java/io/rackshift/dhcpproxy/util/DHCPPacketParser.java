@@ -251,20 +251,20 @@ public class DHCPPacketParser {
         byteBuf.writeShort(secs);
         byteBuf.writeShort(flags);
 
-        for (String s : ciaddr.split(".")) {
-            byteBuf.writeByte(Integer.valueOf(s));
+        for (String s : ciaddr.split("\\.")) {
+            byteBuf.writeByte(Integer.valueOf(s) & 0xff);
         }
 
-        for (String s : yiaddr.split(".")) {
-            byteBuf.writeByte(Integer.valueOf(s));
+        for (String s : yiaddr.split("\\.")) {
+            byteBuf.writeByte(Integer.valueOf(s) & 0xff);
         }
 
-        for (String s : siaddr.split(".")) {
-            byteBuf.writeByte(Integer.valueOf(s));
+        for (String s : siaddr.split("\\.")) {
+            byteBuf.writeByte(Integer.valueOf(s) & 0xff);
         }
 
-        for (String s : giaddr.split(".")) {
-            byteBuf.writeByte(Integer.valueOf(s));
+        for (String s : giaddr.split("\\.")) {
+            byteBuf.writeByte(Integer.valueOf(s) & 0xff);
         }
 
         for (String s : chaddr.split(":")) {
@@ -291,8 +291,8 @@ public class DHCPPacketParser {
         byteBuf.writeByte(1);
         byteBuf.writeByte(4);
         if (StringUtils.isNotBlank(subnetMask)) {
-            for (String s : subnetMask.split(".")) {
-                byteBuf.writeByte(Integer.valueOf(s));
+            for (String s : subnetMask.split("\\.")) {
+                byteBuf.writeByte(Integer.valueOf(s) & 0xff);
             }
         } else {
             byteBuf.writeZero(4);
@@ -303,8 +303,8 @@ public class DHCPPacketParser {
         byteBuf.writeByte(2);
         byteBuf.writeByte(4);
         if (StringUtils.isNotBlank(timeOffset)) {
-            for (String s : timeOffset.split(".")) {
-                byteBuf.writeByte(Integer.valueOf(s));
+            for (String s : timeOffset.split("\\.")) {
+                byteBuf.writeByte(Integer.valueOf(s) & 0xff);
             }
         } else {
             byteBuf.writeZero(4);
@@ -316,8 +316,8 @@ public class DHCPPacketParser {
             byteBuf.writeByte(3);
             byteBuf.writeByte(routerOptions.size());
             for (int i = 0; i < routerOptions.size(); i++) {
-                for (String s : routerOptions.getString(i).split(".")) {
-                    byteBuf.writeByte(Integer.valueOf(s));
+                for (String s : routerOptions.getString(i).split("\\.")) {
+                    byteBuf.writeByte(Integer.valueOf(s) & 0xff);
                 }
             }
         }
@@ -328,8 +328,8 @@ public class DHCPPacketParser {
             byteBuf.writeByte(4);
             byteBuf.writeByte(timeServerOption.size());
             for (int i = 0; i < timeServerOption.size(); i++) {
-                for (String s : timeServerOption.getString(i).split(".")) {
-                    byteBuf.writeByte(Integer.valueOf(s));
+                for (String s : timeServerOption.getString(i).split("\\.")) {
+                    byteBuf.writeByte(Integer.valueOf(s) & 0xff);
                 }
             }
         }
@@ -340,8 +340,8 @@ public class DHCPPacketParser {
             byteBuf.writeByte(5);
             byteBuf.writeByte(nameServerOption.size());
             for (int i = 0; i < nameServerOption.size(); i++) {
-                for (String s : nameServerOption.getString(i).split(".")) {
-                    byteBuf.writeByte(Integer.valueOf(s));
+                for (String s : nameServerOption.getString(i).split("\\.")) {
+                    byteBuf.writeByte(Integer.valueOf(s) & 0xff);
                 }
             }
         }
@@ -352,8 +352,8 @@ public class DHCPPacketParser {
             byteBuf.writeByte(6);
             byteBuf.writeByte(domainServerOption.size());
             for (int i = 0; i < domainServerOption.size(); i++) {
-                for (String s : domainServerOption.getString(i).split(".")) {
-                    byteBuf.writeByte(Integer.valueOf(s));
+                for (String s : domainServerOption.getString(i).split("\\.")) {
+                    byteBuf.writeByte(Integer.valueOf(s) & 0xff);
                 }
             }
         }
@@ -378,8 +378,8 @@ public class DHCPPacketParser {
         if (StringUtils.isNotBlank(broadcastAddress)) {
             byteBuf.writeByte(28);
             byteBuf.writeByte(4);
-            for (String s : broadcastAddress.split(".")) {
-                byteBuf.writeByte(Integer.valueOf(s));
+            for (String s : broadcastAddress.split("\\.")) {
+                byteBuf.writeByte(Integer.valueOf(s) & 0xff);
             }
         }
 
@@ -400,8 +400,8 @@ public class DHCPPacketParser {
         if (StringUtils.isNotBlank(requestedIpAddress)) {
             byteBuf.writeByte(50);
             byteBuf.writeByte(4);
-            for (String s : requestedIpAddress.split(".")) {
-                byteBuf.writeByte(Integer.valueOf(s));
+            for (String s : requestedIpAddress.split("\\.")) {
+                byteBuf.writeByte(Integer.valueOf(s) & 0xff);
             }
         }
 
@@ -431,8 +431,8 @@ public class DHCPPacketParser {
         if (StringUtils.isNotBlank(serverIdentifier)) {
             byteBuf.writeByte(54);
             byteBuf.writeByte(4);
-            for (String s : serverIdentifier.split(".")) {
-                byteBuf.writeByte(Integer.valueOf(s));
+            for (String s : serverIdentifier.split("\\.")) {
+                byteBuf.writeByte(Integer.valueOf(s) & 0xff);
             }
         }
 
