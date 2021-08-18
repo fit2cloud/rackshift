@@ -476,7 +476,18 @@ public class DHCPPacketParser {
             byteBuf.writeShort(archType);
         }
 
-        return byteBuf;
+        //padding
 
+        if (byteBuf.writableBytes() % 2 > 0) {
+            byteBuf.writeZero(1);
+        } else {
+            byteBuf.writeZero(2);
+        }
+
+        int remain = 300 - byteBuf.writableBytes();
+        if (remain > 0) {
+            byteBuf.writeZero(remain);
+        }
+        return byteBuf.slice(0, byteBuf.writableBytes());
     }
 }
