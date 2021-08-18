@@ -5,6 +5,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import io.rackshift.dhcpproxy.util.MongoUtil;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -64,7 +65,8 @@ public class Nodes implements Serializable {
 
     public boolean discovered() {
         BasicDBObject queryVO = new BasicDBObject();
-        queryVO.put("id", this._id);
+        ObjectId objectId = new ObjectId(this._id.$oid);
+        queryVO.put("_id", objectId);
         return MongoUtil.exist("catalogs", queryVO);
     }
 
@@ -81,7 +83,7 @@ public class Nodes implements Serializable {
 
     public boolean isRunningTask() {
         BasicDBObject q = new BasicDBObject();
-        q.put("node", this._id);
+        q.put("node", this._id.$oid);
         q.put("_status", "running");
         return MongoUtil.exist("graphobjects", q);
     }
