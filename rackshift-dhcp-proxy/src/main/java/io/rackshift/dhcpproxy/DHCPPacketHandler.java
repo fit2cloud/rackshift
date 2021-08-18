@@ -120,18 +120,17 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
 
     private void createDHCPACK(JSONObject dhcpPackets, String bootfileName, ChannelHandlerContext channelHandlerContext, DatagramPacket datagramPacket) {
         JSONObject dhcpAckPacket = DHCPPacketParser.createDHCPPROXYAck(dhcpPackets, bootfileName);
-        byte da[] = DHCPPacketParser.createDHCPPROXYAckBuffer(dhcpAckPacket);
-        ByteBuf byteBuf = channelHandlerContext.alloc().buffer(da.length);
-        byteBuf.writeBytes(da);
+        ByteBuf byteBuf = DHCPPacketParser.createDHCPPROXYAckBuffer(dhcpAckPacket);
         channelHandlerContext.writeAndFlush(new DatagramPacket(byteBuf, datagramPacket.sender())).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture f) throws Exception {
                 if (!f.isSuccess()) {
+                    System.out.print("DHCP Proxy send datagramPacket error:");
                     f.cause().printStackTrace();
                 }
             }
         });
-        System.out.println("send! to" + datagramPacket.sender());
+        System.out.println("send" + bootfileName + "! to" + datagramPacket.sender());
     }
 
     @Override
