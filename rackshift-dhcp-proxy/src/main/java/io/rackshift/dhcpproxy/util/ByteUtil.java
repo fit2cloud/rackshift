@@ -14,13 +14,13 @@ public class ByteUtil {
 
     public static int readUInt16(byte[] data, int skips) {
         if (skips < data.length)
-            return new Integer(getUInt(data[skips]) + getUInt(data[skips + 1]));
+            return Integer.parseInt(Integer.toHexString(getUInt(data[skips])) + Integer.toHexString(getUInt(data[skips + 1])), 16);
         return 0;
     }
 
     public static int readUInt32(byte[] data, int skips) {
         if (skips < data.length)
-            return new Integer(getUInt(data[skips]) + getUInt(data[skips + 1]) + getUInt(data[skips + 2]) + getUInt(data[skips + 3]));
+            return Integer.parseInt(Integer.toHexString(getUInt(data[skips])) + Integer.toHexString(getUInt(data[skips + 1])) + Integer.toHexString(getUInt(data[skips + 2])) + Integer.toHexString(getUInt(data[skips + 3])), 16);
         return 0;
     }
 
