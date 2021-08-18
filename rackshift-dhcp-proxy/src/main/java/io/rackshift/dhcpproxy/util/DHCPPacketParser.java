@@ -283,7 +283,7 @@ public class DHCPPacketParser {
         }
         byteBuf.writeZero(length);
         //Magic Cookie
-        byteBuf.writeByte(Integer.parseInt("63825363", 16));
+        byteBuf.writeInt(Integer.parseInt("0x63825363", 16));
 
         JSONObject options = packet.getJSONObject("options");
         //option1 Subnet Mask
