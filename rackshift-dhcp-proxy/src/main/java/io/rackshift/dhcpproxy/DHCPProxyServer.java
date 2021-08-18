@@ -1,10 +1,5 @@
 package io.rackshift.dhcpproxy;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoDriverInformation;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.internal.MongoClientImpl;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -12,7 +7,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.rackshift.dhcpproxy.util.ConfigurationUtil;
-import io.rackshift.dhcpproxy.util.MongoUtil;
 
 public class DHCPProxyServer {
     // DHCP proxy port

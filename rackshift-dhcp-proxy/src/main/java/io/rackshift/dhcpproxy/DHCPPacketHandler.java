@@ -2,6 +2,8 @@ package io.rackshift.dhcpproxy;
 
 import com.alibaba.fastjson.JSONObject;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
@@ -21,7 +23,7 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
         boolean sendBootfile = isSendBootfile(dhcpPackets);
 
         if (sendBootfile) {
-            createDHCPACK(dhcpPackets, getDefaultBootfile(dhcpPackets), channelHandlerContext);
+            createDHCPACK(dhcpPackets, getDefaultBootfile(dhcpPackets), channelHandlerContext, datagramPacket);
         }
     }
 
@@ -116,10 +118,20 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
         return false;
     }
 
-    private void createDHCPACK(JSONObject dhcpPackets, String bootfileName, ChannelHandlerContext channelHandlerContext) {
+    private void createDHCPACK(JSONObject dhcpPackets, String bootfileName, ChannelHandlerContext channelHandlerContext, DatagramPacket datagramPacket) {
         JSONObject dhcpAckPacket = DHCPPacketParser.createDHCPPROXYAck(dhcpPackets, bootfileName);
-        ByteBuf ackBuffer = DHCPPacketParser.createDHCPPROXYAckBuffer(dhcpAckPacket);
-        channelHandlerContext.write(ackBuffer);
+        byte da[] = DHCPPacketParser.createDHCPPROXYAckBuffer(dhcpAckPacket);
+        ByteBuf byteBuf = channelHandlerContext.alloc().buffer(da.length);
+        byteBuf.writeBytes(da);
+        channelHandlerContext.writeAndFlush(new DatagramPacket(byteBuf, datagramPacket.sender())).addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture f) throws Exception {
+                if (!f.isSuccess()) {
+                    f.cause().printStackTrace();
+                }
+            }
+        });
+        System.out.println("send! to" + datagramPacket.sender());
     }
 
     @Override

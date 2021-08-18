@@ -222,13 +222,17 @@ public class DHCPPacketParser {
         return packet;
     }
 
-    public static ByteBuf createDHCPPROXYAckBuffer(JSONObject dhcpAckPacket) {
+    public static byte[] createDHCPPROXYAckBuffer(JSONObject dhcpAckPacket) {
         ByteBuf byteBuf = ByteBufUtil.threadLocalDirectBuffer();
 
         int i = 0;
 
         ByteBufUtil.writeUtf8(byteBuf, String.valueOf(dhcpAckPacket.getInteger("op")));
-        return byteBuf;
+
+        byte[] dat = new byte[byteBuf.readableBytes()];
+        byteBuf.readBytes(dat);
+
+        return dat;
 
     }
 }
