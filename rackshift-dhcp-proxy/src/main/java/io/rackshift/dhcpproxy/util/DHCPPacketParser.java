@@ -164,12 +164,12 @@ public class DHCPPacketParser {
                     break;
 
                 case 67:
-                    options.put("bootFileName", ByteUtil.readString(byteBuf, dataByte, len));
+                    options.put("bootFileName", ByteUtil.readString(byteBuf, dataByte, offset));
                     offset += len;
                     break;
 
                 case 77:
-                    options.put("userClass", ByteUtil.readString(byteBuf, dataByte, len));
+                    options.put("userClass", ByteUtil.readString(byteBuf, dataByte, offset));
                     offset += len;
                     break;
 
@@ -495,8 +495,9 @@ public class DHCPPacketParser {
 
         //option255 结束
         byteBuf.writeByte(255);
-        //padding
+        byteBuf.writeByte(1);
 
+        //padding
         if (byteBuf.writableBytes() % 2 > 0) {
             byteBuf.writeZero(1);
         } else {
@@ -508,16 +509,5 @@ public class DHCPPacketParser {
             byteBuf.writeZero(remain);
         }
         return byteBuf;
-    }
-
-
-    public static void main(String[] args) {
-//        System.out.println(Integer.parseInt("63825363", 16));
-//        System.out.println(Long.parseLong("fafda17a", 16));
-        System.out.println((new Long("4210925946") & 0xffffffff));
-
-        for (String aByte : "fa-fd-a1-7a".split("-")) {
-            System.out.println(Integer.parseInt(aByte, 16));
-        }
     }
 }
