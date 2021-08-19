@@ -493,6 +493,8 @@ public class DHCPPacketParser {
             byteBuf.writeShort(archType);
         }
 
+        //option255 结束
+        byteBuf.writeByte(255);
         //padding
 
         if (byteBuf.writableBytes() % 2 > 0) {
@@ -505,7 +507,7 @@ public class DHCPPacketParser {
         if (remain > 0) {
             byteBuf.writeZero(remain);
         }
-        return byteBuf.slice(0, byteBuf.writableBytes());
+        return byteBuf;
     }
 
 
