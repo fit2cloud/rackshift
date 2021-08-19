@@ -18,10 +18,10 @@ public class ByteUtil {
         return 0;
     }
 
-    public static int readUInt32(byte[] data, int skips) {
+    public static String readUInt32String(byte[] data, int skips) {
         if (skips < data.length)
-            return Integer.parseInt(Integer.toHexString(getUInt(data[skips])) + Integer.toHexString(getUInt(data[skips + 1])) + Integer.toHexString(getUInt(data[skips + 2])) + Integer.toHexString(getUInt(data[skips + 3])), 16);
-        return 0;
+            return Integer.toHexString(getUInt(data[skips])) + "-" + Integer.toHexString(getUInt(data[skips + 1])) + "-" + Integer.toHexString(getUInt(data[skips + 2])) + "-" + Integer.toHexString(getUInt(data[skips + 3]));
+        return "";
     }
 
     public static String readIp(byte[] data, int skips) {

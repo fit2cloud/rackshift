@@ -25,7 +25,7 @@ public class DHCPPacketParser {
         packet.put("op", DHCPProtocolConstants.MessageType.getByCode(Integer.valueOf(dataByte[0])));
         packet.put("hlen", ByteUtil.readUInt8(dataByte, 2));
         packet.put("hops", ByteUtil.readUInt8(dataByte, 3));
-        packet.put("xid", ByteUtil.readUInt32(dataByte, 4));
+        packet.put("xid", ByteUtil.readUInt32String(dataByte, 4));
         packet.put("secs", ByteUtil.readUInt16(dataByte, 8));
         packet.put("flags", ByteUtil.readUInt16(dataByte, 10));
         packet.put("ciaddr", ByteUtil.readIp(dataByte, 12));
@@ -54,7 +54,7 @@ public class DHCPPacketParser {
                     offset += 4;
                     break;
                 case 2:
-                    options.put("timeOffset", ByteUtil.readUInt32(dataByte, offset));
+                    options.put("timeOffset", ByteUtil.readUInt32String(dataByte, offset));
                     offset += 4;
                     break;
                 case 3:
@@ -69,7 +69,7 @@ public class DHCPPacketParser {
                 case 4:
                     JSONArray timeServerOption = new JSONArray();
                     for (int i = 0; i < len; i++) {
-                        int time = ByteUtil.readUInt32(dataByte, offset);
+                        String time = ByteUtil.readUInt32String(dataByte, offset);
                         timeServerOption.add(time);
                         offset += 4;
                     }
@@ -79,7 +79,7 @@ public class DHCPPacketParser {
                 case 5:
                     JSONArray nameServerOption = new JSONArray();
                     for (int i = 0; i < len; i++) {
-                        int name = ByteUtil.readUInt32(dataByte, offset);
+                        String name = ByteUtil.readUInt32String(dataByte, offset);
                         nameServerOption.add(name);
                         offset += 4;
                     }
@@ -89,7 +89,7 @@ public class DHCPPacketParser {
                 case 6:
                     JSONArray domainServerOption = new JSONArray();
                     for (int i = 0; i < len; i++) {
-                        int name = ByteUtil.readUInt32(dataByte, offset);
+                        String name = ByteUtil.readUInt32String(dataByte, offset);
                         domainServerOption.add(name);
                         offset += 4;
                     }
@@ -133,7 +133,7 @@ public class DHCPPacketParser {
                     break;
 
                 case 51:
-                    options.put("ipAddressLeaseTime", ByteUtil.readUInt32(dataByte, offset));
+                    options.put("ipAddressLeaseTime", ByteUtil.readUInt32String(dataByte, offset));
                     offset += len;
                     break;
 
@@ -228,7 +228,7 @@ public class DHCPPacketParser {
 
         int hlen = packet.getInteger("hlen");
         int hops = packet.getInteger("hops");
-        int xid = packet.getInteger("xid");
+        String xid = packet.getString("xid");
         int secs = packet.getInteger("secs");
         int flags = packet.getInteger("flags");
 
@@ -246,7 +246,13 @@ public class DHCPPacketParser {
         byteBuf.writeByte(1);
         byteBuf.writeByte(hlen);
         byteBuf.writeByte(hops);
-        byteBuf.writeInt(xid);
+
+        if (StringUtils.isNotBlank(xid)) {
+            for (String s : xid.split("-")) {
+                byteBuf.writeByte(Integer.parseInt(s, 16));
+            }
+        }
+
 
         byteBuf.writeShort(secs);
         byteBuf.writeShort(flags);
@@ -270,7 +276,7 @@ public class DHCPPacketParser {
         for (String s : chaddr.split(":")) {
             byteBuf.writeByte(Integer.parseInt(s, 16));
         }
-        int length = 16  - chaddr.split(":").length;
+        int length = 16 - chaddr.split(":").length;
         byteBuf.writeZero(length);
 
         length = 64 - sname.length();
@@ -305,8 +311,8 @@ public class DHCPPacketParser {
         byteBuf.writeByte(2);
         byteBuf.writeByte(4);
         if (StringUtils.isNotBlank(timeOffset)) {
-            for (String s : timeOffset.split("\\.")) {
-                byteBuf.writeByte(Integer.valueOf(s));
+            for (String s : timeOffset.split("-")) {
+                byteBuf.writeByte(Integer.parseInt(s, 16));
             }
         } else {
             byteBuf.writeZero(4);
@@ -330,8 +336,8 @@ public class DHCPPacketParser {
             byteBuf.writeByte(4);
             byteBuf.writeByte(timeServerOption.size());
             for (int i = 0; i < timeServerOption.size(); i++) {
-                for (String s : timeServerOption.getString(i).split("\\.")) {
-                    byteBuf.writeByte(Integer.valueOf(s));
+                for (String s : timeServerOption.getString(i).split("-")) {
+                    byteBuf.writeByte(Integer.parseInt(s, 16));
                 }
             }
         }
@@ -342,8 +348,8 @@ public class DHCPPacketParser {
             byteBuf.writeByte(5);
             byteBuf.writeByte(nameServerOption.size());
             for (int i = 0; i < nameServerOption.size(); i++) {
-                for (String s : nameServerOption.getString(i).split("\\.")) {
-                    byteBuf.writeByte(Integer.valueOf(s));
+                for (String s : nameServerOption.getString(i).split("-")) {
+                    byteBuf.writeByte(Integer.parseInt(s, 16));
                 }
             }
         }
@@ -354,8 +360,8 @@ public class DHCPPacketParser {
             byteBuf.writeByte(6);
             byteBuf.writeByte(domainServerOption.size());
             for (int i = 0; i < domainServerOption.size(); i++) {
-                for (String s : domainServerOption.getString(i).split("\\.")) {
-                    byteBuf.writeByte(Integer.valueOf(s));
+                for (String s : domainServerOption.getString(i).split("-")) {
+                    byteBuf.writeByte(Integer.parseInt(s, 16));
                 }
             }
         }
@@ -493,10 +499,14 @@ public class DHCPPacketParser {
         return byteBuf.slice(0, byteBuf.writableBytes());
     }
 
-    public static void main(String[] args){
-        for (byte aByte : "ab".getBytes()) {
-            System.out.println(aByte);
+
+    public static void main(String[] args) {
+//        System.out.println(Integer.parseInt("63825363", 16));
+//        System.out.println(Long.parseLong("fafda17a", 16));
+        System.out.println((new Long("4210925946") & 0xffffffff));
+
+        for (String aByte : "fa-fd-a1-7a".split("-")) {
+            System.out.println(Integer.parseInt(aByte, 16));
         }
-        System.out.println("s");
     }
 }
