@@ -7,6 +7,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.rackshift.dhcpproxy.util.ConfigurationUtil;
+import io.rackshift.dhcpproxy.util.ConsoleUtil;
 
 public class DHCPProxyServer {
     // DHCP proxy port
@@ -25,7 +26,7 @@ public class DHCPProxyServer {
             Bootstrap b = new Bootstrap();
             b.group(g1).channel(NioDatagramChannel.class).handler(new DHCPPacketHandler()).option(ChannelOption.SO_BROADCAST, true);
             ChannelFuture f = b.bind("0.0.0.0", port).sync();
-            System.out.println("Server listening on:" + port);
+            ConsoleUtil.log("Server listening on:" + port);
             f.channel().closeFuture().sync();
         } catch (Exception e) {
             g1.shutdownGracefully();

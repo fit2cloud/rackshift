@@ -7,8 +7,10 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
+import io.rackshift.dhcpproxy.constants.ConfigConstants;
 import io.rackshift.dhcpproxy.model.Nodes;
 import io.rackshift.dhcpproxy.util.ConfigurationUtil;
+import io.rackshift.dhcpproxy.util.ConsoleUtil;
 import io.rackshift.dhcpproxy.util.DHCPPacketParser;
 import org.apache.commons.lang.StringUtils;
 import org.bson.assertions.Assertions;
@@ -19,7 +21,7 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
     @Override
     protected void messageReceived(ChannelHandlerContext channelHandlerContext, DatagramPacket datagramPacket) {
         JSONObject dhcpPackets = DHCPPacketParser.parse(datagramPacket.content());
-        System.out.println("received:" + dhcpPackets.toJSONString());
+        ConsoleUtil.log("received:" + dhcpPackets.toJSONString());
         boolean sendBootfile = isSendBootfile(dhcpPackets);
 
         if (sendBootfile) {
@@ -43,21 +45,21 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
         Assertions.notNull("archType", archType);
 
         if ("Monorail".equalsIgnoreCase(userClass)) {
-            return "http://" + ConfigurationUtil.getConfig("apiServerAddress", "172.31.128.1") + ":"
-                    + ConfigurationUtil.getConfig("apiServerPort", "9030") + "/api/current/profiles";
+            return "http://" + ConfigurationUtil.getConfig(ConfigConstants.APISERVER_URL, "172.31.128.1") + ":"
+                    + ConfigurationUtil.getConfig(ConfigConstants.APISERVER_PORT, "9030") + "/api/current/profiles";
         }
 
         if (vendorClassIdentifier.indexOf("Arista") == 0) {
             // Arista skips the TFTP download step, so just hit the
             // profiles API directly to get a profile from an active task
             // if there is one.
-            return "http://" + ConfigurationUtil.getConfig("apiServerAddress", "172.31.128.1") + ":"
-                    + ConfigurationUtil.getConfig("apiServerPort", "9030") + "/api/current/profiles" +
+            return "http://" + ConfigurationUtil.getConfig(ConfigConstants.APISERVER_URL, "172.31.128.1") + ":"
+                    + ConfigurationUtil.getConfig(ConfigConstants.APISERVER_PORT, "9030") + "/api/current/profiles" +
                     "?macs=" + macs;
         }
         // Same bug as above but for the NICs
         if (macs.toLowerCase().indexOf("ec:a8:6b") == 0) {
-            System.out.println("Sending down monorail.intel.ipxe for mac address associated with NUCs.");
+            ConsoleUtil.log("Sending down monorail.intel.ipxe for mac address associated with NUCs.");
             return "monorail.intel.ipxe";
         }
 
@@ -123,14 +125,14 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
         ByteBuf byteBuf = DHCPPacketParser.createDHCPPROXYAckBuffer(dhcpAckPacket);
         channelHandlerContext.writeAndFlush(new DatagramPacket(byteBuf, datagramPacket.sender())).addListener(new ChannelFutureListener() {
             @Override
-            public void operationComplete(ChannelFuture f) throws Exception {
+            public void operationComplete(ChannelFuture f) {
                 if (!f.isSuccess()) {
                     System.out.print("DHCP Proxy send datagramPacket error:");
                     f.cause().printStackTrace();
                 }
             }
         });
-        System.out.println("send" + bootfileName + "! to" + datagramPacket.sender());
+        ConsoleUtil.log("send:" + bootfileName + "! to" + datagramPacket.sender());
     }
 
     @Override

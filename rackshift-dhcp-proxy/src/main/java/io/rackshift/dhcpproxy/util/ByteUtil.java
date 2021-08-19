@@ -68,8 +68,4 @@ public class ByteUtil {
         return origin & 0xFF;
     }
 
-    public static void main(String[] args) {
-        System.out.println();
-    }
-
 }

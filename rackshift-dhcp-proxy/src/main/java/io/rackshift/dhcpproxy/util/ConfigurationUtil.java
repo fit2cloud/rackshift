@@ -1,6 +1,7 @@
 package io.rackshift.dhcpproxy.util;
 
 import io.rackshift.dhcpproxy.config.MongoConfig;
+import io.rackshift.dhcpproxy.constants.ConfigConstants;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
@@ -12,10 +13,10 @@ public class ConfigurationUtil {
     public static void init() {
 
         try {
-            config = new PropertiesConfiguration("/opt/rackshift/conf/rackshift.properties");
+            config = new PropertiesConfiguration(ConfigConstants.CONFIG_FILE);
             MongoConfig.config(config);
         } catch (ConfigurationException e) {
-            System.out.println("Cannot find rackshift.properties");
+            ConsoleUtil.log("Cannot find " + ConfigConstants.CONFIG_FILE);
             throw new RuntimeException();
         }
     }
