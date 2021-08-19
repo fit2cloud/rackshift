@@ -26,8 +26,8 @@ public class DHCPPacketParser {
         packet.put("hlen", ByteUtil.readUInt8(dataByte, 2));
         packet.put("hops", ByteUtil.readUInt8(dataByte, 3));
         packet.put("xid", ByteUtil.readUInt32String(dataByte, 4));
-        packet.put("secs", ByteUtil.readUInt16(dataByte, 8));
-        packet.put("flags", ByteUtil.readUInt16(dataByte, 10));
+        packet.put("secs", ByteUtil.readUInt16String(dataByte, 8));
+        packet.put("flags", ByteUtil.readUInt16String(dataByte, 10));
         packet.put("ciaddr", ByteUtil.readIp(dataByte, 12));
         packet.put("yiaddr", ByteUtil.readIp(dataByte, 16));
         packet.put("siaddr", ByteUtil.readIp(dataByte, 20));
@@ -229,8 +229,8 @@ public class DHCPPacketParser {
         int hlen = packet.getInteger("hlen");
         int hops = packet.getInteger("hops");
         String xid = packet.getString("xid");
-        int secs = packet.getInteger("secs");
-        int flags = packet.getInteger("flags");
+        String secs = packet.getString("secs");
+        String flags = packet.getString("flags");
 
         String ciaddr = packet.getString("ciaddr");
         String yiaddr = packet.getString("yiaddr");
@@ -254,8 +254,17 @@ public class DHCPPacketParser {
         }
 
 
-        byteBuf.writeShort(secs);
-        byteBuf.writeShort(flags);
+        if (StringUtils.isNotBlank(secs)) {
+            for (String s : secs.split("-")) {
+                byteBuf.writeByte(Integer.parseInt(s, 16));
+            }
+        }
+
+        if (StringUtils.isNotBlank(flags)) {
+            for (String s : flags.split("-")) {
+                byteBuf.writeByte(Integer.parseInt(s, 16));
+            }
+        }
 
         for (String s : ciaddr.split("\\.")) {
             byteBuf.writeByte(Integer.valueOf(s));

@@ -13,9 +13,17 @@ public class ByteUtil {
     }
 
     public static int readUInt16(byte[] data, int skips) {
-        if (skips < data.length)
+        if (skips < data.length) {
             return Integer.parseInt(Integer.toHexString(getUInt(data[skips])) + Integer.toHexString(getUInt(data[skips + 1])), 16);
+
+        }
         return 0;
+    }
+
+    public static String readUInt16String(byte[] data, int skips) {
+        if (skips < data.length)
+            return Integer.toHexString(getUInt(data[skips])) + "-" + Integer.toHexString(getUInt(data[skips + 1]));
+        return "";
     }
 
     public static String readUInt32String(byte[] data, int skips) {
@@ -58,6 +66,10 @@ public class ByteUtil {
 
     private static int getUInt(byte origin) {
         return origin & 0xFF;
+    }
+
+    public static void main(String[] args) {
+        System.out.println();
     }
 
 }
