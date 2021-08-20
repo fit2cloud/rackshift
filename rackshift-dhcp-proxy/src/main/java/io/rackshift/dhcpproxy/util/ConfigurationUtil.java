@@ -14,6 +14,10 @@ public class ConfigurationUtil {
 
         try {
             config = new PropertiesConfiguration(ConfigConstants.CONFIG_FILE);
+            while (config.getKeys() != null && config.getKeys().hasNext()) {
+                String k = config.getKeys().next();
+                ConsoleUtil.log("key: " + k + " value: " + config.getString(k));
+            }
             MongoConfig.config(config);
         } catch (ConfigurationException e) {
             ConsoleUtil.log("Cannot find " + ConfigConstants.CONFIG_FILE);
