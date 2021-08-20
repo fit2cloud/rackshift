@@ -3,6 +3,7 @@ package io.rackshift.dhcpproxy.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.buffer.ByteBuf;
+import io.rackshift.dhcpproxy.constants.ConfigConstants;
 import io.rackshift.dhcpproxy.constants.DHCPProtocolConstants;
 
 import java.nio.charset.Charset;
@@ -200,9 +201,9 @@ public class DHCPPacketParser {
         packet.put("fname", bootFileName);
 
         // Necessary, at least on vbox
-        packet.put("siaddr", ConfigurationUtil.getConfig("tftpBindAddress", "172.31.128.1"));
+        packet.put("siaddr", ConfigurationUtil.getConfig(ConfigConstants.TFTP_URL, "172.31.128.1"));
         // Not necessary, at least on vbox, but perhaps other clients will require these fields?
-        packet.put("sname", ConfigurationUtil.getConfig("tftpBindAddress", "172.31.128.1"));
+        packet.put("sname", ConfigurationUtil.getConfig(ConfigConstants.TFTP_URL, "172.31.128.1"));
 
         //EFI PXE listen on a different port => tell the server
         if ((dhcpPackets.getJSONObject("options").getString("userClass") == null) &&

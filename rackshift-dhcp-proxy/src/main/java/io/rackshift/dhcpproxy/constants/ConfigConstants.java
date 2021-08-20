@@ -7,4 +7,5 @@ public class ConfigConstants {
     public static final String MONGOURL = "mongo.url";
     public static final String APISERVER_URL = "api.server.url";
     public static final String APISERVER_PORT = "api.server.port";
+    public static final String TFTP_URL = "tftp.url";
 }
