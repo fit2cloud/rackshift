@@ -5,6 +5,7 @@ import io.rackshift.dhcpproxy.constants.ConfigConstants;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 public class ConfigurationUtil {
@@ -14,8 +15,9 @@ public class ConfigurationUtil {
 
         try {
             config = new PropertiesConfiguration(ConfigConstants.CONFIG_FILE);
-            while (config.getKeys() != null && config.getKeys().hasNext()) {
-                String k = config.getKeys().next();
+            Iterator<String> keys = config.getKeys();
+            while (keys.hasNext()) {
+                String k = keys.next();
                 ConsoleUtil.log("key: " + k + " value: " + config.getString(k));
             }
             MongoConfig.config(config);
