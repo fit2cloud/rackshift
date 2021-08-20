@@ -39,10 +39,10 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
         String vendorClassIdentifier = options.getString("vendorClassIdentifier");
         int archType = options.getInteger("archType");
 
-        Assertions.notNull("macs", macs);
-        Assertions.notNull("userClass", userClass);
-        Assertions.notNull("vendorClassIdentifier", vendorClassIdentifier);
-        Assertions.notNull("archType", archType);
+        ConsoleUtil.log("macs :" +  macs);
+        ConsoleUtil.log("userClass :" +  userClass);
+        ConsoleUtil.log("vendorClassIdentifier :" +  vendorClassIdentifier);
+        ConsoleUtil.log("archType :" +  archType);
 
         if ("Monorail".equalsIgnoreCase(userClass)) {
             return "http://" + ConfigurationUtil.getConfig(ConfigConstants.APISERVER_URL, "172.31.128.1") + ":"
