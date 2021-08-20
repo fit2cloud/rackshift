@@ -21,9 +21,9 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
     @Override
     protected void messageReceived(ChannelHandlerContext channelHandlerContext, DatagramPacket datagramPacket) {
         JSONObject dhcpPackets = DHCPPacketParser.parse(datagramPacket.content());
-        ConsoleUtil.log("received:" + dhcpPackets.toJSONString());
+        ConsoleUtil.log("received: " + dhcpPackets.toJSONString());
         boolean sendBootfile = isSendBootfile(dhcpPackets);
-
+        ConsoleUtil.log("sendBootfile: " + sendBootfile);
         if (sendBootfile) {
             createDHCPACK(dhcpPackets, getDefaultBootfile(dhcpPackets), channelHandlerContext, datagramPacket);
         }
@@ -39,10 +39,10 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
         String vendorClassIdentifier = options.getString("vendorClassIdentifier");
         int archType = options.getInteger("archType");
 
-        ConsoleUtil.log("macs :" +  macs);
-        ConsoleUtil.log("userClass :" +  userClass);
-        ConsoleUtil.log("vendorClassIdentifier :" +  vendorClassIdentifier);
-        ConsoleUtil.log("archType :" +  archType);
+        ConsoleUtil.log("macs :" + macs);
+        ConsoleUtil.log("userClass :" + userClass);
+        ConsoleUtil.log("vendorClassIdentifier :" + vendorClassIdentifier);
+        ConsoleUtil.log("archType :" + archType);
 
         if ("Monorail".equalsIgnoreCase(userClass)) {
             return "http://" + ConfigurationUtil.getConfig(ConfigConstants.APISERVER_URL, "172.31.128.1") + ":"
@@ -122,6 +122,22 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
         if (dhcpPackets.containsKey("chaddr")) {
             String macAddress = dhcpPackets.getString("chaddr");
             Nodes node = Nodes.findByMac(macAddress);
+            if (node != null) {
+                ConsoleUtil.log("node is exists: " + JSONObject.toJSONString(node));
+                if (node.discovered()) {
+                    ConsoleUtil.log("node is discovered: " + JSONObject.toJSONString(node));
+                } else {
+                    ConsoleUtil.log("node is not discovered: " + macAddress);
+                }
+                if (node.isRunningTask()) {
+                    ConsoleUtil.log("node is isRunningTask: " + JSONObject.toJSONString(node));
+                } else {
+                    ConsoleUtil.log("node is not isRunningTask: " + macAddress);
+                }
+            } else {
+                ConsoleUtil.log("node is not exists: " + macAddress);
+            }
+
             if (node != null && node.discovered()) {
                 if (!node.isRunningTask()) {
                     return false;
@@ -144,7 +160,7 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
                 }
             }
         });
-        ConsoleUtil.log("send:" + bootfileName + "! to" + datagramPacket.sender());
+        ConsoleUtil.log("send: " + "http://" + ConfigurationUtil.getConfig(ConfigConstants.TFTP_URL, "172.31.128.1") + "/" + bootfileName + " ! to" + datagramPacket.sender() + " macaddress:" + dhcpAckPacket.getString("chaddr"));
     }
 
     @Override

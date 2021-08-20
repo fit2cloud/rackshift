@@ -66,7 +66,7 @@ public class Nodes implements Serializable {
     public boolean discovered() {
         BasicDBObject queryVO = new BasicDBObject();
         ObjectId objectId = new ObjectId(this._id.$oid);
-        queryVO.put("_id", objectId);
+        queryVO.put("node", objectId);
         return MongoUtil.exist("catalogs", queryVO);
     }
 
