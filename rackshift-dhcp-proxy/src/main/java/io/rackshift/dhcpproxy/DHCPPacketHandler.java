@@ -105,6 +105,19 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
         return "monorail.ipxe";
     }
 
+    /**
+     * @param dhcpPackets
+     * @return 真值表
+     * 是否存在node 是否有 catalogs 是否有任务运行   是否 sendbootfile
+     * 0            0                0                1
+     * 1            0                0                1
+     * 1            0                1                1
+     * 1            1                1                1
+     * 1            1                0                0
+     * 0            1                0                不存在
+     * 0            0                1                不存在
+     * 0            1                1  			  不存在
+     */
     private boolean isSendBootfile(JSONObject dhcpPackets) {
         if (dhcpPackets.containsKey("chaddr")) {
             String macAddress = dhcpPackets.getString("chaddr");
@@ -113,9 +126,8 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
                 if (!node.isRunningTask()) {
                     return false;
                 }
-            } else {
-                return true;
             }
+            return true;
         }
         return false;
     }
