@@ -73,7 +73,7 @@ public class Nodes implements Serializable {
     public static Nodes findByMac(String mac) {
         BasicDBObject queryVO = new BasicDBObject();
         queryVO.put("name", mac);
-        FindIterable<Document> r = MongoUtil.find("nodes", new BasicDBObject());
+        FindIterable<Document> r = MongoUtil.find("nodes", queryVO);
         List<Nodes> nodeList = new LinkedList<>();
         for (Document d : r) {
             nodeList.add(gson.fromJson(d.toJson(), Nodes.class));
@@ -83,7 +83,8 @@ public class Nodes implements Serializable {
 
     public boolean isRunningTask() {
         BasicDBObject q = new BasicDBObject();
-        q.put("node", this._id.$oid);
+        ObjectId objectId = new ObjectId(this._id.$oid);
+        q.put("node", objectId);
         q.put("_status", "running");
         return MongoUtil.exist("graphobjects", q);
     }
