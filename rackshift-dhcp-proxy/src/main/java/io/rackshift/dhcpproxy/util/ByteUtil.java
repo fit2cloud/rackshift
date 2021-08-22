@@ -15,7 +15,6 @@ public class ByteUtil {
     public static int readUInt16(byte[] data, int skips) {
         if (skips < data.length) {
             return Integer.parseInt(Integer.toHexString(getUInt(data[skips])) + Integer.toHexString(getUInt(data[skips + 1])), 16);
-
         }
         return 0;
     }

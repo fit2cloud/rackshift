@@ -1,5 +1,6 @@
 package io.rackshift.dhcpproxy.model;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
@@ -87,5 +88,45 @@ public class Nodes implements Serializable {
         q.put("node", objectId);
         q.put("_status", "running");
         return MongoUtil.exist("graphobjects", q);
+    }
+
+    public boolean isRequestProfile() {
+        BasicDBObject q = new BasicDBObject();
+        ObjectId objectId = new ObjectId(this._id.$oid);
+        q.put("node", objectId);
+        q.put("_status", "running");
+        FindIterable<Document> r = MongoUtil.find("graphobjects", q);
+        List<JSONObject> nodeList = new LinkedList<>();
+        for (Document d : r) {
+            nodeList.add(gson.fromJson(d.toJson(), JSONObject.class));
+        }
+        //没有任务
+        if (nodeList.size() == 0) {
+            return false;
+        }
+
+        JSONObject obj = nodeList.get(0);
+        if (!obj.containsKey("tasks")) {
+            return false;
+        }
+
+        JSONObject tasks = obj.getJSONObject("tasks");
+        if (tasks == null) {
+            return false;
+        }
+
+        boolean shouldProxy = false;
+        for (String s : tasks.keySet()) {
+            JSONObject task = tasks.getJSONObject(s);
+            if (task.containsKey("options")) {
+                if (task.getJSONObject("options").containsKey("profile")) {
+                    if ("pending".equalsIgnoreCase(task.getString("state"))) {
+                        shouldProxy = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return shouldProxy;
     }
 }

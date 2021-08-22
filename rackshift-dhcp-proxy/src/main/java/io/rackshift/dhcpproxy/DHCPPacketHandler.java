@@ -13,7 +13,6 @@ import io.rackshift.dhcpproxy.util.ConfigurationUtil;
 import io.rackshift.dhcpproxy.util.ConsoleUtil;
 import io.rackshift.dhcpproxy.util.DHCPPacketParser;
 import org.apache.commons.lang.StringUtils;
-import org.bson.assertions.Assertions;
 
 
 public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacket> {
@@ -141,6 +140,8 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
             if (node != null && node.discovered()) {
                 if (!node.isRunningTask()) {
                     return false;
+                }else{
+                    return node.isRequestProfile();
                 }
             }
             return true;
