@@ -96,16 +96,16 @@ public class Nodes implements Serializable {
         q.put("node", objectId);
         q.put("_status", "running");
         FindIterable<Document> r = MongoUtil.find("graphobjects", q);
-        List<JSONObject> nodeList = new LinkedList<>();
+        List<JSONObject> taskList = new LinkedList<>();
         for (Document d : r) {
-            nodeList.add(gson.fromJson(d.toJson(), JSONObject.class));
+            taskList.add(gson.fromJson(d.toJson(), JSONObject.class));
         }
         //没有任务
-        if (nodeList.size() == 0) {
+        if (taskList.size() == 0) {
             return false;
         }
 
-        JSONObject obj = nodeList.get(0);
+        JSONObject obj = taskList.get(0);
         if (!obj.containsKey("tasks")) {
             return false;
         }
