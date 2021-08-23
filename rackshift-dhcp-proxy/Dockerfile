@@ -1,4 +1,4 @@
-FROM jeanblanchard/java:8
+FROM openjdk:8-jre-alpine
 
 COPY target/rackshift-dhcp-proxy-1.0.0-jar-with-dependencies.jar /usr/src/myapp/app.jar
 
