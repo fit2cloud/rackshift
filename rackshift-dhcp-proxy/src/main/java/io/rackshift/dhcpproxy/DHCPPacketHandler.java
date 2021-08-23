@@ -156,7 +156,7 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
             @Override
             public void operationComplete(ChannelFuture f) {
                 if (!f.isSuccess()) {
-                    System.out.print("DHCP Proxy send datagramPacket error:");
+                    ConsoleUtil.log("DHCP Proxy send datagramPacket error:");
                     f.cause().printStackTrace();
                 }
             }
@@ -166,7 +166,7 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        System.out.print("DHCP Proxy receving datagramPacket error:");
+        ConsoleUtil.log("DHCP Proxy receving datagramPacket error:");
         cause.printStackTrace();
     }
 }
