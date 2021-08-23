@@ -152,13 +152,10 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
     private void createDHCPACK(JSONObject dhcpPackets, String bootfileName, ChannelHandlerContext channelHandlerContext, DatagramPacket datagramPacket) {
         JSONObject dhcpAckPacket = DHCPPacketParser.createDHCPPROXYAck(dhcpPackets, bootfileName);
         ByteBuf byteBuf = DHCPPacketParser.createDHCPPROXYAckBuffer(dhcpAckPacket);
-        channelHandlerContext.writeAndFlush(new DatagramPacket(byteBuf, datagramPacket.sender())).addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture f) {
-                if (!f.isSuccess()) {
-                    ConsoleUtil.log("DHCP Proxy send datagramPacket error:");
-                    f.cause().printStackTrace();
-                }
+        channelHandlerContext.writeAndFlush(new DatagramPacket(byteBuf, datagramPacket.sender())).addListener((ChannelFutureListener) f -> {
+            if (!f.isSuccess()) {
+                ConsoleUtil.log("DHCP Proxy send datagramPacket error:");
+                f.cause().printStackTrace();
             }
         });
         ConsoleUtil.log("send: " + "http://" + ConfigurationUtil.getConfig(ConfigConstants.TFTP_URL, "172.31.128.1") + "/" + bootfileName + " ! to" + datagramPacket.sender() + " macaddress:" + dhcpAckPacket.getString("chaddr"));
