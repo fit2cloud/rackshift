@@ -7,6 +7,7 @@ import io.rackshift.constants.ServiceConstants;
 import io.rackshift.job.EndpointPoller;
 import io.rackshift.job.SyncRackJob;
 import io.rackshift.model.EndpointDTO;
+import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.BareMetalMapper;
 import io.rackshift.mybatis.mapper.EndpointMapper;
@@ -152,5 +153,13 @@ public class EndpointService {
 
     public boolean sync() {
         return syncRackJob.run() && endpointPoller.run();
+    }
+
+    public String getMainEndpoint() {
+        EndpointExample e = new EndpointExample();
+        e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.value());
+        if (endpointMapper.selectByExample(e).size() == 0)
+            RSException.throwExceptions("no main endpoint !");
+        return endpointMapper.selectByExample(e).get(0).getIp();
     }
 }

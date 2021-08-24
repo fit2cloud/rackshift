@@ -58,15 +58,10 @@ public class SystemParameterService {
     }
 
     private SystemParameterExample buildExample(SystemParameterDTO queryVO) {
-        if (StringUtils.isNotBlank(queryVO.getParamKey()) && queryVO.getParamKey().equalsIgnoreCase(ServiceConstants.EndPointType.main_endpoint.value())) {
-            SystemParameterExample e = new SystemParameterExample();
-            e.createCriteria().andParamKeyEqualTo(queryVO.getParamKey());
-            return e;
+        SystemParameterExample e = new SystemParameterExample();
+        if (StringUtils.isNotBlank(queryVO.getParamKey())) {
+            e.createCriteria().andParamKeyLike(queryVO.getParamKey());
         }
-        return new SystemParameterExample();
-    }
-
-    public Object getAllEndPointType() {
-        return Arrays.asList(ServiceConstants.EndPointType.values()).stream().map(s -> JSONObject.parse(s.toString())).collect(Collectors.toList());
+        return e;
     }
 }

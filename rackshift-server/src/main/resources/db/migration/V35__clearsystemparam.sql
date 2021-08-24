@@ -1,0 +1,1 @@
+delete from system_parameter where param_key = 'main_endpoint';

@@ -27,12 +27,6 @@ public class SystemParameterController {
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
-    @GetMapping("getAllEndPointType")
-    public ResultHolder getAllEndPointType() {
-        return ResultHolder.success(systemParameterService.getAllEndPointType());
-    }
-
-    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @PostMapping("add")
     public ResultHolder add(@RequestBody SystemParameterDTO queryVO) {
         return ResultHolder.success(systemParameterService.add(queryVO));

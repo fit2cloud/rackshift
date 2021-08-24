@@ -18,7 +18,7 @@ CREATE TABLE template
     create_time BIGINT COMMENT '创建时间',
     update_time BIGINT COMMENT '更新时间',
     PRIMARY KEY (`id`)
-)
+);
 
 
 ALTER TABLE image

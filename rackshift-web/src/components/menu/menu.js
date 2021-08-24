@@ -133,13 +133,13 @@ export default {
                     "order": "14",
                     "icon": "el-icon-user-solid",
                 },
-                // {
-                //     "name": "系统参数",
-                //     "router": "/system-parameter",
-                //     "requireRole": "admin",
-                //     "order" : "5",
-                //     "icon" : "el-icon-s-home",
-                // },
+                {
+                    "name": "系统",
+                    "router": "/SystemParameter",
+                    "requireRole": "admin",
+                    "order" : "15",
+                    "icon" : "el-icon-s-home",
+                },
                 // {
                 //     "name": 'Plugin',
                 //     "router": "/Plugin",

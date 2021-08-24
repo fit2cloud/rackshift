@@ -529,4 +529,5 @@ export default {
     "edit_template": "编辑安裝腳本",
     "template": "安裝腳本",
     "more_than_3": "至少3個字符",
+    "pls_input": "請輸入",
 }

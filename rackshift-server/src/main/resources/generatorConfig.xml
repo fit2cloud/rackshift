@@ -32,7 +32,7 @@
         </commentGenerator>
 
         <!-- jdbc连接信息 --> <!-- EduLoanManage EduTestDataBase -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:3306/rackshift?characterEncoding=utf-8&amp;useSSL=false"
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://192.168.2.72:3306/rackshift?characterEncoding=utf-8&amp;useSSL=false"
                         userId="${spring.datasource.username}" password="${spring.datasource.password}"/>
         <!--        <jdbcConnection driverClass="com.mysql.jdbc.Driver"-->
         <!--                        connectionURL="${spring.datasource.url}"-->

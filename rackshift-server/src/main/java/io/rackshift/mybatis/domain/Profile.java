@@ -11,8 +11,6 @@ public class Profile implements Serializable {
 
     private String type;
 
-    private String imageId;
-
     private Long createTime;
 
     private Long updateTime;

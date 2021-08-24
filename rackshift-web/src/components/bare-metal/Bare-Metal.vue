@@ -194,7 +194,7 @@
       </el-dialog>
 
       <!--参数配置-->
-      <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="80vw"
+      <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="90vw"
                  :close-on-click-modal="false">
         <keep-alive>
           <component v-if="editWorkflowIndex != -1 && selectedWorkflow.length > 0"

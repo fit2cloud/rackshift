@@ -521,4 +521,6 @@ export default {
     "edit_template": "Edit Template",
     "template": "Template",
     "more_than_3": "more than 3 words",
+    "pls_input": "please input",
+
 }

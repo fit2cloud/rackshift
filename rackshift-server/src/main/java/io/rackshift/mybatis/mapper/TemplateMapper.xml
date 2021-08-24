@@ -3,7 +3,7 @@
 <mapper namespace="io.rackshift.mybatis.mapper.TemplateMapper">
   <resultMap id="BaseResultMap" type="io.rackshift.mybatis.domain.Template">
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="create_time" jdbcType="BIGINT" property="createTime" />
     <result column="update_time" jdbcType="BIGINT" property="updateTime" />
@@ -70,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, type, create_time, update_time
+    id, NAME, type, create_time, update_time
   </sql>
   <sql id="Blob_Column_List">
     content
@@ -124,7 +124,7 @@
     </if>
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.Template">
-    insert into template (id, name, type, 
+    insert into template (id, NAME, type, 
       create_time, update_time, content
       )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
@@ -138,7 +138,7 @@
         id,
       </if>
       <if test="name != null">
-        name,
+        NAME,
       </if>
       <if test="type != null">
         type,
@@ -187,7 +187,7 @@
         id = #{record.id,jdbcType=VARCHAR},
       </if>
       <if test="record.name != null">
-        name = #{record.name,jdbcType=VARCHAR},
+        NAME = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.type != null">
         type = #{record.type,jdbcType=VARCHAR},
@@ -209,7 +209,7 @@
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update template
     set id = #{record.id,jdbcType=VARCHAR},
-      name = #{record.name,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=BIGINT},
       update_time = #{record.updateTime,jdbcType=BIGINT},
@@ -221,7 +221,7 @@
   <update id="updateByExample" parameterType="map">
     update template
     set id = #{record.id,jdbcType=VARCHAR},
-      name = #{record.name,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=BIGINT},
       update_time = #{record.updateTime,jdbcType=BIGINT}
@@ -233,7 +233,7 @@
     update template
     <set>
       <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+        NAME = #{name,jdbcType=VARCHAR},
       </if>
       <if test="type != null">
         type = #{type,jdbcType=VARCHAR},
@@ -252,7 +252,7 @@
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="io.rackshift.mybatis.domain.Template">
     update template
-    set name = #{name,jdbcType=VARCHAR},
+    set NAME = #{name,jdbcType=VARCHAR},
       type = #{type,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=BIGINT},
@@ -261,7 +261,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.Template">
     update template
-    set name = #{name,jdbcType=VARCHAR},
+    set NAME = #{name,jdbcType=VARCHAR},
       type = #{type,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=BIGINT}

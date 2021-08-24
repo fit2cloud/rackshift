@@ -5,7 +5,6 @@
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="type" jdbcType="VARCHAR" property="type" />
-    <result column="image_id" jdbcType="VARCHAR" property="imageId" />
     <result column="create_time" jdbcType="BIGINT" property="createTime" />
     <result column="update_time" jdbcType="BIGINT" property="updateTime" />
   </resultMap>
@@ -71,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, type, image_id, create_time, update_time
+    id, name, type, create_time, update_time
   </sql>
   <sql id="Blob_Column_List">
     content
@@ -126,11 +125,11 @@
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.Profile">
     insert into profile (id, name, type, 
-      image_id, create_time, update_time, 
-      content)
+      create_time, update_time, content
+      )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
-      #{imageId,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{updateTime,jdbcType=BIGINT}, 
-      #{content,jdbcType=LONGVARCHAR})
+      #{createTime,jdbcType=BIGINT}, #{updateTime,jdbcType=BIGINT}, #{content,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.Profile">
     insert into profile
@@ -143,9 +142,6 @@
       </if>
       <if test="type != null">
         type,
-      </if>
-      <if test="imageId != null">
-        image_id,
       </if>
       <if test="createTime != null">
         create_time,
@@ -166,9 +162,6 @@
       </if>
       <if test="type != null">
         #{type,jdbcType=VARCHAR},
-      </if>
-      <if test="imageId != null">
-        #{imageId,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=BIGINT},
@@ -199,9 +192,6 @@
       <if test="record.type != null">
         type = #{record.type,jdbcType=VARCHAR},
       </if>
-      <if test="record.imageId != null">
-        image_id = #{record.imageId,jdbcType=VARCHAR},
-      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=BIGINT},
       </if>
@@ -221,7 +211,6 @@
     set id = #{record.id,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=VARCHAR},
-      image_id = #{record.imageId,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=BIGINT},
       update_time = #{record.updateTime,jdbcType=BIGINT},
       content = #{record.content,jdbcType=LONGVARCHAR}
@@ -234,7 +223,6 @@
     set id = #{record.id,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=VARCHAR},
-      image_id = #{record.imageId,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=BIGINT},
       update_time = #{record.updateTime,jdbcType=BIGINT}
     <if test="_parameter != null">
@@ -249,9 +237,6 @@
       </if>
       <if test="type != null">
         type = #{type,jdbcType=VARCHAR},
-      </if>
-      <if test="imageId != null">
-        image_id = #{imageId,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=BIGINT},
@@ -269,7 +254,6 @@
     update profile
     set name = #{name,jdbcType=VARCHAR},
       type = #{type,jdbcType=VARCHAR},
-      image_id = #{imageId,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=BIGINT},
       content = #{content,jdbcType=LONGVARCHAR}
@@ -279,7 +263,6 @@
     update profile
     set name = #{name,jdbcType=VARCHAR},
       type = #{type,jdbcType=VARCHAR},
-      image_id = #{imageId,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=BIGINT}
     where id = #{id,jdbcType=VARCHAR}

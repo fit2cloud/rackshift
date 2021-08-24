@@ -20,7 +20,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item :label="$t('custom_partition')">
+          <el-form-item :label="$t('custom_partition')" >
             <el-switch
                 v-model="extraParams.customPartition">
             </el-switch>
@@ -31,20 +31,18 @@
               <thead>
               <tr>
                 <th>{{ $t('mount_point') }}</th>
-                <th>
-                  <el-row>
-                    <el-col :span="12">{{ $t('capacity') }}</el-col>
-                    <el-col :span="12">
+                <th style="width:100px;">
+                    <el-col :span="8">{{ $t('capacity') }}</el-col>
+                    <el-col :span="16">
                       <el-select v-model="extraParams.unit">
                         <el-option :value="unit" :key="unit" v-for="unit in  units"></el-option>
                       </el-select>
                     </el-col>
-                  </el-row>
                 </th>
                 <th>{{ $t('fs_type') }}</th>
                 <th>{{ $t('device_type') }}</th>
                 <th>{{ $t('volume_group') }}</th>
-                <th>{{ $t('lvm_name') }}</th>
+                <th style="width:80px;">{{ $t('lvm_name') }}</th>
                 <th>
                   <el-button type="primary" icon="el-icon-plus" circle
                              @click="payLoad.options.defaults.installPartitions.push({})">

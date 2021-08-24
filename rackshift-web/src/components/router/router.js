@@ -17,6 +17,7 @@ import Plugin from "../plugin/Plugin"
 import Switch from "../switch/switch"
 import Profile from "../profile/Profile"
 import Template from "../template/Template"
+import SystemParameter from "../systemparameter/SystemParameter"
 
 Vue.use(VueRouter);
 
@@ -39,6 +40,7 @@ const routes = [
     {path: '/switch', component: Switch},
     {path: '/profile', component: Profile},
     {path: '/template', component: Template},
+    {path: '/SystemParameter', component: SystemParameter},
 ]
 const router = new VueRouter({
     routes: routes

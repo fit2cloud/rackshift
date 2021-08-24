@@ -1,98 +1,82 @@
 <template>
-  <div class="container">
-
-    <div class="machine-title">
-      <el-button-group class="batch-button">
-        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
-            $t('add')
-          }}
-        </el-button>
-        <el-button type="primary" icon="el-icon-delete" @click="delAllSelection">{{ $t('del') }}
-        </el-button>
-        <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
-      </el-button-group>
-    </div>
-
-    <el-table
-        :data="tableData"
-        class="table"
-        ref="multipleTable"
-        v-loading="loadingList"
-        header-cell-class-name="table-header"
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" align="left"></el-table-column>
-      <el-table-column :prop="c.prop" :label="c.label" align="left"
-                       v-for="c in columns" :sortable="c.sort"></el-table-column>
-
-      <el-table-column prop="" :label="$t('opt')" align="left">
-        <template slot-scope="scope">
-          <el-button
-              type="button"
-              icon="el-icon-edit"
-              @click="handleEdit(scope.row, 'edit')"
-          >{{ $t('edit') }}
-          </el-button>
-
-          <el-button
-              type="button"
-              icon="el-icon-delete"
-              class="red"
-              @click="handleEdit(scope.row, 'del')"
-          >{{ $t('del') }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <div class="pagination">
-      <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handlePageChange"
-          :current-page="query.pageIndex"
-          :page-sizes="[10, 20, 50, 100]"
-          :page-size="10"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pageTotal">
-      </el-pagination>
-    </div>
-
-    <el-drawer
-        :title="editType == 'edit' ? $t('edit_system_parameter') : $t('add_system_parameter')"
-        :visible.sync="editDialogVisible"
-        direction="rtl"
-        :wrapperClosable="false"
-        :before-close="handleClose">
-      <div class="demo-drawer__content">
-        <el-form :model="editObj">
-
-          <el-form-item :label="$t('param_key')">
-
-            <el-select v-model="editObj.paramKey">
-              <el-option v-for="t in allEndPointType" :label="t.name" :value="t.value"></el-option>
-            </el-select>
-
-          </el-form-item>
-
-
-          <el-form-item :label="$t('param_value')">
-            <el-input v-model="editObj.paramValue" autocomplete="off"
-                      :placeholder="$t('pls_input_param_value')" maxlength="30"></el-input>
-          </el-form-item>
-        </el-form>
-        <div class="demo-drawer__footer">
-          <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
-          <el-button type="primary" @click="confirmEdit" :loading="loading">{{
-              loading ? $t('submitting') +
-                  '...' : $t('confirm')
+  <el-tabs v-model="activeName" style="width:100vw;min-width: 1300px;">
+    <el-tab-pane :label="$t('SystemParameter')" name="systemParameter">
+      <div class="machine-title">
+        <el-button-group class="batch-button">
+          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleEdit({}, 'add')">{{
+              $t('add')
             }}
           </el-button>
-        </div>
+          <el-button type="primary" icon="el-icon-delete" @click="delAllSelection">{{ $t('del') }}
+          </el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
+        </el-button-group>
       </div>
-    </el-drawer>
 
-  </div>
+      <el-table
+          :data="tableData"
+          class="table"
+          ref="multipleTable"
+          v-loading="loadingList"
+          header-cell-class-name="table-header"
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" align="left"></el-table-column>
+        <el-table-column :prop="c.prop" :label="c.label" align="left"
+                         v-for="c in columns" :sortable="c.sort"></el-table-column>
+
+        <el-table-column prop="" :label="$t('opt')" align="left">
+          <template slot-scope="scope">
+            <RSButton @click="handleEdit(scope.row, 'edit')"></RSButton>
+            <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div class="pagination">
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handlePageChange"
+            :current-page="query.pageIndex"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="10"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="pageTotal">
+        </el-pagination>
+      </div>
+
+      <el-drawer
+          :title="editType == 'edit' ? $t('edit_system_parameter') : $t('add_system_parameter')"
+          :visible.sync="editDialogVisible"
+          direction="rtl"
+          :wrapperClosable="false"
+          :before-close="handleClose">
+        <div class="demo-drawer__content">
+          <el-form :model="editObj">
+
+            <el-form-item :label="$t('param_key')">
+              <el-input v-model="editObj.paramKey" autocomplete="off" :disabled="editType == 'edit'"
+                        :placeholder="$t('pls_input') + $t('param_key')" maxlength="30"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('param_value')">
+              <el-input v-model="editObj.paramValue" autocomplete="off"
+                        :placeholder="$t('pls_input_param_value')" maxlength="30"></el-input>
+            </el-form-item>
+          </el-form>
+
+          <div class="demo-drawer__footer">
+            <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
+            <el-button type="primary" @click="confirmEdit" :loading="loading">{{
+                loading ? $t('submitting') +
+                    '...' : $t('confirm')
+              }}
+            </el-button>
+          </div>
+        </div>
+      </el-drawer>
+    </el-tab-pane>
+  </el-tabs>
 </template>
 
 <script>
@@ -103,6 +87,7 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      activeName: 'systemParameter',
       query: {
         name: '',
         pageIndex: 1,
@@ -183,7 +168,6 @@ export default {
       if (this.editType == 'edit') {
         HttpUtil.put("/system_parameter/update", this.editObj, (res) => {
           this.editDialogVisible = false;
-          this.editObj.defaultParams = JSON.stringify(this.editObj.defaultParams);
           this.$message.success(this.$t('edit_success'));
           this.getData();
           this.loading = false;
@@ -227,11 +211,6 @@ export default {
         this.editDialogVisible = true;
         this.editType = type;
         this.editObj = JSON.parse(JSON.stringify(row));
-        this.editObj.brands = eval(this.editObj.brands);
-        this.editObj.settable = eval(this.editObj.settable);
-        // this.editObj.status = eval(this.editObj.status);
-        this.editObj.rolesIds = _.map(this.editObj.roles, (item) => item.id);
-
       } else if (type == 'del') {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'

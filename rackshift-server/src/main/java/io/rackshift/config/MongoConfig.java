@@ -8,6 +8,7 @@ import com.mongodb.client.internal.MongoClientImpl;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.mybatis.domain.SystemParameter;
 import io.rackshift.mybatis.mapper.SystemParameterMapper;
+import io.rackshift.service.EndpointService;
 import io.rackshift.utils.MongoUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +23,7 @@ public class MongoConfig {
     @Value("${mongo.url:localhost}")
     private String mongoUrl;
     @Resource
-    private SystemParameterMapper systemParameterMapper;
+    private EndpointService endpointService;
 
     @Bean
     public MongoClient mongoClient() {
@@ -31,8 +32,7 @@ public class MongoConfig {
             MongoUtil.setMongoClient(client);
             return client;
         } else {
-            SystemParameter endPoint = systemParameterMapper.selectByPrimaryKey(ServiceConstants.EndPointType.main_endpoint.name());
-            MongoClientSettings clientSettings = MongoClientSettings.builder().applyConnectionString(new ConnectionString("mongodb://" + (endPoint.getParamValue().contains(":") ? endPoint.getParamValue().substring(0, endPoint.getParamValue().indexOf(":")) + ":27017" : endPoint.getParamValue()))).build();
+            MongoClientSettings clientSettings = MongoClientSettings.builder().applyConnectionString(new ConnectionString("mongodb://" + endpointService.getMainEndpoint() + ":27017")).build();
             MongoClient client = new MongoClientImpl(clientSettings, MongoDriverInformation.builder().build());
             MongoUtil.setMongoClient(client);
             return client;
