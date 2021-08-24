@@ -1,6 +1,6 @@
 <template>
   <el-tabs class="t100vw" v-model="activeName">
-    <el-tab-pane :label="$t('profile')" name="profile">
+    <el-tab-pane :label="$t('template')" name="template">
       <div class="container">
 
         <div class="machine-title">
@@ -81,7 +81,7 @@
         </div>
 
         <el-drawer
-            :title="editType == 'edit' ? $t('edit_profile') : $t('add_profile')"
+            :title="editType == 'edit' ? $t('edit_template') : $t('add_template')"
             :visible.sync="editDialogVisible"
             :wrapperClosable="false"
             size="50%"
@@ -91,7 +91,7 @@
             <el-form :model="editObj" labelPosition="top" :rules="rules" ref="editForm" label-width="80px">
 
               <el-form-item :label="$t('name')" prop="name">
-                <el-input v-model="editObj.name" autocomplete="off" minlength="3" maxlength="30"
+                <el-input v-model="editObj.name" autocomplete="off" min="3" max="30"
                           :placeholder="$t('pls_input_param_value')" class="input-element"></el-input>
               </el-form-item>
 
@@ -140,9 +140,9 @@ export default {
         ],
         content: [
           {validator: requiredValidator, trigger: 'blur', vue: this},
-        ]
+        ],
       },
-      activeName: 'profile',
+      activeName: 'template',
       query: {
         name: '',
         pageIndex: 1,
@@ -167,7 +167,7 @@ export default {
       },
       allOs: [],
       allOsVersion: [],
-      allprofileType: [],
+      alltemplateType: [],
       loadingList: [],
     };
   },
@@ -178,7 +178,7 @@ export default {
     // 获取 easy-mock 的模拟数据
     getData() {
       this.loadingList = true;
-      HttpUtil.post("/profile/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
+      HttpUtil.post("/template/list/" + this.query.pageIndex + "/" + this.query.pageSize, {}, (res) => {
         this.tableData = res.data.listObject;
         this.pageTotal = res.data.itemCount;
         this.loadingList = false;
@@ -212,7 +212,7 @@ export default {
       this.loading = true;
       this.editObj.brands = JSON.stringify(this.editObj.brands);
       if (this.editType == 'edit') {
-        HttpUtil.put("/profile/update", this.editObj, (res) => {
+        HttpUtil.put("/template/update", this.editObj, (res) => {
           if (res.data) {
             this.editDialogVisible = false;
             this.editObj.defaultParams = JSON.stringify(this.editObj.defaultParams);
@@ -223,12 +223,9 @@ export default {
             this.$message.error(this.$t('opt_fail'));
             this.loading = false;
           }
-        }, (res) => {
-          this.$message.error(this.$t('opt_fail'));
-          this.loading = false;
         })
       } else {
-        HttpUtil.post("/profile/add", this.editObj, (res) => {
+        HttpUtil.post("/template/add", this.editObj, (res) => {
           if (res.data) {
             this.$message.success(this.$t('add_success'));
             this.editDialogVisible = false;
@@ -236,9 +233,6 @@ export default {
             this.$message.error(this.$t(res.message));
           }
           this.getData();
-          this.loading = false;
-        }, (res) => {
-          this.$message.error(this.$t('opt_fail'));
           this.loading = false;
         })
       }
@@ -261,13 +255,13 @@ export default {
       }
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
-        this.$message.error(this.$t('pls_select_profile') + "!");
+        this.$message.error(this.$t('pls_select_template') + "!");
         return;
       }
-      this.$confirm(this.$t('confirm_to_del_profile'), this.$t('tips'), {
+      this.$confirm(this.$t('confirm_to_del_template'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
-        HttpUtil.post("/profile/del", ids, (res) => {
+        HttpUtil.post("/template/del", ids, (res) => {
           if (res.data) {
             this.$message.success(this.$t('delete_success'));
           } else {
@@ -290,10 +284,10 @@ export default {
           this.$message.error(this.$t('delete_fail'));
           return;
         }
-        this.$confirm(this.$t('confirm_to_del_profile'), this.$t('tips'), {
+        this.$confirm(this.$t('confirm_to_del_template'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.delete("/profile/del/" + row.id, {}, (res) => {
+          HttpUtil.delete("/template/del/" + row.id, {}, (res) => {
             if (res.data) {
               this.$message.success(this.$t('delete_success'));
             } else {

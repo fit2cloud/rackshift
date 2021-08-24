@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @org.springframework.web.bind.annotation.ControllerAdvice
 public class ControllerAdvice {
-    @ExceptionHandler(RSException.class)
+    @ExceptionHandler(RuntimeException.class)
     @ResponseBody
-    public ResultHolder resultHolder(RSException e) {
+    public ResultHolder resultHolder(RuntimeException e) {
         return ResultHolder.error(e.getMessage());
     }
 }

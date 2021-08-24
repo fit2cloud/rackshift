@@ -54,6 +54,8 @@ export default {
           return "el-icon-caret-right";
         case "add":
           return "el-icon-plus";
+        case "copy":
+          return "el-icon-plus";
         default :
           return "";
       }

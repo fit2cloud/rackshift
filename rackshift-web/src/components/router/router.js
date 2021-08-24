@@ -16,6 +16,7 @@ import OBM from "../obm/Obm"
 import Plugin from "../plugin/Plugin"
 import Switch from "../switch/switch"
 import Profile from "../profile/Profile"
+import Template from "../template/Template"
 
 Vue.use(VueRouter);
 
@@ -37,6 +38,7 @@ const routes = [
     {path: '/task', component: Task},
     {path: '/switch', component: Switch},
     {path: '/profile', component: Profile},
+    {path: '/template', component: Template},
 ]
 const router = new VueRouter({
     routes: routes

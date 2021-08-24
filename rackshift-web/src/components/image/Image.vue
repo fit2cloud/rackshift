@@ -101,6 +101,30 @@
                 </el-select>
               </el-form-item>
 
+              <el-form-item :label="$t('profile')" prop="profile">
+                <el-select v-model="editObj.profileId" :placeholder="$t('pls_select') + $t('profile')"
+                           class="input-element">
+                  <el-option
+                      v-for="(item, key) in allProfiles"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+
+              <el-form-item :label="$t('template')" prop="template">
+                <el-select v-model="editObj.templateId" :placeholder="$t('pls_select') + $t('template')"
+                           class="input-element">
+                  <el-option
+                      v-for="(item, key) in allTemplates"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+
               <el-form-item :label="$t('image')" v-if="editType != 'edit'">
                 <el-upload
                     class="upload-demo"
@@ -171,6 +195,8 @@ let _ = require('lodash');
 export default {
   data() {
     return {
+      allTemplates: [],
+      allProfiles: [],
       activeName: 'image',
       canConfirm: false,
       rules: {
@@ -247,6 +273,8 @@ export default {
     this.getData();
     this.getAllOsAndVersion();
     this.getAllEndPoints();
+    this.getAllProfiles();
+    this.getAllTemplates();
   },
   methods: {
     copyUrl(e) {
@@ -270,6 +298,20 @@ export default {
         this.allEndPoints = [].concat(_.find(res.data, (e) => e.type == 'main_endpoint'));
 
         localStorage.setItem("allEndPoints", JSON.stringify(this.allEndPoints));
+      });
+    },
+    getAllProfiles() {
+      HttpUtil.get("/profile/getAllProfiles", {}, (res) => {
+        this.allProfiles = res.data;
+
+        localStorage.setItem("allProfiles", JSON.stringify(this.allProfiles));
+      });
+    },
+    getAllTemplates() {
+      HttpUtil.get("/template/getAllTemplates", {}, (res) => {
+        this.allTemplates = res.data;
+
+        localStorage.setItem("allTemplates", JSON.stringify(this.allTemplates));
       });
     },
     // 获取 easy-mock 的模拟数据

@@ -520,5 +520,16 @@ export default {
     "post_install": "POST-INSTALL 脚本",
     "view_example": "查看示例",
     "Profile": "配置文件",
-    "InstallScript": "安装脚本"
+    "Template": "安装脚本",
+    "Profile already exists!": "配置文件已经存在",
+    "add_profile": "添加配置文件",
+    "edit_profile": "编辑配置文件",
+    "content": "内容",
+    "profile": "配置文件",
+
+    "Template already exists!": "安装脚本已经存在",
+    "add_template": "添加安装脚本",
+    "edit_template": "编辑安装脚本",
+    "template": "安装脚本",
+    "more_than_3": "至少3个字符",
 }

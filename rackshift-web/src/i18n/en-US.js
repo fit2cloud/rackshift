@@ -510,5 +510,15 @@ export default {
     "post_install": "POST-INSTALL Script",
     "view_example": "View Example",
     "Profile": "Profile",
-    "InstallScript": "InstallScript"
+    "InstallScript": "InstallScript",
+    "Profile already exists!": "Profile already exists!",
+    "add_profile": "Add Profile",
+    "edit_profile": "Edit Profile",
+    "content": "Content",
+    "profile": "Profile",
+    "Template already exists!": "Template already exists!",
+    "add_template": "Add Template",
+    "edit_template": "Edit Template",
+    "template": "Template",
+    "more_than_3": "more than 3 words",
 }

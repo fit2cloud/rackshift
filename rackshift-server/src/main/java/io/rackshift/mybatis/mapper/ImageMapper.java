@@ -2,9 +2,8 @@ package io.rackshift.mybatis.mapper;
 
 import io.rackshift.mybatis.domain.Image;
 import io.rackshift.mybatis.domain.ImageExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface ImageMapper {
     long countByExample(ImageExample example);

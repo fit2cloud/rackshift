@@ -3,11 +3,11 @@ package io.rackshift.service;
 import com.sun.org.slf4j.internal.Logger;
 import com.sun.org.slf4j.internal.LoggerFactory;
 import io.rackshift.constants.ServiceConstants;
-import io.rackshift.model.ProfileDTO;
+import io.rackshift.model.TemplateDTO;
 import io.rackshift.model.RSException;
-import io.rackshift.mybatis.domain.Profile;
-import io.rackshift.mybatis.domain.ProfileExample;
-import io.rackshift.mybatis.mapper.ProfileMapper;
+import io.rackshift.mybatis.domain.Template;
+import io.rackshift.mybatis.domain.TemplateExample;
+import io.rackshift.mybatis.mapper.TemplateMapper;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -28,47 +28,47 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ProfileService {
-    private Logger logger = LoggerFactory.getLogger(ProfileService.class);
+public class TemplateService {
+    private Logger logger = LoggerFactory.getLogger(TemplateService.class);
     @Resource
-    private ProfileMapper profileMapper;
+    private TemplateMapper templateMapper;
     @Resource
     private EndpointService endpointService;
 
-    public Object add(ProfileDTO queryVO) throws Exception {
+    public Object add(TemplateDTO queryVO) throws Exception {
         if (StringUtils.isNotBlank(queryVO.getName())) {
-            ProfileExample e = new ProfileExample();
+            TemplateExample e = new TemplateExample();
             e.createCriteria().andNameEqualTo(queryVO.getName());
-            if (profileMapper.selectByExample(e).size() > 0) {
-                RSException.throwExceptions("Profile already exists!");
+            if (templateMapper.selectByExample(e).size() > 0) {
+                RSException.throwExceptions("Template already exists!");
             }
         }
-        Profile image = new Profile();
+        Template image = new Template();
         BeanUtils.copyBean(image, queryVO);
         if (uploadToServer(queryVO)) {
             image.setId(UUIDUtil.newUUID());
-            profileMapper.insertSelective(image);
+            templateMapper.insertSelective(image);
             return true;
         }
         return false;
     }
 
-    public Object update(Profile queryVO) throws Exception {
-        Profile image = new Profile();
+    public Object update(Template queryVO) throws Exception {
+        Template image = new Template();
         BeanUtils.copyBean(image, queryVO);
         if (uploadToServer(queryVO)) {
-            profileMapper.updateByPrimaryKeySelective(image);
+            templateMapper.updateByPrimaryKeySelective(image);
             return true;
         }
         return false;
     }
 
     public boolean del(String id) {
-        Profile profile = profileMapper.selectByPrimaryKey(id);
-        if (profile == null) {
+        Template template = templateMapper.selectByPrimaryKey(id);
+        if (template == null) {
             return false;
         }
-        if (profile.getType().equalsIgnoreCase(ServiceConstants.TYPE_SYS)) {
+        if (template.getType().equalsIgnoreCase(ServiceConstants.TYPE_SYS)) {
             return false;
         }
 
@@ -77,7 +77,7 @@ public class ProfileService {
 
     public Object del(String[] ids) {
         for (String id : ids) {
-            if (ServiceConstants.TYPE_SYS.equalsIgnoreCase(profileMapper.selectByPrimaryKey(id).getType())) {
+            if (ServiceConstants.TYPE_SYS.equalsIgnoreCase(templateMapper.selectByPrimaryKey(id).getType())) {
                 return false;
             }
         }
@@ -89,34 +89,34 @@ public class ProfileService {
         return true;
     }
 
-    public List<Profile> list(ProfileDTO queryVO) {
-        ProfileExample example = buildExample(queryVO);
-        return profileMapper.selectByExampleWithBLOBs(example);
+    public List<Template> list(TemplateDTO queryVO) {
+        TemplateExample example = buildExample(queryVO);
+        return templateMapper.selectByExampleWithBLOBs(example);
     }
 
-    private ProfileExample buildExample(ProfileDTO queryVO) {
-        return new ProfileExample();
+    private TemplateExample buildExample(TemplateDTO queryVO) {
+        return new TemplateExample();
     }
 
-    public Profile getById(String id) {
+    public Template getById(String id) {
         if (StringUtils.isBlank(id)) {
             return null;
         }
-        return profileMapper.selectByPrimaryKey(id);
+        return templateMapper.selectByPrimaryKey(id);
     }
 
-    private boolean uploadToServer(Profile profile) throws Exception {
+    private boolean uploadToServer(Template template) throws Exception {
 
-        File temp = File.createTempFile(profile.getName(), null);
+        File temp = File.createTempFile(template.getName(), null);
         FileOutputStream fileOutputStream = new FileOutputStream(temp);
-        fileOutputStream.write(profile.getContent().getBytes());
+        fileOutputStream.write(template.getContent().getBytes());
         fileOutputStream.close();
 
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        String url = "http://" + endpointService.getAllEndPoints().stream().filter(s -> s.getType().equalsIgnoreCase(ServiceConstants.EndPointType.main_endpoint.name())).collect(Collectors.toList()).get(0).getIp() + ":9090/api/2.0/profiles/library/" + profile.getName();
+        String url = "http://" + endpointService.getAllEndPoints().stream().filter(s -> s.getType().equalsIgnoreCase(ServiceConstants.EndPointType.main_endpoint.name())).collect(Collectors.toList()).get(0).getIp() + ":9090/api/2.0/templates/library/" + template.getName();
         HttpPut httpPut = new HttpPut(url);// 创建httpPut
-        httpPut.setHeader("Accept", "application/octet-stream");
-        httpPut.setHeader("Content-Type", "application/octet-stream");
+        httpPut.setHeader("Accept", "application/x-www-form-urlencoded");
+        httpPut.setHeader("Content-Type", "application/x-www-form-urlencoded");
         CloseableHttpResponse response = null;
 
         httpPut.setEntity(new FileEntity(temp));
@@ -148,7 +148,7 @@ public class ProfileService {
         return false;
     }
 
-    public Object getAllProfiles() {
-        return list(new ProfileDTO());
+    public Object getAllTemplates() {
+        return list(new TemplateDTO());
     }
 }

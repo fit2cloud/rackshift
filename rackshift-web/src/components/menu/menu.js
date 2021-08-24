@@ -37,26 +37,25 @@ export default {
                     "order": "5",
                     "icon": "el-icon-s-promotion"
                 },
-
                 {
-                    "name": 'Image',
-                    "router": "/Image",
+                    "name": 'Profile',
+                    "router": "/Profile",
                     "requireRole": "user,admin",
                     "order": "6",
                     "icon": "el-icon-view"
                 },
                 {
-                    "name": 'Profile',
-                    "router": "/Profile",
+                    "name": 'Template',
+                    "router": "/Template",
                     "requireRole": "user,admin",
                     "order": "7",
                     "icon": "el-icon-view"
                 },
                 {
-                    "name": 'InstallScript',
-                    "router": "/InstallScript",
+                    "name": 'Image',
+                    "router": "/Image",
                     "requireRole": "user,admin",
-                    "order": "6",
+                    "order": "8",
                     "icon": "el-icon-view"
                 }
             ]

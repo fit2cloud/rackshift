@@ -19,6 +19,11 @@ function requiredValidator(rule, value, callback) {
             callback(new Error(rule.vue.$t('pls_input_params')));
         }
     }
+    if(value && value.length < 3){
+        if (rule.field == "name") {
+            callback(new Error(rule.vue.$t('more_than_3')));
+        }
+    }
     callback();
 }
 

@@ -75,7 +75,8 @@
 <!--        <table tableName="user_key"/>-->
 <!--        <table tableName="ip"/>-->
         <table tableName="profile"/>
-        <table tableName="install_script"/>
+        <table tableName="template"/>
+        <table tableName="image"/>
 
     </context>
 </generatorConfiguration>

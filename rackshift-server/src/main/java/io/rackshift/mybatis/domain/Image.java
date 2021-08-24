@@ -1,8 +1,7 @@
 package io.rackshift.mybatis.domain;
 
-import lombok.Data;
-
 import java.io.Serializable;
+import lombok.Data;
 
 @Data
 public class Image implements Serializable {
@@ -27,6 +26,10 @@ public class Image implements Serializable {
     private Long updateTime;
 
     private String status;
+
+    private String profileId;
+
+    private String templateId;
 
     private String extProperties;
 

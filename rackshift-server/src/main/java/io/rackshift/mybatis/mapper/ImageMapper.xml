@@ -13,6 +13,8 @@
     <result column="mount_path" jdbcType="VARCHAR" property="mountPath" />
     <result column="update_time" jdbcType="BIGINT" property="updateTime" />
     <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="profile_id" jdbcType="VARCHAR" property="profileId" />
+    <result column="template_id" jdbcType="VARCHAR" property="templateId" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.Image">
     <result column="ext_properties" jdbcType="LONGVARCHAR" property="extProperties" />
@@ -77,7 +79,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, endpoint_id, name, os, os_version, url, original_name, file_path, mount_path, 
-    update_time, status
+    update_time, status, profile_id, template_id
   </sql>
   <sql id="Blob_Column_List">
     ext_properties
@@ -134,13 +136,13 @@
     insert into image (id, endpoint_id, name, 
       os, os_version, url, 
       original_name, file_path, mount_path, 
-      update_time, status, ext_properties
-      )
+      update_time, status, profile_id, 
+      template_id, ext_properties)
     values (#{id,jdbcType=VARCHAR}, #{endpointId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{os,jdbcType=VARCHAR}, #{osVersion,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
       #{originalName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{mountPath,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=BIGINT}, #{status,jdbcType=VARCHAR}, #{extProperties,jdbcType=LONGVARCHAR}
-      )
+      #{updateTime,jdbcType=BIGINT}, #{status,jdbcType=VARCHAR}, #{profileId,jdbcType=VARCHAR}, 
+      #{templateId,jdbcType=VARCHAR}, #{extProperties,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.Image">
     insert into image
@@ -177,6 +179,12 @@
       </if>
       <if test="status != null">
         status,
+      </if>
+      <if test="profileId != null">
+        profile_id,
+      </if>
+      <if test="templateId != null">
+        template_id,
       </if>
       <if test="extProperties != null">
         ext_properties,
@@ -215,6 +223,12 @@
       </if>
       <if test="status != null">
         #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="profileId != null">
+        #{profileId,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null">
+        #{templateId,jdbcType=VARCHAR},
       </if>
       <if test="extProperties != null">
         #{extProperties,jdbcType=LONGVARCHAR},
@@ -263,6 +277,12 @@
       <if test="record.status != null">
         status = #{record.status,jdbcType=VARCHAR},
       </if>
+      <if test="record.profileId != null">
+        profile_id = #{record.profileId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templateId != null">
+        template_id = #{record.templateId,jdbcType=VARCHAR},
+      </if>
       <if test="record.extProperties != null">
         ext_properties = #{record.extProperties,jdbcType=LONGVARCHAR},
       </if>
@@ -284,6 +304,8 @@
       mount_path = #{record.mountPath,jdbcType=VARCHAR},
       update_time = #{record.updateTime,jdbcType=BIGINT},
       status = #{record.status,jdbcType=VARCHAR},
+      profile_id = #{record.profileId,jdbcType=VARCHAR},
+      template_id = #{record.templateId,jdbcType=VARCHAR},
       ext_properties = #{record.extProperties,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -301,7 +323,9 @@
       file_path = #{record.filePath,jdbcType=VARCHAR},
       mount_path = #{record.mountPath,jdbcType=VARCHAR},
       update_time = #{record.updateTime,jdbcType=BIGINT},
-      status = #{record.status,jdbcType=VARCHAR}
+      status = #{record.status,jdbcType=VARCHAR},
+      profile_id = #{record.profileId,jdbcType=VARCHAR},
+      template_id = #{record.templateId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -339,6 +363,12 @@
       <if test="status != null">
         status = #{status,jdbcType=VARCHAR},
       </if>
+      <if test="profileId != null">
+        profile_id = #{profileId,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null">
+        template_id = #{templateId,jdbcType=VARCHAR},
+      </if>
       <if test="extProperties != null">
         ext_properties = #{extProperties,jdbcType=LONGVARCHAR},
       </if>
@@ -357,6 +387,8 @@
       mount_path = #{mountPath,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=BIGINT},
       status = #{status,jdbcType=VARCHAR},
+      profile_id = #{profileId,jdbcType=VARCHAR},
+      template_id = #{templateId,jdbcType=VARCHAR},
       ext_properties = #{extProperties,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -371,7 +403,9 @@
       file_path = #{filePath,jdbcType=VARCHAR},
       mount_path = #{mountPath,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=BIGINT},
-      status = #{status,jdbcType=VARCHAR}
+      status = #{status,jdbcType=VARCHAR},
+      profile_id = #{profileId,jdbcType=VARCHAR},
+      template_id = #{templateId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>
