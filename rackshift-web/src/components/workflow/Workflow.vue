@@ -139,7 +139,7 @@
             </el-form>
             <div class="demo-drawer__footer">
               <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
-              <el-button type="primary" @click="confirmEdit" :loading="loading" :disabled="editObj.type == 'system'">{{
+              <el-button type="primary" @click="confirmEdit" :loading="loading">{{
                   loading ? $t('submitting') +
                       '...' : $t('confirm')
                 }}
@@ -231,7 +231,7 @@ export default {
         defaultParams: null
       },
       allEventType: [],
-      allBrands: ['DELL', 'HP', 'Inspur', 'ZTE', 'Huawei', 'New H3C Technologies Co., Ltd.', 'SuperMicro', 'Suma', 'Lenovo'],
+      allBrands: [],
       allRackHDWorkflows: [],
       workflowMap: {}
     };
@@ -240,6 +240,7 @@ export default {
     this.getData();
     this.getAllRackHDWorkflows();
     this.getAllEventType();
+    this.getAllBrands();
   },
   filters: {
     enabled: function (v) {
@@ -251,6 +252,13 @@ export default {
     }
   },
   methods: {
+    getAllBrands() {
+      HttpUtil.get("/bare-metal/allBrands", {}, (res) => {
+        if (res.success) {
+          this.allBrands = res.data;
+        }
+      });
+    },
     i18n(item) {
       return this.$t(item);
     },

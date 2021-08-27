@@ -57,11 +57,11 @@
 
             <el-form-item :label="$t('param_key')">
               <el-input v-model="editObj.paramKey" autocomplete="off" :disabled="editType == 'edit'"
-                        :placeholder="$t('pls_input') + $t('param_key')" maxlength="30"></el-input>
+                        :placeholder="$t('pls_input') + $t('param_key')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('param_value')">
-              <el-input v-model="editObj.paramValue" autocomplete="off"
-                        :placeholder="$t('pls_input_param_value')" maxlength="30"></el-input>
+              <el-input type="textarea" :rows="10" :cols="20" v-model="editObj.paramValue" autocomplete="off"
+                        :placeholder="$t('pls_input_param_value')"></el-input>
             </el-form-item>
           </el-form>
 
@@ -103,6 +103,7 @@ export default {
       idx: -1,
       id: -1,
       loading: false,
+
       columns: [
         {
           label: this.$t('param_key'),
@@ -128,7 +129,6 @@ export default {
   },
   mounted() {
     this.getData();
-    this.getAllEndPointType();
   },
   methods: {
     // 获取 easy-mock 的模拟数据
@@ -140,11 +140,6 @@ export default {
         this.loadingList = false;
       });
 
-    },
-    getAllEndPointType() {
-      HttpUtil.get("/system_parameter/getAllEndPointType", {}, (res) => {
-        this.allEndPointType = res.data;
-      });
     },
     handleSizeChange(val) {
       this.query.pageSize = val;
@@ -159,7 +154,7 @@ export default {
     },
     getSelectedIds: function () {
       this.delList = [].concat(this.multipleSelection);
-      let ids = _.map(this.delList, (item) => item.id);
+      let ids = _.map(this.delList, (item) => item.paramKey);
       return ids;
     },
     confirmEdit() {
@@ -215,7 +210,7 @@ export default {
         this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
-          HttpUtil.delete("/system_parameter/del/" + row.id, {}, (res) => {
+          HttpUtil.delete("/system_parameter/del/" + row.paramKey, {}, (res) => {
             this.getData();
             this.$message.success(this.$t('delete_success!'));
           });

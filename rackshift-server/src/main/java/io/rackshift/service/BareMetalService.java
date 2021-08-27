@@ -2,13 +2,15 @@ package io.rackshift.service;
 
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import io.rackshift.constants.RackHDConstants;
+import io.rackshift.constants.ServiceConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.*;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.domain.OutBandExample;
 import io.rackshift.mybatis.domain.SystemParameter;
-import io.rackshift.mybatis.mapper.*;
+import io.rackshift.mybatis.mapper.OutBandMapper;
+import io.rackshift.mybatis.mapper.SystemParameterMapper;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
 import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.*;
@@ -28,14 +30,6 @@ public class BareMetalService {
     private OutBandMapper outBandMapper;
     @Resource
     private IPMIHandlerDecorator ipmiHandlerDecorator;
-    @Resource
-    private CpuMapper cpuMapper;
-    @Resource
-    private MemoryMapper memoryMapper;
-    @Resource
-    private DiskMapper diskMapper;
-    @Resource
-    private NetworkCardMapper networkCardMapper;
     @Resource
     private RackHDService rackHDService;
     @Resource
@@ -255,5 +249,21 @@ public class BareMetalService {
             return ResultHolder.error("带外链接失败！");
         }
         return ResultHolder.success("");
+    }
+
+    public ResultHolder allBrands() {
+        SystemParameter systemParameter = systemParameterMapper.selectByPrimaryKey(ServiceConstants.PARAM_ALL_BRANDS);
+
+        if (systemParameter == null || StringUtils.isBlank(systemParameter.getParamValue())) {
+            RSException.throwExceptions(Translator.get("no_brands_key_exists"));
+        }
+
+        try {
+            systemParameter.getParamValue().split("\\|");
+        } catch (Exception e) {
+            RSException.throwExceptions(Translator.get("no_brands_key_exists"));
+        }
+
+        return ResultHolder.success(systemParameter.getParamValue().split("\\|"));
     }
 }

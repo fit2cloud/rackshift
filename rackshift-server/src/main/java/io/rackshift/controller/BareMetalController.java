@@ -61,4 +61,10 @@ public class BareMetalController {
     public ResultHolder webkvm(@RequestParam String id, @RequestParam String host) {
         return bareMetalService.webkvm(id, host);
     }
+
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @GetMapping("allBrands")
+    public ResultHolder allBrands() {
+        return bareMetalService.allBrands();
+    }
 }
