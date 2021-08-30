@@ -44,6 +44,12 @@ public class ImageController {
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @PostMapping("allImage")
+    public ResultHolder allImage() {
+        return ResultHolder.success(imageService.allImage());
+    }
+
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @PostMapping("add")
     public ResultHolder add(@RequestBody ImageDTO queryVO) {
         return ResultHolder.success(imageService.add(queryVO));

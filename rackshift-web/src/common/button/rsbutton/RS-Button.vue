@@ -36,6 +36,8 @@ export default {
           return "el-button--danger";
         case "sync":
           return "el-button--success";
+        case "copy":
+          return "el-button--success";
         default :
           return "el-button";
       }

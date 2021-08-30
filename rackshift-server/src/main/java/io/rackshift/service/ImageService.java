@@ -10,6 +10,7 @@ import io.rackshift.mybatis.domain.Image;
 import io.rackshift.mybatis.domain.ImageExample;
 import io.rackshift.mybatis.mapper.EndpointMapper;
 import io.rackshift.mybatis.mapper.ImageMapper;
+import io.rackshift.mybatis.mapper.ext.ExtImageMapper;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.ProxyUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +30,8 @@ public class ImageService {
     private ImageMapper imageMapper;
     @Resource
     private EndpointMapper endpointMapper;
+    @Resource
+    private ExtImageMapper extImageMapper;
 
     public Object add(ImageDTO queryVO) {
         Image image = new Image();
@@ -147,5 +150,9 @@ public class ImageService {
             return endpointMapper.selectByExample(new EndpointExample()).get(0).getIp();
         }
         return endpointMapper.selectByPrimaryKey(endpointId).getIp();
+    }
+
+    public Object allImage() {
+        return extImageMapper.allImage();
     }
 }

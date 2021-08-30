@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * Spring Bean获取工具
  * <p>使用方法：
  * <br>
- * spring配置文件中添加
+ * spring引导文件中添加
  * &lt;context:component-scan base-package="com.zwzx.common.spring"/&gt;
  * <p>
  *

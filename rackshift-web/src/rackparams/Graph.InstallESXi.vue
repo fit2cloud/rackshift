@@ -490,8 +490,8 @@ export default {
     }
     ,
     getAllImage: function () {
-      HttpUtil.post("/image/list/" + 1 + "/" + 1000, {}, (res) => {
-        this.allImages = _.filter(res.data.listObject, i => i.os == 'esxi');
+      HttpUtil.post("/image/allImage", {}, (res) => {
+        this.allImages = _.filter(res.data, i => i.os == 'esxi');
         if (!this.allImages) {
           this.$message.error(this.$t('no_valid_image!'));
           return;

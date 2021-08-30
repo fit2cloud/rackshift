@@ -134,7 +134,7 @@ export default {
                     "icon": "el-icon-user-solid",
                 },
                 {
-                    "name": "系统",
+                    "name": "SystemParameter",
                     "router": "/SystemParameter",
                     "requireRole": "admin",
                     "order" : "15",

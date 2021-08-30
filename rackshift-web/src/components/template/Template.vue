@@ -255,10 +255,10 @@ export default {
       }
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
-        this.$message.error(this.$t('pls_select_template') + "!");
+        this.$message.error(this.$t('pls_select') + this.$t('template') + "!");
         return;
       }
-      this.$confirm(this.$t('confirm_to_del_template'), this.$t('tips'), {
+      this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
         HttpUtil.post("/template/del", ids, (res) => {
@@ -284,7 +284,7 @@ export default {
           this.$message.error(this.$t('delete_fail'));
           return;
         }
-        this.$confirm(this.$t('confirm_to_del_template'), this.$t('tips'), {
+        this.$confirm(this.$t('confirm_to_del') + this.$t('template'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
           HttpUtil.delete("/template/del/" + row.id, {}, (res) => {

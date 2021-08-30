@@ -566,8 +566,6 @@
 
     </drawer>
     <!-- 执行器 end -->
-
-
     <!--obm-->
     <el-dialog :title="$t('change_ipmipwd')" :visible.sync="changeObm" width="35vw" :close-on-click-modal="false">
       <el-form :model="curObm" :rules="rules" ref="ipmiForm">
@@ -1054,17 +1052,24 @@ export default {
     },
     saveParams() {
       let canSave = true;
-      if (this.directCom) {
-        if (!this.$refs.currentWfParamTemplate.valid()) {
-          canSave = false;
-        }
+
+      let tempParam = this.directCom ? this.$refs.currentWfParamTemplate.payLoad : this.$refs.currentWfParamTemplate.$children[0].payLoad;
+      if (tempParam && tempParam.options && tempParam.options.defaults && (tempParam.options.defaults.profile || tempParam.options.defaults.installScript)) {
+        //当有自定义的脚本时 忽略参数检查
       } else {
-        if (!this.$refs.currentWfParamTemplate.$children[0].valid()) {
-          canSave = false;
+        if (this.directCom) {
+          if (!this.$refs.currentWfParamTemplate.valid()) {
+            canSave = false;
+          }
+        } else {
+          if (!this.$refs.currentWfParamTemplate.$children[0].valid()) {
+            canSave = false;
+          }
         }
       }
+
       if (canSave) {
-        this.selectedWorkflow[this.editWorkflowIndex].params = this.directCom ? this.$refs.currentWfParamTemplate.payLoad : this.$refs.currentWfParamTemplate.$children[0].payLoad;
+        this.selectedWorkflow[this.editWorkflowIndex].params = tempParam;
         this.selectedWorkflow[this.editWorkflowIndex].extraParams = this.directCom ? this.$refs.currentWfParamTemplate.extraParams : this.$refs.currentWfParamTemplate.$children[0].extraParams;
         this.fillWfParamsLoading = true;
         HttpUtil.post("/workflow/params", this.buildRequest(this.selectedWorkflow[this.editWorkflowIndex]), (res) => {

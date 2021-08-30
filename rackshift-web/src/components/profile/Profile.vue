@@ -261,10 +261,10 @@ export default {
       }
       let ids = this.getSelectedIds();
       if (!ids || ids.length == 0) {
-        this.$message.error(this.$t('pls_select_profile') + "!");
+        this.$message.error(this.$t('pls_select') + this.$t('profile') + "!");
         return;
       }
-      this.$confirm(this.$t('confirm_to_del_profile'), this.$t('tips'), {
+      this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
         type: 'warning'
       }).then(() => {
         HttpUtil.post("/profile/del", ids, (res) => {
@@ -290,7 +290,7 @@ export default {
           this.$message.error(this.$t('delete_fail'));
           return;
         }
-        this.$confirm(this.$t('confirm_to_del_profile'), this.$t('tips'), {
+        this.$confirm(this.$t('confirm_to_del'), this.$t('tips'), {
           type: 'warning'
         }).then(() => {
           HttpUtil.delete("/profile/del/" + row.id, {}, (res) => {

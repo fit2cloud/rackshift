@@ -24,7 +24,7 @@ public class WorkflowEndHandler extends AbstractHandler {
 
     @Override
     public void handleYourself(LifeEvent event) {
-        if (event.getWorkflowRequestDTO().getParams() == null) {
+        if (event.getWorkflowRequestDTO() != null && event.getWorkflowRequestDTO().getParams() == null) {
             return;
         }
         boolean result = event.getWorkflowRequestDTO().getParams().getBoolean("result");

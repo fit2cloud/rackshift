@@ -8,6 +8,7 @@ import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.Profile;
 import io.rackshift.mybatis.domain.ProfileExample;
 import io.rackshift.mybatis.mapper.ProfileMapper;
+import io.rackshift.mybatis.mapper.ext.ExtImageMapper;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +35,8 @@ public class ProfileService {
     private ProfileMapper profileMapper;
     @Resource
     private EndpointService endpointService;
+    @Resource
+    private ExtImageMapper extImageMapper;
 
     public Object add(ProfileDTO queryVO) throws Exception {
         if (StringUtils.isNotBlank(queryVO.getName())) {
@@ -54,8 +57,11 @@ public class ProfileService {
     }
 
     public Object update(Profile queryVO) throws Exception {
-        Profile image = new Profile();
-        BeanUtils.copyBean(image, queryVO);
+        Profile image = profileMapper.selectByPrimaryKey(queryVO.getId());
+//        if (ServiceConstants.SYSTEM.equalsIgnoreCase(image.getType())) {
+//            return false;
+//        }
+        queryVO.setId(image.getId());
         if (uploadToServer(queryVO)) {
             profileMapper.updateByPrimaryKeySelective(image);
             return true;
@@ -68,16 +74,17 @@ public class ProfileService {
         if (profile == null) {
             return false;
         }
-        if (profile.getType().equalsIgnoreCase(ServiceConstants.TYPE_SYS)) {
+        if (profile.getType().equalsIgnoreCase(ServiceConstants.SYSTEM)) {
             return false;
         }
-
+        profileMapper.deleteByPrimaryKey(id);
+        extImageMapper.deleteProfileById(id);
         return true;
     }
 
     public Object del(String[] ids) {
         for (String id : ids) {
-            if (ServiceConstants.TYPE_SYS.equalsIgnoreCase(profileMapper.selectByPrimaryKey(id).getType())) {
+            if (ServiceConstants.SYSTEM.equalsIgnoreCase(profileMapper.selectByPrimaryKey(id).getType())) {
                 return false;
             }
         }
@@ -106,7 +113,6 @@ public class ProfileService {
     }
 
     private boolean uploadToServer(Profile profile) throws Exception {
-
         File temp = File.createTempFile(profile.getName(), null);
         FileOutputStream fileOutputStream = new FileOutputStream(temp);
         fileOutputStream.write(profile.getContent().getBytes());

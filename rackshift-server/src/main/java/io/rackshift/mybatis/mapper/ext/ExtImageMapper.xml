@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.mybatis.mapper.ext.ExtImageMapper">
+    <select id="allImage" resultType="io.rackshift.model.ImageDTO">
+        select image.*,
+               profile.id       pid,
+               template.id      tid,
+               profile.name     pName,
+               template.name    tName,
+               profile.content  pContent,
+               template.content tContent
+        from image
+                 left join profile on image.profile_id = profile.id
+                 left join template on image.template_id = template.id
+    </select>
+
+    <update id="deleteTemplateById">
+        update image
+        set template_id = null
+        where template_id = #{templateId}
+    </update>
+
+    <update id="deleteProfileById">
+        update image
+        set profile_id = null
+        where profile_id = #{profileId}
+    </update>
+
+</mapper>

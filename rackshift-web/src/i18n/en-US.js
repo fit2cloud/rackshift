@@ -106,7 +106,7 @@ export default {
     "pls_select": "Please select",
     "Control": "Control",
     "mem_cpu_num": "Memory CPU Number",
-    "SystemParameter": "System Mistakes",
+    "SystemParameter": "System Parameter",
     "GB": "GB",
     "OBM": "Out of Band",
     "change_pwd": "Change Password",
@@ -522,5 +522,5 @@ export default {
     "template": "Template",
     "more_than_3": "more than 3 words",
     "pls_input": "please input",
-
+    "not_support_validate": "UI param will not be supported",
 }

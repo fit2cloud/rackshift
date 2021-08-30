@@ -515,13 +515,13 @@ export default {
     "open_webkvm": "遠程 KVM 控制台",
     "post_install" : "POST-INSTALL 腳本",
     "view_example": "查看實例",
-    "Profile": "配置文件",
+    "Profile": "引導文件",
     "InstallScript": "安裝腳本",
-    "Profile already exists!": "配置文件已經存在",
-    "add_profile": "添加配置文件",
-    "edit_profile": "編輯配置文件",
+    "Profile already exists!": "引導文件已經存在",
+    "add_profile": "添加引導文件",
+    "edit_profile": "編輯引導文件",
     "content": "內容",
-    "profile": "配置文件",
+    "profile": "引導文件",
 
 
     "Template already exists!": "安裝腳本已经存在",
@@ -530,4 +530,5 @@ export default {
     "template": "安裝腳本",
     "more_than_3": "至少3個字符",
     "pls_input": "請輸入",
+    "not_support_validate": "已選擇的鏡像已有裝機腳本，因此 UI 填寫的參數將可能不會生效",
 }

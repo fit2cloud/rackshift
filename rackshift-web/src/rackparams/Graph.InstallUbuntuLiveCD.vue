@@ -573,8 +573,8 @@ export default {
     }
     ,
     getAllImage: function () {
-      HttpUtil.post("/image/list/" + 1 + "/" + 1000, {}, (res) => {
-        this.allImages = _.filter(res.data.listObject, i => i.os == 'ubuntu' && i.osVersion == '20.04 liveCD');
+      HttpUtil.post("/image/allImage", {}, (res) => {
+        this.allImages = _.filter(res.data, i => i.os == 'ubuntu' && i.osVersion == '20.04 liveCD');
         if (!this.allImages) {
           this.$message.error(this.$t('no_valid_image!'));
           return;
