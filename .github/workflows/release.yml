@@ -22,8 +22,8 @@ jobs:
           rm -rf docker .git
           cd ..
           chmod +x rackshift-installer/installer/install.sh
-          version=`echo $RELEASE_VERSION | tr -d 'REFS/TAGS/'`
-          filename=$version
+          version=`echo $RELEASE_VERSION | tr -d 'refs/tags/'`
+          filename=rackshift-online-installer-$version
           mv rackshift-installer $filename
           tar -czvf $filename.tar.gz $filename
           echo "::set-output name=FILENAME::$(echo $filename)"
