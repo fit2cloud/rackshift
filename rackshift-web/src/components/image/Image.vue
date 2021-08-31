@@ -125,25 +125,45 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item :label="$t('image')" v-if="editType != 'edit'">
-                <el-upload
-                    class="upload-demo"
-                    drag
-                    ref="uploader"
-                    :before-upload="beforeUpload"
-                    :on-success="afterUploadSuccess"
-                    action="/image/upload"
-                    style="margin-bottom: 20px;"
-                    :multiple=false
-                    :limit="1"
-                    :disabled="editType == 'edit'"
-                >
-                  <i class="el-icon-upload"></i>
-                  <div class="el-upload__text">{{ $t('drag_file_into_or') }}<em>{{ $t('click_to_upload') }}</em></div>
-                  <div class="el-upload__tip" slot="tip">{{ $t('only_iso_no_more_than_10g') }}
-                    <em class="upload-tip">{{ $t('upload_success_submit') }}</em>
-                  </div>
-                </el-upload>
+              <el-tabs v-model="activeTypeName" @tab-click="handleChangeType" v-if="editType != 'edit'">
+                <el-tab-pane :label="$t('front_upload')" name="front">
+                  <el-form-item :label="$t('image')" v-if="editType != 'edit'">
+                    <el-upload
+                        class="upload-demo"
+                        drag
+                        ref="uploader"
+                        :before-upload="beforeUpload"
+                        :on-success="afterUploadSuccess"
+                        action="/image/upload"
+                        style="margin-bottom: 20px;"
+                        :multiple=false
+                        :limit="1"
+                        :disabled="editType == 'edit'"
+                    >
+                      <i class="el-icon-upload"></i>
+                      <div class="el-upload__text">{{ $t('drag_file_into_or') }}<em>{{ $t('click_to_upload') }}</em>
+                      </div>
+                      <div class="el-upload__tip" slot="tip">{{ $t('only_iso_no_more_than_10g') }}
+                        <em class="upload-tip">{{ $t('upload_success_submit') }}</em>
+                      </div>
+                    </el-upload>
+                  </el-form-item>
+                </el-tab-pane>
+                <el-tab-pane :label="$t('backend_upload')" name="backend">
+
+                  <el-form-item :label="$t('url')" prop="name">
+                    <div class="el-upload__text">{{ $t('mount_text') }}
+                    </div>
+                    <el-input v-model="editObj.url" autocomplete="off"></el-input>
+                  </el-form-item>
+
+                </el-tab-pane>
+
+              </el-tabs>
+              <el-form-item :label="$t('url')" prop="name" v-if="editType == 'edit'">
+                <div class="el-upload__text">{{ $t('mount_text') }}
+                </div>
+                <el-input v-model="editObj.url" autocomplete="off"></el-input>
               </el-form-item>
 
             </el-form>
@@ -198,6 +218,7 @@ export default {
       allTemplates: [],
       allProfiles: [],
       activeName: 'image',
+      activeTypeName: 'front',
       canConfirm: false,
       rules: {
         name: [
@@ -236,22 +257,22 @@ export default {
           label: 'os_vesion',
           prop: "osVersion"
         },
-        {
-          label: 'status',
-          prop: "status",
-          custom: true,
-          statusMap: {
-            "not_detected": this.$t('not_detected'),
-            "detected": this.$t('detected'),
-            "error": this.$t('error'),
-          },
-          formatter: function (item) {
-            if (item) {
-              return this.statusMap[item];
-            }
-            return item;
-          }
-        },
+        // {
+        //   label: 'status',
+        //   prop: "status",
+        //   custom: true,
+        //   statusMap: {
+        //     "not_detected": this.$t('not_detected'),
+        //     "detected": this.$t('detected'),
+        //     "error": this.$t('error'),
+        //   },
+        //   formatter: function (item) {
+        //     if (item) {
+        //       return this.statusMap[item];
+        //     }
+        //     return item;
+        //   }
+        // },
       ],
       editDialogVisible: false,
       editType: 'edit',
@@ -335,6 +356,13 @@ export default {
     changeOsVersion() {
       this.allOsVersion = _.find(this.allOs, {"id": this.editObj.os}).versions;
       this.editObj.osVersion = null;
+    },
+    handleChangeType() {
+      if (this.activeTypeName == 'backend') {
+        this.canConfirm = true;
+      } else {
+        this.canConfirm = false;
+      }
     },
     handleClose() {
       this.editDialogVisible = false;

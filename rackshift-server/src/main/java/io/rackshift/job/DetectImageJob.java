@@ -22,7 +22,7 @@ public class DetectImageJob {
     @Value("${file.upload.dir}")
     private String fileUploadBase;
 
-    @Scheduled(fixedDelay = 5 * 60 * 1000)
+//    @Scheduled(fixedDelay = 5 * 60 * 1000) 不检测 镜像状态了
     public void run() {
         try {
             if (new File(fileUploadBase).exists()) {

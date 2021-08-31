@@ -535,4 +535,7 @@ export default {
     "more_than_3": "至少3个字符",
     "pls_input": "请输入",
     "not_support_validate": "已选择的镜像已有装机脚本，因此 UI 填写的参数将可能不会生效",
+    "backend_upload": "后端挂载",
+    "front_upload": "前端上传",
+    "mount_text" : "默认 http 服务器挂载地址在 /opt/rackshift/rackhd/files/mount/common，也可以直接使用其他第三方 http 服务器"
 }

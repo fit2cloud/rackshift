@@ -523,4 +523,7 @@ export default {
     "more_than_3": "more than 3 words",
     "pls_input": "please input",
     "not_support_validate": "UI param will not be supported",
+    "backend_upload": "Mount",
+    "front_upload": "Upload",
+    "mount_text" : "default mount point is under /opt/rackshift/rackhd/files/mount/common，third part http server is also available"
 }
