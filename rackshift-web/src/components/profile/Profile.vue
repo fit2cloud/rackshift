@@ -109,7 +109,7 @@
             </el-form>
             <div class="demo-drawer__footer">
               <el-button @click="editDialogVisible = false">{{ $t('cancel') }}</el-button>
-              <el-button type="primary" @click="confirmEdit" :loading="loading" :disabled="editObj.type == 'system'">{{
+              <el-button type="primary" @click="confirmEdit" :loading="loading" >{{
                   loading ? $t('submitting') +
                       '...' : $t('confirm')
                 }}

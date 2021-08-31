@@ -18,10 +18,19 @@
           <el-form-item :label="$t('image')" prop="repo">
             <el-select v-model="payLoad.options.defaults.repo" class="input-element" filterable
                        allow-create
-                       default-first-option>
+                       default-first-option @change="changePT">
               <el-option v-for="g in allImages" :label="g.name"
                          :value="g.url"></el-option>
             </el-select>
+          </el-form-item>
+
+          <el-form-item :label="$t('profile')" prop="repo" v-if="payLoad.options.defaults.profile">
+            <el-link target="_blank" @click="showContent('profile')">{{ payLoad.options.defaults.profile }}</el-link>
+          </el-form-item>
+
+          <el-form-item :label="$t('InstallScript')" prop="repo" v-if=" payLoad.options.defaults.installScript">
+            <el-link target="_blank" @click="showContent('template')">{{ payLoad.options.defaults.installScript }}
+            </el-link>
           </el-form-item>
 
           <el-form-item :label="$t('custom_partition')">
@@ -167,6 +176,17 @@
       </el-row>
 
     </el-form>
+
+    <el-dialog
+        :title="tip"
+        :visible.sync="dialogVisible"
+        :append-to-body="true"
+        width="50%">
+      <el-input type="textarea" rows="25" cols="150" v-model="content"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="updateScript()">{{ $t("confirm") }}</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -195,6 +215,10 @@ export default {
   },
   data() {
     return {
+      tip: null,
+      dialogVisible: false,
+      content: null,
+      scriptType: null,
       objs: [],
       nicActiveNames: '0',
       switchActiveNames: 'switch0',
@@ -321,6 +345,67 @@ export default {
   }
   ,
   methods: {
+    updateScript() {
+      let image = _.find(this.allImages, i => i.url == this.payLoad.options.defaults.repo);
+      if (image == null) return;
+      let req = {};
+      let url = null;
+      if (this.scriptType == 'profile') {
+        req = {
+          "id": image.pid,
+          "name": image.pName,
+          "content": this.content,
+        };
+        url = "/profile/update";
+      } else {
+
+        req = {
+          "id": image.tid,
+          "name": image.tName,
+          "content": this.content,
+        };
+        url = "/template/update";
+      }
+      let that = this;
+      HttpUtil.put(url, req, (res) => {
+        if (res.data) {
+          that.getAllImage();
+        } else {
+          this.$message.error(this.$t('opt_fail'));
+        }
+      });
+      this.dialogVisible = false;
+    },
+    showContent(type) {
+      this.scriptType = type;
+      let image = _.find(this.allImages, i => i.url == this.payLoad.options.defaults.repo);
+      if (type == 'profile') {
+        this.tip = this.payLoad.options.defaults.profile;
+        this.content = image.pContent;
+      } else {
+        this.tip = this.payLoad.options.defaults.installScript;
+        this.content = image.tContent;
+      }
+      this.dialogVisible = true;
+    },
+    changePT(url) {
+      let centosImage = _.find(this.allImages, i => i.url == url);
+      let customPXE = false;
+      if (centosImage.pName) {
+        this.payLoad.options.defaults.profile = centosImage.pName;
+        customPXE = true;
+      } else {
+        delete this.payLoad.options.defaults.profile;
+      }
+      if (centosImage.tName) {
+        this.payLoad.options.defaults.installScript = centosImage.tName;
+        customPXE = true;
+      } else {
+        delete this.payLoad.options.defaults.installScript;
+      }
+      if (customPXE)
+        this.$message.info(this.$t("not_support_validate"));
+    },
     changeUefiBoot: function () {
 
       if (this.extraParams.uefi) {
@@ -564,20 +649,45 @@ export default {
       return this.validateResult;
     }
     ,
+
     getAllImage: function () {
       HttpUtil.post("/image/allImage", {}, (res) => {
         this.allImages = _.filter(res.data, i => i.os == 'ubuntu' && i.osVersion == '18.04 Legacy');
-        if (!this.allImages) {
+        if (!this.allImages || !this.allImages.length) {
           this.$message.error(this.$t('no_valid_image!'));
           return;
         }
         if (!this.payLoad.options.defaults.repo) {
-          let centosImage = _.find(this.allImages, i => i.os == 'ubuntu');
+          let centosImage = _.find(this.allImages, i => i.os == 'ubuntu' && i.osVersion == '18.04 Legacy');
           if (centosImage) {
             this.payLoad.options.defaults.repo = centosImage.url;
+            if (centosImage.pName) {
+              this.payLoad.options.defaults.profile = centosImage.pName;
+            }
+            if (centosImage.tName) {
+              this.payLoad.options.defaults.installScript = centosImage.tName;
+            }
           } else {
             this.$message.error(this.$t('no_valid_image!'));
           }
+        } else {
+          let that = this;
+          let centosImage = _.find(that.allImages, i => i.url == that.payLoad.options.defaults.repo);
+          if (centosImage) {
+            this.payLoad.options.defaults.repo = centosImage.url;
+            if (centosImage.pName) {
+              this.payLoad.options.defaults.profile = centosImage.pName;
+            }
+            if (centosImage.tName) {
+              this.payLoad.options.defaults.installScript = centosImage.tName;
+            }
+            if (centosImage.pName || centosImage.tName) {
+              this.$message.info(this.$t("not_support_validate"));
+            }
+          } else {
+            this.payLoad.options.defaults.repo = null;
+          }
+
         }
       });
     }

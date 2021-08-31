@@ -492,7 +492,7 @@ export default {
     getAllImage: function () {
       HttpUtil.post("/image/allImage", {}, (res) => {
         this.allImages = _.filter(res.data, i => i.os == 'esxi');
-        if (!this.allImages) {
+        if (!this.allImages || !this.allImages.length) {
           this.$message.error(this.$t('no_valid_image!'));
           return;
         }

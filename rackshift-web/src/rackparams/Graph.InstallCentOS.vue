@@ -743,12 +743,12 @@ export default {
     getAllImage: function () {
       HttpUtil.post("/image/allImage", {}, (res) => {
         this.allImages = _.filter(res.data, i => i.os == 'centos');
-        if (!this.allImages) {
+        if (!this.allImages || !this.allImages.length) {
           this.$message.error(this.$t('no_valid_image!'));
           return;
         }
         if (!this.payLoad.options.defaults.repo) {
-          let centosImage = _.find(this.allImages, i => i.os == 'centos');
+          let centosImage = _.find(this.allImages, i => i => i.os == 'centos');
           if (centosImage) {
             this.payLoad.options.defaults.repo = centosImage.url;
             if (centosImage.pName) {
