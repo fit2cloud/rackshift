@@ -1,7 +1,5 @@
 package io.rackshift.service;
 
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.ProfileDTO;
 import io.rackshift.model.RSException;
@@ -10,6 +8,7 @@ import io.rackshift.mybatis.domain.ProfileExample;
 import io.rackshift.mybatis.mapper.ProfileMapper;
 import io.rackshift.mybatis.mapper.ext.ExtImageMapper;
 import io.rackshift.utils.BeanUtils;
+import io.rackshift.utils.LogUtil;
 import io.rackshift.utils.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -30,7 +29,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProfileService {
-    private Logger logger = LoggerFactory.getLogger(ProfileService.class);
     @Resource
     private ProfileMapper profileMapper;
     @Resource
@@ -133,7 +131,7 @@ public class ProfileService {
             if (state == HttpStatus.SC_OK || state == HttpStatus.SC_CREATED) {
                 return true;
             } else {
-                logger.error("请求返回:" + state + "(" + url + ")");
+                LogUtil.error("请求返回:" + state + "(" + url + ")");
             }
         } catch (Exception e) {
             System.out.println(e);

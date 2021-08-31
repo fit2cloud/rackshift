@@ -1,8 +1,5 @@
 package io.rackshift.service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.RSException;
 import io.rackshift.model.TemplateDTO;
@@ -11,19 +8,17 @@ import io.rackshift.mybatis.domain.TemplateExample;
 import io.rackshift.mybatis.mapper.TemplateMapper;
 import io.rackshift.mybatis.mapper.ext.ExtImageMapper;
 import io.rackshift.utils.BeanUtils;
+import io.rackshift.utils.LogUtil;
 import io.rackshift.utils.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -31,12 +26,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @Service
 public class TemplateService {
-    private Logger logger = LoggerFactory.getLogger(TemplateService.class);
     @Resource
     private TemplateMapper templateMapper;
     @Resource
@@ -91,11 +84,11 @@ public class TemplateService {
             CloseableHttpResponse response = httpclient.execute(httpDelete);
             StatusLine statusLine = response.getStatusLine();
             if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
-                logger.error("删除template失败！可能是文件不存在！" + template.getName());
+                LogUtil.error("删除template失败！可能是文件不存在！" + template.getName());
             }
         } catch (IOException e) {
             e.printStackTrace();
-            logger.error("删除template失败！异常" + e);
+            LogUtil.error("删除template失败！异常" + e);
         }
         templateMapper.deleteByPrimaryKey(id);
         extImageMapper.deleteTemplateById(template.getId());
@@ -154,10 +147,10 @@ public class TemplateService {
             if (state == HttpStatus.SC_OK || state == HttpStatus.SC_CREATED) {
                 return true;
             } else {
-                logger.error("请求返回:" + state + "(" + url + ")");
+                LogUtil.error("请求返回:" + state + "(" + url + ")");
             }
         } catch (Exception e) {
-            logger.error("请求失败:" + e);
+            LogUtil.error("请求失败:" + e);
         } finally {
             if (response != null) {
                 try {
