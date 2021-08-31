@@ -22,11 +22,11 @@ jobs:
           rm -rf docker .git
           cd ..
           chmod +x rackshift-installer/installer/install.sh
-          version=`echo $RELEASE_VERSION | tr 'a-z' 'A-Z' | tr -d 'REFS/TAGS/'`
-          filename=rackshift$version
+          version=`echo $RELEASE_VERSION | tr -d 'REFS/TAGS/'`
+          filename=$version
           mv rackshift-installer $filename
           tar -czvf $filename.tar.gz $filename
-          echo "::set-output name=VERSION::$(echo $version)"
+          echo "::set-output name=FILENAME::$(echo $filename)"
 
       - name: Create Release
         id: create_release
@@ -49,7 +49,7 @@ jobs:
             ```
 
             ## 新增功能
-            - 支持 自定义 KS，IPXE 装机
+            - 支持 自定义 KS，iPXE 装机
             - 自定义品牌
             - 镜像支持后台挂载
 
@@ -71,8 +71,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./rackshift${{ steps.create_release_file.outputs.VERSION }}.tar.gz
-          asset_name: rackshift${{ steps.create_release_file.outputs.VERSION }}.tar.gz
+          asset_path: ./${{ steps.create_release_file.outputs.FILENAME }}.tar.gz
+          asset_name: ${{ steps.create_release_file.outputs.FILENAME }}.tar.gz
           asset_content_type: application/zip
 
       - name: Upload Quick Start Script
@@ -82,6 +82,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./rackshift${{ steps.create_release_file.outputs.VERSION }}/installer/quick_start.sh
+          asset_path: ./${{ steps.create_release_file.outputs.FILENAME }}/installer/quick_start.sh
           asset_name: quick_start.sh
           asset_content_type: application/text
