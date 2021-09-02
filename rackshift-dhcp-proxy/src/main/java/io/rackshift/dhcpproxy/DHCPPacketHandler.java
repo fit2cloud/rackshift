@@ -140,7 +140,7 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
             if (node != null && node.discovered()) {
                 if (!node.isRunningTask()) {
                     return false;
-                }else{
+                } else {
                     return node.isRequestProfile();
                 }
             }
@@ -158,7 +158,7 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
                 f.cause().printStackTrace();
             }
         });
-        ConsoleUtil.log("send: " + "http://" + ConfigurationUtil.getConfig(ConfigConstants.TFTP_URL, "172.31.128.1") + "/" + bootfileName + " ! to" + datagramPacket.sender() + " macaddress:" + dhcpAckPacket.getString("chaddr"));
+        ConsoleUtil.log("send: " + bootfileName + " ! to" + datagramPacket.sender() + " macaddress:" + dhcpAckPacket.getString("chaddr"));
     }
 
     @Override
