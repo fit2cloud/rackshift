@@ -140,11 +140,12 @@ public class ImageService {
                 return true;
             }
         } catch (Exception e) {
-            if (new File(imageDTO.getFilePath()).exists())
+            if (StringUtils.isNotBlank(imageDTO.getFilePath()) && new File(imageDTO.getFilePath()).exists())
                 new File(imageDTO.getFilePath()).delete();
             return true;
         }
-        return false;
+        //不管怎样都算成功删掉
+        return true;
     }
 
     private String getEndpointUrl(String endpointId) {
