@@ -4,7 +4,7 @@
 
 module.exports = {
     friendlyName: 'Provide Ami Catalog Bios Version',
-    injectableName: 'Task.Catalogs.Provide.Ami.BiosVersion',
+    injectableName: 'Task.Catalogs.Provide.Quanta.BiosVersion',
     implementsTask: 'Task.Base.Catalogs.ProvideValue',
     options: {
         'source': 'ami',

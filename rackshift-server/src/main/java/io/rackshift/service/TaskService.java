@@ -1,7 +1,11 @@
 package io.rackshift.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import io.rackshift.constants.ServiceConstants;
+import io.rackshift.engine.basetask.BaseTask;
+import io.rackshift.engine.taskobject.BaseTaskObject;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.RSException;
 import io.rackshift.model.TaskDTO;
@@ -16,12 +20,15 @@ import io.rackshift.strategy.statemachine.StateMachine;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.SessionUtil;
 import io.rackshift.utils.UUIDUtil;
+import net.sf.cglib.core.Local;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +55,10 @@ public class TaskService {
     private WorkflowService workflowService;
     @Autowired
     private SimpMessagingTemplate template;
+    @Resource
+    private Map<String, BaseTaskObject> taskObject;
+    @Resource
+    private Map<String, BaseTask> baseTask;
 
     public Object add(TaskDTO queryVO) {
         TaskWithBLOBs task = new TaskWithBLOBs();
@@ -130,6 +141,8 @@ public class TaskService {
                 task.setExtparams(Optional.ofNullable(e.getWorkflowRequestDTO().getExtraParams()).orElse(new JSONObject()).toJSONString());
                 task.setStatus(ServiceConstants.TaskStatusEnum.created.name());
                 task.setCreateTime(System.currentTimeMillis());
+                //生成真正的 taskgraph 实例对象
+                task.setGraphObjects(generateGraphObjects(e));
                 list.add(task);
             });
 
@@ -146,6 +159,65 @@ public class TaskService {
                 taskMapper.insertSelective(taskWithBLOBs);
             }
         }
+    }
+
+    private String generateGraphObjects(LifeEvent e) {
+        String bareMetalId = e.getBareMetalId();
+        String workflowName = e.getWorkflowRequestDTO().getWorkflowName();
+        WorkflowWithBLOBs w = workflowService.getByInjectableName(workflowName);
+        JSONObject taskObjects = new JSONObject();
+        if (w != null) {
+            JSONArray tasks = JSONArray.parseArray(w.getTasks());
+
+            Map<String, String> instanceMap = new HashedMap();
+            for (int i = 0; i < tasks.size(); i++) {
+                JSONObject task = tasks.getJSONObject(i);
+                String taskName = task.getString("taskName");
+                JSONObject taskObj = (JSONObject) JSONObject.toJSON(taskObject.get(taskName));
+                JSONObject baseTaskObj = (JSONObject) JSONObject.toJSON(baseTask.get(taskObj.getString("implementsTask")));
+                taskObj.keySet().forEach(k -> {
+                    task.put(k, taskObj.get(k));
+                });
+
+                task.put("runJob", baseTaskObj.get("runJob"));
+                task.put("state", ServiceConstants.RackHDTaskStatusEnum.pending.name());
+                task.put("taskStartTime", LocalDateTime.now());
+                if (task.getJSONObject("options") == null) {
+                    task.put("options", extract(e.getWorkflowRequestDTO().getParams()));
+                } else {
+                    JSONObject userOptions = extract(e.getWorkflowRequestDTO().getParams());
+                    JSONObject options = task.getJSONObject("options");
+                    userOptions.keySet().forEach(k -> {
+                        options.put(k, userOptions.get(k));
+                    });
+                }
+                task.put("bareMetalId", bareMetalId);
+                task.put("instanceId", UUIDUtil.newUUID());
+
+                //将 waiton的 task label 替换成实例的 instancId
+                instanceMap.put(task.getString("label"), task.getString("instanceId"));
+                if (task.getJSONObject("waitOn") != null) {
+                    JSONObject waitOnObj = task.getJSONObject("waitOn");
+                    String label = waitOnObj.keySet().stream().findFirst().get();
+                    waitOnObj.put(instanceMap.get(label), waitOnObj.getString(label));
+                    waitOnObj.remove(label);
+                    task.put("waitingOn", waitOnObj);
+                    task.remove("waitOn");
+                }
+
+                taskObjects.put(task.getString("instanceId"), task);
+            }
+            return taskObjects.toJSONString();
+        }
+
+        return taskObjects.toJSONString();
+    }
+
+    private JSONObject extract(JSONObject params) {
+        if (params.containsKey("options")) {
+            return params.getJSONObject("options").getJSONObject("defaults");
+        }
+        return params;
     }
 
     private String findLastTaskId(String bareMetalId) {
@@ -178,10 +250,6 @@ public class TaskService {
         return taskMapper.deleteByExample(e);
     }
 
-
-    public static void main(String[] args) {
-        new ArrayList<>().get(0);
-    }
 
     public boolean cancel(String[] ids) {
         if (ids == null || ids.length == 0) {
