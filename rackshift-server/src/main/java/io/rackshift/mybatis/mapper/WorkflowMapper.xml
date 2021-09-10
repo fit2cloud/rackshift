@@ -12,8 +12,10 @@
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="create_time" jdbcType="BIGINT" property="createTime" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.Workflow">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.WorkflowWithBLOBs">
     <result column="default_params" jdbcType="LONGVARCHAR" property="defaultParams" />
+    <result column="tasks" jdbcType="LONGVARCHAR" property="tasks" />
+    <result column="options" jdbcType="LONGVARCHAR" property="options" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -77,7 +79,7 @@
     id, type, injectable_name, friendly_name, event_type, brands, settable, status, create_time
   </sql>
   <sql id="Blob_Column_List">
-    default_params
+    default_params, tasks, options
   </sql>
   <select id="selectByExampleWithBLOBs" parameterType="io.rackshift.mybatis.domain.WorkflowExample" resultMap="ResultMapWithBLOBs">
     select
@@ -127,17 +129,19 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="io.rackshift.mybatis.domain.Workflow">
+  <insert id="insert" parameterType="io.rackshift.mybatis.domain.WorkflowWithBLOBs">
     insert into workflow (id, type, injectable_name, 
       friendly_name, event_type, brands, 
       settable, status, create_time, 
-      default_params)
+      default_params, tasks, options
+      )
     values (#{id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{injectableName,jdbcType=VARCHAR}, 
       #{friendlyName,jdbcType=VARCHAR}, #{eventType,jdbcType=VARCHAR}, #{brands,jdbcType=VARCHAR}, 
       #{settable,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, 
-      #{defaultParams,jdbcType=LONGVARCHAR})
+      #{defaultParams,jdbcType=LONGVARCHAR}, #{tasks,jdbcType=LONGVARCHAR}, #{options,jdbcType=LONGVARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.Workflow">
+  <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.WorkflowWithBLOBs">
     insert into workflow
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -170,6 +174,12 @@
       <if test="defaultParams != null">
         default_params,
       </if>
+      <if test="tasks != null">
+        tasks,
+      </if>
+      <if test="options != null">
+        options,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -201,6 +211,12 @@
       </if>
       <if test="defaultParams != null">
         #{defaultParams,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tasks != null">
+        #{tasks,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="options != null">
+        #{options,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -243,6 +259,12 @@
       <if test="record.defaultParams != null">
         default_params = #{record.defaultParams,jdbcType=LONGVARCHAR},
       </if>
+      <if test="record.tasks != null">
+        tasks = #{record.tasks,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.options != null">
+        options = #{record.options,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -259,7 +281,9 @@
       settable = #{record.settable,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=BIGINT},
-      default_params = #{record.defaultParams,jdbcType=LONGVARCHAR}
+      default_params = #{record.defaultParams,jdbcType=LONGVARCHAR},
+      tasks = #{record.tasks,jdbcType=LONGVARCHAR},
+      options = #{record.options,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -279,7 +303,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="io.rackshift.mybatis.domain.Workflow">
+  <update id="updateByPrimaryKeySelective" parameterType="io.rackshift.mybatis.domain.WorkflowWithBLOBs">
     update workflow
     <set>
       <if test="type != null">
@@ -309,10 +333,16 @@
       <if test="defaultParams != null">
         default_params = #{defaultParams,jdbcType=LONGVARCHAR},
       </if>
+      <if test="tasks != null">
+        tasks = #{tasks,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="options != null">
+        options = #{options,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="io.rackshift.mybatis.domain.Workflow">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="io.rackshift.mybatis.domain.WorkflowWithBLOBs">
     update workflow
     set type = #{type,jdbcType=VARCHAR},
       injectable_name = #{injectableName,jdbcType=VARCHAR},
@@ -322,7 +352,9 @@
       settable = #{settable,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=BIGINT},
-      default_params = #{defaultParams,jdbcType=LONGVARCHAR}
+      default_params = #{defaultParams,jdbcType=LONGVARCHAR},
+      tasks = #{tasks,jdbcType=LONGVARCHAR},
+      options = #{options,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.Workflow">

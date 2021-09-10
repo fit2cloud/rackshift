@@ -1,8 +1,7 @@
 package io.rackshift.mybatis.domain;
 
-import lombok.Data;
-
 import java.io.Serializable;
+import lombok.Data;
 
 @Data
 public class Workflow implements Serializable {
@@ -23,8 +22,6 @@ public class Workflow implements Serializable {
     private String status;
 
     private Long createTime;
-
-    private String defaultParams;
 
     private static final long serialVersionUID = 1L;
 }

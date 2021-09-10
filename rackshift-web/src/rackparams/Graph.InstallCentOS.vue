@@ -605,6 +605,7 @@ export default {
     },
     restorePartition: function () {
       this.payLoad = JSON.parse(JSON.stringify(this.defaultPayLoad));
+      this.extraParams.unit = "MB";
       this.getAllImage();
     },
     valid: function () {

@@ -16,6 +16,7 @@
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.TaskWithBLOBs">
     <result column="params" jdbcType="LONGVARCHAR" property="params" />
     <result column="extParams" jdbcType="LONGVARCHAR" property="extparams" />
+    <result column="graph_objects" jdbcType="LONGVARCHAR" property="graphObjects" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -80,7 +81,7 @@
     update_time, before_status
   </sql>
   <sql id="Blob_Column_List">
-    params, extParams
+    params, extParams, graph_objects
   </sql>
   <select id="selectByExampleWithBLOBs" parameterType="io.rackshift.mybatis.domain.TaskExample" resultMap="ResultMapWithBLOBs">
     select
@@ -134,13 +135,13 @@
     insert into task (id, pre_task_id, work_flow_id, 
       bare_metal_id, user_id, instance_id, 
       status, create_time, update_time, 
-      before_status, params, extParams
-      )
+      before_status, params, extParams, 
+      graph_objects)
     values (#{id,jdbcType=VARCHAR}, #{preTaskId,jdbcType=VARCHAR}, #{workFlowId,jdbcType=VARCHAR}, 
       #{bareMetalId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{instanceId,jdbcType=VARCHAR}, 
       #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{updateTime,jdbcType=BIGINT}, 
-      #{beforeStatus,jdbcType=VARCHAR}, #{params,jdbcType=LONGVARCHAR}, #{extparams,jdbcType=LONGVARCHAR}
-      )
+      #{beforeStatus,jdbcType=VARCHAR}, #{params,jdbcType=LONGVARCHAR}, #{extparams,jdbcType=LONGVARCHAR}, 
+      #{graphObjects,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.TaskWithBLOBs">
     insert into task
@@ -181,6 +182,9 @@
       <if test="extparams != null">
         extParams,
       </if>
+      <if test="graphObjects != null">
+        graph_objects,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -218,6 +222,9 @@
       </if>
       <if test="extparams != null">
         #{extparams,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="graphObjects != null">
+        #{graphObjects,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -266,6 +273,9 @@
       <if test="record.extparams != null">
         extParams = #{record.extparams,jdbcType=LONGVARCHAR},
       </if>
+      <if test="record.graphObjects != null">
+        graph_objects = #{record.graphObjects,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -284,7 +294,8 @@
       update_time = #{record.updateTime,jdbcType=BIGINT},
       before_status = #{record.beforeStatus,jdbcType=VARCHAR},
       params = #{record.params,jdbcType=LONGVARCHAR},
-      extParams = #{record.extparams,jdbcType=LONGVARCHAR}
+      extParams = #{record.extparams,jdbcType=LONGVARCHAR},
+      graph_objects = #{record.graphObjects,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -341,6 +352,9 @@
       <if test="extparams != null">
         extParams = #{extparams,jdbcType=LONGVARCHAR},
       </if>
+      <if test="graphObjects != null">
+        graph_objects = #{graphObjects,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -356,7 +370,8 @@
       update_time = #{updateTime,jdbcType=BIGINT},
       before_status = #{beforeStatus,jdbcType=VARCHAR},
       params = #{params,jdbcType=LONGVARCHAR},
-      extParams = #{extparams,jdbcType=LONGVARCHAR}
+      extParams = #{extparams,jdbcType=LONGVARCHAR},
+      graph_objects = #{graphObjects,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="io.rackshift.mybatis.domain.Task">
