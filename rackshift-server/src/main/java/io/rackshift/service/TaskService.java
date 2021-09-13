@@ -24,15 +24,15 @@ import net.sf.cglib.core.Local;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,6 +59,8 @@ public class TaskService {
     private Map<String, BaseTaskObject> taskObject;
     @Resource
     private Map<String, BaseTask> baseTask;
+    @Resource
+    private Map<String, String> renderOptions;
 
     public Object add(TaskDTO queryVO) {
         TaskWithBLOBs task = new TaskWithBLOBs();
@@ -168,8 +170,11 @@ public class TaskService {
         JSONObject taskObjects = new JSONObject();
         if (w != null) {
             JSONArray tasks = JSONArray.parseArray(w.getTasks());
-
+            // 原 rackhd graph 定义默认参数
+            JSONObject definitionOptions = JSONObject.parseObject(w.getOptions());
+            Map<String, JSONObject> taskOptions = definitionOptions.keySet().stream().collect(Collectors.toMap(k -> k, k -> definitionOptions.getJSONObject(k)));
             Map<String, String> instanceMap = new HashedMap();
+
             for (int i = 0; i < tasks.size(); i++) {
                 JSONObject task = tasks.getJSONObject(i);
                 String taskName = task.getString("taskName");
@@ -191,6 +196,15 @@ public class TaskService {
                         options.put(k, userOptions.get(k));
                     });
                 }
+
+                if (taskOptions.get(task.getString("label")) != null) {
+                    taskOptions.get(task.getString("label")).keySet().forEach(k -> {
+                        if (!task.getJSONObject("options").containsKey(k)) {
+                            task.getJSONObject("options").put(k, taskOptions.get(task.getString("label")).get(k));
+                        }
+                    });
+                }
+
                 task.put("bareMetalId", bareMetalId);
                 task.put("instanceId", UUIDUtil.newUUID());
 
@@ -205,12 +219,32 @@ public class TaskService {
                     task.remove("waitOn");
                 }
 
+                //渲染参数中的 {{}} 形式变量
+                renderTaskOptions(task);
                 taskObjects.put(task.getString("instanceId"), task);
             }
-            return taskObjects.toJSONString();
         }
 
         return taskObjects.toJSONString();
+    }
+
+    private void renderTaskOptions(JSONObject task) {
+        Map<String, String> thisOptions = getThisOptions(task);
+        Map<String, String> defaultOptions = new HashMap();
+        BeanUtils.copyBean(defaultOptions, renderOptions);
+        Pattern p = Pattern.compile("\\{\\{([a-zA-Z\\.\\s]+)\\}\\}");
+        thisOptions.keySet().forEach(k -> {
+            if (thisOptions.get(k).contains("{{")) {
+                Matcher m = p.matcher(thisOptions.get(k));
+                while (m.find()) {
+                    thisOptions.get(k).replace(m.group(), defaultOptions.get(m.group(1)));
+                }
+            }
+        });
+    }
+
+    private Map getThisOptions(JSONObject task) {
+        return task.getJSONObject("options").keySet().stream().collect(Collectors.toMap(k -> k, k -> task.getJSONObject(k)));
     }
 
     private JSONObject extract(JSONObject params) {
@@ -274,5 +308,15 @@ public class TaskService {
             }
         }
         return true;
+    }
+
+    public static void main(String[] args) {
+        String s = "{{ api.templates }}/{{ options.installScript }}?nodeId={{ task.nodeId }}";
+
+        Pattern p = Pattern.compile("\\{\\{([a-zA-Z\\.\\s]+)\\}\\}");
+        Matcher m = p.matcher(s);
+        while (m.find()) {
+            System.out.println(m.group(1));
+        }
     }
 }

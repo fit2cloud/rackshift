@@ -246,7 +246,7 @@ public class BareMetalService {
             }
             bareMetalManager.update(b);
         } catch (Exception e) {
-            return ResultHolder.error("带外链接失败！");
+            return ResultHolder.error("与服务器得带外连接失败！");
         }
         return ResultHolder.success("");
     }

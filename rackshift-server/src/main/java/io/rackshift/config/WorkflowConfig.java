@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import io.rackshift.constants.RackHDConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.engine.basetask.BaseTask;
+import io.rackshift.engine.job.BaseJob;
+import io.rackshift.engine.job.Jobs;
 import io.rackshift.engine.taskgraph.BaseTaskGraph;
 import io.rackshift.engine.taskobject.BaseTaskObject;
 import io.rackshift.metal.sdk.util.HttpFutureUtils;
@@ -14,7 +16,11 @@ import io.rackshift.mybatis.mapper.EndpointMapper;
 import io.rackshift.mybatis.mapper.WorkflowMapper;
 import io.rackshift.service.WorkflowService;
 import io.rackshift.strategy.statemachine.LifeEventType;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,18 +32,16 @@ import javax.script.ScriptEngineManager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.lang.annotation.Annotation;
 import java.net.Inet4Address;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Configuration
-public class WorkflowConfig {
+public class WorkflowConfig implements BeanPostProcessor {
     @Resource
     private WorkflowMapper workflowMapper;
     @Resource
@@ -52,6 +56,11 @@ public class WorkflowConfig {
     private void setEndpointMapper(EndpointMapper endpointMapper) {
         staticEndpointMapper = endpointMapper;
     }
+
+    @Value("${api.server.url}")
+    private String apiServer;
+    @Value("${api.server.port}")
+    private String apiServerPort;
 
     @PostConstruct
     public void initWorkflow() {
@@ -100,6 +109,43 @@ public class WorkflowConfig {
                 workflowService.update(w);
             }
         });
+
+    }
+
+    /**
+     * 用于渲染参数的一些默认选项
+     *
+     * @return
+     */
+    @Bean
+    public Map<String, String> renderOptions() {
+        Map<String, String> optionMap = new HashMap<>();
+
+        optionMap.put("api.server", apiServer);
+        optionMap.put("api.server.port", apiServerPort);
+        optionMap.put("file.server", apiServerPort);
+        optionMap.put("api.base", apiServer + "/api/current");
+        optionMap.put("api.templates", apiServer + "/api/templates");
+        optionMap.put("api.profiles", apiServer + "/api/profiles");
+        optionMap.put("api.lookups", apiServer + "/api/lookups");
+        optionMap.put("api.files", apiServer + "/api/files");
+        optionMap.put("api.nodes", apiServer + "/api/nodes");
+        return optionMap;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+
+        Annotation annotation = bean.getClass().getAnnotation(Jobs.class);
+        if (annotation != null) {
+            job().put(((Jobs) annotation).value(), bean.getClass());
+        }
+        return bean;
+    }
+
+    @Bean
+    public Map<String, Class> job() {
+        return new HashMap<>();
     }
 
     @Bean
