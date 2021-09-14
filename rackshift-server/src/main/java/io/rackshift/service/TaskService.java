@@ -230,21 +230,25 @@ public class TaskService {
 
     private void renderTaskOptions(JSONObject task) {
         Map<String, String> thisOptions = getThisOptions(task);
-        Map<String, String> defaultOptions = new HashMap();
-        BeanUtils.copyBean(defaultOptions, renderOptions);
         Pattern p = Pattern.compile("\\{\\{([a-zA-Z\\.\\s]+)\\}\\}");
         thisOptions.keySet().forEach(k -> {
-            if (thisOptions.get(k).contains("{{")) {
+            if (thisOptions.get(k) instanceof String && thisOptions.get(k).contains("{{")) {
                 Matcher m = p.matcher(thisOptions.get(k));
                 while (m.find()) {
-                    thisOptions.get(k).replace(m.group(), defaultOptions.get(m.group(1)));
+                    if (m.group(1).contains("options")) {
+                        thisOptions.put(k, thisOptions.get(k).replace(m.group(), thisOptions.get(m.group(1).trim().replace("options.", ""))));
+                    } else if (m.group(1).contains("task.nodeId")) {
+                        thisOptions.put(k, thisOptions.get(k).replace(m.group(), task.getString("bareMetalId")));
+                    } else {
+                        thisOptions.put(k, thisOptions.get(k).replace(m.group(), renderOptions.get(m.group(1).trim())));
+                    }
                 }
             }
         });
     }
 
     private Map getThisOptions(JSONObject task) {
-        return task.getJSONObject("options").keySet().stream().collect(Collectors.toMap(k -> k, k -> task.getJSONObject(k)));
+        return task.getJSONObject("options").keySet().stream().collect(Collectors.toMap(k -> k, k -> task.getJSONObject("options").get(k)));
     }
 
     private JSONObject extract(JSONObject params) {
@@ -308,15 +312,5 @@ public class TaskService {
             }
         }
         return true;
-    }
-
-    public static void main(String[] args) {
-        String s = "{{ api.templates }}/{{ options.installScript }}?nodeId={{ task.nodeId }}";
-
-        Pattern p = Pattern.compile("\\{\\{([a-zA-Z\\.\\s]+)\\}\\}");
-        Matcher m = p.matcher(s);
-        while (m.find()) {
-            System.out.println(m.group(1));
-        }
     }
 }

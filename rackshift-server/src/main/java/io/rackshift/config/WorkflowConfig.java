@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import io.rackshift.constants.RackHDConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.engine.basetask.BaseTask;
-import io.rackshift.engine.job.BaseJob;
 import io.rackshift.engine.job.Jobs;
 import io.rackshift.engine.taskgraph.BaseTaskGraph;
 import io.rackshift.engine.taskobject.BaseTaskObject;
@@ -16,10 +15,8 @@ import io.rackshift.mybatis.mapper.EndpointMapper;
 import io.rackshift.mybatis.mapper.WorkflowMapper;
 import io.rackshift.service.WorkflowService;
 import io.rackshift.strategy.statemachine.LifeEventType;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,11 +53,6 @@ public class WorkflowConfig implements BeanPostProcessor {
     private void setEndpointMapper(EndpointMapper endpointMapper) {
         staticEndpointMapper = endpointMapper;
     }
-
-    @Value("${api.server.url}")
-    private String apiServer;
-    @Value("${api.server.port}")
-    private String apiServerPort;
 
     @PostConstruct
     public void initWorkflow() {
@@ -110,27 +102,6 @@ public class WorkflowConfig implements BeanPostProcessor {
             }
         });
 
-    }
-
-    /**
-     * 用于渲染参数的一些默认选项
-     *
-     * @return
-     */
-    @Bean
-    public Map<String, String> renderOptions() {
-        Map<String, String> optionMap = new HashMap<>();
-
-        optionMap.put("api.server", apiServer);
-        optionMap.put("api.server.port", apiServerPort);
-        optionMap.put("file.server", apiServerPort);
-        optionMap.put("api.base", apiServer + "/api/current");
-        optionMap.put("api.templates", apiServer + "/api/templates");
-        optionMap.put("api.profiles", apiServer + "/api/profiles");
-        optionMap.put("api.lookups", apiServer + "/api/lookups");
-        optionMap.put("api.files", apiServer + "/api/files");
-        optionMap.put("api.nodes", apiServer + "/api/nodes");
-        return optionMap;
     }
 
     @Override
