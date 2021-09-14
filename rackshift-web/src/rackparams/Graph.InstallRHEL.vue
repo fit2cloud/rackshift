@@ -661,6 +661,10 @@ export default {
       let exists = 0;
       for (let j = 0; j < this.payLoad.options.defaults.installPartitions.length; j++) {
         let p = this.payLoad.options.defaults.installPartitions[j];
+        if (p.deviceType == 'lvm' && !p.lvmName) {
+          this.$message.error(this.$t('i18n_lvmname_null'));
+          this.validateResult = false;
+        }
         if (!p.mountPoint) {
           this.$message.error(this.$t('i18n_mount_point_cant_be_null'));
           this.validateResult = false;
