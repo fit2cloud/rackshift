@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class WorkflowJob {
+public class NewWorkflowJob {
 
     @Resource
     private TaskMapper taskMapper;
@@ -66,7 +66,7 @@ public class WorkflowJob {
      * 2.2 检查本地和RackHD有无正在运行的任务
      * 2.3 如果没有则创建运行任务
      */
-//    @Scheduled(fixedDelay = 1 * 30 * 1000)
+    @Scheduled(fixedDelay = 1 * 30 * 1000)
     public boolean run() {
         try {
             updateRunningTask();
@@ -123,10 +123,7 @@ public class WorkflowJob {
         TaskExample te = new TaskExample();
         te.createCriteria().andBareMetalIdEqualTo(key).andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
         List<Task> tasks = taskMapper.selectByExample(te);
-
-        BareMetal bareMetal = bareMetalMapper.selectByPrimaryKey(key);
-        List<String> nodeIds = rackHDService.getActiveWorkflowNodeIds(bareMetal.getEndpointId());
-        return (tasks.size() > 0 ? true : false) || nodeIds.contains(bareMetal.getServerId());
+        return (tasks.size() > 0 ? true : false);
     }
 
     private void updateRunningTask() {
@@ -146,7 +143,6 @@ public class WorkflowJob {
                     requestDTO.setTaskId(task.getId());
                     if (ServiceConstants.TaskStatusEnum.cancelled.name().equals(status) || ServiceConstants.TaskStatusEnum.failed.name().equals(status)) {
                         requestDTO.setParams(JSONObject.parseObject("{ \"result\" : false}"));
-
                     } else if (ServiceConstants.TaskStatusEnum.succeeded.name().equals(status)) {
                         requestDTO.setParams(JSONObject.parseObject("{ \"result\" : true}"));
                     }

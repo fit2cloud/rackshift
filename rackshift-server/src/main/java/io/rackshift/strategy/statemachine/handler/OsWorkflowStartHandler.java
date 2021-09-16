@@ -7,12 +7,14 @@ import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.Task;
+import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.service.RackHDService;
 import io.rackshift.service.TaskService;
 import io.rackshift.strategy.statemachine.*;
 import io.rackshift.strategy.statemachine.handler.param.AbstractParamHandler;
 
 import javax.annotation.Resource;
+import java.util.stream.Collectors;
 
 @EventHandlerAnnotation(LifeEventType.POST_OS_WORKFLOW_START)
 public class OsWorkflowStartHandler extends AbstractHandler {
@@ -27,7 +29,7 @@ public class OsWorkflowStartHandler extends AbstractHandler {
     @Override
     public void handleYourself(LifeEvent event) {
         String taskId = event.getWorkflowRequestDTO().getTaskId();
-        Task task = taskService.getById(taskId);
+        TaskWithBLOBs task = taskService.getById(taskId);
 
         //下发装机workflow
         WorkflowRequestDTO requestDTO = event.getWorkflowRequestDTO();
@@ -51,10 +53,18 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         customizeParams(requestDTO.getWorkflowName(), params);
 
         String workflowId = rackHDService.postWorkflowNoWait(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
+        JSONArray taskArr = JSONArray.parseArray(task.getGraphObjects());
+
+        startTask(task);
         task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
-        task.setInstanceId(workflowId);
         taskService.update(task);
         changeStatus(event, LifeStatus.deploying, true);
+    }
+
+    private void startTask(TaskWithBLOBs task) {
+        JSONArray taskArr = JSONArray.parseArray(task.getGraphObjects());
+        JSONObject obj = (JSONObject) taskArr.stream().filter(t->((JSONObject)t).getJSONObject("waitingOn") == null).findFirst().get();
+
     }
 
     private void customizeParams(String injectableName, JSONObject params) {

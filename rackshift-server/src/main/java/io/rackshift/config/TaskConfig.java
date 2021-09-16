@@ -34,13 +34,13 @@ public class TaskConfig {
 
         optionMap.put("api.server", "http://" + apiServer);
         optionMap.put("api.server.port", apiServerPort);
-        optionMap.put("file.server", apiServerPort);
-        optionMap.put("api.base", apiServer + "/api/current");
-        optionMap.put("api.templates", apiServer + "/api/templates");
-        optionMap.put("api.profiles", apiServer + "/api/profiles");
-        optionMap.put("api.lookups", apiServer + "/api/lookups");
-        optionMap.put("api.files", apiServer + "/api/files");
-        optionMap.put("api.nodes", apiServer + "/api/nodes");
+        optionMap.put("file.server", optionMap.get("api.server"));
+        optionMap.put("api.base", optionMap.get("api.server") + "/api/current");
+        optionMap.put("api.templates", optionMap.get("api.server") + "/api/templates");
+        optionMap.put("api.profiles", optionMap.get("api.server") + "/api/profiles");
+        optionMap.put("api.lookups", optionMap.get("api.server") + "/api/lookups");
+        optionMap.put("api.files", optionMap.get("api.server") + "/api/files");
+        optionMap.put("api.nodes", optionMap.get("api.server") + "/api/nodes");
         return optionMap;
     }
 }

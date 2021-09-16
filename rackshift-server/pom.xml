@@ -206,6 +206,13 @@
             <!-- use latest version https://github.com/docker-java/docker-java/releases -->
             <version>3.2.7</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+            <version>2.3.10</version>
+        </dependency>
+
     </dependencies>
 
     <build>

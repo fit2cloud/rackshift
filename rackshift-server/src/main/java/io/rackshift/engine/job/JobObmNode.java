@@ -51,4 +51,8 @@ public class JobObmNode extends BaseJob {
             }
         }
     }
+
+    public static void main(String[] args) {
+        new JobObmNode().run();
+    }
 }

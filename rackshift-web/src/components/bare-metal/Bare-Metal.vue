@@ -1490,6 +1490,11 @@ export default {
             title: this.$t('server_message'),
             message: this.$t('workflow_submitted'),
           });
+        } else {
+          this.$notify({
+            title: this.$t('server_message'),
+            message: res.message,
+          });
         }
       });
     }
