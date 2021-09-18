@@ -7,12 +7,12 @@ import io.rackshift.utils.IPMIUtil;
 
 @Jobs("Job.Obm.Node")
 public class JobObmNode extends BaseJob {
-    public JobObmNode(){
+    public JobObmNode() {
 
     }
 
     @Override
-    protected void run() {
+    public void run() {
         String action = this.options.getString("action");
         try {
             new OBMService(action).run();

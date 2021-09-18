@@ -5,10 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.mybatis.mapper.TaskMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -305,6 +309,7 @@ public abstract class BaseJob {
     protected TaskMapper taskMapper;
     protected TaskWithBLOBs task;
     protected ApplicationContext applicationContext;
+    protected Map<String, Class> job;
 
     public BaseJob() {
 
@@ -320,9 +325,10 @@ public abstract class BaseJob {
         this.task = taskMapper.selectByPrimaryKey(taskId);
         this.bareMetalId = context.getString("bareMetalId");
         this.applicationContext = applicationContext;
+        this.job = (Map<String, Class>) applicationContext.getBean("job");
     }
 
-    abstract protected void run();
+    abstract public void run();
 
     protected JSONObject getTaskByInstanceId(String instanceId) {
         JSONObject graphObjects = JSONObject.parseObject(task.getGraphObjects());
@@ -349,6 +355,33 @@ public abstract class BaseJob {
             JSONObject task = getTaskByInstanceId(instanceId);
             task.put("state", ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
             setTask(task);
+        }
+        nextTick();
+    }
+
+    public void nextTick() {
+
+        JSONObject graphObjects = JSONObject.parseObject(this.task.getGraphObjects());
+        for (String s : graphObjects.keySet()) {
+            JSONObject waitingOnObj = graphObjects.getJSONObject(s).getJSONObject("waitingOn");
+            if (waitingOnObj != null && waitingOnObj.getString(waitingOnObj.keySet().stream().findFirst().get()).equalsIgnoreCase(this.instanceId)) {
+                String runJob = graphObjects.getJSONObject(s).getString("runJob");
+                if (StringUtils.isNotBlank(runJob)) {
+                    Class c1 = job.get(runJob);
+                    if (c1 != null) {
+                        try {
+                            Constructor c2 = c1.getConstructor(String.class, String.class, JSONObject.class, TaskMapper.class, ApplicationContext.class);
+                            if (c2 != null) {
+                                BaseJob nextJob = (BaseJob) c2.newInstance(taskId, instanceId, context, taskMapper, applicationContext);
+                                nextJob.run();
+                            };
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            }
         }
     }
 

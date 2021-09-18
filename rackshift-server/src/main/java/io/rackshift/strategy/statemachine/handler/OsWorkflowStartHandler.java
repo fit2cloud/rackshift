@@ -4,16 +4,23 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.config.WorkflowConfig;
 import io.rackshift.constants.ServiceConstants;
+import io.rackshift.engine.job.BaseJob;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.Task;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
+import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.service.RackHDService;
 import io.rackshift.service.TaskService;
 import io.rackshift.strategy.statemachine.*;
 import io.rackshift.strategy.statemachine.handler.param.AbstractParamHandler;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @EventHandlerAnnotation(LifeEventType.POST_OS_WORKFLOW_START)
@@ -25,6 +32,8 @@ public class OsWorkflowStartHandler extends AbstractHandler {
     private TaskService taskService;
     @Resource
     private AbstractParamHandler abstractParamHandler;
+    @Resource
+    private Map<String, Class> job;
 
     @Override
     public void handleYourself(LifeEvent event) {
@@ -52,9 +61,6 @@ public class OsWorkflowStartHandler extends AbstractHandler {
 
         customizeParams(requestDTO.getWorkflowName(), params);
 
-        String workflowId = rackHDService.postWorkflowNoWait(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
-        JSONArray taskArr = JSONArray.parseArray(task.getGraphObjects());
-
         startTask(task);
         task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
         taskService.update(task);
@@ -63,8 +69,28 @@ public class OsWorkflowStartHandler extends AbstractHandler {
 
     private void startTask(TaskWithBLOBs task) {
         JSONArray taskArr = JSONArray.parseArray(task.getGraphObjects());
-        JSONObject obj = (JSONObject) taskArr.stream().filter(t->((JSONObject)t).getJSONObject("waitingOn") == null).findFirst().get();
-
+        JSONObject obj = (JSONObject) taskArr.stream().filter(t -> ((JSONObject) t).getJSONObject("waitingOn") == null).findFirst().get();
+        String runJob = obj.getString("runJob");
+        if (StringUtils.isNotBlank(runJob)) {
+            Class c1 = job.get(runJob);
+            if(c1 != null){
+                try {
+                    Constructor c = c1.getConstructor(String.class,String.class,JSONObject.class, TaskMapper.class, ApplicationContext.class);
+                    if(c != null){
+                       BaseJob bj = (BaseJob) c.newInstance(task.getId());
+                       bj.run();
+                    }
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void customizeParams(String injectableName, JSONObject params) {
