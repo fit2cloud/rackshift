@@ -1,24 +1,30 @@
 package io.rackshift.strategy.statemachine;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.ExecutionLogConstants;
 import io.rackshift.constants.ServiceConstants;
+import io.rackshift.engine.job.BaseJob;
 import io.rackshift.model.RSException;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.Task;
+import io.rackshift.mybatis.domain.TaskExample;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.mybatis.domain.Workflow;
+import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.service.ExecutionLogService;
 import io.rackshift.service.TaskService;
 import io.rackshift.service.WorkflowService;
 import io.rackshift.utils.LogUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.util.Asserts;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.Constructor;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -29,6 +35,13 @@ public class StateMachine {
     private TaskService taskService;
     @Resource
     private WorkflowService workflowService;
+    @Resource
+    private Map<String, Class> job;
+    @Resource
+    private TaskMapper taskMapper;
+    @Resource
+    private ApplicationContext applicationContext;
+
     private ConcurrentHashMap<LifeEventType, IStateHandler> handlerMap = new ConcurrentHashMap<>();
     private static List<String> endStatusList = new ArrayList<String>() {{
         add(ServiceConstants.TaskStatusEnum.cancelled.name());
@@ -38,6 +51,15 @@ public class StateMachine {
 
     public void configureHandler(LifeEventType event, IStateHandler handler) {
         handlerMap.put(event, handler);
+    }
+
+    /**
+     * 运行一个完整的 task 工作流
+     *
+     * @param taskId
+     */
+    public void runTaskGraph(String taskId) {
+        runTaskList(Arrays.asList(taskService.getById(taskId)));
     }
 
     public void runTaskList(List<TaskWithBLOBs> tasks) {
@@ -79,4 +101,32 @@ public class StateMachine {
         return LifeEvent.builder().withEventType(type).withWorkflowRequestDTO(requestDTO);
     }
 
+    /**
+     * 运行数据库 task 表中 graphobject 的子任务
+     *
+     * @param messageObj
+     */
+    public void runTask(JSONObject messageObj) {
+        String taskId = messageObj.getString("taskId");
+        String instanceId = messageObj.getString("instanceId");
+        Asserts.notBlank(taskId, "taskId is null!");
+        Asserts.notBlank(instanceId, "instanceId is null!");
+        TaskWithBLOBs task = taskService.getById(taskId);
+        JSONObject graphObject = JSONObject.parseObject(task.getGraphObjects());
+        String runJob = graphObject.getJSONObject(instanceId).getString("runJob");
+        if (StringUtils.isNotBlank(runJob)) {
+            Class c1 = job.get(runJob);
+            if (c1 != null) {
+                try {
+                    Constructor c = c1.getConstructor(String.class, String.class, JSONObject.class, TaskMapper.class, ApplicationContext.class);
+                    if (c != null) {
+                        BaseJob bj = (BaseJob) c.newInstance(task.getId(), task.getInstanceId(), graphObject.getJSONObject(instanceId), taskMapper, applicationContext);
+                        bj.run();
+                    }
+                } catch (Exception e) {
+                    LogUtil.error("子任务：" + graphObject.getJSONObject(instanceId) + "运行失败！");
+                }
+            }
+        }
+    }
 }

@@ -1,28 +1,32 @@
 package io.rackshift.strategy.statemachine;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.config.PluginConfig;
 import io.rackshift.constants.ExecutionLogConstants;
-import io.rackshift.constants.PluginConstants;
+import io.rackshift.constants.MqConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.metal.sdk.IMetalProvider;
-import io.rackshift.metal.sdk.util.CloudProviderManager;
 import io.rackshift.model.RSException;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.Task;
+import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.service.ExecutionLogService;
 import io.rackshift.service.TaskService;
 import io.rackshift.service.WorkflowService;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,13 +40,13 @@ public abstract class AbstractHandler implements IStateHandler {
     @Autowired
     private SimpMessagingTemplate template;
     @Resource
-    private CloudProviderManager metalProviderManager;
-    @Resource
     private TaskService taskService;
     @Resource
     private WorkflowService workflowService;
     @Resource
     private PluginConfig pluginConfig;
+    @Resource
+    private RabbitTemplate rabbitTemplate;
 
     protected BareMetal getBareMetalById(String id) {
         return bareMetalManager.getBareMetalById(id);
@@ -150,5 +154,22 @@ public abstract class AbstractHandler implements IStateHandler {
             msg = String.format("裸金属：%s,任务开始：%s,状态变更为：%s", bareMetal.getMachineModel() + " " + bareMetal.getManagementIp(), workflowService.getFriendlyName(task.getWorkFlowId()), taskStatus);
         }
         template.convertAndSend("/topic/taskLifecycle", msg);
+    }
+
+    protected void startTask(TaskWithBLOBs task) {
+        JSONArray taskArr = JSONArray.parseArray(task.getGraphObjects());
+        List<JSONObject> tasksReadyToStart = new ArrayList<>();
+        for (Object t : taskArr) {
+            if (((JSONObject) t).getJSONObject("waitingOn") == null) {
+                tasksReadyToStart.add((JSONObject) t);
+            }
+        }
+        tasksReadyToStart.forEach(obj -> {
+            JSONObject body = new JSONObject();
+            body.put("taskId", task.getId());
+            body.put("instanceId", obj.getString("instanceId"));
+            Message message = new Message("".getBytes(StandardCharsets.UTF_8));
+            rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
+        });
     }
 }

@@ -55,6 +55,6 @@ public class ServiceConstants {
     }
 
     public enum RackHDTaskStatusEnum {
-        pending, failed, cancelled, timeout, succeeded
+        pending, failed, cancelled, timeout, succeeded, finished
     }
 }

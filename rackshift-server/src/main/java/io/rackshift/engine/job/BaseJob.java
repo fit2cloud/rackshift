@@ -1,19 +1,16 @@
 package io.rackshift.engine.job;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.constants.MqConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.mybatis.mapper.TaskMapper;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeansException;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * graphObject sample
@@ -310,22 +307,24 @@ public abstract class BaseJob {
     protected TaskWithBLOBs task;
     protected ApplicationContext applicationContext;
     protected Map<String, Class> job;
+    protected RabbitTemplate rabbitTemplate;
 
     public BaseJob() {
 
     }
 
-    public BaseJob(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext) {
+    public BaseJob(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext, RabbitTemplate rabbitTemplate) {
         this.instanceId = instanceId;
         this.taskId = taskId;
         this.context = context;
         this.options = context.getJSONObject("options");
-        this._status = ServiceConstants.RackHDTaskStatusEnum.pending.name();
+        this._status = context.getString("state");
         this.taskMapper = taskMapper;
         this.task = taskMapper.selectByPrimaryKey(taskId);
         this.bareMetalId = context.getString("bareMetalId");
         this.applicationContext = applicationContext;
         this.job = (Map<String, Class>) applicationContext.getBean("job");
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     abstract public void run();
@@ -346,41 +345,31 @@ public abstract class BaseJob {
         if (ServiceConstants.RackHDTaskStatusEnum.pending.name().equalsIgnoreCase(this._status)) {
             JSONObject task = getTaskByInstanceId(instanceId);
             task.put("state", ServiceConstants.RackHDTaskStatusEnum.cancelled.name());
+            this._status = ServiceConstants.RackHDTaskStatusEnum.cancelled.name();
             setTask(task);
         }
     }
 
-    public void complete() {
+    public void succeeded() {
         if (ServiceConstants.RackHDTaskStatusEnum.pending.name().equalsIgnoreCase(this._status)) {
             JSONObject task = getTaskByInstanceId(instanceId);
             task.put("state", ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
+            this._status = ServiceConstants.RackHDTaskStatusEnum.succeeded.name();
             setTask(task);
         }
         nextTick();
     }
 
     public void nextTick() {
-
         JSONObject graphObjects = JSONObject.parseObject(this.task.getGraphObjects());
         for (String s : graphObjects.keySet()) {
             JSONObject waitingOnObj = graphObjects.getJSONObject(s).getJSONObject("waitingOn");
-            if (waitingOnObj != null && waitingOnObj.getString(waitingOnObj.keySet().stream().findFirst().get()).equalsIgnoreCase(this.instanceId)) {
-                String runJob = graphObjects.getJSONObject(s).getString("runJob");
-                if (StringUtils.isNotBlank(runJob)) {
-                    Class c1 = job.get(runJob);
-                    if (c1 != null) {
-                        try {
-                            Constructor c2 = c1.getConstructor(String.class, String.class, JSONObject.class, TaskMapper.class, ApplicationContext.class);
-                            if (c2 != null) {
-                                BaseJob nextJob = (BaseJob) c2.newInstance(taskId, instanceId, context, taskMapper, applicationContext);
-                                nextJob.run();
-                            };
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }
+            if (waitingOnObj != null && waitingOnObj.getString(waitingOnObj.keySet().stream().findFirst().get()).equalsIgnoreCase(this.instanceId) && waitingOnObj.getString(this.instanceId).equalsIgnoreCase(this._status)) {
+                JSONObject body = new JSONObject();
+                body.put("taskId", taskId);
+                body.put("instanceId", graphObjects.getJSONObject(s).getString("instanceId"));
+                Message message = new Message("".getBytes(StandardCharsets.UTF_8));
+                rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
             }
         }
     }
@@ -389,7 +378,15 @@ public abstract class BaseJob {
         if (ServiceConstants.RackHDTaskStatusEnum.pending.name().equalsIgnoreCase(this._status)) {
             JSONObject task = getTaskByInstanceId(instanceId);
             task.put("state", ServiceConstants.RackHDTaskStatusEnum.failed.name());
+            this._status = ServiceConstants.RackHDTaskStatusEnum.failed.name();
+            this.task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
             setTask(task);
         }
+        complete();
+    }
+
+    public void complete() {
+        this._status = ServiceConstants.RackHDTaskStatusEnum.finished.name();
+        nextTick();
     }
 }

@@ -16,7 +16,7 @@ public class JobObmNode extends BaseJob {
         String action = this.options.getString("action");
         try {
             new OBMService(action).run();
-            this.complete();
+            this.succeeded();
         } catch (Exception e) {
             this.error();
         }
@@ -50,9 +50,5 @@ public class JobObmNode extends BaseJob {
                     break;
             }
         }
-    }
-
-    public static void main(String[] args) {
-        new JobObmNode().run();
     }
 }
