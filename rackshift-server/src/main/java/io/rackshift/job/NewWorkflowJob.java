@@ -39,7 +39,6 @@ public class NewWorkflowJob {
         return true;
     }
 
-
     private void runCreatedTask() {
         List<TaskWithBLOBs> taskList;
         TaskExample te = new TaskExample();
@@ -53,8 +52,10 @@ public class NewWorkflowJob {
             //保证同一台机器同一时刻只能有一个任务处于执行状态8
             if (!activeTask) {
 //                stateMachine.runTaskList(entry.getValue());
-                Message message = new Message(entry.getValue().get(0).getId().getBytes(StandardCharsets.UTF_8));
-                rabbitTemplate.send(MqConstants.RUN_TASKGRAPH_ROUTINGKEY, message);
+                JSONObject body = new JSONObject();
+                body.put("taskId", entry.getValue().get(0).getId());
+                Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
+                rabbitTemplate.send(MqConstants.RUN_TASKGRAPH_QUEUE_NAME, message);
             }
         }
     }

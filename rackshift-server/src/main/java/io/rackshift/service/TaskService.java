@@ -167,7 +167,8 @@ public class TaskService {
         String bareMetalId = e.getBareMetalId();
         String workflowName = e.getWorkflowRequestDTO().getWorkflowName();
         WorkflowWithBLOBs w = workflowService.getByInjectableName(workflowName);
-        JSONObject taskObjects = new JSONObject();
+        LinkedHashMap taskObjects = new LinkedHashMap();
+//        JSONObject taskObjects = new JSONObject();
         if (w != null) {
             JSONArray tasks = JSONArray.parseArray(w.getTasks());
             // 原 rackhd graph 定义默认参数
@@ -225,7 +226,7 @@ public class TaskService {
             }
         }
 
-        return taskObjects.toJSONString();
+        return JSONObject.toJSONString(taskObjects);
     }
 
     private void renderTaskOptions(JSONObject task) {

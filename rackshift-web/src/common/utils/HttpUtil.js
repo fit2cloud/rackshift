@@ -28,7 +28,7 @@ axios.interceptors.response.use(function (response) {
     }
     return response;
 }, function (error) {
-    if (error.response && error.response.data && error.response.data.indexOf('Authentication Status Invalid') != -1) {
+    if (error.response && error.response.data && error.response.data.message.indexOf('Authentication Status Invalid') != -1) {
         throw new LoginError("login time out");
     } else {
         return Promise.reject(error);

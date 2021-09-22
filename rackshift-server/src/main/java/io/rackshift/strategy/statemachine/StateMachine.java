@@ -19,6 +19,7 @@ import io.rackshift.service.WorkflowService;
 import io.rackshift.utils.LogUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.Asserts;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +42,8 @@ public class StateMachine {
     private TaskMapper taskMapper;
     @Resource
     private ApplicationContext applicationContext;
+    @Resource
+    private RabbitTemplate rabbitTemplate;
 
     private ConcurrentHashMap<LifeEventType, IStateHandler> handlerMap = new ConcurrentHashMap<>();
     private static List<String> endStatusList = new ArrayList<String>() {{
@@ -59,11 +62,12 @@ public class StateMachine {
      * @param taskId
      */
     public void runTaskGraph(String taskId) {
-        runTaskList(Arrays.asList(taskService.getById(taskId)));
+        runTaskList(Arrays.asList(Optional.ofNullable(taskService.getById(taskId)).orElse(new TaskWithBLOBs())));
     }
 
     public void runTaskList(List<TaskWithBLOBs> tasks) {
         tasks.forEach(task -> {
+            if (StringUtils.isBlank(task.getId())) return;
             LifeEvent event = buildEvent(task);
             if (task != null && ServiceConstants.TaskStatusEnum.created.name().equals(task.getStatus())) {
                 Task preTask = taskService.getById(task.getPreTaskId());
@@ -109,8 +113,9 @@ public class StateMachine {
     public void runTask(JSONObject messageObj) {
         String taskId = messageObj.getString("taskId");
         String instanceId = messageObj.getString("instanceId");
-        Asserts.notBlank(taskId, "taskId is null!");
-        Asserts.notBlank(instanceId, "instanceId is null!");
+        if (StringUtils.isAnyBlank(taskId, instanceId)) {
+            return;
+        }
         TaskWithBLOBs task = taskService.getById(taskId);
         JSONObject graphObject = JSONObject.parseObject(task.getGraphObjects());
         String runJob = graphObject.getJSONObject(instanceId).getString("runJob");
@@ -118,9 +123,9 @@ public class StateMachine {
             Class c1 = job.get(runJob);
             if (c1 != null) {
                 try {
-                    Constructor c = c1.getConstructor(String.class, String.class, JSONObject.class, TaskMapper.class, ApplicationContext.class);
+                    Constructor c = c1.getConstructor(String.class, String.class, JSONObject.class, TaskMapper.class, ApplicationContext.class, RabbitTemplate.class);
                     if (c != null) {
-                        BaseJob bj = (BaseJob) c.newInstance(task.getId(), task.getInstanceId(), graphObject.getJSONObject(instanceId), taskMapper, applicationContext);
+                        BaseJob bj = (BaseJob) c.newInstance(taskId, instanceId, graphObject.getJSONObject(instanceId), taskMapper, applicationContext, rabbitTemplate);
                         bj.run();
                     }
                 } catch (Exception e) {

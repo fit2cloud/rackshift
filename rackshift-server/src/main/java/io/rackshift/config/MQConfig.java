@@ -32,10 +32,10 @@ public class MQConfig {
         admin.declareQueue(new Queue(MqConstants.RUN_TASK_QUEUE_NAME));
         admin.declareQueue(new Queue(MqConstants.CANCEL_TASK_QUEUE_NAME));
 
-        admin.declareBinding(new Binding(MqConstants.RUN_TASKGRAPH_QUEUE_NAME, Binding.DestinationType.QUEUE, MqConstants.EXCHANGE_NAME, MqConstants.RUN_TASKGRAPH_ROUTINGKEY, null));
-        admin.declareBinding(new Binding(MqConstants.CANCEL_TASKGRAPH_QUEUE_NAME, Binding.DestinationType.QUEUE, MqConstants.EXCHANGE_NAME, MqConstants.CANCEL_TASKGRAPH_ROUTINGKEY, null));
-        admin.declareBinding(new Binding(MqConstants.RUN_TASK_QUEUE_NAME, Binding.DestinationType.QUEUE, MqConstants.EXCHANGE_NAME, MqConstants.RUN_TASK_ROUTINGKEY, null));
-        admin.declareBinding(new Binding(MqConstants.CANCEL_TASK_QUEUE_NAME, Binding.DestinationType.QUEUE, MqConstants.EXCHANGE_NAME, MqConstants.CANCEL_TASK_ROUTINGKEY, null));
+        admin.declareBinding(new Binding(MqConstants.RUN_TASKGRAPH_QUEUE_NAME, Binding.DestinationType.QUEUE, MqConstants.EXCHANGE_NAME, MqConstants.RUN_TASKGRAPH_ROUTINGKEY + MqConstants.ANY, null));
+        admin.declareBinding(new Binding(MqConstants.CANCEL_TASKGRAPH_QUEUE_NAME, Binding.DestinationType.QUEUE, MqConstants.EXCHANGE_NAME, MqConstants.CANCEL_TASKGRAPH_ROUTINGKEY + MqConstants.ANY, null));
+        admin.declareBinding(new Binding(MqConstants.RUN_TASK_QUEUE_NAME, Binding.DestinationType.QUEUE, MqConstants.EXCHANGE_NAME, MqConstants.RUN_TASK_ROUTINGKEY + MqConstants.ANY, null));
+        admin.declareBinding(new Binding(MqConstants.CANCEL_TASK_QUEUE_NAME, Binding.DestinationType.QUEUE, MqConstants.EXCHANGE_NAME, MqConstants.CANCEL_TASK_ROUTINGKEY + MqConstants.ANY, null));
         return new RabbitTemplate(rabbitMQConnectionFactory());
     }
 

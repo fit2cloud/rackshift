@@ -19,6 +19,8 @@
         <result column="success_count" jdbcType="VARCHAR" property="successCount"/>
         <result column="total_count" jdbcType="VARCHAR" property="totalCount"/>
         <result column="percent" jdbcType="VARCHAR" property="percent"/>
+        <result column="graph_objects" jdbcType="VARCHAR" property="graphObjects"/>
+        <result column="before_status" jdbcType="VARCHAR" property="beforeStatus"/>
     </resultMap>
 
     <select id="list" parameterType="io.rackshift.model.TaskDTO" resultMap="BaseResultMap">

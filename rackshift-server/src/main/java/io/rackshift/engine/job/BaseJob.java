@@ -5,6 +5,7 @@ import io.rackshift.constants.MqConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.mybatis.mapper.TaskMapper;
+import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
@@ -309,22 +310,8 @@ public abstract class BaseJob {
     protected Map<String, Class> job;
     protected RabbitTemplate rabbitTemplate;
 
-    public BaseJob() {
+    protected BaseJob() {
 
-    }
-
-    public BaseJob(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext, RabbitTemplate rabbitTemplate) {
-        this.instanceId = instanceId;
-        this.taskId = taskId;
-        this.context = context;
-        this.options = context.getJSONObject("options");
-        this._status = context.getString("state");
-        this.taskMapper = taskMapper;
-        this.task = taskMapper.selectByPrimaryKey(taskId);
-        this.bareMetalId = context.getString("bareMetalId");
-        this.applicationContext = applicationContext;
-        this.job = (Map<String, Class>) applicationContext.getBean("job");
-        this.rabbitTemplate = rabbitTemplate;
     }
 
     abstract public void run();
@@ -338,7 +325,7 @@ public abstract class BaseJob {
         JSONObject graphObjects = JSONObject.parseObject(this.task.getGraphObjects());
         graphObjects.put(instanceId, task);
         this.task.setGraphObjects(graphObjects.toJSONString());
-        taskMapper.updateByPrimaryKey(this.task);
+        taskMapper.updateByPrimaryKeyWithBLOBs(this.task);
     }
 
     public void cancel() {
@@ -374,10 +361,11 @@ public abstract class BaseJob {
         }
     }
 
-    public void error() {
+    public void error(Exchange e) {
         if (ServiceConstants.RackHDTaskStatusEnum.pending.name().equalsIgnoreCase(this._status)) {
             JSONObject task = getTaskByInstanceId(instanceId);
             task.put("state", ServiceConstants.RackHDTaskStatusEnum.failed.name());
+            task.put("error", );
             this._status = ServiceConstants.RackHDTaskStatusEnum.failed.name();
             this.task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
             setTask(task);

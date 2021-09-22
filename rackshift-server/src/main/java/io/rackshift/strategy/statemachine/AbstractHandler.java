@@ -157,18 +157,18 @@ public abstract class AbstractHandler implements IStateHandler {
     }
 
     protected void startTask(TaskWithBLOBs task) {
-        JSONArray taskArr = JSONArray.parseArray(task.getGraphObjects());
+        JSONObject taskObj = JSONObject.parseObject(task.getGraphObjects());
         List<JSONObject> tasksReadyToStart = new ArrayList<>();
-        for (Object t : taskArr) {
-            if (((JSONObject) t).getJSONObject("waitingOn") == null) {
-                tasksReadyToStart.add((JSONObject) t);
+        for (String t : taskObj.keySet()) {
+            if (taskObj.getJSONObject(t).getJSONObject("waitingOn") == null) {
+                tasksReadyToStart.add(taskObj.getJSONObject(t));
             }
         }
         tasksReadyToStart.forEach(obj -> {
             JSONObject body = new JSONObject();
             body.put("taskId", task.getId());
             body.put("instanceId", obj.getString("instanceId"));
-            Message message = new Message("".getBytes(StandardCharsets.UTF_8));
+            Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
             rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
         });
     }

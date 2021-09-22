@@ -1,8 +1,8 @@
 package io.rackshift.model;
 
-import io.rackshift.mybatis.domain.Task;
+import io.rackshift.mybatis.domain.TaskWithBLOBs;
 
-public class TaskDTO extends Task {
+public class TaskDTO extends TaskWithBLOBs {
 
     private String searchKey;
     private String machineSn;

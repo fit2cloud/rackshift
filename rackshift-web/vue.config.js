@@ -12,7 +12,7 @@ module.exports = {
         proxy: {
             "/": {
                 target: 'http://localhost:8082',
-                ws: true,
+                ws: false,
                 changeOrigin: true
             }
         }
