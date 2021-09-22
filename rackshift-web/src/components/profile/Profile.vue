@@ -61,7 +61,7 @@
             <template slot-scope="scope">
 
               <RSButton @click="handleEdit(scope.row, 'edit')"></RSButton>
-              <RSButton @click="handleEdit(scope.row, 'del')" type="del"></RSButton>
+              <RSButton @click="handleEdit(scope.row, 'del')" type="del" v-if="scope.row.type != 'system'"></RSButton>
               <RSButton @click="handleEdit(scope.row, 'copy')" type="copy" :tip="$t('copy')"></RSButton>
 
             </template>
