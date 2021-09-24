@@ -498,6 +498,7 @@ export default {
       }
       if (customPXE)
         this.$message.info(this.$t("not_support_validate"));
+      this.payLoad.options.defaults.repo = url;
     },
     receiveValue(val) {
       this.payLoad.options.defaults.postInstallCommands = val;
