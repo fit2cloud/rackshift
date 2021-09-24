@@ -767,9 +767,13 @@ export default {
             this.payLoad.options.defaults.repo = centosImage.url;
             if (centosImage.pName) {
               this.payLoad.options.defaults.profile = centosImage.pName;
+            } else {
+              delete this.payLoad.options.defaults.profile;
             }
             if (centosImage.tName) {
               this.payLoad.options.defaults.installScript = centosImage.tName;
+            } else {
+              delete this.payLoad.options.defaults.installScript;
             }
             if (centosImage.pName || centosImage.tName) {
               this.$message.info(this.$t("not_support_validate"));
