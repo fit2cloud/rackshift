@@ -3,7 +3,7 @@ name: upload release asset
 on:
   create:
     tag:
-      - "v1.5.0"
+      - "v1.5.1"
 
 jobs:
   build:
