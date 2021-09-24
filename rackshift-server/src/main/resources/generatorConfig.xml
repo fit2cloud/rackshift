@@ -60,14 +60,14 @@
         <!--要生成的数据库表 -->
 
 <!--        <table tableName="endpoint"/>-->
-<!--        <table tableName="bare_metal"/>-->
+        <table tableName="bare_metal"/>
 <!--        <table tableName="network"/>-->
 <!--        <table tableName="bare_metal_rule"/>-->
 <!--        <table tableName="cpu"/>-->
 <!--        <table tableName="disk"/>-->
 <!--        <table tableName="memory"/>-->
-        <table tableName="workflow"/>
-        <table tableName="task"/>
+<!--        <table tableName="workflow"/>-->
+<!--        <table tableName="task"/>-->
 <!--        <table tableName="bare_metal_rule"/>-->
 <!--        <table tableName="instruction"/>-->
 <!--        <table tableName="switch_rule"/>-->

@@ -155,4 +155,13 @@ public class ProfileService {
     public Object getAllProfiles() {
         return list(new ProfileDTO());
     }
+
+    public String getProfileContentByName(String profileName) {
+        ProfileExample e = new ProfileExample();
+        e.createCriteria().andNameEqualTo(profileName);
+        List<Profile> profiles = profileMapper.selectByExample(e);
+        if (profiles.size() > 0)
+            return render(profiles.get(0).getContent());
+        return "echo no profiles get!";
+    }
 }

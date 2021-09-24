@@ -32,7 +32,7 @@ public class MongoConfig {
             MongoUtil.setMongoClient(client);
             return client;
         } else {
-            MongoClientSettings clientSettings = MongoClientSettings.builder().applyConnectionString(new ConnectionString("mongodb://" + endpointService.getMainEndpoint() + ":27017")).build();
+            MongoClientSettings clientSettings = MongoClientSettings.builder().applyConnectionString(new ConnectionString("mongodb://" + endpointService.getMainEndpointIp() + ":27017")).build();
             MongoClient client = new MongoClientImpl(clientSettings, MongoDriverInformation.builder().build());
             MongoUtil.setMongoClient(client);
             return client;

@@ -3,6 +3,7 @@ package io.rackshift.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
+import io.rackshift.constants.MqConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.engine.basetask.BaseTask;
 import io.rackshift.engine.taskobject.BaseTaskObject;
@@ -23,12 +24,15 @@ import io.rackshift.utils.UUIDUtil;
 import net.sf.cglib.core.Local;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -61,6 +65,8 @@ public class TaskService {
     private Map<String, BaseTask> baseTask;
     @Resource
     private Map<String, String> renderOptions;
+    @Resource
+    private RabbitTemplate rabbitTemplate;
 
     public Object add(TaskDTO queryVO) {
         TaskWithBLOBs task = new TaskWithBLOBs();
@@ -163,12 +169,11 @@ public class TaskService {
         }
     }
 
-    private String generateGraphObjects(LifeEvent e) {
+    public String generateGraphObjects(LifeEvent e) {
         String bareMetalId = e.getBareMetalId();
         String workflowName = e.getWorkflowRequestDTO().getWorkflowName();
         WorkflowWithBLOBs w = workflowService.getByInjectableName(workflowName);
         LinkedHashMap taskObjects = new LinkedHashMap();
-//        JSONObject taskObjects = new JSONObject();
         if (w != null) {
             JSONArray tasks = JSONArray.parseArray(w.getTasks());
             // 原 rackhd graph 定义默认参数
@@ -318,5 +323,58 @@ public class TaskService {
             }
         }
         return true;
+    }
+
+    public TaskWithBLOBs createDiscoveryGraph(String bareMetalId) {
+        WorkflowWithBLOBs w = workflowService.getByInjectableName("Graph.Discovery");
+        TaskWithBLOBs task = new TaskWithBLOBs();
+        task.setId(UUIDUtil.newUUID());
+        task.setBareMetalId(bareMetalId);
+        task.setWorkFlowId(w.getId());
+        task.setStatus(ServiceConstants.TaskStatusEnum.created.name());
+        task.setCreateTime(System.currentTimeMillis());
+        //生成真正的 taskgraph 实例对象
+        WorkflowRequestDTO workflowRequestDTO = new WorkflowRequestDTO();
+        workflowRequestDTO.setWorkflowName(w.getInjectableName());
+        LifeEvent e = LifeEvent.builder().withEventType(LifeEventType.POST_DISCOVERY_WORKFLOW_START).withWorkflowRequestDTO(workflowRequestDTO);
+        task.setGraphObjects(generateGraphObjects(e));
+        taskMapper.insertSelective(task);
+        return task;
+    }
+
+    public void createBMAndDiscoveryGraph(String macs) {
+        BareMetal bareMetal = bareMetalManager.createNewFromPXE(macs);
+        Task t = createDiscoveryGraph(bareMetal.getId());
+        JSONObject param = new JSONObject();
+        param.put("taskId", t.getId());
+        Message m = new Message(param.toJSONString().getBytes(StandardCharsets.UTF_8));
+        rabbitTemplate.send(MqConstants.RUN_TASKGRAPH_QUEUE_NAME, m);
+    }
+
+    public boolean findActiveGraph(String id) {
+        TaskExample e = new TaskExample();
+        e.createCriteria().andBareMetalIdEqualTo(id).andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
+        return taskMapper.selectByExample(e).size() > 0 ? true : false;
+    }
+
+    public String getTaskProfile(String id) {
+        TaskExample e = new TaskExample();
+        e.createCriteria().andBareMetalIdEqualTo(id).andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
+        TaskWithBLOBs task = taskMapper.selectByExampleWithBLOBs(e).get(0);
+
+        JSONObject taskObj = JSONObject.parseObject(task.getGraphObjects());
+        List<JSONObject> tasksReadyToStart = new ArrayList<>();
+        for (String t : taskObj.keySet()) {
+            if (taskObj.getJSONObject(t).getJSONObject("waitingOn") == null) {
+                tasksReadyToStart.add(taskObj.getJSONObject(t));
+            }
+        }
+        for (JSONObject jsonObject : tasksReadyToStart) {
+            if (StringUtils.isNotBlank(jsonObject.getJSONObject("options").getString("profile"))) {
+                return jsonObject.getJSONObject("options").getString("profile");
+            }
+        }
+
+        return "redirect.ipxe";
     }
 }

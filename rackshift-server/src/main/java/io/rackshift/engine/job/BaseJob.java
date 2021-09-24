@@ -361,11 +361,11 @@ public abstract class BaseJob {
         }
     }
 
-    public void error(Exchange e) {
+    public void error(Exception e) {
         if (ServiceConstants.RackHDTaskStatusEnum.pending.name().equalsIgnoreCase(this._status)) {
             JSONObject task = getTaskByInstanceId(instanceId);
             task.put("state", ServiceConstants.RackHDTaskStatusEnum.failed.name());
-            task.put("error", );
+            task.put("error", e.getMessage());
             this._status = ServiceConstants.RackHDTaskStatusEnum.failed.name();
             this.task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
             setTask(task);

@@ -155,7 +155,15 @@ public class EndpointService {
         return syncRackJob.run() && endpointPoller.run();
     }
 
-    public String getMainEndpoint() {
+    public Endpoint getMainEndpoint() {
+        EndpointExample e = new EndpointExample();
+        e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.value());
+        if (endpointMapper.selectByExample(e).size() == 0)
+            RSException.throwExceptions("no main endpoint !");
+        return endpointMapper.selectByExample(e).get(0);
+    }
+
+    public String getMainEndpointIp() {
         EndpointExample e = new EndpointExample();
         e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.value());
         if (endpointMapper.selectByExample(e).size() == 0)

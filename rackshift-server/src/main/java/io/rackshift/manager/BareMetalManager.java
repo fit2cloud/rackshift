@@ -4,11 +4,13 @@ import io.rackshift.model.*;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.*;
 import io.rackshift.mybatis.mapper.ext.ExtNetworkCardMapper;
+import io.rackshift.service.EndpointService;
 import io.rackshift.service.RackHDService;
 import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.LogUtil;
+import io.rackshift.utils.UUIDUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -37,6 +39,8 @@ public class BareMetalManager {
     private SimpMessagingTemplate template;
     @Resource
     private ExtNetworkCardMapper extNetworkCardMapper;
+    @Resource
+    private EndpointService endpointService;
 
     public BareMetal getBareMetalBySn(String sn) {
         if (StringUtils.isBlank(sn)) {
@@ -297,5 +301,14 @@ public class BareMetalManager {
         r.put("nics", nics);
 
         return r;
+    }
+
+    public BareMetal createNewFromPXE(String macs) {
+        BareMetal newNode = new BareMetal();
+        newNode.setId(UUIDUtil.newUUID());
+        newNode.setEndpointId(endpointService.getMainEndpoint().getId());
+        newNode.setPxeMac(macs);
+        bareMetalMapper.insertSelective(newNode);
+        return newNode;
     }
 }

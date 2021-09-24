@@ -2463,6 +2463,76 @@ public class BareMetalExample {
             addCriterion("container_id not between", value1, value2, "containerId");
             return (Criteria) this;
         }
+
+        public Criteria andPxeMacIsNull() {
+            addCriterion("pxe_mac is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacIsNotNull() {
+            addCriterion("pxe_mac is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacEqualTo(String value) {
+            addCriterion("pxe_mac =", value, "pxeMac");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacNotEqualTo(String value) {
+            addCriterion("pxe_mac <>", value, "pxeMac");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacGreaterThan(String value) {
+            addCriterion("pxe_mac >", value, "pxeMac");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacGreaterThanOrEqualTo(String value) {
+            addCriterion("pxe_mac >=", value, "pxeMac");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacLessThan(String value) {
+            addCriterion("pxe_mac <", value, "pxeMac");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacLessThanOrEqualTo(String value) {
+            addCriterion("pxe_mac <=", value, "pxeMac");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacLike(String value) {
+            addCriterion("pxe_mac like", value, "pxeMac");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacNotLike(String value) {
+            addCriterion("pxe_mac not like", value, "pxeMac");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacIn(List<String> values) {
+            addCriterion("pxe_mac in", values, "pxeMac");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacNotIn(List<String> values) {
+            addCriterion("pxe_mac not in", values, "pxeMac");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacBetween(String value1, String value2) {
+            addCriterion("pxe_mac between", value1, value2, "pxeMac");
+            return (Criteria) this;
+        }
+
+        public Criteria andPxeMacNotBetween(String value1, String value2) {
+            addCriterion("pxe_mac not between", value1, value2, "pxeMac");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
