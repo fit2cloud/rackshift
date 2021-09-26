@@ -32,8 +32,8 @@ public class TaskConfig {
     public Map<String, String> renderOptions() {
         Map<String, String> optionMap = new HashMap<>();
 
-        optionMap.put("api.server", "http://" + apiServer);
         optionMap.put("api.server.port", apiServerPort);
+        optionMap.put("api.server", "http://" + apiServer + ":" + apiServerPort);
         optionMap.put("file.server", optionMap.get("api.server"));
         optionMap.put("api.base", optionMap.get("api.server") + "/api/current");
         optionMap.put("api.templates", optionMap.get("api.server") + "/api/templates");
