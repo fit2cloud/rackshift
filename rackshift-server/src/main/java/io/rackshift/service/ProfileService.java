@@ -164,4 +164,8 @@ public class ProfileService {
             return render(profiles.get(0).getContent());
         return "echo no profiles get!";
     }
+
+    public String render(String originContent){
+
+    }
 }

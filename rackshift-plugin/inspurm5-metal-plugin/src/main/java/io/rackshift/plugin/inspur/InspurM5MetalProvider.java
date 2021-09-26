@@ -55,6 +55,7 @@ public class InspurM5MetalProvider extends AbstractMetalProvider {
     public List<String> getSupportedBrands() {
         return new ArrayList<String>() {{
             add("Inspur");
+            add("Huawei");
         }};
     }
 
@@ -66,6 +67,8 @@ public class InspurM5MetalProvider extends AbstractMetalProvider {
             add("Inspur NF5270M5");
             add("Inspur NF5266M5");
             add("Inspur NF8480M5");
+            add("Huawei RH2288H V3");
+            add("Huawei 2288H V5");
         }};
     }
 
