@@ -1,5 +1,6 @@
 package io.rackshift.service;
 
+import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.ProfileDTO;
 import io.rackshift.model.RSException;
@@ -25,6 +26,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -156,16 +160,23 @@ public class ProfileService {
         return list(new ProfileDTO());
     }
 
-    public String getProfileContentByName(String profileName) {
+    public String getProfileContentByName(Map profileOptionMap) {
         ProfileExample e = new ProfileExample();
-        e.createCriteria().andNameEqualTo(profileName);
+        e.createCriteria().andNameEqualTo((String) profileOptionMap.get("profile"));
         List<Profile> profiles = profileMapper.selectByExample(e);
         if (profiles.size() > 0)
-            return render(profiles.get(0).getContent());
-        return "echo no profiles get!";
+            return render(profiles.get(0).getContent(), (JSONObject) profileOptionMap.get("options"));
+        return "echo RackShift: no profiles get!";
     }
 
-    public String render(String originContent){
-
+    public String render(String originContent, JSONObject optionsForRender) {
+        Pattern p = Pattern.compile("<%=(\\w+)%>");
+        Matcher m = p.matcher(originContent);
+        while (m.find()) {
+            if (StringUtils.isNotBlank(optionsForRender.getString(m.group(1)))) {
+                originContent = originContent.replace(m.group(), optionsForRender.getString(m.group(1)));
+            }
+        }
+        return originContent;
     }
 }

@@ -357,11 +357,13 @@ public class TaskService {
         return taskMapper.selectByExample(e).size() > 0 ? true : false;
     }
 
-    public String getTaskProfile(String id) {
+    public Map<String, Object> getTaskProfile(String id) {
         TaskExample e = new TaskExample();
         e.createCriteria().andBareMetalIdEqualTo(id).andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
         TaskWithBLOBs task = taskMapper.selectByExampleWithBLOBs(e).get(0);
-
+        Map<String, Object> r = new HashMap<>();
+        r.put("profile", "redirect.ipxe");
+        r.put("options", new JSONObject());
         JSONObject taskObj = JSONObject.parseObject(task.getGraphObjects());
         List<JSONObject> tasksReadyToStart = new ArrayList<>();
         for (String t : taskObj.keySet()) {
@@ -371,10 +373,11 @@ public class TaskService {
         }
         for (JSONObject jsonObject : tasksReadyToStart) {
             if (StringUtils.isNotBlank(jsonObject.getJSONObject("options").getString("profile"))) {
-                return jsonObject.getJSONObject("options").getString("profile");
+
+                r.put("profile", jsonObject.getJSONObject("options").getString("profile"));
+                r.put("options", jsonObject.getJSONObject("options"));
             }
         }
-
-        return "redirect.ipxe";
+        return r;
     }
 }
