@@ -23,7 +23,7 @@ set pxe_mac = (select mac from network_card where network_card.bare_metal_id = b
 insert into workflow
 values (uuid(),
         'system',
-        'Graph.Discovery',
+        'Graph.rancherDiscovery',
         'PXE 发现搜集硬件信息',
         'POST_DISCOVERY_WORKFLOW_START',
         '[]',
@@ -39,5 +39,10 @@ values (uuid(), 'linux.ipxe',
 
 insert into profile
 values (uuid(), 'redirect.ipxe',
-        'set i:int8 0\n\n:loop\nset CurrentIp $\{net$\{i\}/ip\}\nisset $\{CurrentIp\} || goto noipqueryset\nset CurrentIpQuery ips=$\{CurrentIp\}\ngoto ipquerysetdone\n:noipqueryset\nset CurrentIpQuery ips=\n:ipquerysetdone\n\nset CurrentMac $\{net$\{i\}/mac:hex\}\nisset $\{CurrentMac\} || goto done\nset CurrentMacQuery macs=$\{CurrentMac\}\n\niseq $\{i\} 0 || goto notnic0queryset\nset IpsQuery $\{CurrentIpQuery\}\nset MacsQuery $\{CurrentMacQuery\}\ngoto querysetdone\n\n:notnic0queryset\nset IpsQuery $\{IpsQuery\}&$\{CurrentIpQuery\}\nset MacsQuery $\{MacsQuery\}&$\{CurrentMacQuery\}\n:querysetdone\n\necho RackHD: NIC$\{i\} MAC: $\{CurrentMac\}\necho RackHD: NIC$\{i\} IP: $\{CurrentIp\}\n\ninc i\niseq $\{i\} 100 || goto loop\n:done\n\n# Profile request retries\nset getProfileAttempt:int8 0\nset getProfileAttemptMax:int8 5\nset getProfileRetryDelay:int8 3\n\ngoto getProfile\n\n:getProfileRetry\ninc getProfileAttempt\niseq $\{getProfileAttempt\} $\{getProfileAttemptMax\} || goto getProfileRetryContinue\n\necho Exceeded max retries chainloading boot profile\necho Exiting in $\{rebootInterval\} seconds...\n# rebootInterval defined in boilerplate.ipxe\nsleep $\{rebootInterval\}\ngoto complete\n\n:getProfileRetryContinue\necho Failed to download profile, retrying in $\{getProfileRetryDelay\} seconds\nsleep $\{getProfileRetryDelay\}\n\n:getProfile\necho RackHD: Chainloading next profile\nchain http://<%=server%>:<%=port%>/api/current/profiles?$\{MacsQuery\}&$\{IpsQuery\} || goto getProfileRetry\n\n:complete\nexit\n',
+        'set i:int8 0\n\n:loop\nset CurrentIp $\{net$\{i\}/ip\}\nisset $\{CurrentIp\} || goto noipqueryset\nset CurrentIpQuery ips=$\{CurrentIp\}\ngoto ipquerysetdone\n:noipqueryset\nset CurrentIpQuery ips=\n:ipquerysetdone\n\nset CurrentMac $\{net$\{i\}/mac:hex\}\nisset $\{CurrentMac\} || goto done\nset CurrentMacQuery macs=$\{CurrentMac\}\n\niseq $\{i\} 0 || goto notnic0queryset\nset IpsQuery $\{CurrentIpQuery\}\nset MacsQuery $\{CurrentMacQuery\}\ngoto querysetdone\n\n:notnic0queryset\nset IpsQuery $\{IpsQuery\}&$\{CurrentIpQuery\}\nset MacsQuery $\{MacsQuery\}&$\{CurrentMacQuery\}\n:querysetdone\n\necho RackShift: NIC$\{i\} MAC: $\{CurrentMac\}\necho RackShift: NIC$\{i\} IP: $\{CurrentIp\}\n\ninc i\niseq $\{i\} 100 || goto loop\n:done\n\n# Profile request retries\nset getProfileAttempt:int8 0\nset getProfileAttemptMax:int8 5\nset getProfileRetryDelay:int8 3\n\ngoto getProfile\n\n:getProfileRetry\ninc getProfileAttempt\niseq $\{getProfileAttempt\} $\{getProfileAttemptMax\} || goto getProfileRetryContinue\n\necho Exceeded max retries chainloading boot profile\necho Exiting in $\{rebootInterval\} seconds...\n# rebootInterval defined in boilerplate.ipxe\nsleep $\{rebootInterval\}\ngoto complete\n\n:getProfileRetryContinue\necho Failed to download profile, retrying in $\{getProfileRetryDelay\} seconds\nsleep $\{getProfileRetryDelay\}\n\n:getProfile\necho RackShift: Chainloading next profile\nchain http://<%=server%>:<%=port%>/api/current/profiles?$\{MacsQuery\}&$\{IpsQuery\} || goto getProfileRetry\n\n:complete\nexit\n',
+        'system', 1629698788504, 1629698788504);
+
+insert into profile
+values (uuid(), 'rancherOS.ipxe',
+        '# Copyright 2018, Dell EMC, Inc.\nkernel <%=kernelUri%>\ninitrd <%=initrdUri%>\nimgargs <%=kernelFile%> initrd=<%=initrdFile%> console=tty0 netconsole=+@/,514@<%=server%>/ rancher.password=monorail rancher.cloud_init.datasources=[\'url:http://<%=server%>:<%=port%>/api/current/templates/cloud-config.yaml?nodeId=<%=nodeId%>\']\nboot || prompt --key 0x197e --timeout 2000 Press F12 to investigate || exit shell',
         'system', 1629698788504, 1629698788504);

@@ -81,11 +81,6 @@ public abstract class AbstractHandler implements IStateHandler {
     public void handle(LifeEvent event) {
         BareMetal bareMetal = getBareMetalById(event.getWorkflowRequestDTO().getBareMetalId());
         Task task = taskService.getById(event.getWorkflowRequestDTO().getTaskId());
-        if (StringUtils.isAnyBlank(bareMetal.getEndpointId(), bareMetal.getServerId())) {
-            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), "该裸金属未执行discovery流程,无法进行部署");
-            revert(event);
-            return;
-        }
 
         try {
             paramPreProcess(event);

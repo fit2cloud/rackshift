@@ -12,7 +12,7 @@ import java.util.List;
 
 @Configuration
 public class ApiConfig {
-    @Value("${server.additionalPorts}")
+    @Value("${api.server.port}")
     private String additionalPorts;
 
     @Bean

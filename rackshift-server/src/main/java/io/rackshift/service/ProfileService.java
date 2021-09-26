@@ -161,12 +161,17 @@ public class ProfileService {
     }
 
     public String getProfileContentByName(Map profileOptionMap) {
+        if (profileOptionMap == null)
+            return "echo RackShift: No active task is running !";
         ProfileExample e = new ProfileExample();
         e.createCriteria().andNameEqualTo((String) profileOptionMap.get("profile"));
-        List<Profile> profiles = profileMapper.selectByExample(e);
-        if (profiles.size() > 0)
+        List<Profile> profiles = profileMapper.selectByExampleWithBLOBs(e);
+        if (profiles.size() > 0) {
+            LogUtil.info("profile:" + profileOptionMap.get("profile"));
             return render(profiles.get(0).getContent(), (JSONObject) profileOptionMap.get("options"));
-        return "echo RackShift: no profiles get!";
+        }
+        return "echo RackShift: No profile is provided !";
+
     }
 
     public String render(String originContent, JSONObject optionsForRender) {
@@ -178,5 +183,14 @@ public class ProfileService {
             }
         }
         return originContent;
+    }
+
+    public String getDefaultProfile(String profileName) {
+        ProfileExample e = new ProfileExample();
+        e.createCriteria().andNameEqualTo(profileName);
+        List<Profile> profiles = profileMapper.selectByExampleWithBLOBs(e);
+        if (profiles.size() > 0)
+            return render(profiles.get(0).getContent(), new JSONObject());
+        return "echo Default RackShift profile is not exist！";
     }
 }

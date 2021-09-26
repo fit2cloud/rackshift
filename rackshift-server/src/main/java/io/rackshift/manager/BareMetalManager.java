@@ -308,6 +308,7 @@ public class BareMetalManager {
         newNode.setId(UUIDUtil.newUUID());
         newNode.setEndpointId(endpointService.getMainEndpoint().getId());
         newNode.setPxeMac(macs);
+        newNode.setStatus(LifeStatus.onrack.name());
         bareMetalMapper.insertSelective(newNode);
         return newNode;
     }

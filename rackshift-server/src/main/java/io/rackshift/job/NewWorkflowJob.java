@@ -7,6 +7,7 @@ import io.rackshift.mybatis.domain.Task;
 import io.rackshift.mybatis.domain.TaskExample;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.mybatis.mapper.TaskMapper;
+import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.LogUtil;
 import org.springframework.amqp.core.Message;
@@ -28,7 +29,7 @@ public class NewWorkflowJob {
     @Resource
     private RabbitTemplate rabbitTemplate;
 
-    @Scheduled(fixedDelay = 1 * 30 * 1000)
+//    @Scheduled(fixedDelay = 1 * 30 * 1000)
     public boolean run() {
         try {
             runCreatedTask();
@@ -42,7 +43,8 @@ public class NewWorkflowJob {
     private void runCreatedTask() {
         List<TaskWithBLOBs> taskList;
         TaskExample te = new TaskExample();
-        te.createCriteria().andStatusEqualTo(ServiceConstants.TaskStatusEnum.created.name());
+        te.createCriteria().andStatusEqualTo(ServiceConstants.TaskStatusEnum.created.name()).andBeforeStatusNotEqualTo(LifeStatus.onrack.name());
+
         te.setOrderByClause("create_time asc");
         taskList = taskMapper.selectByExampleWithBLOBs(te);
 

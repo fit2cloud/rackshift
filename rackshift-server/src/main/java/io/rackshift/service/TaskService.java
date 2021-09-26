@@ -17,8 +17,10 @@ import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.mybatis.mapper.ext.ExtTaskMapper;
 import io.rackshift.strategy.statemachine.LifeEvent;
 import io.rackshift.strategy.statemachine.LifeEventType;
+import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.strategy.statemachine.StateMachine;
 import io.rackshift.utils.BeanUtils;
+import io.rackshift.utils.JSONUtils;
 import io.rackshift.utils.SessionUtil;
 import io.rackshift.utils.UUIDUtil;
 import net.sf.cglib.core.Local;
@@ -67,6 +69,11 @@ public class TaskService {
     private Map<String, String> renderOptions;
     @Resource
     private RabbitTemplate rabbitTemplate;
+
+    private List<String> runningStatus = new ArrayList<String>() {{
+        add(ServiceConstants.TaskStatusEnum.created.name());
+        add(ServiceConstants.TaskStatusEnum.running.name());
+    }};
 
     public Object add(TaskDTO queryVO) {
         TaskWithBLOBs task = new TaskWithBLOBs();
@@ -184,10 +191,18 @@ public class TaskService {
             for (int i = 0; i < tasks.size(); i++) {
                 JSONObject task = tasks.getJSONObject(i);
                 String taskName = task.getString("taskName");
-                JSONObject taskObj = (JSONObject) JSONObject.toJSON(taskObject.get(taskName));
-                JSONObject baseTaskObj = (JSONObject) JSONObject.toJSON(baseTask.get(taskObj.getString("implementsTask")));
+                JSONObject taskObj = null;
+                JSONObject baseTaskObj = null;
+                if (StringUtils.isNotBlank(taskName)) {
+                    taskObj = (JSONObject) JSONObject.toJSON(taskObject.get(taskName));
+                    baseTaskObj = (JSONObject) JSONObject.toJSON(baseTask.get(taskObj.getString("implementsTask")));
+                } else if (task.getJSONObject("taskDefinition") != null) {
+                    taskObj = task.getJSONObject("taskDefinition");
+                    baseTaskObj = (JSONObject) JSONObject.toJSON(baseTask.get(taskObj.getString("implementsTask")));
+                }
+                JSONObject finalTaskObj = taskObj;
                 taskObj.keySet().forEach(k -> {
-                    task.put(k, taskObj.get(k));
+                    task.put(k, finalTaskObj.get(k));
                 });
 
                 task.put("runJob", baseTaskObj.get("runJob"));
@@ -198,9 +213,10 @@ public class TaskService {
                 } else {
                     JSONObject userOptions = extract(e.getWorkflowRequestDTO().getParams());
                     JSONObject options = task.getJSONObject("options");
-                    userOptions.keySet().forEach(k -> {
-                        options.put(k, userOptions.get(k));
-                    });
+                    if (userOptions != null)
+                        userOptions.keySet().forEach(k -> {
+                            options.put(k, userOptions.get(k));
+                        });
                 }
 
                 if (taskOptions.get(task.getString("label")) != null) {
@@ -263,7 +279,7 @@ public class TaskService {
     }
 
     private JSONObject extract(JSONObject params) {
-        if (params.containsKey("options")) {
+        if (params != null && params.containsKey("options")) {
             return params.getJSONObject("options").getJSONObject("defaults");
         }
         return params;
@@ -326,7 +342,7 @@ public class TaskService {
     }
 
     public TaskWithBLOBs createDiscoveryGraph(String bareMetalId) {
-        WorkflowWithBLOBs w = workflowService.getByInjectableName("Graph.Discovery");
+        WorkflowWithBLOBs w = workflowService.getByInjectableName("Graph.rancherDiscovery");
         TaskWithBLOBs task = new TaskWithBLOBs();
         task.setId(UUIDUtil.newUUID());
         task.setBareMetalId(bareMetalId);
@@ -336,30 +352,30 @@ public class TaskService {
         //生成真正的 taskgraph 实例对象
         WorkflowRequestDTO workflowRequestDTO = new WorkflowRequestDTO();
         workflowRequestDTO.setWorkflowName(w.getInjectableName());
-        LifeEvent e = LifeEvent.builder().withEventType(LifeEventType.POST_DISCOVERY_WORKFLOW_START).withWorkflowRequestDTO(workflowRequestDTO);
+        LifeEvent e = LifeEvent.builder().withEventType(LifeEventType.POST_DISCOVERY_WORKFLOW_START).withWorkflowRequestDTO(workflowRequestDTO).withBareMetalId(bareMetalId);
         task.setGraphObjects(generateGraphObjects(e));
+        task.setBeforeStatus(LifeStatus.onrack.name());
         taskMapper.insertSelective(task);
         return task;
     }
 
-    public void createBMAndDiscoveryGraph(String macs) {
+    public BareMetal createBMAndDiscoveryGraph(String macs) {
         BareMetal bareMetal = bareMetalManager.createNewFromPXE(macs);
         Task t = createDiscoveryGraph(bareMetal.getId());
         JSONObject param = new JSONObject();
         param.put("taskId", t.getId());
         Message m = new Message(param.toJSONString().getBytes(StandardCharsets.UTF_8));
         rabbitTemplate.send(MqConstants.RUN_TASKGRAPH_QUEUE_NAME, m);
-    }
-
-    public boolean findActiveGraph(String id) {
-        TaskExample e = new TaskExample();
-        e.createCriteria().andBareMetalIdEqualTo(id).andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
-        return taskMapper.selectByExample(e).size() > 0 ? true : false;
+        return bareMetal;
     }
 
     public Map<String, Object> getTaskProfile(String id) {
         TaskExample e = new TaskExample();
-        e.createCriteria().andBareMetalIdEqualTo(id).andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
+        e.createCriteria().andBareMetalIdEqualTo(id).andStatusIn(runningStatus);
+        List<TaskWithBLOBs> tasks = taskMapper.selectByExampleWithBLOBs(e);
+        if (tasks.isEmpty()) {
+            return null;
+        }
         TaskWithBLOBs task = taskMapper.selectByExampleWithBLOBs(e).get(0);
         Map<String, Object> r = new HashMap<>();
         r.put("profile", "redirect.ipxe");
@@ -373,7 +389,8 @@ public class TaskService {
         }
         for (JSONObject jsonObject : tasksReadyToStart) {
             if (StringUtils.isNotBlank(jsonObject.getJSONObject("options").getString("profile"))) {
-
+                JSONUtils.merge(renderOptions, jsonObject.getJSONObject("options"));
+                jsonObject.getJSONObject("options").put("nodeId", jsonObject.getString("bareMetalId"));
                 r.put("profile", jsonObject.getJSONObject("options").getString("profile"));
                 r.put("options", jsonObject.getJSONObject("options"));
             }
