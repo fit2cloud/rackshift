@@ -49,20 +49,18 @@ jobs:
             ```
 
             ## 新增功能
-            - 支持 自定义 KS，iPXE 装机
-            - 自定义品牌
-            - 镜像支持后台挂载
-
-            ## 功能优化
-            - 重写 DHCP-PROXY 服务减小离线包体积
+             - Huawei 2288H V3 V5 RAID
 
             ## 问题修复
-            - 修复了一些已知问题
+             - 浪潮M5 删除与创建 RAID 失败
+             - CentOS 装机指定脚本安装 ip 指定失效
+             - IDRAC6 远程 kvm 报错
+             - 更新删除镜像报错
 
             # 产品文档
-            点击 [完整文档](https://rackshift.io) 查看完整的安装和使用文档
+             点击 [完整文档](https://rackshift.io) 查看完整的安装和使用文档
             # 离线安装包
-            [离线安装包下载地址](https://community.fit2cloud.com/#/download/rackshift/v1-5-0)
+             - [离线安装包下载地址](https://community.fit2cloud.com/#/download/rackshift/v1-5-1)
 
       - name: Upload Release Asset
         id: upload-release-asset

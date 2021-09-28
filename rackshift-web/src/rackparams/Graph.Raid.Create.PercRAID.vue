@@ -62,6 +62,7 @@ export default {
   },
   data() {
     return {
+      enclosure: 32,
       defaultPayLoad: {
         "options": {
           "bootstrap-rancher": {
@@ -126,7 +127,7 @@ export default {
     addRaid() {
       this.payLoad.options['create-raid'].raidList.push(
           {
-            "enclosure": 32,
+            "enclosure": this.enclosure,
             "type": null,
             "drives": [],
             "name": "VD" + this.payLoad.options['create-raid'].raidList.length
@@ -257,6 +258,14 @@ export default {
         }
         this.disks = res.data.disks;
         this.nics = res.data.nics;
+        if (this.disks && this.disks.length > 0) {
+          this.enclosure = this.disks[0].enclosureId;
+          if (this.payLoad.options['create-raid'].raidList.length > 0) {
+            _.forEach(this.payLoad.options['create-raid'].raidList, r => {
+              r.enclosure = this.disks[0].enclosureId;
+            })
+          }
+        }
       })
     }
     ,
