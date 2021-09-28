@@ -1,5 +1,7 @@
 package io.rackshift.engine.job;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.OutBand;
@@ -13,6 +15,10 @@ import java.util.Map;
 
 @Jobs("Job.Linux.Bootstrap")
 public class JobLinuxBootstrap extends BaseJob {
+    public JobLinuxBootstrap() {
+
+    }
+
     public JobLinuxBootstrap(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext, RabbitTemplate rabbitTemplate) {
         this.instanceId = instanceId;
         this.taskId = taskId;
@@ -29,13 +35,25 @@ public class JobLinuxBootstrap extends BaseJob {
 
     @Override
     public void run() {
-        String action = this.options.getString("action");
-        try {
-            new OBMService(action).run();
+        JSONObject r = new JSONObject();
+        r.put("identifier", bareMetalId);
+        this.subscribeForRequestCommand((o) -> {
+            JSONArray taskArr = new JSONArray();
+            JSONObject cmd = new JSONObject();
+            cmd.put("cmd", "");
+            taskArr.add(cmd);
+            r.put("tasks", taskArr);
+            return r;
+        });
+
+        this.subscribeForRequestProfile(o -> this.options.getString("profile"));
+
+        this.subscribeForRequestOptions(o -> this.options);
+
+        this.subscribeForCompleteCommands(o -> {
             this.succeeded();
-        } catch (Exception e) {
-            this.error(e);
-        }
+            return null;
+        });
     }
 
     private class OBMService {

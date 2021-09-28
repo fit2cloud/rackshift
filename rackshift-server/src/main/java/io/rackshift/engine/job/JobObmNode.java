@@ -13,6 +13,10 @@ import java.util.Map;
 
 @Jobs("Job.Obm.Node")
 public class JobObmNode extends BaseJob {
+    public JobObmNode() {
+
+    }
+
     public JobObmNode(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext, RabbitTemplate rabbitTemplate) {
         this.instanceId = instanceId;
         this.taskId = taskId;

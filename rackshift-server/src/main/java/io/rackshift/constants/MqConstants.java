@@ -21,4 +21,6 @@ public class MqConstants {
     public static final String RUN_TASK_ROUTINGKEY = "run.task.";
     public static final String CANCEL_TASK_ROUTINGKEY = "cancel.task.";
 
+    //for task detail
+
 }

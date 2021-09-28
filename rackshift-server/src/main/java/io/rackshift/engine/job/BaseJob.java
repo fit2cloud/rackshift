@@ -5,6 +5,7 @@ import io.rackshift.constants.MqConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.mybatis.mapper.TaskMapper;
+import io.rackshift.utils.MqUtil;
 import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -12,6 +13,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * graphObject sample
@@ -376,5 +378,22 @@ public abstract class BaseJob {
     public void complete() {
         this._status = ServiceConstants.RackHDTaskStatusEnum.finished.name();
         nextTick();
+    }
+
+
+    protected void subscribeForRequestCommand(Function callback) {
+        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, "methods.requestCommands." + this.bareMetalId, callback);
+    }
+
+    protected void subscribeForRequestProfile(Function callback) {
+        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, "methods.requestProfile." + this.bareMetalId, callback);
+    }
+
+    protected void subscribeForRequestOptions(Function callback) {
+        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, "methods.requestOptions." + this.bareMetalId, callback);
+    }
+
+    protected void subscribeForCompleteCommands(Function callback) {
+        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, "methods.completeCommands." + this.bareMetalId, callback);
     }
 }
