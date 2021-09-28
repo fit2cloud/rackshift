@@ -10,6 +10,8 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.nio.charset.StandardCharsets;
+
 @Configuration
 public class MQConfig {
     @Bean
@@ -23,8 +25,13 @@ public class MQConfig {
     }
 
     @Bean
+    public AmqpAdmin amqpAdmin() {
+        return new RabbitAdmin(rabbitMQConnectionFactory());
+    }
+
+    @Bean
     public AmqpTemplate RabbitTemplate() {
-        AmqpAdmin admin = new RabbitAdmin(rabbitMQConnectionFactory());
+        AmqpAdmin admin = amqpAdmin();
         TopicExchange exchange = new TopicExchange(MqConstants.EXCHANGE_NAME, true, true);
         admin.declareExchange(exchange);
         admin.declareQueue(new Queue(MqConstants.RUN_TASKGRAPH_QUEUE_NAME));
@@ -42,6 +49,29 @@ public class MQConfig {
     @Bean
     public MessageConverter mqMessageConverter() {
         return new Jackson2JsonMessageConverter();
+    }
+
+    public static void main(String[] args) {
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
+        connectionFactory.setUsername(MqConstants.USERNAME);
+        connectionFactory.setPassword(MqConstants.PASSWORD);
+        connectionFactory.setUri(MqConstants.URI);
+        connectionFactory.setVirtualHost(MqConstants.VIRTUALHOST);
+
+        RabbitTemplate ra = new RabbitTemplate(connectionFactory);
+        ra.setExchange("rackshift.exchange.default");
+        ra.setDefaultReceiveQueue(MqConstants.RUN_TASKGRAPH_QUEUE_NAME);
+
+        Message m = new Message("hello".getBytes(StandardCharsets.UTF_8));
+        ra.send(MqConstants.RUN_TASKGRAPH_ROUTINGKEY + ".12121", m);
+
+//        ra.receiveAndReply(new ReceiveAndReplyCallback<Object, Object>() {
+//            @Override
+//            public Object handle(Object o) {
+//                System.out.println(o);
+//                return null;
+//            }
+//        });
     }
 
 }

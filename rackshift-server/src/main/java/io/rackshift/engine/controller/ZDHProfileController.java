@@ -15,7 +15,7 @@ public class ZDHProfileController {
     @Resource
     private ZDHProfileService zdhProfileService;
 
-    @RequestMapping(value = "/api/current/profiles", produces = "text/plain")
+    @GetMapping(value = "/api/current/profiles", produces = "text/plain")
     public String profiles(@RequestParam(required = false) String macs) {
         return zdhProfileService.profiles(macs);
     }

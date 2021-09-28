@@ -14,7 +14,7 @@ public class MqConstants {
     public static final String CANCEL_TASK_QUEUE_NAME = "rackshift.queue.cancel.task";
 
 
-    public static final String ANY = "*";
+    public static final String ANY = "#";
     public static final String RUN_TASKGRAPH_ROUTINGKEY = "run.taskgraph.";
     public static final String CANCEL_TASKGRAPH_ROUTINGKEY = "cancel.taskgraph.";
 
