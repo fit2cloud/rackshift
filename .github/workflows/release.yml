@@ -49,26 +49,18 @@ jobs:
             ```
 
             ## 新增功能
-            - 支持 浪潮/SuperMicro/DELL/h3c/曙光 远程 KVM
-            - 开关机状态刷新
-            - 自定义 post-installation 脚本
-            - InspurM5 RAID
-            - Suma，Lenovo 装机支持
-
-            ## 功能优化
-            - 密码打印脱敏
-            - 兼容超微服务器产品型号缺失
+            - Huawei 2288H V3 V5 RAID
 
             ## 问题修复
-            - 插件选择裸金属分页问题
-            - h3c 磁盘 raid 失败的问题
-            - ubuntu 20.04 和 windows 2019 完成后状态显示错误的问题
-            - 重新执行安装脚本覆盖之前配置的问题
+            - 浪潮M5 删除与创建 RAID 失败
+            - CentOS 装机指定脚本安装 ip 指定失效
+            - IDRAC6 远程 kvm 报错
+            - 更新删除镜像报错
 
             # 产品文档
             点击 [完整文档](https://rackshift.io) 查看完整的安装和使用文档
             # 离线安装包
-            - 百度网盘下载链接: https://pan.baidu.com/s/1v0QYNZr1KGDlOxzlyoVGdA 提取码: ebz4
+            - [离线安装包下载地址](https://community.fit2cloud.com/#/download/rackshift/v1-5-1)
 
       - name: Upload Release Asset
         id: upload-release-asset
