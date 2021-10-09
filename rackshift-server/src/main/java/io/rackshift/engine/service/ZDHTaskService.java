@@ -8,6 +8,7 @@ import io.rackshift.utils.MqUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 @Service
 public class ZDHTaskService {
@@ -18,7 +19,7 @@ public class ZDHTaskService {
     @Resource
     private BareMetalService bareMetalService;
 
-    public String tasks(String bareMetalId) {
-        return new String(MqUtil.request(MqConstants.EXCHANGE_NAME, "methods.requestCommands." + bareMetalId).getBody());
+    public String tasks(String bareMetalId) throws IOException, InterruptedException {
+        return new String(MqUtil.request(MqConstants.EXCHANGE_NAME, "methods.requestCommands." + bareMetalId, bareMetalId));
     }
 }

@@ -1,6 +1,7 @@
 package io.rackshift.config;
 
 import io.rackshift.constants.MqConstants;
+import net.sf.jsqlparser.statement.select.Top;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -32,12 +33,12 @@ public class MQConfig {
     @Bean
     public AmqpTemplate RabbitTemplate() {
         AmqpAdmin admin = amqpAdmin();
-        TopicExchange exchange = new TopicExchange(MqConstants.EXCHANGE_NAME, true, true);
+        TopicExchange exchange = new TopicExchange(MqConstants.EXCHANGE_NAME, false, true);
         admin.declareExchange(exchange);
-        admin.declareQueue(new Queue(MqConstants.RUN_TASKGRAPH_QUEUE_NAME));
-        admin.declareQueue(new Queue(MqConstants.CANCEL_TASKGRAPH_QUEUE_NAME));
-        admin.declareQueue(new Queue(MqConstants.RUN_TASK_QUEUE_NAME));
-        admin.declareQueue(new Queue(MqConstants.CANCEL_TASK_QUEUE_NAME));
+        admin.declareQueue(new Queue(MqConstants.RUN_TASKGRAPH_QUEUE_NAME, false, true, true));
+        admin.declareQueue(new Queue(MqConstants.CANCEL_TASKGRAPH_QUEUE_NAME, false,true, true));
+        admin.declareQueue(new Queue(MqConstants.RUN_TASK_QUEUE_NAME, false,true, true));
+        admin.declareQueue(new Queue(MqConstants.CANCEL_TASK_QUEUE_NAME, false,true, true));
 
         admin.declareBinding(new Binding(MqConstants.RUN_TASKGRAPH_QUEUE_NAME, Binding.DestinationType.QUEUE, MqConstants.EXCHANGE_NAME, MqConstants.RUN_TASKGRAPH_ROUTINGKEY + MqConstants.ANY, null));
         admin.declareBinding(new Binding(MqConstants.CANCEL_TASKGRAPH_QUEUE_NAME, Binding.DestinationType.QUEUE, MqConstants.EXCHANGE_NAME, MqConstants.CANCEL_TASKGRAPH_ROUTINGKEY + MqConstants.ANY, null));
@@ -49,29 +50,6 @@ public class MQConfig {
     @Bean
     public MessageConverter mqMessageConverter() {
         return new Jackson2JsonMessageConverter();
-    }
-
-    public static void main(String[] args) {
-        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setUsername(MqConstants.USERNAME);
-        connectionFactory.setPassword(MqConstants.PASSWORD);
-        connectionFactory.setUri(MqConstants.URI);
-        connectionFactory.setVirtualHost(MqConstants.VIRTUALHOST);
-
-        RabbitTemplate ra = new RabbitTemplate(connectionFactory);
-        ra.setExchange("rackshift.exchange.default");
-        ra.setDefaultReceiveQueue(MqConstants.RUN_TASKGRAPH_QUEUE_NAME);
-
-        Message m = new Message("hello".getBytes(StandardCharsets.UTF_8));
-        ra.send(MqConstants.RUN_TASKGRAPH_ROUTINGKEY + ".12121", m);
-
-//        ra.receiveAndReply(new ReceiveAndReplyCallback<Object, Object>() {
-//            @Override
-//            public Object handle(Object o) {
-//                System.out.println(o);
-//                return null;
-//            }
-//        });
     }
 
 }

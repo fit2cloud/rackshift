@@ -377,6 +377,7 @@ public abstract class BaseJob {
 
     public void complete() {
         this._status = ServiceConstants.RackHDTaskStatusEnum.finished.name();
+        deleteQueue();
         nextTick();
     }
 
@@ -395,5 +396,12 @@ public abstract class BaseJob {
 
     protected void subscribeForCompleteCommands(Function callback) {
         MqUtil.subscribe(MqConstants.EXCHANGE_NAME, "methods.completeCommands." + this.bareMetalId, callback);
+    }
+
+    private void deleteQueue() {
+        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, "methods.requestCommands." + this.bareMetalId);
+        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, "methods.requestProfile." + this.bareMetalId);
+        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, "methods.requestOptions." + this.bareMetalId);
+        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, "methods.completeCommands." + this.bareMetalId);
     }
 }

@@ -43,7 +43,7 @@ public class JobLinuxBootstrap extends BaseJob {
             cmd.put("cmd", "");
             taskArr.add(cmd);
             r.put("tasks", taskArr);
-            return r;
+            return r.toJSONString();
         });
 
         this.subscribeForRequestProfile(o -> this.options.getString("profile"));

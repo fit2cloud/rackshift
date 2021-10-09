@@ -1,15 +1,15 @@
 package io.rackshift.utils;
 
-import org.apache.poi.ss.formula.functions.T;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.ReceiveAndReplyCallback;
+import com.rabbitmq.client.*;
+import io.rackshift.constants.MqConstants;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.connection.Connection;
 
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
 public class MqUtil {
@@ -17,26 +17,104 @@ public class MqUtil {
         return exchange + "." + routingKey;
     }
 
+    private static CachingConnectionFactory getCachingConnectionFactory() {
+        return (CachingConnectionFactory) SpringUtils.getApplicationContext().getBean("rabbitMQConnectionFactory");
+
+    }
+
     public static void subscribe(String exchange, String routingKey, Function<Object, Object> callback) {
-        CachingConnectionFactory connectionFactory = (CachingConnectionFactory) SpringUtils.getApplicationContext().getBean("rabbitMQConnectionFactory");
-        RabbitAdmin admin = new RabbitAdmin(connectionFactory);
-        admin.declareQueue(new Queue(queueName(exchange, routingKey)));
-        admin.declareBinding(new Binding(queueName(exchange, routingKey), Binding.DestinationType.QUEUE, exchange, routingKey, null));
-        RabbitTemplate r = new RabbitTemplate(connectionFactory);
-        r.receiveAndReply(queueName(exchange, routingKey), o -> callback.apply(o));
+        CachingConnectionFactory connectionFactory = getCachingConnectionFactory();
+        Connection connection = null;
+        try {
+            // 1.connection & channel
+            connection = connectionFactory.createConnection();
+            final Channel channel = connection.createChannel(false);
+
+            // 2.declare queue
+            channel.queueDeclare(queueName(exchange, routingKey), false, true, true, null);
+
+            System.out.println("****** rpc server waiting for client request ......");
+
+            // 3.Receive only one message at a time (task)
+            channel.basicQos(1);
+            //4.Get consumer instances
+            Consumer consumer = new DefaultConsumer(channel) {
+
+                @Override
+                public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+                    AMQP.BasicProperties prop = new AMQP.BasicProperties().builder().correlationId(properties.getCorrelationId())
+                            .build();
+                    String resp = "";
+                    try {
+                        String msg = new String(body, "UTF-8");
+                        resp = (String) callback.apply(msg);
+                        System.out.println("*** will response to rpc client :" + resp);
+                        LogUtil.info("*** will response to rpc client :" + resp);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    } finally {
+                        channel.basicPublish("", properties.getReplyTo(), prop, resp.getBytes());
+                        channel.basicAck(envelope.getDeliveryTag(), false);
+                    }
+
+                }
+            };
+            // 5.Consumption messages (processing tasks)
+            channel.basicConsume(queueName(exchange, routingKey), false, consumer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void publish(String exchange, String routingKey, Message message) {
-        CachingConnectionFactory connectionFactory = (CachingConnectionFactory) SpringUtils.getApplicationContext().getBean("rabbitMQConnectionFactory");
-        RabbitTemplate r = new RabbitTemplate(connectionFactory);
-        r.setExchange(exchange);
-        r.send(routingKey, message);
+    public static String request(String exchange, String routingKey, String msg) throws IOException, InterruptedException {
+        CachingConnectionFactory connectionFactory = getCachingConnectionFactory();
+        connectionFactory.setUsername(MqConstants.USERNAME);
+        connectionFactory.setPassword(MqConstants.PASSWORD);
+        connectionFactory.setUri(MqConstants.URI);
+        connectionFactory.setVirtualHost(MqConstants.VIRTUALHOST);
+        Connection connection = connectionFactory.createConnection();
+        Channel channel = connection.createChannel(false);
+        String queueName = channel.queueDeclare().getQueue();
+        final String uuid = UUID.randomUUID().toString();
+        //Subsequently, the server relies on"replyTo"To specify to which queue the return information will be written
+        //Subsequently, the server identifies based on the Association"correlationId"To specify which request the response was returned
+        AMQP.BasicProperties prop = new AMQP.BasicProperties().builder().replyTo(queueName).correlationId(uuid).build();
+
+        channel.basicPublish("", queueName(exchange, routingKey), prop, msg.getBytes());
+        final BlockingQueue<String> blockQueue = new ArrayBlockingQueue<String>(1);
+        channel.basicConsume(queueName, true, new DefaultConsumer(channel) {
+            @Override
+            public void handleDelivery(String consumerTag, Envelope envelope,
+                                       com.rabbitmq.client.AMQP.BasicProperties properties, byte[] body) throws IOException {
+
+                if (properties.getCorrelationId().equals(uuid)) {
+                    String msg = new String(body, "UTF-8");
+
+                    blockQueue.offer(msg);
+                    System.out.println("**** rpc client reciver response :[" + msg + "]");
+                    LogUtil.info("**** rpc client reciver response :[" + msg + "]");
+                    channel.queueDelete(queueName);
+                    try {
+                        channel.close();
+                    } catch (TimeoutException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        });
+        return blockQueue.take();
     }
 
-    public static Message request(String exchange, String routingKey) {
-        CachingConnectionFactory connectionFactory = (CachingConnectionFactory) SpringUtils.getApplicationContext().getBean("rabbitMQConnectionFactory");
-        RabbitTemplate r = new RabbitTemplate(connectionFactory);
-        r.setExchange(exchange);
-        return r.sendAndReceive(routingKey, new Message("hello".getBytes(StandardCharsets.UTF_8)));
+    public static void delQueue(String exchangeName, String s) {
+        CachingConnectionFactory connectionFactory = getCachingConnectionFactory();
+        Connection c = connectionFactory.createConnection();
+        Channel channel = c.createChannel(false);
+        try {
+            channel.queueDelete(queueName(exchangeName, s));
+            c.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
