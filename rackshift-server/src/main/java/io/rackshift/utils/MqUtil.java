@@ -9,17 +9,20 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
 public class MqUtil {
+    private static boolean durable = true;
+    private static boolean exclusive = false;
+
     private static String queueName(String exchange, String routingKey) {
         return exchange + "." + routingKey;
     }
 
     private static CachingConnectionFactory getCachingConnectionFactory() {
         return (CachingConnectionFactory) SpringUtils.getApplicationContext().getBean("rabbitMQConnectionFactory");
-
     }
 
     public static void subscribe(String exchange, String routingKey, Function<Object, Object> callback) {
@@ -31,7 +34,7 @@ public class MqUtil {
             final Channel channel = connection.createChannel(false);
 
             // 2.declare queue
-            channel.queueDeclare(queueName(exchange, routingKey), false, true, true, null);
+            channel.queueDeclare(queueName(exchange, routingKey), durable, exclusive, true, null);
 
             System.out.println("****** rpc server waiting for client request ......");
 
@@ -56,7 +59,6 @@ public class MqUtil {
                         channel.basicPublish("", properties.getReplyTo(), prop, resp.getBytes());
                         channel.basicAck(envelope.getDeliveryTag(), false);
                     }
-
                 }
             };
             // 5.Consumption messages (processing tasks)
@@ -68,10 +70,6 @@ public class MqUtil {
 
     public static String request(String exchange, String routingKey, String msg) throws IOException, InterruptedException {
         CachingConnectionFactory connectionFactory = getCachingConnectionFactory();
-        connectionFactory.setUsername(MqConstants.USERNAME);
-        connectionFactory.setPassword(MqConstants.PASSWORD);
-        connectionFactory.setUri(MqConstants.URI);
-        connectionFactory.setVirtualHost(MqConstants.VIRTUALHOST);
         Connection connection = connectionFactory.createConnection();
         Channel channel = connection.createChannel(false);
         String queueName = channel.queueDeclare().getQueue();
@@ -103,7 +101,21 @@ public class MqUtil {
             }
 
         });
-        return blockQueue.take();
+        String r = "";
+        try {
+            r = blockQueue.poll(1, TimeUnit.MINUTES);
+        } catch (Exception e) {
+
+        } finally {
+            channel.queueDelete(queueName);
+            try {
+                channel.close();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return r;
     }
 
     public static void delQueue(String exchangeName, String s) {

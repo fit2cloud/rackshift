@@ -15,6 +15,10 @@ public class TaskConfig {
     private String apiServer;
     @Value("${api.server.port}")
     private String apiServerPort;
+    @Value("${file.server}")
+    private String fileServer;
+    @Value("${file.server.port}")
+    private String fileServerPort;
 
     @Bean
     public TaskScheduler taskScheduler() {
@@ -36,7 +40,7 @@ public class TaskConfig {
         optionMap.put("port", apiServerPort);
         optionMap.put("api.server.port", apiServerPort);
         optionMap.put("api.server", "http://" + apiServer + ":" + apiServerPort);
-        optionMap.put("file.server", optionMap.get("api.server"));
+        optionMap.put("file.server", "http://" + fileServer + ":" + fileServerPort);
         optionMap.put("api.base", optionMap.get("api.server") + "/api/current");
         optionMap.put("api.templates", optionMap.get("api.server") + "/api/templates");
         optionMap.put("api.profiles", optionMap.get("api.server") + "/api/profiles");

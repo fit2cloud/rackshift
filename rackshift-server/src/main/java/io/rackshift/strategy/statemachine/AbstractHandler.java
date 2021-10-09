@@ -159,12 +159,14 @@ public abstract class AbstractHandler implements IStateHandler {
                 tasksReadyToStart.add(taskObj.getJSONObject(t));
             }
         }
-        tasksReadyToStart.forEach(obj -> {
+        //假如有多个启动任务只启动一个
+        for (JSONObject jsonObject : tasksReadyToStart) {
             JSONObject body = new JSONObject();
             body.put("taskId", task.getId());
-            body.put("instanceId", obj.getString("instanceId"));
+            body.put("instanceId", jsonObject.getString("instanceId"));
             Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
             rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
-        });
+            break;
+        }
     }
 }

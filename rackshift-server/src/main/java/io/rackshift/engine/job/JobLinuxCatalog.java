@@ -1,6 +1,5 @@
 package io.rackshift.engine.job;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.model.RSException;
@@ -13,13 +12,13 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
 
-@Jobs("Job.Linux.Bootstrap")
-public class JobLinuxBootstrap extends BaseJob {
-    public JobLinuxBootstrap() {
+@Jobs("Job.Linux.Catalog")
+public class JobLinuxCatalog extends BaseJob {
+    public JobLinuxCatalog() {
 
     }
 
-    public JobLinuxBootstrap(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext, RabbitTemplate rabbitTemplate) {
+    public JobLinuxCatalog(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext, RabbitTemplate rabbitTemplate) {
         this.instanceId = instanceId;
         this.taskId = taskId;
         this.context = context;
@@ -40,7 +39,7 @@ public class JobLinuxBootstrap extends BaseJob {
         this.subscribeForRequestCommand((o) -> {
             JSONArray taskArr = new JSONArray();
             JSONObject cmd = new JSONObject();
-            cmd.put("cmd", "");
+            cmd.put("cmd", options.getJSONArray("commands"));
             taskArr.add(cmd);
             r.put("tasks", taskArr);
             return r.toJSONString();
@@ -55,5 +54,4 @@ public class JobLinuxBootstrap extends BaseJob {
             return "ok";
         });
     }
-
 }

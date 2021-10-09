@@ -46,6 +46,13 @@
       >
         <el-table-column type="selection" align="left"></el-table-column>
 
+        <el-table-column prop="pxe_mac" :label="$t('pxe_mac')" align="left"
+                         sortable="custom">
+          <template slot-scope="scope">
+            {{ scope.row.pxeMac }}
+          </template>
+        </el-table-column>
+
         <el-table-column prop="machine_model" :label="$t('machine_model')" align="left"
                          sortable="custom" style="overflow: scroll" width="180">
           <template slot-scope="scope">

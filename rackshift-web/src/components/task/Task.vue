@@ -146,14 +146,15 @@
             :wrapperClosable="false"
             :before-close="handleClose2">
           <div class="demo-drawer__content">
-<!--            <json-viewer v-if="editObj.graphObjects" :value="editObj.graphObjects" :expand-depth=2-->
-<!--                         :copyable="{copyText: $t('copy'), copiedText: $t('copied'), timeout: 2000}"></json-viewer>-->
+            <json-viewer v-if="editObj.graphObjects" :value="editObj.graphObjects" :expand-depth=2
+                         :copyable="{copyText: $t('copy'), copiedText: $t('copied'), timeout: 2000}"></json-viewer>
 
-<!--            <span v-else class="mb10">{{ $t('no_more_logs') }}</span>-->
+            <span v-else class="mb10">{{ $t('no_more_logs') }}</span>
 
-                <workflow-chart
-                    :transitions="transitions"
-                    :states="states" />
+<!--                <workflow-chart-->
+<!--                    :transitions="transitions"-->
+<!--                    :states="states" />-->
+
 
 
             <div class="demo-drawer__footer">

@@ -12,6 +12,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -345,20 +347,46 @@ public abstract class BaseJob {
             task.put("state", ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
             this._status = ServiceConstants.RackHDTaskStatusEnum.succeeded.name();
             setTask(task);
+            deleteQueue();
         }
-        nextTick();
+        nextTick(ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
     }
 
-    public void nextTick() {
+    public void nextTick(String status) {
         JSONObject graphObjects = JSONObject.parseObject(this.task.getGraphObjects());
+        boolean go = false;
         for (String s : graphObjects.keySet()) {
             JSONObject waitingOnObj = graphObjects.getJSONObject(s).getJSONObject("waitingOn");
-            if (waitingOnObj != null && waitingOnObj.getString(waitingOnObj.keySet().stream().findFirst().get()).equalsIgnoreCase(this.instanceId) && waitingOnObj.getString(this.instanceId).equalsIgnoreCase(this._status)) {
+            if (waitingOnObj != null) {
+                for (String waitInstance : waitingOnObj.keySet()) {
+                    if (waitInstance.equalsIgnoreCase(this.instanceId) && waitingOnObj.getString(waitInstance).equalsIgnoreCase(status)) {
+                        JSONObject body = new JSONObject();
+                        body.put("taskId", taskId);
+                        body.put("instanceId", graphObjects.getJSONObject(s).getString("instanceId"));
+                        Message message = new Message("".getBytes(StandardCharsets.UTF_8));
+                        rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
+                        go = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!go) {
+            JSONObject taskObj = JSONObject.parseObject(task.getGraphObjects());
+            List<JSONObject> tasksReadyToStart = new ArrayList<>();
+            for (String t : taskObj.keySet()) {
+                if (taskObj.getJSONObject(t).getJSONObject("waitingOn") == null && taskObj.getJSONObject(t).getString("state").equalsIgnoreCase("pending")) {
+                    tasksReadyToStart.add(taskObj.getJSONObject(t));
+                }
+            }
+            //假如有多个启动任务只启动一个
+            for (JSONObject jsonObject : tasksReadyToStart) {
                 JSONObject body = new JSONObject();
-                body.put("taskId", taskId);
-                body.put("instanceId", graphObjects.getJSONObject(s).getString("instanceId"));
-                Message message = new Message("".getBytes(StandardCharsets.UTF_8));
+                body.put("taskId", task.getId());
+                body.put("instanceId", jsonObject.getString("instanceId"));
+                Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
                 rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
+                break;
             }
         }
     }
@@ -376,9 +404,14 @@ public abstract class BaseJob {
     }
 
     public void complete() {
-        this._status = ServiceConstants.RackHDTaskStatusEnum.finished.name();
-        deleteQueue();
-        nextTick();
+        if (ServiceConstants.RackHDTaskStatusEnum.pending.name().equalsIgnoreCase(this._status)) {
+            JSONObject task = getTaskByInstanceId(instanceId);
+            task.put("state", ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
+            this._status = ServiceConstants.RackHDTaskStatusEnum.succeeded.name();
+            setTask(task);
+            deleteQueue();
+        }
+        nextTick(ServiceConstants.RackHDTaskStatusEnum.finished.name());
     }
 
 
