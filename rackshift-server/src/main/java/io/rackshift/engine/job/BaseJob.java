@@ -363,7 +363,7 @@ public abstract class BaseJob {
                         JSONObject body = new JSONObject();
                         body.put("taskId", taskId);
                         body.put("instanceId", graphObjects.getJSONObject(s).getString("instanceId"));
-                        Message message = new Message("".getBytes(StandardCharsets.UTF_8));
+                        Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
                         rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
                         go = true;
                         break;
