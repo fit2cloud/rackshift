@@ -119,6 +119,11 @@ public class WorkflowConfig implements BeanPostProcessor {
         return new HashMap<>();
     }
 
+    /**
+     * 降低重写的成本 直接加载 RackHD 的源码
+     *
+     * @return
+     */
     @Bean
     public Map<String, BaseTask> baseTask() {
         try {
@@ -149,6 +154,12 @@ public class WorkflowConfig implements BeanPostProcessor {
         return null;
     }
 
+
+    /**
+     * 降低重写的成本 直接加载 RackHD 的源码
+     *
+     * @return
+     */
     @Bean
     public Map<String, BaseTaskGraph> taskGraph() {
         try {
@@ -179,6 +190,12 @@ public class WorkflowConfig implements BeanPostProcessor {
         return null;
     }
 
+
+    /**
+     * 降低重写的成本 直接加载 RackHD 的源码
+     *
+     * @return
+     */
     @Bean
     public Map<String, BaseTaskObject> taskObject() {
         try {

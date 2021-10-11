@@ -1,0 +1,513 @@
+{
+  "aa9cc41f-b853-49a5-9314-cc9da0a71197": {
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "noop",
+    "taskStartTime": 1633777526833,
+    "implementsTask": "Task.Base.noop",
+    "waitingOn": {
+      "c8d05089-30d5-4944-a6c9-2c1773af6441": "succeeded"
+    },
+    "instanceId": "aa9cc41f-b853-49a5-9314-cc9da0a71197",
+    "options": {
+      "delay": 0,
+      "option3": 3,
+      "option1": 1,
+      "option2": 2
+    },
+    "taskName": "Task.noop",
+    "state": "pending",
+    "injectableName": "Task.noop",
+    "friendlyName": "noop",
+    "properties": {
+      "noop": {
+        "foo": "bar"
+      }
+    },
+    "runJob": "Job.noop"
+  },
+  "8625ee52-01b9-42eb-a461-da72d0862db2": {
+    "ignoreFailure": true,
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "set-interfaces",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Linux.Commands",
+    "waitingOn": {
+      "8d316144-b712-4bd4-b5d9-3abfa8788991": "finished"
+    },
+    "instanceId": "8625ee52-01b9-42eb-a461-da72d0862db2",
+    "options": {
+      "commands": [
+        {
+          "downloadUrl": "{{ api.templates }}/set_interfaces.py?nodeId={{ task.nodeId }}",
+          "command": ""
+        }
+      ]
+    },
+    "taskName": "Task.Set.Interfaces",
+    "state": "pending",
+    "injectableName": "Task.Set.Interfaces",
+    "friendlyName": "Set Interfaces",
+    "properties": {
+      "os": {
+        "linux": {
+          "type": "microkernel"
+        }
+      }
+    },
+    "runJob": "Job.Linux.Commands"
+  },
+  "7988b9e6-1e06-4674-9d17-7e01f5b1ce45": {
+    "ignoreFailure": true,
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "catalog-lsall",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Linux.Catalog",
+    "waitingOn": {
+      "8625ee52-01b9-42eb-a461-da72d0862db2": "finished"
+    },
+    "instanceId": "7988b9e6-1e06-4674-9d17-7e01f5b1ce45",
+    "options": {
+      "commands": [
+        "sudo lspci -nn -vmm",
+        "sudo lshw -json",
+        "sudo lsblk -o KNAME,TYPE,ROTA; echo BREAK; sudo lsscsi --size"
+      ]
+    },
+    "taskName": "Task.Catalog.lsall",
+    "state": "pending",
+    "injectableName": "Task.Catalog.lsall",
+    "friendlyName": "Catalog lsall",
+    "properties": {
+      "catalog": {
+        "type": "lsall"
+      }
+    },
+    "runJob": "Job.Linux.Catalog"
+  },
+  "7e041fea-085a-4687-bf4b-deeb6af2ad0f": {
+    "implementsTask": "Task.Base.Linux.Catalog",
+    "instanceId": "7e041fea-085a-4687-bf4b-deeb6af2ad0f",
+    "options": {
+      "commands": [
+        "sudo dmidecode"
+      ]
+    },
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "taskName": "Task.Catalog.dmi",
+    "label": "catalog-dmi",
+    "state": "succeeded",
+    "injectableName": "Task.Catalog.dmi",
+    "taskStartTime": 1633777526832,
+    "friendlyName": "Catalog dmi",
+    "properties": {
+      "catalog": {
+        "type": "dmi"
+      }
+    },
+    "runJob": "Job.Linux.Catalog"
+  },
+  "b80ed509-9d96-4e10-b076-48623e1a8838": {
+    "ignoreFailure": true,
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "catalog-megaraid",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Linux.Catalog",
+    "waitingOn": {
+      "7988b9e6-1e06-4674-9d17-7e01f5b1ce45": "finished"
+    },
+    "instanceId": "b80ed509-9d96-4e10-b076-48623e1a8838",
+    "optionsSchema": "catalog-raid.json",
+    "options": {
+      "path": "/opt/MegaRAID/storcli/storcli64",
+      "adapter": "0",
+      "commands": [
+        "sudo {{options.path}} /c{{ options.adapter }} show all J",
+        "sudo {{options.path}} show ctrlcount J",
+        "sudo {{options.path}} /c{{ options.adapter }} /eall /sall show all J",
+        "sudo {{options.path}} /c{{ options.adapter }} /vall show all J"
+      ]
+    },
+    "taskName": "Task.Catalog.megaraid",
+    "state": "pending",
+    "injectableName": "Task.Catalog.megaraid",
+    "friendlyName": "Catalog megaraid",
+    "properties": {
+      "catalog": {
+        "type": "megaraid"
+      }
+    },
+    "runJob": "Job.Linux.Catalog"
+  },
+  "debd7457-971f-4cbd-ad9a-de701de2c6bf": {
+    "ignoreFailure": true,
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "catalog-lldp",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Linux.Catalog",
+    "waitingOn": {
+      "6e2c298f-1560-44f5-870c-ac25387224c9": "finished"
+    },
+    "instanceId": "debd7457-971f-4cbd-ad9a-de701de2c6bf",
+    "options": {
+      "commands": [
+        "sudo /usr/sbin/lldpcli show neighbor -f keyvalue"
+      ]
+    },
+    "taskName": "Task.Catalog.LLDP",
+    "state": "pending",
+    "injectableName": "Task.Catalog.LLDP",
+    "friendlyName": "Catalog LLDP",
+    "properties": {
+      "catalog": {
+        "type": "lldp"
+      }
+    },
+    "runJob": "Job.Linux.Catalog"
+  },
+  "c8d05089-30d5-4944-a6c9-2c1773af6441": {
+    "ignoreFailure": true,
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "skip-reboot-post-discovery",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Evaluate.Condition",
+    "waitingOn": {
+      "626e5afc-c7ca-4fcc-8414-90d2cae426f2": "finished"
+    },
+    "instanceId": "c8d05089-30d5-4944-a6c9-2c1773af6441",
+    "options": {
+      "skipReboot": "false",
+      "when": "false"
+    },
+    "taskName": "Task.Evaluate.Condition",
+    "state": "pending",
+    "injectableName": "Task.Evaluate.Condition",
+    "friendlyName": "Evaluate Condition",
+    "properties": {},
+    "runJob": "Job.Evaluate.Condition"
+  },
+  "9c5b909f-3209-45a6-ac5c-845462b91301": {
+    "ignoreFailure": true,
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "catalog-adaptecraid",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Linux.Catalog",
+    "waitingOn": {
+      "82bac382-1bbf-4bae-b2ff-e19b3f2a1b31": "finished"
+    },
+    "instanceId": "9c5b909f-3209-45a6-ac5c-845462b91301",
+    "optionsSchema": "catalog-raid.json",
+    "options": {
+      "adapter": "0",
+      "commands": [
+        "sudo /usr/Arcconf/arcconf getconfig 1 al"
+      ]
+    },
+    "taskName": "Task.Catalog.adaptecraid",
+    "state": "pending",
+    "injectableName": "Task.Catalog.adaptecraid",
+    "friendlyName": "Catalog adaptecraid",
+    "properties": {
+      "catalog": {
+        "type": "adaptecraid"
+      }
+    },
+    "runJob": "Job.Linux.Catalog"
+  },
+  "626e5afc-c7ca-4fcc-8414-90d2cae426f2": {
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "set-boot-pxe",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Linux.Commands",
+    "waitingOn": {
+      "debd7457-971f-4cbd-ad9a-de701de2c6bf": "finished"
+    },
+    "instanceId": "626e5afc-c7ca-4fcc-8414-90d2cae426f2",
+    "options": {
+      "commands": "sudo ipmitool chassis bootdev pxe"
+    },
+    "taskDefinition": {
+      "implementsTask": "Task.Base.Linux.Commands",
+      "options": {
+        "$ref": "$.626e5afc-c7ca-4fcc-8414-90d2cae426f2.options"
+      },
+      "injectableName": "Task.Node.PxeBoot",
+      "friendlyName": "Set PXE boot",
+      "properties": {}
+    },
+    "state": "pending",
+    "injectableName": "Task.Node.PxeBoot",
+    "friendlyName": "Set PXE boot",
+    "properties": {
+      "$ref": "$.626e5afc-c7ca-4fcc-8414-90d2cae426f2.taskDefinition.properties"
+    },
+    "runJob": "Job.Linux.Commands"
+  },
+  "82bac382-1bbf-4bae-b2ff-e19b3f2a1b31": {
+    "ignoreFailure": true,
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "catalog-perccli",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Linux.Catalog",
+    "waitingOn": {
+      "b80ed509-9d96-4e10-b076-48623e1a8838": "finished"
+    },
+    "instanceId": "82bac382-1bbf-4bae-b2ff-e19b3f2a1b31",
+    "optionsSchema": "catalog-raid.json",
+    "options": {
+      "adapter": "0",
+      "commands": [
+        "sudo /opt/MegaRAID/perccli/perccli64 /c{{ options.adapter }} show all J",
+        "sudo /opt/MegaRAID/perccli/perccli64 show ctrlcount J",
+        "sudo /opt/MegaRAID/perccli/perccli64 /c{{ options.adapter }} /vall show all J",
+        "sudo /opt/MegaRAID/perccli/perccli64 -v"
+      ]
+    },
+    "taskName": "Task.Catalog.perccli",
+    "state": "pending",
+    "injectableName": "Task.Catalog.perccli",
+    "friendlyName": "Catalog perccli",
+    "properties": {
+      "catalog": {
+        "type": "perccli"
+      }
+    },
+    "runJob": "Job.Linux.Catalog"
+  },
+  "d0a39c02-9753-41e9-99ba-b4504ab11daf": {
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "finish-bootstrap-trigger",
+    "taskStartTime": 1633777526834,
+    "implementsTask": "Task.Base.Trigger",
+    "waitingOn": {
+      "626e5afc-c7ca-4fcc-8414-90d2cae426f2": "finished"
+    },
+    "instanceId": "d0a39c02-9753-41e9-99ba-b4504ab11daf",
+    "options": {
+      "triggerGroup": "default",
+      "triggerType": "finish",
+      "triggerMode": "send"
+    },
+    "taskName": "Task.Trigger.Send.Finish",
+    "state": "pending",
+    "injectableName": "Task.Trigger.Send.Finish",
+    "friendlyName": "Send Finish Trigger",
+    "properties": {},
+    "runJob": "Job.Trigger"
+  },
+  "70ba34f6-b82b-4340-96ef-e0e9cd3814b8": {
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "catalog-ohai",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Linux.Catalog",
+    "waitingOn": {
+      "7e041fea-085a-4687-bf4b-deeb6af2ad0f": "finished"
+    },
+    "instanceId": "70ba34f6-b82b-4340-96ef-e0e9cd3814b8",
+    "options": {
+      "commands": [
+        "sudo ohai --directory /etc/ohai/plugins"
+      ]
+    },
+    "taskName": "Task.Catalog.ohai",
+    "state": "succeeded",
+    "injectableName": "Task.Catalog.ohai",
+    "friendlyName": "Catalog ohai",
+    "properties": {
+      "catalog": {
+        "type": "ohai"
+      }
+    },
+    "runJob": "Job.Linux.Catalog"
+  },
+  "0da9d5f5-493e-4166-afbc-d857bab5eef9": {
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "node-discovered-alert",
+    "taskStartTime": 1633777526834,
+    "implementsTask": "Task.Base.Alert.Node.Discovered",
+    "waitingOn": {
+      "d0a39c02-9753-41e9-99ba-b4504ab11daf": "finished"
+    },
+    "instanceId": "0da9d5f5-493e-4166-afbc-d857bab5eef9",
+    "options": {},
+    "taskName": "Task.Alert.Node.Discovered",
+    "state": "pending",
+    "injectableName": "Task.Alert.Node.Discovered",
+    "friendlyName": "Node Discovered Alerts",
+    "properties": {},
+    "runJob": "Job.Alert.Node.Discovered"
+  },
+  "be16b166-f3f9-486b-abd7-c74abcfaab52": {
+    "ignoreFailure": true,
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "catalog-smart",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Linux.Catalog",
+    "waitingOn": {
+      "9c77c2fe-89f2-448a-b8d4-0612b6463261": "finished"
+    },
+    "instanceId": "be16b166-f3f9-486b-abd7-c74abcfaab52",
+    "options": {
+      "commands": [
+        {
+          "downloadUrl": "{{ api.templates }}/get_smart.sh?nodeId={{ task.nodeId }}",
+          "command": "sudo bash get_smart.sh"
+        }
+      ]
+    },
+    "taskName": "Task.Catalog.smart",
+    "state": "pending",
+    "injectableName": "Task.Catalog.smart",
+    "friendlyName": "Catalog S.M.A.R.T",
+    "properties": {
+      "catalog": {
+        "type": "smart"
+      }
+    },
+    "runJob": "Job.Linux.Catalog"
+  },
+  "9c77c2fe-89f2-448a-b8d4-0612b6463261": {
+    "ignoreFailure": true,
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "catalog-hpssaraid",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Linux.Catalog",
+    "waitingOn": {
+      "9c5b909f-3209-45a6-ac5c-845462b91301": "finished"
+    },
+    "instanceId": "9c77c2fe-89f2-448a-b8d4-0612b6463261",
+    "optionsSchema": "catalog-raid.json",
+    "options": {
+      "adapter": "0",
+      "commands": [
+        "sudo /usr/sbin/hpssacli ctrl all show config detail"
+      ]
+    },
+    "taskName": "Task.Catalog.hpssaraid",
+    "state": "pending",
+    "injectableName": "Task.Catalog.hpssaraid",
+    "friendlyName": "Catalog hpssaraid",
+    "properties": {
+      "catalog": {
+        "type": "hpssaraid"
+      }
+    },
+    "runJob": "Job.Linux.Catalog"
+  },
+  "8d316144-b712-4bd4-b5d9-3abfa8788991": {
+    "ignoreFailure": true,
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "catalog-bmc",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Linux.Catalog",
+    "waitingOn": {
+      "70ba34f6-b82b-4340-96ef-e0e9cd3814b8": "finished"
+    },
+    "instanceId": "8d316144-b712-4bd4-b5d9-3abfa8788991",
+    "options": {
+      "commands": [
+        {
+          "acceptedResponseCodes": [
+            1
+          ],
+          "command": "sudo ipmitool lan print"
+        },
+        "sudo ipmitool sel",
+        "sudo ipmitool sel list -c",
+        "sudo ipmitool mc info",
+        "sudo ipmitool fru"
+      ]
+    },
+    "taskName": "Task.Catalog.bmc",
+    "state": "succeeded",
+    "injectableName": "Task.Catalog.bmc",
+    "friendlyName": "Catalog bmc",
+    "properties": {
+      "catalog": {
+        "type": "bmc"
+      }
+    },
+    "runJob": "Job.Linux.Catalog"
+  },
+  "8c40a8bb-df31-4433-8a6a-c0c533f0e70a": {
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "shell-reboot",
+    "taskStartTime": 1633777526833,
+    "implementsTask": "Task.Base.ShellReboot",
+    "waitingOn": {
+      "c8d05089-30d5-4944-a6c9-2c1773af6441": "failed"
+    },
+    "instanceId": "8c40a8bb-df31-4433-8a6a-c0c533f0e70a",
+    "options": {
+      "rebootCode": 1
+    },
+    "taskName": "Task.ProcShellReboot",
+    "state": "pending",
+    "injectableName": "Task.ProcShellReboot",
+    "friendlyName": "Reboot Node via proc",
+    "properties": {
+      "power": {}
+    },
+    "runJob": "Job.Linux.ShellReboot"
+  },
+  "e1bb9ae1-7cb7-435f-9aa6-93b5da15c234": {
+    "implementsTask": "Task.Base.Linux.Bootstrap",
+    "instanceId": "e1bb9ae1-7cb7-435f-9aa6-93b5da15c234",
+    "options": {
+      "dockerFile": "discovery.docker.tar.xz",
+      "kernelUri": "http://127.0.0.1:80/common/vmlinuz-1.2.0-rancher",
+      "initrdUri": "http://127.0.0.1:80/common/initrd-1.2.0-rancher",
+      "triggerGroup": "bootstrap",
+      "comport": "ttyS0",
+      "profile": "rancherOS.ipxe",
+      "kernelFile": "vmlinuz-1.2.0-rancher",
+      "dockerUri": "http://127.0.0.1:80/common/discovery.docker.tar.xz",
+      "initrdFile": "initrd-1.2.0-rancher"
+    },
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "taskName": "Task.Linux.Bootstrap.Rancher",
+    "label": "bootstrap-rancher",
+    "state": "pending",
+    "injectableName": "Task.Linux.Bootstrap.Rancher",
+    "taskStartTime": 1633777526831,
+    "friendlyName": "Bootstrap Rancher",
+    "properties": {
+      "os": {
+        "linux": {
+          "Linux": "4.9.78",
+          "release": "1.2.0",
+          "distribution": "rancher"
+        }
+      }
+    },
+    "runJob": "Job.Linux.Bootstrap"
+  },
+  "6e2c298f-1560-44f5-870c-ac25387224c9": {
+    "ignoreFailure": true,
+    "bareMetalId": "39e91d5c-e77c-494d-a647-cc7e1e5183f4",
+    "label": "catalog-driveid",
+    "taskStartTime": 1633777526832,
+    "implementsTask": "Task.Base.Linux.Catalog",
+    "waitingOn": {
+      "be16b166-f3f9-486b-abd7-c74abcfaab52": "finished"
+    },
+    "instanceId": "6e2c298f-1560-44f5-870c-ac25387224c9",
+    "options": {
+      "commands": [
+        {
+          "downloadUrl": "{{ api.templates }}/get_driveid.js?nodeId={{ task.nodeId }}",
+          "command": "sudo node get_driveid.js"
+        }
+      ]
+    },
+    "taskName": "Task.Catalog.Drive.Id",
+    "state": "pending",
+    "injectableName": "Task.Catalog.Drive.Id",
+    "friendlyName": "Catalog Drive IDs",
+    "properties": {
+      "catalog": {
+        "type": "driveId"
+      }
+    },
+    "runJob": "Job.Linux.Catalog"
+  }
+}

@@ -21,7 +21,7 @@ public class ZDHTaskService {
     private BareMetalService bareMetalService;
 
     public String tasks(String bareMetalId) throws IOException, InterruptedException {
-        return new String(MqUtil.request(MqConstants.EXCHANGE_NAME, "methods.requestCommands." + bareMetalId, bareMetalId));
+        return MqUtil.request(MqConstants.EXCHANGE_NAME, "methods.requestCommands." + bareMetalId, bareMetalId);
     }
 
     public void postTasks(String bareMetalId, JSONObject data) throws IOException, InterruptedException {

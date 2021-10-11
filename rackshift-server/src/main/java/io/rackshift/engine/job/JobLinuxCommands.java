@@ -1,21 +1,16 @@
 package io.rackshift.engine.job;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import io.rackshift.model.RSException;
-import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.mapper.TaskMapper;
-import io.rackshift.service.OutBandService;
-import io.rackshift.utils.IPMIUtil;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
 
-@Jobs("Job.Linux.Bootstrap")
-public class JobLinuxBootstrap extends BaseJob {
-    public JobLinuxBootstrap() {
+@Jobs("Job.Linux.Commands")
+public class JobLinuxCommands extends BaseJob {
+    public JobLinuxCommands() {
 
     }
 
@@ -27,7 +22,7 @@ public class JobLinuxBootstrap extends BaseJob {
      * @param applicationContext
      * @param rabbitTemplate
      */
-    public JobLinuxBootstrap(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext, RabbitTemplate rabbitTemplate) {
+    public JobLinuxCommands(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext, RabbitTemplate rabbitTemplate) {
         this.instanceId = instanceId;
         this.taskId = taskId;
         this.context = context;
@@ -48,7 +43,9 @@ public class JobLinuxBootstrap extends BaseJob {
         this.subscribeForRequestCommand((o) -> {
             JSONArray taskArr = new JSONArray();
             JSONObject cmd = new JSONObject();
-            cmd.put("cmd", "");
+            JSONObject downloadURLOBj = (JSONObject) options.getJSONObject("commands").get(0);
+            cmd.put("downloadUrl", downloadURLOBj.getString("downloadUrl"));
+            cmd.put("cmd", downloadURLOBj.getString("command"));
             taskArr.add(cmd);
             r.put("tasks", taskArr);
             return r.toJSONString();
@@ -59,9 +56,9 @@ public class JobLinuxBootstrap extends BaseJob {
         this.subscribeForRequestOptions(o -> this.options);
 
         this.subscribeForCompleteCommands(o -> {
+
             this.complete();
             return "ok";
         });
     }
-
 }
