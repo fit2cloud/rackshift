@@ -1,5 +1,6 @@
 package io.rackshift.engine.job;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -7,9 +8,9 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
 
-@Jobs("Job.noop")
-public class JobNoob extends BaseJob {
-    public JobNoob() {
+@Jobs("Job.Trigger")
+public class JobTrigger extends BaseJob {
+    public JobTrigger() {
 
     }
 
@@ -21,7 +22,7 @@ public class JobNoob extends BaseJob {
      * @param applicationContext
      * @param rabbitTemplate
      */
-    public JobNoob(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext, RabbitTemplate rabbitTemplate) {
+    public JobTrigger(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext, RabbitTemplate rabbitTemplate) {
         this.instanceId = instanceId;
         this.taskId = taskId;
         this.context = context;
@@ -35,12 +36,8 @@ public class JobNoob extends BaseJob {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    /**
-     * 专门用于测试的 job
-     */
     @Override
     public void run() {
         this.completeNoQueue();
     }
-
 }

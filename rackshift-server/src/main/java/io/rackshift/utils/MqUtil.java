@@ -1,7 +1,6 @@
 package io.rackshift.utils;
 
 import com.rabbitmq.client.*;
-import io.rackshift.constants.MqConstants;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.Connection;
 

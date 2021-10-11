@@ -13,9 +13,4 @@ public class BaseTaskGraph {
     protected String injectableName;
     protected JSONObject options;
     protected JSONArray tasks;
-
-    public static void main(String[] args) {
-        InputStream in = BaseTaskObject.class.getResourceAsStream("io/rackshift/engine/taskgraph/install-centos-graph.js");
-
-    }
 }

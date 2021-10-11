@@ -386,8 +386,16 @@ public abstract class BaseJob {
                 body.put("instanceId", jsonObject.getString("instanceId"));
                 Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
                 rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
+                go = true;
                 break;
             }
+        }
+
+        if (!go) {
+            JSONObject task = getTaskByInstanceId(instanceId);
+            task.put("state", ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
+            this._status = ServiceConstants.RackHDTaskStatusEnum.succeeded.name();
+            setTask(task);
         }
     }
 
@@ -399,6 +407,7 @@ public abstract class BaseJob {
             this._status = ServiceConstants.RackHDTaskStatusEnum.failed.name();
             this.task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
             setTask(task);
+            deleteQueue();
         }
         complete();
     }
@@ -410,6 +419,16 @@ public abstract class BaseJob {
             this._status = ServiceConstants.RackHDTaskStatusEnum.succeeded.name();
             setTask(task);
             deleteQueue();
+        }
+        nextTick(ServiceConstants.RackHDTaskStatusEnum.finished.name());
+    }
+
+    public void completeNoQueue() {
+        if (ServiceConstants.RackHDTaskStatusEnum.pending.name().equalsIgnoreCase(this._status)) {
+            JSONObject task = getTaskByInstanceId(instanceId);
+            task.put("state", ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
+            this._status = ServiceConstants.RackHDTaskStatusEnum.succeeded.name();
+            setTask(task);
         }
         nextTick(ServiceConstants.RackHDTaskStatusEnum.finished.name());
     }

@@ -42,7 +42,7 @@ public class JobEvaluateCondition extends BaseJob {
     @Override
     public void run() {
         if (this.options.getBoolean("when")) {
-            this.complete();
+            this.completeNoQueue();
         } else {
             this.error(new RSException("Job.Evaluate.Condition failed"));
         }

@@ -2,10 +2,13 @@ package io.rackshift.engine.job;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.constants.ServiceConstants;
+import io.rackshift.model.RSException;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
+import java.util.List;
 import java.util.Map;
 
 @Jobs("Job.Linux.Commands")
@@ -55,10 +58,21 @@ public class JobLinuxCommands extends BaseJob {
 
         this.subscribeForRequestOptions(o -> this.options);
 
-        this.subscribeForCompleteCommands(o -> {
+        //简便起见只去第一个指令的可接受返回 code
+        List<Integer> acceptResponseCode = ((JSONObject) options.getJSONObject("commands").get(0)).getJSONArray("acceptedResponseCodes").toJavaList(Integer.class);
 
-            this.complete();
-            return "ok";
+        this.subscribeForCompleteCommands(o -> {
+            JSONArray tasksArr = JSONArray.parseArray((String) o);
+            for (int i = 0; i < tasksArr.size(); i++) {
+                JSONObject t = tasksArr.getJSONObject(i);
+                if (t.getJSONObject("error") != null && !acceptResponseCode.contains(t.getJSONObject("error").getInteger("code"))) {
+                    this.error(new RSException(t.getJSONObject("error").toJSONString()));
+                }
+            }
+            if (!this._status.equalsIgnoreCase(ServiceConstants.TaskStatusEnum.failed.name())) {
+                this.complete();
+            }
+            return o;
         });
     }
 }
