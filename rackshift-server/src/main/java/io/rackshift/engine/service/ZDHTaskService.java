@@ -21,10 +21,10 @@ public class ZDHTaskService {
     private BareMetalService bareMetalService;
 
     public String tasks(String bareMetalId) throws IOException, InterruptedException {
-        return MqUtil.request(MqConstants.EXCHANGE_NAME, "methods.requestCommands." + bareMetalId, bareMetalId);
+        return MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMMANDS + bareMetalId, bareMetalId);
     }
 
     public void postTasks(String bareMetalId, JSONObject data) throws IOException, InterruptedException {
-        MqUtil.request(MqConstants.EXCHANGE_NAME, "methods.completeCommands." + bareMetalId, data.toJSONString());
+        MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMPLETE + bareMetalId, data.toJSONString());
     }
 }

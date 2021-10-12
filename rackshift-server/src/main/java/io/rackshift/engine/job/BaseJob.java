@@ -313,6 +313,11 @@ public abstract class BaseJob {
     protected ApplicationContext applicationContext;
     protected Map<String, Class> job;
     protected RabbitTemplate rabbitTemplate;
+    protected List<String> finalStateList = new ArrayList<String>() {{
+        add(ServiceConstants.TaskStatusEnum.cancelled.name());
+        add(ServiceConstants.TaskStatusEnum.failed.name());
+        add(ServiceConstants.TaskStatusEnum.succeeded.name());
+    }};
 
     protected BaseJob() {
 
@@ -355,6 +360,9 @@ public abstract class BaseJob {
     public void nextTick(String status) {
         JSONObject graphObjects = JSONObject.parseObject(this.task.getGraphObjects());
         boolean go = false;
+        //没有 waitingOn 属性的任务，可能有多个需要分别处理
+        List<String> firstTaskList = new ArrayList<>();
+
         for (String s : graphObjects.keySet()) {
             JSONObject waitingOnObj = graphObjects.getJSONObject(s).getJSONObject("waitingOn");
             if (waitingOnObj != null) {
@@ -369,6 +377,8 @@ public abstract class BaseJob {
                         break;
                     }
                 }
+            } else {
+                firstTaskList.add(s);
             }
         }
         if (!go) {
@@ -391,11 +401,61 @@ public abstract class BaseJob {
             }
         }
 
+        //只有一条任务流的时候 或者多个起始任务完成 主 taskgrah 直接结束
         if (!go) {
-            JSONObject task = getTaskByInstanceId(instanceId);
-            task.put("state", ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
-            this._status = ServiceConstants.RackHDTaskStatusEnum.succeeded.name();
-            setTask(task);
+            if (firstTaskList.size() == 1 || isEnd(firstTaskList, graphObjects)) {
+                JSONObject task = getTaskByInstanceId(instanceId);
+                task.put("state", ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
+                this._status = ServiceConstants.RackHDTaskStatusEnum.succeeded.name();
+                setTask(task);
+            }
+        }
+    }
+
+    private boolean isEnd(List<String> firstTaskList, JSONObject graphObjects) {
+        for (String s : firstTaskList) {
+            if (!finalStateList.contains(graphObjects.getJSONObject(s).getString("state"))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected void startTask(TaskWithBLOBs task) {
+        JSONObject taskObj = JSONObject.parseObject(task.getGraphObjects());
+        List<JSONObject> tasksReadyToStart = new ArrayList<>();
+        for (String t : taskObj.keySet()) {
+            if (taskObj.getJSONObject(t).getJSONObject("waitingOn") == null && !finalStateList.contains(taskObj.getJSONObject(t).getString("state"))) {
+                tasksReadyToStart.add(taskObj.getJSONObject(t));
+            }
+        }
+
+        if (tasksReadyToStart.size() == 1) {
+            //假如有多个启动任务只启动一个
+            JSONObject body = new JSONObject();
+            body.put("taskId", task.getId());
+            body.put("instanceId", tasksReadyToStart.get(0).getString("instanceId"));
+            Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
+            rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
+        } else {
+            for (JSONObject jsonObject : tasksReadyToStart) {
+                boolean solo = true;
+                for (String s : taskObj.keySet()) {
+                    JSONObject t = taskObj.getJSONObject(s);
+                    if (t.getJSONObject("waitingOn") != null && t.getJSONObject("waitingOn").containsKey(s)) {
+                        solo = false;
+                        break;
+                    }
+                }
+                if (solo) {
+                    JSONObject body = new JSONObject();
+                    body.put("taskId", task.getId());
+                    body.put("instanceId", jsonObject.getString("instanceId"));
+                    Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
+                    rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
+                    break;
+                }
+            }
         }
     }
 
@@ -435,25 +495,25 @@ public abstract class BaseJob {
 
 
     protected void subscribeForRequestCommand(Function callback) {
-        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, "methods.requestCommands." + this.bareMetalId, callback);
+        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMMANDS + this.bareMetalId, callback);
     }
 
     protected void subscribeForRequestProfile(Function callback) {
-        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, "methods.requestProfile." + this.bareMetalId, callback);
+        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_PROFILES + this.bareMetalId, callback);
     }
 
     protected void subscribeForRequestOptions(Function callback) {
-        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, "methods.requestOptions." + this.bareMetalId, callback);
+        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_OPTIONS + this.bareMetalId, callback);
     }
 
     protected void subscribeForCompleteCommands(Function callback) {
-        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, "methods.completeCommands." + this.bareMetalId, callback);
+        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMPLETE + this.bareMetalId, callback);
     }
 
     private void deleteQueue() {
-        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, "methods.requestCommands." + this.bareMetalId);
-        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, "methods.requestProfile." + this.bareMetalId);
-        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, "methods.requestOptions." + this.bareMetalId);
-        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, "methods.completeCommands." + this.bareMetalId);
+        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMMANDS + this.bareMetalId);
+        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_PROFILES + this.bareMetalId);
+        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_OPTIONS + this.bareMetalId);
+        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMPLETE + this.bareMetalId);
     }
 }

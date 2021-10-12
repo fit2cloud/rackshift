@@ -276,4 +276,8 @@ public class BareMetalService {
         }
         return null;
     }
+
+    public BareMetal getById(String nodeId) {
+        return bareMetalManager.getBareMetalById(nodeId);
+    }
 }

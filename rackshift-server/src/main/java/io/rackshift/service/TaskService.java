@@ -377,6 +377,8 @@ public class TaskService {
         Map<String, Object> r = new HashMap<>();
         r.put("profile", "redirect.ipxe");
         r.put("options", new JSONObject());
+
+
         JSONObject taskObj = JSONObject.parseObject(task.getGraphObjects());
         List<JSONObject> tasksReadyToStart = new ArrayList<>();
         for (String t : taskObj.keySet()) {

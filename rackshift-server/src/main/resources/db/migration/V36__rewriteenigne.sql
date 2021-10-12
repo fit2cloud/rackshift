@@ -46,3 +46,9 @@ insert into profile
 values (uuid(), 'rancherOS.ipxe',
         '# Copyright 2018, Dell EMC, Inc.\nkernel <%=kernelUri%>\ninitrd <%=initrdUri%>\nimgargs <%=kernelFile%> initrd=<%=initrdFile%> console=tty0 netconsole=+@/,514@<%=server%>/ rancher.password=monorail rancher.cloud_init.datasources=[\'url:http://<%=server%>:<%=port%>/api/current/templates/cloud-config.yaml?nodeId=<%=nodeId%>\']\nboot || prompt --key 0x197e --timeout 2000 Press F12 to investigate || exit shell',
         'system', 1629698788504, 1629698788504);
+
+
+insert into template
+values (uuid(), 'cloud-config.yaml',
+        '# Copyright 2018, Dell EMC, Inc.\nkernel <%=kernelUri%>\ninitrd <%=initrdUri%>\nimgargs <%=kernelFile%> initrd=<%=initrdFile%> console=tty0 netconsole=+@/,514@<%=server%>/ rancher.password=monorail rancher.cloud_init.datasources=[\'url:http://<%=server%>:<%=port%>/api/current/templates/cloud-config.yaml?nodeId=<%=nodeId%>\']\nboot || prompt --key 0x197e --timeout 2000 Press F12 to investigate || exit shell',
+        'system', 1629698788504, 1629698788504);

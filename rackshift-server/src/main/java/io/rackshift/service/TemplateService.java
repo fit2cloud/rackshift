@@ -5,6 +5,7 @@ import io.rackshift.model.RSException;
 import io.rackshift.model.TemplateDTO;
 import io.rackshift.mybatis.domain.Template;
 import io.rackshift.mybatis.domain.TemplateExample;
+import io.rackshift.mybatis.domain.WorkflowParamTemplatesWithBLOBs;
 import io.rackshift.mybatis.mapper.TemplateMapper;
 import io.rackshift.mybatis.mapper.ext.ExtImageMapper;
 import io.rackshift.utils.BeanUtils;
@@ -123,6 +124,18 @@ public class TemplateService {
             return null;
         }
         return templateMapper.selectByPrimaryKey(id);
+    }
+
+    public Template getByName(String id) {
+        if (StringUtils.isBlank(id)) {
+            return null;
+        }
+        TemplateExample e = new TemplateExample();
+        e.createCriteria().andNameEqualTo(id);
+        List<Template> tes = templateMapper.selectByExampleWithBLOBs(e);
+        if(tes.size() > 0)
+            return tes.get(0);
+        return null;
     }
 
     private boolean uploadToServer(Template template) throws Exception {
