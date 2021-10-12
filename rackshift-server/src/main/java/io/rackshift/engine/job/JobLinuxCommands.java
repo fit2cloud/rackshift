@@ -8,6 +8,7 @@ import io.rackshift.mybatis.mapper.TaskMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class JobLinuxCommands extends BaseJob {
         this.subscribeForRequestCommand((o) -> {
             JSONArray taskArr = new JSONArray();
             JSONObject cmd = new JSONObject();
-            JSONObject downloadURLOBj = (JSONObject) options.getJSONObject("commands").get(0);
+            JSONObject downloadURLOBj = options.getJSONArray("commands").getJSONObject(0);
             cmd.put("downloadUrl", downloadURLOBj.getString("downloadUrl"));
             cmd.put("cmd", downloadURLOBj.getString("command"));
             taskArr.add(cmd);
@@ -58,9 +59,9 @@ public class JobLinuxCommands extends BaseJob {
 
         this.subscribeForRequestOptions(o -> this.options);
 
-        //简便起见只去第一个指令的可接受返回 code
-        List<Integer> acceptResponseCode = ((JSONObject) options.getJSONObject("commands").get(0)).getJSONArray("acceptedResponseCodes").toJavaList(Integer.class);
-
+        //简便起见只去第一个指令的可接受返回 code 写死了先 后面做动态调整
+        List<Integer> acceptResponseCode = new ArrayList<Integer>();
+        acceptResponseCode.add(1);
         this.subscribeForCompleteCommands(o -> {
             JSONArray tasksArr = JSONArray.parseArray((String) o);
             for (int i = 0; i < tasksArr.size(); i++) {
@@ -72,7 +73,7 @@ public class JobLinuxCommands extends BaseJob {
             if (!this._status.equalsIgnoreCase(ServiceConstants.TaskStatusEnum.failed.name())) {
                 this.complete();
             }
-            return o;
+            return "ok";
         });
     }
 }
