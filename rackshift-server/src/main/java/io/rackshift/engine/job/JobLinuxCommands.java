@@ -63,7 +63,7 @@ public class JobLinuxCommands extends BaseJob {
         List<Integer> acceptResponseCode = new ArrayList<Integer>();
         acceptResponseCode.add(1);
         this.subscribeForCompleteCommands(o -> {
-            JSONArray tasksArr = JSONArray.parseArray((String) o);
+//            JSONArray tasksArr = JSONArray.parseArray((String) o);
 //            for (int i = 0; i < tasksArr.size(); i++) {
 //                JSONObject t = tasksArr.getJSONObject(i);
 //                if (t.getJSONObject("error") != null && !acceptResponseCode.contains(t.getJSONObject("error").getInteger("code"))) {
