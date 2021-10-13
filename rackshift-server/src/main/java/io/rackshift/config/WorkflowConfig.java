@@ -17,6 +17,7 @@ import io.rackshift.service.WorkflowService;
 import io.rackshift.strategy.statemachine.LifeEventType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,15 +27,13 @@ import javax.annotation.Resource;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import javax.script.ScriptException;
+import java.io.*;
 import java.lang.annotation.Annotation;
-import java.net.Inet4Address;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -53,6 +52,9 @@ public class WorkflowConfig implements BeanPostProcessor {
     private void setEndpointMapper(EndpointMapper endpointMapper) {
         staticEndpointMapper = endpointMapper;
     }
+
+    @Value("${run.mode:local}")
+    private String runMode;
 
     @PostConstruct
     public void initWorkflow() {
@@ -127,26 +129,35 @@ public class WorkflowConfig implements BeanPostProcessor {
     @Bean
     public Map<String, BaseTask> baseTask() {
         try {
-            File[] files = new File(BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/basetask").getFile()).listFiles();
-            List<BaseTask> objs = new LinkedList<>();
-            for (File f : files) {
-                if (f.getName().indexOf(".js") == -1)
-                    continue;
-                BufferedReader reader = new BufferedReader(new FileReader(f));
-                String line = null;
-                StringBuffer sb = new StringBuffer();
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
+            if ("local".equalsIgnoreCase(runMode)) {
+                File[] files = new File(BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/basetask").getFile()).listFiles();
+                List<BaseTask> objs = new LinkedList<>();
+                for (File f : files) {
+                    if (f.getName().indexOf(".js") == -1)
+                        continue;
+                    String r = getString(f);
+                    objs.add(new Gson().fromJson(r, BaseTask.class));
                 }
-                ScriptEngineManager manager = new ScriptEngineManager();
-                ScriptEngine engine = manager.getEngineByName("Nashorn");
-                String a = sb.toString().replace("module.exports =", "var  a =") + "function json(){ return (JSON.stringify(a));}";
-                engine.eval(a);
-                Invocable invocable = (Invocable) engine;
-                String r = (String) invocable.invokeFunction("json", "");
-                objs.add(new Gson().fromJson(r, BaseTask.class));
+                return objs.stream().collect(Collectors.toMap(BaseTask::getInjectableName, c -> c));
+            } else {
+                String urlStr = BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/basetask").toString();
+                String jarPath = urlStr.substring(0, urlStr.indexOf("!/") + 2);
+                URL jarURL = new URL(jarPath);
+                JarURLConnection jarCon = (JarURLConnection) jarURL.openConnection();
+                JarFile jarFile = jarCon.getJarFile();
+                Enumeration<JarEntry> jarEntrys = jarFile.entries();
+                List<BaseTask> objs = new LinkedList<>();
+                while (jarEntrys.hasMoreElements()) {
+                    JarEntry entry = jarEntrys.nextElement();
+                    String name = entry.getName();
+                    if (name.startsWith("BOOT-INF/classes/io/rackshift/engine/basetask/") && !entry.isDirectory() && name.contains(".js")) {
+                        // 开始读取文件内容
+                        String r = getString(new File(this.getClass().getClassLoader().getResource(name).getFile()));
+                        objs.add(new Gson().fromJson(r, BaseTask.class));
+                    }
+                }
+                return objs.stream().collect(Collectors.toMap(BaseTask::getInjectableName, c -> c));
             }
-            return objs.stream().collect(Collectors.toMap(BaseTask::getInjectableName, c -> c));
         } catch (Exception e) {
             LogUtil.error("初始化 " + BaseTask.class + " 失败！", e);
         }
@@ -163,26 +174,35 @@ public class WorkflowConfig implements BeanPostProcessor {
     @Bean
     public Map<String, BaseTaskGraph> taskGraph() {
         try {
-            File[] files = new File(BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/taskgraph").getFile()).listFiles();
-            List<BaseTaskGraph> objs = new LinkedList<>();
-            for (File f : files) {
-                if (f.getName().indexOf(".js") == -1)
-                    continue;
-                BufferedReader reader = new BufferedReader(new FileReader(f));
-                String line = null;
-                StringBuffer sb = new StringBuffer();
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
+            if ("local".equalsIgnoreCase(runMode)) {
+                File[] files = new File(BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/taskgraph").getFile()).listFiles();
+                List<BaseTaskGraph> objs = new LinkedList<>();
+                for (File f : files) {
+                    if (f.getName().indexOf(".js") == -1)
+                        continue;
+                    String r = getString(f);
+                    objs.add(new Gson().fromJson(r, BaseTaskGraph.class));
                 }
-                ScriptEngineManager manager = new ScriptEngineManager();
-                ScriptEngine engine = manager.getEngineByName("Nashorn");
-                String a = sb.toString().replace("module.exports =", "var  a =") + "function json(){ return (JSON.stringify(a));}";
-                engine.eval(a);
-                Invocable invocable = (Invocable) engine;
-                String r = (String) invocable.invokeFunction("json", "");
-                objs.add(new Gson().fromJson(r, BaseTaskGraph.class));
+                return objs.stream().collect(Collectors.toMap(BaseTaskGraph::getInjectableName, c -> c));
+            } else {
+                String urlStr = BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/taskgraph").toString();
+                String jarPath = urlStr.substring(0, urlStr.indexOf("!/") + 2);
+                URL jarURL = new URL(jarPath);
+                JarURLConnection jarCon = (JarURLConnection) jarURL.openConnection();
+                JarFile jarFile = jarCon.getJarFile();
+                Enumeration<JarEntry> jarEntrys = jarFile.entries();
+                List<BaseTaskGraph> objs = new LinkedList<>();
+                while (jarEntrys.hasMoreElements()) {
+                    JarEntry entry = jarEntrys.nextElement();
+                    String name = entry.getName();
+                    if (name.startsWith("BOOT-INF/classes/io/rackshift/engine/taskgraph/") && !entry.isDirectory() && name.contains(".js")) {
+                        // 开始读取文件内容
+                        String r = getString(new File(this.getClass().getClassLoader().getResource(name).getFile()));
+                        objs.add(new Gson().fromJson(r, BaseTaskGraph.class));
+                    }
+                }
+                return objs.stream().collect(Collectors.toMap(BaseTaskGraph::getInjectableName, c -> c));
             }
-            return objs.stream().collect(Collectors.toMap(BaseTaskGraph::getInjectableName, c -> c));
         } catch (Exception e) {
             LogUtil.error("初始化 " + BaseTaskGraph.class + " 失败！", e);
         }
@@ -190,6 +210,20 @@ public class WorkflowConfig implements BeanPostProcessor {
         return null;
     }
 
+    private String getString(File f) throws IOException, ScriptException, NoSuchMethodException {
+        BufferedReader reader = new BufferedReader(new FileReader(f));
+        String line = null;
+        StringBuffer sb = new StringBuffer();
+        while ((line = reader.readLine()) != null) {
+            sb.append(line + "\n");
+        }
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("Nashorn");
+        String a = sb.toString().replace("module.exports =", "var  a =") + "function json(){ return (JSON.stringify(a));}";
+        engine.eval(a);
+        Invocable invocable = (Invocable) engine;
+        return (String) invocable.invokeFunction("json", "");
+    }
 
     /**
      * 降低重写的成本 直接加载 RackHD 的源码
@@ -199,26 +233,35 @@ public class WorkflowConfig implements BeanPostProcessor {
     @Bean
     public Map<String, BaseTaskObject> taskObject() {
         try {
-            File[] files = new File(BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/taskobject").getFile()).listFiles();
-            List<BaseTaskObject> objs = new LinkedList<>();
-            for (File f : files) {
-                if (f.getName().indexOf(".js") == -1)
-                    continue;
-                BufferedReader reader = new BufferedReader(new FileReader(f));
-                String line = null;
-                StringBuffer sb = new StringBuffer();
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
+            if ("local".equalsIgnoreCase(runMode)) {
+                File[] files = new File(BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/taskobject").getFile()).listFiles();
+                List<BaseTaskObject> objs = new LinkedList<>();
+                for (File f : files) {
+                    if (f.getName().indexOf(".js") == -1)
+                        continue;
+                    String r = getString(f);
+                    objs.add(new Gson().fromJson(r, BaseTaskObject.class));
                 }
-                ScriptEngineManager manager = new ScriptEngineManager();
-                ScriptEngine engine = manager.getEngineByName("Nashorn");
-                String a = sb.toString().replace("module.exports =", "var  a =") + "function json(){ return (JSON.stringify(a));}";
-                engine.eval(a);
-                Invocable invocable = (Invocable) engine;
-                String r = (String) invocable.invokeFunction("json", "");
-                objs.add(new Gson().fromJson(r, BaseTaskObject.class));
+                return objs.stream().collect(Collectors.toMap(BaseTaskObject::getInjectableName, c -> c));
+            } else {
+                String urlStr = BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/taskobject").toString();
+                String jarPath = urlStr.substring(0, urlStr.indexOf("!/") + 2);
+                URL jarURL = new URL(jarPath);
+                JarURLConnection jarCon = (JarURLConnection) jarURL.openConnection();
+                JarFile jarFile = jarCon.getJarFile();
+                Enumeration<JarEntry> jarEntrys = jarFile.entries();
+                List<BaseTaskObject> objs = new LinkedList<>();
+                while (jarEntrys.hasMoreElements()) {
+                    JarEntry entry = jarEntrys.nextElement();
+                    String name = entry.getName();
+                    if (name.startsWith("BOOT-INF/classes/io/rackshift/engine/taskobject/") && !entry.isDirectory() && name.contains(".js")) {
+                        // 开始读取文件内容
+                        String r = getString(new File(this.getClass().getClassLoader().getResource(name).getFile()));
+                        objs.add(new Gson().fromJson(r, BaseTaskObject.class));
+                    }
+                }
+                return objs.stream().collect(Collectors.toMap(BaseTaskObject::getInjectableName, c -> c));
             }
-            return objs.stream().collect(Collectors.toMap(BaseTaskObject::getInjectableName, c -> c));
         } catch (Exception e) {
             LogUtil.error("初始化 " + BaseTaskObject.class + " 失败！", e);
         }
