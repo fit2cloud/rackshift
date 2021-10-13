@@ -421,44 +421,6 @@ public abstract class BaseJob {
         return true;
     }
 
-    protected void startTask(TaskWithBLOBs task) {
-        JSONObject taskObj = JSONObject.parseObject(task.getGraphObjects());
-        List<JSONObject> tasksReadyToStart = new ArrayList<>();
-        for (String t : taskObj.keySet()) {
-            if (taskObj.getJSONObject(t).getJSONObject("waitingOn") == null && !finalStateList.contains(taskObj.getJSONObject(t).getString("state"))) {
-                tasksReadyToStart.add(taskObj.getJSONObject(t));
-            }
-        }
-
-        if (tasksReadyToStart.size() == 1) {
-            //假如有多个启动任务只启动一个
-            JSONObject body = new JSONObject();
-            body.put("taskId", task.getId());
-            body.put("instanceId", tasksReadyToStart.get(0).getString("instanceId"));
-            Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
-            rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
-        } else {
-            for (JSONObject jsonObject : tasksReadyToStart) {
-                boolean solo = true;
-                for (String s : taskObj.keySet()) {
-                    JSONObject t = taskObj.getJSONObject(s);
-                    if (t.getJSONObject("waitingOn") != null && t.getJSONObject("waitingOn").containsKey(s)) {
-                        solo = false;
-                        break;
-                    }
-                }
-                if (solo) {
-                    JSONObject body = new JSONObject();
-                    body.put("taskId", task.getId());
-                    body.put("instanceId", jsonObject.getString("instanceId"));
-                    Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
-                    rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
-                    break;
-                }
-            }
-        }
-    }
-
     public void error(Exception e) {
         if (ServiceConstants.RackHDTaskStatusEnum.pending.name().equalsIgnoreCase(this._status)) {
             JSONObject task = getTaskByInstanceId(instanceId);
@@ -516,4 +478,6 @@ public abstract class BaseJob {
         MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_OPTIONS + this.bareMetalId);
         MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMPLETE + this.bareMetalId);
     }
+
+
 }
