@@ -16,6 +16,7 @@ import io.rackshift.mybatis.mapper.WorkflowMapper;
 import io.rackshift.service.WorkflowService;
 import io.rackshift.strategy.statemachine.LifeEventType;
 import org.apache.commons.lang3.StringUtils;
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -37,7 +38,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 @Configuration
-public class WorkflowConfig implements BeanPostProcessor {
+public class WorkflowConfig {
     @Resource
     private WorkflowMapper workflowMapper;
     @Resource
@@ -55,6 +56,15 @@ public class WorkflowConfig implements BeanPostProcessor {
 
     @Value("${run.mode:local}")
     private String runMode;
+
+    @Value("${spring.datasource.url}")
+    private String dataSource;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
+    @Value("${spring.flyway.table}")
+    private String table;
 
     @Bean
     public String initWorkflow() {
@@ -89,7 +99,10 @@ public class WorkflowConfig implements BeanPostProcessor {
             return endpoint;
         }).collect(Collectors.toList());
 
+        Flyway flyway = Flyway.configure().dataSource(dataSource, username, password).table(table).baselineVersion("0").locations("classpath:db/migration").validateOnMigrate(false).load();
 
+        flyway.migrate();
+        //重写装机引擎 先执行变更脚本 后面要用到的
         Set<Map.Entry<String, BaseTaskGraph>> baseTasks = taskGraph().entrySet();
         baseTasks.forEach(baseTaskGraph -> {
             WorkflowWithBLOBs w = workflowService.getByInjectableName(baseTaskGraph.getValue().getInjectableName());
@@ -104,21 +117,6 @@ public class WorkflowConfig implements BeanPostProcessor {
             }
         });
         return "1";
-    }
-
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-
-        Annotation annotation = bean.getClass().getAnnotation(Jobs.class);
-        if (annotation != null) {
-            job().put(((Jobs) annotation).value(), bean.getClass());
-        }
-        return bean;
-    }
-
-    @Bean
-    public Map<String, Class> job() {
-        return new HashMap<>();
     }
 
     /**

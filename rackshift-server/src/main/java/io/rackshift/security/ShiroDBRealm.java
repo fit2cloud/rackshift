@@ -29,7 +29,7 @@ public class ShiroDBRealm extends AuthorizingRealm {
     @Resource
     private UserService userService;
 
-    @Value("${run.mode:release}")
+    @Value("${run.mode:local}")
     private String runMode;
 
     private Set<String> roles = new HashSet<String>() {{
