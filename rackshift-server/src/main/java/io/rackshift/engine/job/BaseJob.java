@@ -6,7 +6,6 @@ import io.rackshift.constants.ServiceConstants;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.utils.MqUtil;
-import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
@@ -354,10 +353,10 @@ public abstract class BaseJob {
             setTask(task);
             deleteQueue();
         }
-        nextTick(ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
+        nextTask(ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
     }
 
-    public void nextTick(String status) {
+    public void nextTask(String status) {
         JSONObject graphObjects = JSONObject.parseObject(this.task.getGraphObjects());
         boolean go = false;
         //没有 waitingOn 属性的任务，可能有多个需要分别处理
@@ -407,6 +406,7 @@ public abstract class BaseJob {
                 JSONObject task = getTaskByInstanceId(instanceId);
                 task.put("state", ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
                 this._status = ServiceConstants.RackHDTaskStatusEnum.succeeded.name();
+                this.task.setStatus(ServiceConstants.TaskStatusEnum.succeeded.name());
                 setTask(task);
             }
         }
@@ -480,7 +480,7 @@ public abstract class BaseJob {
             setTask(task);
             deleteQueue();
         }
-        nextTick(ServiceConstants.RackHDTaskStatusEnum.finished.name());
+        nextTask(ServiceConstants.RackHDTaskStatusEnum.finished.name());
     }
 
     public void completeNoQueue() {
@@ -490,7 +490,7 @@ public abstract class BaseJob {
             this._status = ServiceConstants.RackHDTaskStatusEnum.succeeded.name();
             setTask(task);
         }
-        nextTick(ServiceConstants.RackHDTaskStatusEnum.finished.name());
+        nextTask(ServiceConstants.RackHDTaskStatusEnum.finished.name());
     }
 
 

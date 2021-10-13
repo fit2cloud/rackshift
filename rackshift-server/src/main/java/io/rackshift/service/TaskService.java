@@ -396,4 +396,10 @@ public class TaskService {
         }
         return r;
     }
+
+    public List<Task> getActiveTasks(String bareMetalId) {
+        TaskExample e = new TaskExample();
+        e.createCriteria().andBareMetalIdEqualTo(bareMetalId).andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
+        return taskMapper.selectByExample(e);
+    }
 }

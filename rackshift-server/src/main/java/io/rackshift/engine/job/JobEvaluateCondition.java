@@ -44,7 +44,8 @@ public class JobEvaluateCondition extends BaseJob {
         if (this.options.getBoolean("when")) {
             this.completeNoQueue();
         } else {
-            this.error(new RSException("Job.Evaluate.Condition failed"));
+            //实际上要根据 when 来控制流程方向的 这里先简化处理
+            this.completeNoQueue();
         }
     }
 
