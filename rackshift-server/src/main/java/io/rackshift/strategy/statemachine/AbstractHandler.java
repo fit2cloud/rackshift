@@ -172,7 +172,7 @@ public abstract class AbstractHandler implements IStateHandler {
                 boolean solo = true;
                 for (String s : taskObj.keySet()) {
                     JSONObject t = taskObj.getJSONObject(s);
-                    if (t.getJSONObject("waitingOn") != null && t.getJSONObject("waitingOn").containsKey(s)) {
+                    if (t.getJSONObject("waitingOn") != null && t.getJSONObject("waitingOn").containsKey(jsonObject.getString("instanceId"))) {
                         solo = false;
                         break;
                     }
