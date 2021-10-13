@@ -56,8 +56,8 @@ public class WorkflowConfig implements BeanPostProcessor {
     @Value("${run.mode:local}")
     private String runMode;
 
-    @PostConstruct
-    public void initWorkflow() {
+    @Bean
+    public String initWorkflow() {
         Map<String, List<Workflow>> typeMap = workflowMapper.selectByExample(new WorkflowExample()).stream().collect(Collectors.groupingBy(Workflow::getEventType));
         if (typeMap != null && typeMap.keySet().size() > 0) {
             for (Map.Entry<String, List<Workflow>> wfEntry : typeMap.entrySet()) {
@@ -103,7 +103,7 @@ public class WorkflowConfig implements BeanPostProcessor {
                 workflowService.update(w);
             }
         });
-
+        return "1";
     }
 
     @Override
