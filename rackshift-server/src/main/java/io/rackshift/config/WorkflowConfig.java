@@ -152,7 +152,9 @@ public class WorkflowConfig implements BeanPostProcessor {
                     String name = entry.getName();
                     if (name.startsWith("BOOT-INF/classes/io/rackshift/engine/basetask/") && !entry.isDirectory() && name.contains(".js")) {
                         // 开始读取文件内容
-                        String r = getString(new File(this.getClass().getClassLoader().getResource(name).getFile()));
+                        InputStream in = this.getClass().getClassLoader().getResourceAsStream(name);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                        String r = getString(reader);
                         objs.add(new Gson().fromJson(r, BaseTask.class));
                     }
                 }
@@ -185,7 +187,7 @@ public class WorkflowConfig implements BeanPostProcessor {
                 }
                 return objs.stream().collect(Collectors.toMap(BaseTaskGraph::getInjectableName, c -> c));
             } else {
-                String urlStr = BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/taskgraph").toString();
+                String urlStr = BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/taskobject").toString();
                 String jarPath = urlStr.substring(0, urlStr.indexOf("!/") + 2);
                 URL jarURL = new URL(jarPath);
                 JarURLConnection jarCon = (JarURLConnection) jarURL.openConnection();
@@ -197,7 +199,9 @@ public class WorkflowConfig implements BeanPostProcessor {
                     String name = entry.getName();
                     if (name.startsWith("BOOT-INF/classes/io/rackshift/engine/taskgraph/") && !entry.isDirectory() && name.contains(".js")) {
                         // 开始读取文件内容
-                        String r = getString(new File(this.getClass().getClassLoader().getResource(name).getFile()));
+                        InputStream in = this.getClass().getClassLoader().getResourceAsStream(name);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                        String r = getString(reader);
                         objs.add(new Gson().fromJson(r, BaseTaskGraph.class));
                     }
                 }
@@ -212,6 +216,10 @@ public class WorkflowConfig implements BeanPostProcessor {
 
     private String getString(File f) throws IOException, ScriptException, NoSuchMethodException {
         BufferedReader reader = new BufferedReader(new FileReader(f));
+        return getString(reader);
+    }
+
+    private String getString(BufferedReader reader) throws IOException, ScriptException, NoSuchMethodException {
         String line = null;
         StringBuffer sb = new StringBuffer();
         while ((line = reader.readLine()) != null) {
@@ -256,7 +264,9 @@ public class WorkflowConfig implements BeanPostProcessor {
                     String name = entry.getName();
                     if (name.startsWith("BOOT-INF/classes/io/rackshift/engine/taskobject/") && !entry.isDirectory() && name.contains(".js")) {
                         // 开始读取文件内容
-                        String r = getString(new File(this.getClass().getClassLoader().getResource(name).getFile()));
+                        InputStream in = this.getClass().getClassLoader().getResourceAsStream(name);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                        String r = getString(reader);
                         objs.add(new Gson().fromJson(r, BaseTaskObject.class));
                     }
                 }
