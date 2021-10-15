@@ -66,8 +66,8 @@ public class WorkflowConfig {
     @Value("${spring.flyway.table}")
     private String table;
 
-    @Bean
-    public String initWorkflow() {
+    @PostConstruct
+    public void initWorkflow() {
         Map<String, List<Workflow>> typeMap = workflowMapper.selectByExample(new WorkflowExample()).stream().collect(Collectors.groupingBy(Workflow::getEventType));
         if (typeMap != null && typeMap.keySet().size() > 0) {
             for (Map.Entry<String, List<Workflow>> wfEntry : typeMap.entrySet()) {
@@ -116,7 +116,6 @@ public class WorkflowConfig {
                 workflowService.update(w);
             }
         });
-        return "1";
     }
 
     /**

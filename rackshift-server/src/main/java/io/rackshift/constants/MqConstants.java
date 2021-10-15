@@ -4,7 +4,6 @@ public class MqConstants {
 
     public static final String USERNAME = "guest";
     public static final String PASSWORD = "guest";
-    public static final String URI = "amqp://127.0.0.1";
     public static final String VIRTUALHOST = "/";
 
     public static final String EXCHANGE_NAME = "rackshift.exchange.default";
