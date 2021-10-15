@@ -1,6 +1,5 @@
 package io.rackshift.dhcpproxy.util;
 
-import io.rackshift.dhcpproxy.config.MongoConfig;
 import io.rackshift.dhcpproxy.constants.ConfigConstants;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -20,7 +19,6 @@ public class ConfigurationUtil {
                 String k = keys.next();
                 ConsoleUtil.log("key: " + k + " value: " + config.getString(k));
             }
-            MongoConfig.config(config);
         } catch (ConfigurationException e) {
             ConsoleUtil.log("Cannot find " + ConfigConstants.CONFIG_FILE);
             throw new RuntimeException();
