@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class MQConfig {
-    @Value("${ampq.uri:'amqp://127.0.0.1'}")
+    @Value("${amqp.uri:'amqp://127.0.0.1'}")
     private String mqURI;
 
     @Bean
