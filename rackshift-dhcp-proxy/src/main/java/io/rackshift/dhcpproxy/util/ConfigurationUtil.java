@@ -11,7 +11,7 @@ import java.util.Optional;
 public class ConfigurationUtil {
     private static PropertiesConfiguration config;
 
-    public static void init() {
+    static {
 
         try {
             config = new PropertiesConfiguration(ConfigConstants.CONFIG_FILE);

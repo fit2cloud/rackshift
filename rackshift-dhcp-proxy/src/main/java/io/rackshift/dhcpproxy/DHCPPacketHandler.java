@@ -2,13 +2,12 @@ package io.rackshift.dhcpproxy;
 
 import com.alibaba.fastjson.JSONObject;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
 import io.rackshift.dhcpproxy.constants.ConfigConstants;
-import io.rackshift.dhcpproxy.model.Nodes;
+import io.rackshift.dhcpproxy.model.BareMetal;
 import io.rackshift.dhcpproxy.util.ConfigurationUtil;
 import io.rackshift.dhcpproxy.util.ConsoleUtil;
 import io.rackshift.dhcpproxy.util.DHCPPacketParser;
@@ -120,30 +119,15 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
     private boolean isSendBootfile(JSONObject dhcpPackets) {
         if (dhcpPackets.containsKey("chaddr")) {
             String macAddress = dhcpPackets.getString("chaddr");
-            Nodes node = Nodes.findByMac(macAddress);
-            if (node != null) {
-                ConsoleUtil.log("node is exists: " + JSONObject.toJSONString(node));
-                if (node.discovered()) {
-                    ConsoleUtil.log("node is discovered: " + JSONObject.toJSONString(node));
-                } else {
-                    ConsoleUtil.log("node is not discovered: " + macAddress);
-                }
-                if (node.isRunningTask()) {
-                    ConsoleUtil.log("node is isRunningTask: " + JSONObject.toJSONString(node));
-                } else {
-                    ConsoleUtil.log("node is not isRunningTask: " + macAddress);
-                }
-            } else {
-                ConsoleUtil.log("node is not exists: " + macAddress);
-            }
-
-            if (node != null && node.discovered()) {
-                if (!node.isRunningTask()) {
+            BareMetal bareMetal = BareMetal.findByMac(macAddress);
+            if (bareMetal != null && bareMetal.discovered()) {
+                if (!bareMetal.isRunningTask()) {
                     return false;
                 } else {
-                    return node.isRequestProfile();
+                    return bareMetal.isRequestProfile();
                 }
             }
+
             return true;
         }
         return false;
