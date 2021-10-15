@@ -39,6 +39,8 @@ public class ProfileService {
     private EndpointService endpointService;
     @Resource
     private ExtImageMapper extImageMapper;
+    @Resource
+    private Map<String, String> renderOptions;
 
     public Object add(ProfileDTO queryVO) throws Exception {
         if (StringUtils.isNotBlank(queryVO.getName())) {
@@ -174,12 +176,12 @@ public class ProfileService {
 
     }
 
-    public String render(String originContent, JSONObject optionsForRender) {
+    public String render(String originContent, Map optionsForRender) {
         Pattern p = Pattern.compile("<%=(\\w+)%>");
         Matcher m = p.matcher(originContent);
         while (m.find()) {
-            if (StringUtils.isNotBlank(optionsForRender.getString(m.group(1)))) {
-                originContent = originContent.replace(m.group(), optionsForRender.getString(m.group(1)));
+            if (StringUtils.isNotBlank(((String) optionsForRender.get(m.group(1))))) {
+                originContent = originContent.replace(m.group(), ((String) optionsForRender.get(m.group(1))));
             }
         }
         return originContent;
@@ -190,7 +192,7 @@ public class ProfileService {
         e.createCriteria().andNameEqualTo(profileName);
         List<Profile> profiles = profileMapper.selectByExampleWithBLOBs(e);
         if (profiles.size() > 0)
-            return render(profiles.get(0).getContent(), new JSONObject());
+            return render(profiles.get(0).getContent(), renderOptions);
         return "echo Default RackShift profile is not exist！";
     }
 }
