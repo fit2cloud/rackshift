@@ -15,7 +15,9 @@ public class ZDHProfileController {
     @Resource
     private ZDHProfileService zdhProfileService;
 
-    @GetMapping(value = "/api/current/profiles", produces = "text/plain")
+//    @GetMapping(value = "/api/current/profiles", produces = "text/plain;charset=UTF-8")
+    @GetMapping(value = "/api/current/profiles")
+//    @GetMapping(value = "/api/current/profiles", produces = "text/plain;charset=UTF-8", headers = "Transfer-Encoding=chunked")
     public String profiles(@RequestParam(required = false) String macs) {
         return zdhProfileService.profiles(macs);
     }
