@@ -213,7 +213,7 @@ public class ProfileService {
         Profile profile = getProfileByName(profileName);
         if (profile != null) {
             Map<String, String> options = new HashMap<>();
-            BeanUtils.copyBean(options, renderOptions);
+            options.putAll(renderOptions);
             options.put("macaddress", "");
             return render(getProfileByName("boilerplate.ipxe").getContent() + profile.getContent(), options);
         }
