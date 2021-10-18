@@ -198,9 +198,7 @@ public class ProfileService {
         Pattern p = Pattern.compile("<%=(\\w+)%>");
         Matcher m = p.matcher(originContent);
         while (m.find()) {
-            if (StringUtils.isNotBlank(((String) optionsForRender.get(m.group(1))))) {
-                originContent = originContent.replace(m.group(), ((String) optionsForRender.get(m.group(1))));
-            }
+            originContent = originContent.replace(m.group(), ((String) optionsForRender.get(m.group(1))));
         }
         if (!test) {
             return new String(originContent.getBytes(StandardCharsets.UTF_8), StandardCharsets.US_ASCII);
