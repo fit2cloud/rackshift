@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -188,9 +189,9 @@ public class ProfileService {
             }
         }
         if (!test) {
-            return originContent;
+            return new String(originContent.getBytes(StandardCharsets.UTF_8), StandardCharsets.US_ASCII);
         } else {
-            return content;
+            return new String(content.getBytes(StandardCharsets.UTF_8), StandardCharsets.US_ASCII);
         }
     }
 
