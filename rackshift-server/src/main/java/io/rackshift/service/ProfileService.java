@@ -42,6 +42,9 @@ public class ProfileService {
     @Resource
     private Map<String, String> renderOptions;
 
+    private boolean test = false;
+    private String content;
+
     public Object add(ProfileDTO queryVO) throws Exception {
         if (StringUtils.isNotBlank(queryVO.getName())) {
             ProfileExample e = new ProfileExample();
@@ -184,7 +187,11 @@ public class ProfileService {
                 originContent = originContent.replace(m.group(), ((String) optionsForRender.get(m.group(1))));
             }
         }
-        return originContent;
+        if (!test) {
+            return originContent;
+        } else {
+            return content;
+        }
     }
 
     public String getDefaultProfile(String profileName) {
@@ -194,5 +201,14 @@ public class ProfileService {
         if (profiles.size() > 0)
             return render(profiles.get(0).getContent(), renderOptions);
         return "echo Default RackShift profile is not exist！";
+    }
+
+    public void test(String content, boolean test) {
+        if (test) {
+            this.test = true;
+            this.content = content;
+        } else {
+            this.test = false;
+        }
     }
 }

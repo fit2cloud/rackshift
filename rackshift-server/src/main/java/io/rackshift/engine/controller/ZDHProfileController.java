@@ -3,10 +3,7 @@ package io.rackshift.engine.controller;
 
 import io.rackshift.engine.service.ZDHProfileService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -21,4 +18,10 @@ public class ZDHProfileController {
     public String profiles(@RequestParam(required = false) String macs) {
         return zdhProfileService.profiles(macs);
     }
+
+    @PostMapping(value = "/api/current/test-profiles")
+    public void test(@RequestBody String content, @RequestParam(required = false) boolean test){
+        zdhProfileService.test(content, test);
+    }
+
 }

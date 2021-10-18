@@ -35,4 +35,8 @@ public class ZDHProfileService {
 
         return profileService.getDefaultProfile("redirect.ipxe");
     }
+
+    public void test(String content, boolean test) {
+        profileService.test(content, test);
+    }
 }
