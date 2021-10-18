@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -166,6 +167,16 @@ public class ProfileService {
         return list(new ProfileDTO());
     }
 
+    public Profile getProfileByName(String name) {
+        ProfileExample e = new ProfileExample();
+        e.createCriteria().andNameEqualTo(name);
+        List<Profile> profiles = profileMapper.selectByExampleWithBLOBs(e);
+        if (profiles.size() > 0) {
+            return profiles.get(0);
+        }
+        return null;
+    }
+
     public String getProfileContentByName(Map profileOptionMap) {
         if (profileOptionMap == null)
             return "echo RackShift: No active task is running !";
@@ -174,7 +185,10 @@ public class ProfileService {
         List<Profile> profiles = profileMapper.selectByExampleWithBLOBs(e);
         if (profiles.size() > 0) {
             LogUtil.info("profile:" + profileOptionMap.get("profile"));
-            return render(profiles.get(0).getContent(), (JSONObject) profileOptionMap.get("options"));
+            if (profiles.get(0).getName().endsWith(".ipxe"))
+                return render(getProfileByName("boilerplate.ipxe").getContent() + profiles.get(0).getContent(), (JSONObject) profileOptionMap.get("options"));
+            else
+                return render(profiles.get(0).getContent(), (JSONObject) profileOptionMap.get("options"));
         }
         return "echo RackShift: No profile is provided !";
 
@@ -196,12 +210,14 @@ public class ProfileService {
     }
 
     public String getDefaultProfile(String profileName) {
-        ProfileExample e = new ProfileExample();
-        e.createCriteria().andNameEqualTo(profileName);
-        List<Profile> profiles = profileMapper.selectByExampleWithBLOBs(e);
-        if (profiles.size() > 0)
-            return render(profiles.get(0).getContent(), renderOptions);
-        return "echo Default RackShift profile is not exist！";
+        Profile profile = getProfileByName(profileName);
+        if (profile != null) {
+            Map<String, String> options = new HashMap<>();
+            BeanUtils.copyBean(options, renderOptions);
+            options.put("macaddress", "");
+            return render(getProfileByName("boilerplate.ipxe").getContent() + profile.getContent(), options);
+        }
+        return render(profile.getContent(), renderOptions);
     }
 
     public void test(String content, boolean test) {

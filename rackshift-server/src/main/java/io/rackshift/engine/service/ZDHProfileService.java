@@ -32,7 +32,6 @@ public class ZDHProfileService {
             }
             return profileService.getProfileContentByName(taskService.getTaskProfile(bareMetal.getId()));
         }
-
         return profileService.getDefaultProfile("redirect.ipxe");
     }
 

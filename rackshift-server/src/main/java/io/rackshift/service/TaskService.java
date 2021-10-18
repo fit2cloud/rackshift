@@ -399,10 +399,13 @@ public class TaskService {
                 tasksReadyToStart.add(taskObj.getJSONObject(t));
             }
         }
+
+        BareMetal bareMetal = bareMetalManager.getBareMetalById(id);
         for (JSONObject jsonObject : tasksReadyToStart) {
             if (StringUtils.isNotBlank(jsonObject.getJSONObject("options").getString("profile"))) {
                 JSONUtils.merge(renderOptions, jsonObject.getJSONObject("options"));
                 jsonObject.getJSONObject("options").put("nodeId", jsonObject.getString("bareMetalId"));
+                jsonObject.getJSONObject("options").put("macaddress", bareMetal.getPxeMac());
                 r.put("profile", jsonObject.getJSONObject("options").getString("profile"));
                 r.put("options", jsonObject.getJSONObject("options"));
             }
