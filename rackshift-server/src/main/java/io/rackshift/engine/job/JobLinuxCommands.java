@@ -57,7 +57,7 @@ public class JobLinuxCommands extends BaseJob {
 
         this.subscribeForRequestProfile(o -> this.options.getString("profile"));
 
-        this.subscribeForRequestOptions(o -> this.options);
+        this.subscribeForRequestOptions(o -> this.options.toJSONString());
 
         //简便起见只去第一个指令的可接受返回 code 写死了先 后面做动态调整
         List<Integer> acceptResponseCode = new ArrayList<Integer>();

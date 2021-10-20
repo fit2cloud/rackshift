@@ -53,7 +53,7 @@ public class JobLinuxShellReboot extends BaseJob {
 
         this.subscribeForRequestProfile(o -> this.options.getString("profile"));
 
-        this.subscribeForRequestOptions(o -> this.options);
+        this.subscribeForRequestOptions(o -> this.options.toJSONString());
 
 //        this.subscribeForCompleteCommands(o -> {
 //            this.complete();

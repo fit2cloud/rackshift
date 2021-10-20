@@ -35,7 +35,7 @@ public class ZDHTemplatesService {
             return String.format("%s not exists !", templateName);
         }
         if (StringUtils.isNotBlank(nodeId)) {
-            String optionStr = MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_OPTIONS, "");
+            String optionStr = MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_OPTIONS + nodeId, "");
             if (StringUtils.isNotBlank(optionStr)) {
                 JSONObject param = JSONObject.parseObject(optionStr);
                 param.put("macaddress", Optional.ofNullable(bareMetalService.getById(nodeId)).orElse(new BareMetal()).getPxeMac());
