@@ -39,14 +39,14 @@ public class ZDHTemplatesService {
             if (StringUtils.isNotBlank(optionStr)) {
                 JSONObject param = JSONObject.parseObject(optionStr);
                 param.put("macaddress", Optional.ofNullable(bareMetalService.getById(nodeId)).orElse(new BareMetal()).getPxeMac());
-                return render(template.getContent(), JSONObject.parseObject(optionStr));
+                return render(template.getContent(), param);
             }
         }
         return template.getContent();
     }
 
     public String render(String originContent, JSONObject optionsForRender) {
-        Pattern p = Pattern.compile("<%=(\\w+)%>");
+        Pattern p = Pattern.compile("<%=\\s*(\\w+)\\s*%>");
         Matcher m = p.matcher(originContent);
         while (m.find()) {
             if (StringUtils.isNotBlank(optionsForRender.getString(m.group(1)))) {

@@ -126,6 +126,7 @@ public class StateMachine {
                     Constructor c = c1.getConstructor(String.class, String.class, JSONObject.class, TaskMapper.class, ApplicationContext.class, RabbitTemplate.class);
                     if (c != null) {
                         BaseJob bj = (BaseJob) c.newInstance(taskId, instanceId, graphObject.getJSONObject(instanceId), taskMapper, applicationContext, rabbitTemplate);
+                        bj.initParams();
                         bj.run();
                     }
                 } catch (Exception e) {

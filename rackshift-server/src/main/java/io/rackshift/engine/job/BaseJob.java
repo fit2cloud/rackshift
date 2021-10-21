@@ -3,9 +3,11 @@ package io.rackshift.engine.job;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.MqConstants;
 import io.rackshift.constants.ServiceConstants;
+import io.rackshift.mybatis.domain.Task;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.utils.MqUtil;
+import io.rackshift.utils.SpringUtils;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
@@ -305,6 +307,7 @@ public abstract class BaseJob {
     protected String taskId;
     protected String instanceId;
     protected JSONObject options;
+    protected Map<String, String> renderOptions;
     protected JSONObject context;
     protected String _status;
     protected TaskMapper taskMapper;
@@ -319,7 +322,12 @@ public abstract class BaseJob {
     }};
 
     protected BaseJob() {
+        this.renderOptions = (Map<String, String>) SpringUtils.getApplicationContext().getBean("renderOptions");
+    }
 
+    public void initParams() {
+        Task task = taskMapper.selectByPrimaryKey(taskId);
+        this.options.put("nodeId", task.getBareMetalId());
     }
 
     abstract public void run();

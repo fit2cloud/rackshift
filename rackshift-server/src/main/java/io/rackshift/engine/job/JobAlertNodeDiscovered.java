@@ -1,6 +1,5 @@
 package io.rackshift.engine.job;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

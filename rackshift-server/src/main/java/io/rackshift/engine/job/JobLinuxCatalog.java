@@ -7,6 +7,7 @@ import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.service.OutBandService;
 import io.rackshift.utils.IPMIUtil;
+import io.rackshift.utils.JSONUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
@@ -55,7 +56,7 @@ public class JobLinuxCatalog extends BaseJob {
 
         this.subscribeForRequestProfile(o -> this.options.getString("profile"));
 
-        this.subscribeForRequestOptions(o -> this.options.toJSONString());
+        this.subscribeForRequestOptions(o -> JSONUtils.merge(this.options, this.renderOptions).toJSONString());
 
         this.subscribeForCompleteCommands(o -> {
             this.complete();

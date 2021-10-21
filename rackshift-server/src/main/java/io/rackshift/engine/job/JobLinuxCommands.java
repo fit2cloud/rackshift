@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.mapper.TaskMapper;
+import io.rackshift.utils.JSONUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
@@ -57,7 +58,7 @@ public class JobLinuxCommands extends BaseJob {
 
         this.subscribeForRequestProfile(o -> this.options.getString("profile"));
 
-        this.subscribeForRequestOptions(o -> this.options.toJSONString());
+        this.subscribeForRequestOptions(o -> JSONUtils.merge(this.options, this.renderOptions).toJSONString());
 
         //简便起见只去第一个指令的可接受返回 code 写死了先 后面做动态调整
         List<Integer> acceptResponseCode = new ArrayList<Integer>();
