@@ -9,7 +9,6 @@ import io.rackshift.model.MachineEntity;
 import io.rackshift.mybatis.domain.Endpoint;
 import io.rackshift.service.RackHDService;
 import io.rackshift.utils.RackHDHttpClientUtil;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,7 +25,7 @@ public class SyncRackJob {
     private WorkflowConfig workflowConfig;
 
     //    @Scheduled(fixedDelay = 1000)
-    @Scheduled(fixedDelay = 120 * 1000)
+//    @Scheduled(fixedDelay = 120 * 1000)
     public boolean run() {
         try {
             List<MachineEntity> entities = new LinkedList<>();

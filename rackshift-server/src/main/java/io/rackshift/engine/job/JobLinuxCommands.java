@@ -48,9 +48,13 @@ public class JobLinuxCommands extends BaseJob {
         this.subscribeForRequestCommand((o) -> {
             JSONArray taskArr = new JSONArray();
             JSONObject cmd = new JSONObject();
-            JSONObject downloadURLOBj = options.getJSONArray("commands").getJSONObject(0);
-            cmd.put("downloadUrl", downloadURLOBj.getString("downloadUrl"));
-            cmd.put("cmd", downloadURLOBj.getString("command"));
+            if (options.get("commands") instanceof JSONArray) {
+                JSONObject downloadURLOBj = options.getJSONArray("commands").getJSONObject(0);
+                cmd.put("downloadUrl", downloadURLOBj.getString("downloadUrl"));
+                cmd.put("cmd", downloadURLOBj.getString("command"));
+            } else if (options.get("commands") instanceof String) {
+                cmd.put("cmd", options.getString("commands"));
+            }
             taskArr.add(cmd);
             r.put("tasks", taskArr);
             return r.toJSONString();
