@@ -93,7 +93,8 @@ public class BareMetalManager {
     }
 
     public void update(BareMetal bareMetal, boolean changeStatus) {
-        BareMetal oldBareMetal = getBareMetalBySn(bareMetal.getMachineSn());
+
+        BareMetal oldBareMetal = getBareMetalById(bareMetal.getId());
         bareMetal.setId(oldBareMetal.getId());
         if (!changeStatus) {
             bareMetal.setStatus(oldBareMetal.getStatus());

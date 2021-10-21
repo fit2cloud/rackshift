@@ -1,7 +1,11 @@
 package io.rackshift.engine.job;
 
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.mapper.TaskMapper;
+import io.rackshift.strategy.statemachine.LifeEvent;
+import io.rackshift.strategy.statemachine.LifeEventType;
+import io.rackshift.strategy.statemachine.StateMachine;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
@@ -38,5 +42,11 @@ public class JobAlertNodeDiscovered extends BaseJob {
     @Override
     public void run() {
         this.complete();
+        WorkflowRequestDTO r = new WorkflowRequestDTO();
+        r.setBareMetalId(bareMetalId);
+        r.setTaskId(taskId);
+        LifeEvent event = LifeEvent.builder().withEventType(LifeEventType.POST_DISCOVERY_WORKFLOW_END).withWorkflowRequestDTO(r);
+        StateMachine stateMachine = (StateMachine) applicationContext.getBean("stateMachine");
+        stateMachine.sendEvent(event);
     }
 }
