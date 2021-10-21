@@ -18,6 +18,11 @@ public class ZDHTaskController {
         return zdhTaskService.tasks(bareMetalId);
     }
 
+    @GetMapping(value = "/api/current/tasks/bootstrap.js", produces = "text/plain")
+    public String bootstrap(@RequestParam String macAddress) throws IOException, InterruptedException {
+        return zdhTaskService.bootstrap(macAddress);
+    }
+
     @PostMapping(value = "/api/current/tasks/{bareMetalId}", produces = "text/plain")
     public void postTasks(@RequestBody JSONObject data, @PathVariable String bareMetalId) throws IOException, InterruptedException {
         zdhTaskService.postTasks(bareMetalId, data);

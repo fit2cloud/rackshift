@@ -2,6 +2,7 @@ package io.rackshift.engine.service;
 
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.MqConstants;
+import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.Task;
 import io.rackshift.service.BareMetalService;
 import io.rackshift.service.ProfileService;
@@ -21,6 +22,8 @@ public class ZDHTaskService {
     private TaskService taskService;
     @Resource
     private BareMetalService bareMetalService;
+    @Resource
+    private ZDHTemplatesService zdhTemplatesService;
 
     public String tasks(String bareMetalId) throws IOException, InterruptedException {
         List<Task> taskList = taskService.getActiveTasks(bareMetalId);
@@ -35,5 +38,12 @@ public class ZDHTaskService {
         if (taskList.size() > 0) {
             MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMPLETE + bareMetalId, data.toJSONString());
         }
+    }
+
+    public String bootstrap(String macAddress) throws IOException, InterruptedException {
+        BareMetal bareMetal = bareMetalService.getByPXEMAC(macAddress);
+        if (bareMetal != null)
+            return zdhTemplatesService.getTemplateName("bootstrap.js", bareMetal.getId());
+        return "";
     }
 }

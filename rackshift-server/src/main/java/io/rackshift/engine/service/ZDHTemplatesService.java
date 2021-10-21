@@ -39,6 +39,7 @@ public class ZDHTemplatesService {
             if (StringUtils.isNotBlank(optionStr)) {
                 JSONObject param = JSONObject.parseObject(optionStr);
                 param.put("macaddress", Optional.ofNullable(bareMetalService.getById(nodeId)).orElse(new BareMetal()).getPxeMac());
+                param.put("identifier", nodeId);
                 return render(template.getContent(), param);
             }
         }
