@@ -2,6 +2,7 @@ package io.rackshift.engine.job;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.engine.util.CommandParser;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.mapper.TaskMapper;
@@ -59,6 +60,8 @@ public class JobLinuxCatalog extends BaseJob {
         this.subscribeForRequestOptions(o -> JSONUtils.merge(this.options, this.renderOptions).toJSONString());
 
         this.subscribeForCompleteCommands(o -> {
+            CommandParser cp = (CommandParser) applicationContext.getBean("commandParser");
+//            cp.saveCatalog()
             this.complete();
             return "ok";
         });
