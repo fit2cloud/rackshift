@@ -276,6 +276,86 @@ public class WorkflowConfig {
         return null;
     }
 
+    /**
+     * 降低重写的成本 直接加载 RackHD 的源码
+     *
+     * @return
+     */
+    @Bean
+    public String commandParserScript() {
+        try {
+            String filePath = "io/rackshift/engine/util/command-parser.js";
+            if ("local".equalsIgnoreCase(runMode)) {
+                File file = new File(BaseTaskObject.class.getClassLoader().getResource(filePath).getFile());
+                return getString(file);
+            } else {
+
+                String urlStr = BaseTaskObject.class.getClassLoader().getResource(filePath).toString();
+                String jarPath = urlStr.substring(0, urlStr.indexOf("!/") + 2);
+                URL jarURL = new URL(jarPath);
+                JarURLConnection jarCon = (JarURLConnection) jarURL.openConnection();
+                JarFile jarFile = jarCon.getJarFile();
+                Enumeration<JarEntry> jarEntrys = jarFile.entries();
+                while (jarEntrys.hasMoreElements()) {
+                    JarEntry entry = jarEntrys.nextElement();
+                    String name = entry.getName();
+                    if (name.startsWith("BOOT-INF/classes/" + filePath) && !entry.isDirectory() && name.contains(".js")) {
+                        // 开始读取文件内容
+                        InputStream in = this.getClass().getClassLoader().getResourceAsStream(name);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                        return getString(reader);
+
+                    }
+                }
+                return null;
+            }
+        } catch (Exception e) {
+            LogUtil.error("初始化  commandParserScript  失败！", e);
+        }
+
+        return null;
+    }
+
+    /**
+     * 降低重写的成本 直接加载 RackHD 的源码
+     *
+     * @return
+     */
+    @Bean
+    public String lodashScript() {
+        try {
+            String filePath = "io/rackshift/engine/util/lodash.min.js";
+            if ("local".equalsIgnoreCase(runMode)) {
+                File file = new File(BaseTaskObject.class.getClassLoader().getResource(filePath).getFile());
+                return getString(file);
+            } else {
+
+                String urlStr = BaseTaskObject.class.getClassLoader().getResource(filePath).toString();
+                String jarPath = urlStr.substring(0, urlStr.indexOf("!/") + 2);
+                URL jarURL = new URL(jarPath);
+                JarURLConnection jarCon = (JarURLConnection) jarURL.openConnection();
+                JarFile jarFile = jarCon.getJarFile();
+                Enumeration<JarEntry> jarEntrys = jarFile.entries();
+                while (jarEntrys.hasMoreElements()) {
+                    JarEntry entry = jarEntrys.nextElement();
+                    String name = entry.getName();
+                    if (name.startsWith("BOOT-INF/classes/" + filePath) && !entry.isDirectory() && name.contains(".js")) {
+                        // 开始读取文件内容
+                        InputStream in = this.getClass().getClassLoader().getResourceAsStream(name);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                        return getString(reader);
+
+                    }
+                }
+                return null;
+            }
+        } catch (Exception e) {
+            LogUtil.error("初始化  lodash.min.js  失败！", e);
+        }
+
+        return null;
+    }
+
     private static String getGateWayAddress(String ip) throws UnknownHostException, SocketException {
         String localhost = Inet4Address.getLocalHost().getHostAddress();
         if (StringUtils.isNotBlank(ip)) {
