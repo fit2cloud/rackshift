@@ -1,9 +1,7 @@
-
-module.exports = commandParserFactory;
-
 function commandParserFactory(_) {
 
-    function CommandParser() { }
+    function CommandParser() {
+    }
 
     // -------- commands ----------
     var ohai = 'sudo ohai --directory /etc/ohai/plugins',
@@ -72,7 +70,7 @@ function commandParserFactory(_) {
                     store: true
                 });
             } catch (e) {
-                return Promise.resolve({ source: 'esxcli-network-driver-version', error: e });
+                return Promise.resolve({source: 'esxcli-network-driver-version', error: e});
             }
         }
     };
@@ -93,14 +91,14 @@ function commandParserFactory(_) {
                 // We catalog all 15 channels, only really fail if the first
                 // one isn't present
                 if (channel && channel[0] !== '1') {
-                    return Promise.resolve({ source: userListSource, data: '', store: false });
+                    return Promise.resolve({source: userListSource, data: '', store: false});
                 } else {
-                    return Promise.resolve({ source: userListSource, error: data.error });
+                    return Promise.resolve({source: userListSource, error: data.error});
                 }
             }
             try {
                 if (data.stdout.length === 0) {
-                    return Promise.resolve({ source: userListSource, data: '', store: false });
+                    return Promise.resolve({source: userListSource, data: '', store: false});
                 }
                 var lines = data.stdout.split('\n');
                 _.remove(lines, function (line) {
@@ -128,9 +126,9 @@ function commandParserFactory(_) {
                 });
 
                 var store = true;
-                return Promise.resolve({ data: parsed, source: userListSource, store: store });
+                return Promise.resolve({data: parsed, source: userListSource, store: store});
             } catch (e) {
-                return Promise.resolve({ source: userListSource, error: e });
+                return Promise.resolve({source: userListSource, error: e});
             }
         }
     };
@@ -151,14 +149,14 @@ function commandParserFactory(_) {
                 // We catalog all 15 channels, only really fail if the first
                 // one isn't present
                 if (channel && channel[0] !== '1') {
-                    return Promise.resolve({ source: userSummarySource, data: '', store: false });
+                    return Promise.resolve({source: userSummarySource, data: '', store: false});
                 } else {
-                    return Promise.resolve({ source: userSummarySource, error: data.error });
+                    return Promise.resolve({source: userSummarySource, error: data.error});
                 }
             }
             try {
                 if (data.stdout.length === 0) {
-                    return Promise.resolve({ source: userSummarySource, data: '', store: false });
+                    return Promise.resolve({source: userSummarySource, data: '', store: false});
                 }
                 var split = data.stdout.split('\n');
                 _.remove(split, function (line) {
@@ -183,9 +181,9 @@ function commandParserFactory(_) {
                 });
 
                 var store = true;
-                return Promise.resolve({ data: parsed, source: userSummarySource, store: store });
+                return Promise.resolve({data: parsed, source: userSummarySource, store: store});
             } catch (e) {
-                return Promise.resolve({ source: userSummarySource, error: e });
+                return Promise.resolve({source: userSummarySource, error: e});
             }
         }
     };
@@ -206,14 +204,14 @@ function commandParserFactory(_) {
                 // We catalog all 15 channels, only really fail if the first
                 // one isn't present
                 if (channel && channel[0] !== '1') {
-                    return Promise.resolve({ source: bmcsource, data: '', store: false });
+                    return Promise.resolve({source: bmcsource, data: '', store: false});
                 } else {
-                    return Promise.resolve({ source: bmcsource, error: data.error });
+                    return Promise.resolve({source: bmcsource, error: data.error});
                 }
             }
             try {
                 if (data.stdout.length === 0) {
-                    return Promise.resolve({ source: bmcsource, data: '', store: false });
+                    return Promise.resolve({source: bmcsource, data: '', store: false});
                 }
                 var split = data.stdout.split('\n');
                 _.remove(split, function (line) {
@@ -275,10 +273,10 @@ function commandParserFactory(_) {
                         lookups: lookups
                     });
                 } else {
-                    return Promise.resolve({ data: parsed, source: bmcsource, store: store });
+                    return Promise.resolve({data: parsed, source: bmcsource, store: store});
                 }
             } catch (e) {
-                return Promise.resolve({ source: bmcsource, error: e });
+                return Promise.resolve({source: bmcsource, error: e});
             }
         }
     };
@@ -287,19 +285,19 @@ function commandParserFactory(_) {
     // -------- parsers ----------
     CommandParser.prototype[ohai] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'ohai', error: data.error });
+            return Promise.resolve({source: 'ohai', error: data.error});
         }
         try {
             var parsed = JSON.parse(data.stdout);
-            return Promise.resolve({ data: parsed, source: 'ohai', store: true });
+            return Promise.resolve({data: parsed, source: 'ohai', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'ohai', error: e });
+            return Promise.resolve({source: 'ohai', error: e});
         }
     };
 
     CommandParser.prototype[smart] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'smart', error: data.error });
+            return Promise.resolve({source: 'smart', error: data.error});
         }
         try {
             var parsed = [];
@@ -315,11 +313,9 @@ function commandParserFactory(_) {
             _.forEach(smartEachDrive, function (smart) {
                 if (smart === '') {
                     return;
-                }
-                else if (smart[0] === '/') { //This is the device name
+                } else if (smart[0] === '/') { //This is the device name
                     drive['OS Device Name'] = smart;
-                }
-                else { //this is the smart data for above device
+                } else { //this is the smart data for above device
                     //extract the smartctl version
                     var ver = smart.match(/^smartctl\s([\d\.]+)/);
                     if (ver && ver.length > 1) {
@@ -333,8 +329,7 @@ function commandParserFactory(_) {
                             //code to find out the HBA controller that the drive is connected to
                             drive.Controller = _parseControllerInfoOneDriveData(elem);
                             return;
-                        }
-                        else {                      //This is the smart data part
+                        } else {                      //This is the smart data part
                             drive.SMART = _parseSmartOneDriveData(elem);
                         }
                     });
@@ -348,15 +343,15 @@ function commandParserFactory(_) {
                     };
                 }
             });
-            return Promise.resolve({ data: parsed, source: 'smart', store: true });
+            return Promise.resolve({data: parsed, source: 'smart', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'smart', error: e });
+            return Promise.resolve({source: 'smart', error: e});
         }
     };
 
     CommandParser.prototype[dmi] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'dmi', error: data.error });
+            return Promise.resolve({source: 'dmi', error: data.error});
         }
         try {
             // Slice head of file until first 'Handle...' entry and
@@ -501,15 +496,15 @@ function commandParserFactory(_) {
                 }
             }, {});
 
-            return Promise.resolve({ data: parsed, source: 'dmi', store: true });
+            return Promise.resolve({data: parsed, source: 'dmi', store: true});
         } catch (e) {
-            return Promise.reject({ source: 'dmi', error: e });
+            return Promise.reject({source: 'dmi', error: e});
         }
     };
 
     CommandParser.prototype[flashupdt] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'flashupdt', error: data.error });
+            return Promise.resolve({source: 'flashupdt', error: data.error});
         }
         try {
             // Slice head of file until first 'BIOS Version Information' entry and
@@ -565,15 +560,15 @@ function commandParserFactory(_) {
                 }
             }, {});
 
-            return Promise.resolve({ data: parsed, source: 'flashupdt', store: true });
+            return Promise.resolve({data: parsed, source: 'flashupdt', store: true});
         } catch (e) {
-            return Promise.reject({ source: 'flashupdt', error: e });
+            return Promise.reject({source: 'flashupdt', error: e});
         }
     };
 
     CommandParser.prototype[lshw] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'lshw', error: data.error });
+            return Promise.resolve({source: 'lshw', error: data.error});
         }
 
         return Promise.resolve()
@@ -601,18 +596,18 @@ function commandParserFactory(_) {
                     }
                 }));
                 var lookups = _.map(_.flattenDeep(macs), function (mac) {
-                    return { mac: mac };
+                    return {mac: mac};
                 });
-                return Promise.resolve({ data: parsed, source: 'lshw', store: true, lookups: lookups });
+                return Promise.resolve({data: parsed, source: 'lshw', store: true, lookups: lookups});
             })
             .catch(function (e) {
-                return Promise.resolve({ source: 'lshw', error: e });
+                return Promise.resolve({source: 'lshw', error: e});
             });
     };
 
     CommandParser.prototype[lspci] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'lspci', error: data.error });
+            return Promise.resolve({source: 'lspci', error: data.error});
         }
         try {
             var lines = data.stdout.split('\n\n');
@@ -623,15 +618,15 @@ function commandParserFactory(_) {
                     result[sep[0]] = sep[1];
                 }, {});
             });
-            return Promise.resolve({ data: parsed, source: 'lspci', store: true });
+            return Promise.resolve({data: parsed, source: 'lspci', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'lspci', error: e });
+            return Promise.resolve({source: 'lspci', error: e});
         }
     };
 
     CommandParser.prototype[lsscsiPlusRotational] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'lsscsi', error: data.error });
+            return Promise.resolve({source: 'lsscsi', error: data.error});
         }
         try {
             var lines = data.stdout.trim().split('\n');
@@ -686,15 +681,15 @@ function commandParserFactory(_) {
                 }
             }));
 
-            return Promise.resolve({ data: parsed, source: 'lsscsi', store: true });
+            return Promise.resolve({data: parsed, source: 'lsscsi', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'lsscsi', error: e });
+            return Promise.resolve({source: 'lsscsi', error: e});
         }
     };
 
     CommandParser.prototype[megaraidControllerCount] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'megaraid-controller-count', error: data.error });
+            return Promise.resolve({source: 'megaraid-controller-count', error: data.error});
         }
         try {
             var store = true;
@@ -708,13 +703,13 @@ function commandParserFactory(_) {
                 store: store
             });
         } catch (e) {
-            return Promise.resolve({ source: 'megaraid-controllers', error: e });
+            return Promise.resolve({source: 'megaraid-controllers', error: e});
         }
     };
 
     CommandParser.prototype[megaraidAdapterInfo] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'megaraid-controllers', error: data.error });
+            return Promise.resolve({source: 'megaraid-controllers', error: data.error});
         }
         try {
             var store = true;
@@ -722,16 +717,16 @@ function commandParserFactory(_) {
             if (parsed.Controllers[0]['Command Status'].Status === 'Failure') {
                 store = false;
             }
-            return Promise.resolve({ data: parsed, source: 'megaraid-controllers', store: store });
+            return Promise.resolve({data: parsed, source: 'megaraid-controllers', store: store});
         } catch (e) {
-            return Promise.resolve({ source: 'megaraid-controllers', error: e });
+            return Promise.resolve({source: 'megaraid-controllers', error: e});
         }
     };
 
 
     CommandParser.prototype[megaraidVirtualDiskInfo] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'megaraid-virtual-disks', error: data.error });
+            return Promise.resolve({source: 'megaraid-virtual-disks', error: data.error});
         }
         try {
             var store = true;
@@ -745,13 +740,13 @@ function commandParserFactory(_) {
                 store: store
             });
         } catch (e) {
-            return Promise.resolve({ source: 'megaraid-virtual-disks', error: e });
+            return Promise.resolve({source: 'megaraid-virtual-disks', error: e});
         }
     };
 
     CommandParser.prototype[megaraidDriveInfo] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'megaraid-physical-drives', error: data.error });
+            return Promise.resolve({source: 'megaraid-physical-drives', error: data.error});
         }
         try {
             var store = true;
@@ -765,13 +760,13 @@ function commandParserFactory(_) {
                 store: store
             });
         } catch (e) {
-            return Promise.resolve({ source: 'megaraid-physical-drives', error: e });
+            return Promise.resolve({source: 'megaraid-physical-drives', error: e});
         }
     };
 
     CommandParser.prototype[perccliVersionInfo] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'perccli-version', error: data.error });
+            return Promise.resolve({source: 'perccli-version', error: data.error});
         }
         try {
             var lines = data.stdout.split('\n');
@@ -792,16 +787,15 @@ function commandParserFactory(_) {
                     var key2 = 'description';
                     var line1 = line.replace(/ {2,}/g, '');
                     parsed[key2] = line1;
-                }
-                else {
+                } else {
                     var key3 = "copyright";
                     var line2 = line.replace(/ {2,}/g, '');
                     parsed[key3] = line2;
                 }
             });
-            return Promise.resolve({ data: parsed, source: 'perccli-version', store: true });
+            return Promise.resolve({data: parsed, source: 'perccli-version', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'perccli-version', error: e });
+            return Promise.resolve({source: 'perccli-version', error: e});
         }
     };
 
@@ -813,7 +807,7 @@ function commandParserFactory(_) {
         CommandParser.prototype[megaraidControllerCount];
     CommandParser.prototype[mpt2fusionAdapterInfo] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'mpt2fusion-adapters', error: data.error });
+            return Promise.resolve({source: 'mpt2fusion-adapters', error: data.error});
         }
         try {
             var lines = data.stdout.split('\n');
@@ -836,17 +830,17 @@ function commandParserFactory(_) {
                 result[split[0]] = split[1];
             }, {});
 
-            return Promise.resolve({ data: parsed, source: 'mpt2fusion-adapters', store: true });
+            return Promise.resolve({data: parsed, source: 'mpt2fusion-adapters', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'mpt2fusion-adapters', error: e });
+            return Promise.resolve({source: 'mpt2fusion-adapters', error: e});
         }
     };
 
     CommandParser.prototype[mellanoxInfo] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'mellanox', error: data.error });
+            return Promise.resolve({source: 'mellanox', error: data.error});
         } else if (!data.stdout) {
-            return Promise.resolve({ source: 'mellanox', error: new Error("No data") });
+            return Promise.resolve({source: 'mellanox', error: new Error("No data")});
         }
         var resolve;
         var deferred = new Promise(function (_resolve) {
@@ -854,7 +848,7 @@ function commandParserFactory(_) {
         });
         xmlParser(data.stdout, function (err, out) {
             if (err) {
-                resolve({ source: 'mellanox', error: err });
+                resolve({source: 'mellanox', error: err});
             } else {
                 resolve({
                     data: out,
@@ -868,7 +862,7 @@ function commandParserFactory(_) {
 
     CommandParser.prototype[ipmiSelInformation] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'ipmi-sel-information', error: data.error });
+            return Promise.resolve({source: 'ipmi-sel-information', error: data.error});
         }
         try {
             var lines = data.stdout.trim().split('\n');
@@ -878,15 +872,15 @@ function commandParserFactory(_) {
                 result[split.shift().trim()] = split.shift().trim();
             }, {});
 
-            return Promise.resolve({ data: parsed, source: 'ipmi-sel-information', store: true });
+            return Promise.resolve({data: parsed, source: 'ipmi-sel-information', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'ipmi-sel-information', error: e });
+            return Promise.resolve({source: 'ipmi-sel-information', error: e});
         }
     };
 
     CommandParser.prototype[ipmiSel] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'ipmi-sel', error: data.error });
+            return Promise.resolve({source: 'ipmi-sel', error: data.error});
         }
         try {
             var lines = data.stdout.split('\n');
@@ -902,15 +896,15 @@ function commandParserFactory(_) {
                 result[split.shift()] = split;
             }, {});
 
-            return Promise.resolve({ data: parsed, source: 'ipmi-sel', store: true });
+            return Promise.resolve({data: parsed, source: 'ipmi-sel', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'ipmi-sel', error: e });
+            return Promise.resolve({source: 'ipmi-sel', error: e});
         }
     };
 
     CommandParser.prototype[ipmiFru] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'ipmi-fru', error: data.error });
+            return Promise.resolve({source: 'ipmi-fru', error: data.error});
         }
         try {
             var split = data.stdout.split('\n');
@@ -937,16 +931,16 @@ function commandParserFactory(_) {
                     parsed[key][line[0]] = line[1];
                 }
             });
-            return Promise.resolve({ data: parsed, source: 'ipmi-fru', store: true });
+            return Promise.resolve({data: parsed, source: 'ipmi-fru', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'ipmi-fru', error: e });
+            return Promise.resolve({source: 'ipmi-fru', error: e});
         }
     };
 
 
     CommandParser.prototype[ipmiMcInfo] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'ipmi-mc-info', error: data.error });
+            return Promise.resolve({source: 'ipmi-mc-info', error: data.error});
         }
         if (!data.stdout) {
             return Promise.resolve({
@@ -984,15 +978,15 @@ function commandParserFactory(_) {
                 }
             });
 
-            return Promise.resolve({ data: parsed, source: 'ipmi-mc-info', store: true });
+            return Promise.resolve({data: parsed, source: 'ipmi-mc-info', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'ipmi-mc-info', error: e });
+            return Promise.resolve({source: 'ipmi-mc-info', error: e});
         }
     };
 
     CommandParser.prototype[amiBios] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'ami', error: data.error });
+            return Promise.resolve({source: 'ami', error: data.error});
         }
         try {
             var lines = data.stdout.split('\n');
@@ -1006,17 +1000,17 @@ function commandParserFactory(_) {
                     parsed.systemRomSecureFlash = _.last(line.split(' = '));
                 }
             });
-            return Promise.resolve({ data: parsed, source: 'ami', store: true });
+            return Promise.resolve({data: parsed, source: 'ami', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'ami', error: e });
+            return Promise.resolve({source: 'ami', error: e});
         }
     };
 
     CommandParser.prototype[testEsesR] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'test_eses', error: data.error });
+            return Promise.resolve({source: 'test_eses', error: data.error});
         } else if (!data.stdout) {
-            return Promise.resolve({ source: 'test_eses', error: new Error("No data") });
+            return Promise.resolve({source: 'test_eses', error: new Error("No data")});
         }
         var resolve;
         var deferred = new Promise(function (_resolve) {
@@ -1024,7 +1018,7 @@ function commandParserFactory(_) {
         });
         xmlParser(data.stdout, function (err, out) {
             if (err) {
-                resolve({ source: 'test_eses', error: err });
+                resolve({source: 'test_eses', error: err});
             } else {
                 resolve({
                     data: out,
@@ -1038,9 +1032,9 @@ function commandParserFactory(_) {
 
     CommandParser.prototype[testEsesQ] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'test_eses', error: data.error });
+            return Promise.resolve({source: 'test_eses', error: data.error});
         } else if (!data.stdout) {
-            return Promise.resolve({ source: 'test_eses', error: new Error("No data") });
+            return Promise.resolve({source: 'test_eses', error: new Error("No data")});
         }
         var resolve;
         var deferred = new Promise(function (_resolve) {
@@ -1048,7 +1042,7 @@ function commandParserFactory(_) {
         });
         xmlParser(data.stdout, function (err, out) {
             if (err) {
-                resolve({ source: 'test_eses', error: err });
+                resolve({source: 'test_eses', error: err});
             } else {
                 resolve({
                     data: out,
@@ -1062,9 +1056,9 @@ function commandParserFactory(_) {
 
     CommandParser.prototype[lldp] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'lldp', error: data.error });
+            return Promise.resolve({source: 'lldp', error: data.error});
         } else if (!data.stdout) {
-            return Promise.resolve({ source: 'lldp', error: new Error("No data") });
+            return Promise.resolve({source: 'lldp', error: new Error("No data")});
         }
         try {
             var lines = data.stdout.split('\n');
@@ -1089,17 +1083,17 @@ function commandParserFactory(_) {
                     }
                 }
             });
-            return Promise.resolve({ data: parsed, source: 'lldp', store: true });
+            return Promise.resolve({data: parsed, source: 'lldp', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'lldp', error: e });
+            return Promise.resolve({source: 'lldp', error: e});
         }
     };
 
     CommandParser.prototype[ip] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'ip', error: data.error });
+            return Promise.resolve({source: 'ip', error: data.error});
         } else if (!data.stdout) {
-            return Promise.resolve({ source: 'ip', error: new Error("No data") });
+            return Promise.resolve({source: 'ip', error: new Error("No data")});
         }
 
         try {
@@ -1135,7 +1129,7 @@ function commandParserFactory(_) {
                 res[name] = (res[name] || {});
                 //each interface will appear in ip addr show and ip link show so we don't
                 // want to overwrite the object
-                _.defaults(res[name], { flags: flags });
+                _.defaults(res[name], {flags: flags});
 
                 var detailObj = _.transform(_.compact(info), function (result, line) {
                     //iterate over the lines of each interface array and parse to key/value
@@ -1144,7 +1138,7 @@ function commandParserFactory(_) {
                         //handle vlan detail line
                         // i.e. vlan protocol 802.1Q id 99 <REORDER_HDR>
                         words = words.slice(1, words.length - 1);
-                        return _.defaults(result, { vlan: _.zipObject(_.chunk(words, 2)) });
+                        return _.defaults(result, {vlan: _.zipObject(_.chunk(words, 2))});
                     } else if (words.length % 2 !== 0) {
                         //pop off the last element of a line like
                         // ['inet', '10.0.2.15/24', 'brd', '10.0.2.255', 'scope', 'global', 'eth0']
@@ -1165,13 +1159,13 @@ function commandParserFactory(_) {
 
             var lookups = _.transform(parsed, function (result, intrface, name) {
                 if (name !== 'lo' && !intrface.vlan) {
-                    result.push({ ip: intrface.inet.split('/')[0], mac: intrface['link/ether'] });
+                    result.push({ip: intrface.inet.split('/')[0], mac: intrface['link/ether']});
                 }
             }, []);
 
-            return Promise.resolve({ data: parsed, source: 'ip', lookups: lookups, store: true });
+            return Promise.resolve({data: parsed, source: 'ip', lookups: lookups, store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'ip', error: e });
+            return Promise.resolve({source: 'ip', error: e});
         }
     };
 
@@ -1179,15 +1173,15 @@ function commandParserFactory(_) {
         return Promise.all(_.map(tasks, function (data) {
             var out;
             if (data.error) {
-                return Promise.resolve({ source: data.source, error: data.error });
+                return Promise.resolve({source: data.source, error: data.error});
             } else if (!data.stdout) {
-                return Promise.resolve({ source: data.source, error: new Error("No data") });
+                return Promise.resolve({source: data.source, error: new Error("No data")});
             }
             if (data.format === 'json') {
                 try {
                     out = JSON.parse(data.stdout);
                 } catch (e) {
-                    return Promise.resolve({ source: data.source, error: e });
+                    return Promise.resolve({source: data.source, error: e});
                 }
                 return Promise.resolve({
                     source: data.source,
@@ -1197,7 +1191,7 @@ function commandParserFactory(_) {
             } else if (data.format === 'xml') {
                 xmlParser(data.stdout, function (err, out) {
                     if (err) {
-                        return Promise.resolve({ source: data.source, error: err });
+                        return Promise.resolve({source: data.source, error: err});
                     } else {
                         return Promise.resolve({
                             data: out,
@@ -1209,7 +1203,7 @@ function commandParserFactory(_) {
             } else {
                 return Promise.resolve({
                     source: data.source,
-                    data: { data: data.stdout },
+                    data: {data: data.stdout},
                     store: true
                 });
             }
@@ -1242,7 +1236,7 @@ function commandParserFactory(_) {
             }
             // otherwise return an error for no parser existing
             var error = new Error("No parser exists for command " + task.cmd);
-            return Promise.resolve({ source: task.cmd, error: error });
+            return Promise.resolve({source: task.cmd, error: error});
         }));
     };
 
@@ -1271,6 +1265,7 @@ function commandParserFactory(_) {
 
         return drvObj;
     }
+
     /**
      * Parse the whole SMART data of one drive.
      *
@@ -1296,33 +1291,25 @@ function commandParserFactory(_) {
 
             if (data.startsWith('=== START OF INFORMATION SECTION ===')) {
                 drvObj.Identity = _parseSmartInfoSection(lines);
-            }
-            else if (data.startsWith('=== START OF READ SMART DATA SECTION ===')) {
+            } else if (data.startsWith('=== START OF READ SMART DATA SECTION ===')) {
                 drvObj['Self-Assessment'] = _parseSmartSelfAssessment(lines);
-            }
-            else if (data.startsWith('General SMART Values')) {
+            } else if (data.startsWith('General SMART Values')) {
                 drvObj.Capabilities = _parseSmartCapabilities(lines);
-            }
-            else if (data.startsWith('SMART Attributes Data Structure revision number:')) {
+            } else if (data.startsWith('SMART Attributes Data Structure revision number:')) {
                 drvObj.Attributes = _parseSmartAttributes(lines);
-            }
-            else if (data.startsWith('SMART Error Log Version:')) {
+            } else if (data.startsWith('SMART Error Log Version:')) {
                 drvObj['Error Log'] = _parseSmartErrorLog(lines);
-            }
-            else if (data.startsWith('SMART Self-test log structure revision number')) {
+            } else if (data.startsWith('SMART Self-test log structure revision number')) {
                 drvObj['Self-test Log'] = _parseSmartSelfTestLog(lines);
-            }
-            else if (data.startsWith(
+            } else if (data.startsWith(
                 'SMART Selective self-test log data structure revision number')) {
                 drvObj['Selective Self-test Log'] = _parseSmartSelectiveSelfTestLog(lines);
-            }
-            else {
+            } else {
                 //I don't find the regular pattern for some data segment, or I don't know how to
                 //well classify some data, so just put them in the 'Un-parsed Raw Data'.
                 if (_.isArray(drvObj['Un-parsed Raw Data'])) {
                     drvObj['Un-parsed Raw Data'].push(data);
-                }
-                else {
+                } else {
                     drvObj['Un-parsed Raw Data'] = [data];
                 }
             }
@@ -1347,8 +1334,7 @@ function commandParserFactory(_) {
         if (pos < 0) {//If no colon, then put this into key 'Others'
             key = 'Others';
             val = line;
-        }
-        else {
+        } else {
             key = line.substring(0, pos);
             val = line.substring(pos + 1).trim();
         }
@@ -1360,12 +1346,10 @@ function commandParserFactory(_) {
         if (obj.hasOwnProperty(key)) {
             if (_.isArray(obj[key])) {
                 obj[key] = obj[key].push(val);
-            }
-            else {
+            } else {
                 obj[key] = [obj[key], val];
             }
-        }
-        else {
+        } else {
             obj[key] = val;
         }
         return obj;
@@ -1451,8 +1435,7 @@ function commandParserFactory(_) {
                     combineLines.push(strBuf);
                 }
                 strBuf = lines[i];
-            }
-            else {
+            } else {
                 if (strBuf[strBuf.length - 1] !== '.') {
                     strBuf += ' ';
                 }
@@ -1637,9 +1620,9 @@ function commandParserFactory(_) {
      * @api private
      */
     function _parseSmartTable(lines,
-        ignoreLinesCount,
-        regSplitRow,
-        funcCheckTableEnd) {
+                              ignoreLinesCount,
+                              regSplitRow,
+                              funcCheckTableEnd) {
         /* Example 1:
 
          ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED
@@ -1700,15 +1683,15 @@ function commandParserFactory(_) {
 
     CommandParser.prototype[driveid] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'driveId', error: data.error });
+            return Promise.resolve({source: 'driveId', error: data.error});
         } else if (!data.stdout) {
-            return Promise.resolve({ source: 'driveId', error: new Error("No data") });
+            return Promise.resolve({source: 'driveId', error: new Error("No data")});
         }
         try {
             var parsed = JSON.parse(data.stdout);
-            return Promise.resolve({ data: parsed, source: 'driveId', store: true });
+            return Promise.resolve({data: parsed, source: 'driveId', store: true});
         } catch (e) {
-            return Promise.resolve({ source: 'driveId', error: e });
+            return Promise.resolve({source: 'driveId', error: e});
         }
     };
 
@@ -1718,7 +1701,7 @@ function commandParserFactory(_) {
      */
     CommandParser.prototype[adaptecraidAdapterInfo] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'adaptecraid-controllers', error: data.error });
+            return Promise.resolve({source: 'adaptecraid-controllers', error: data.error});
         }
         try {
             var store = true;
@@ -1764,7 +1747,7 @@ function commandParserFactory(_) {
                 for (let j = 0; j < keys.length; j++) {
                     if (keys[j].indexOf("Segment") != -1) {
                         pdldMap[adaptecLd[i][keys[j]].split(":")[1].split(",")[0] + "," + adaptecLd[i][keys[j]].split(":")[2].split(")")[0]] = adaptecLd[i]["RAID level"];
-                    }else if(keys[j].indexOf("Device") != -1 && adaptecLd[i][keys[j]].indexOf("Present") != -1){
+                    } else if (keys[j].indexOf("Device") != -1 && adaptecLd[i][keys[j]].indexOf("Present") != -1) {
                         pdldMap[adaptecLd[i][keys[j]].split(",")[3].split(":")[1].trim() + "," + keys[j].split(" ")[1].trim()] = adaptecLd[i]["RAID level"];
                     }
                 }
@@ -1802,9 +1785,9 @@ function commandParserFactory(_) {
                 }
 
             });
-            return Promise.resolve({ data: adaptecRaidController, source: 'adaptecraid-controllers', store: store });
+            return Promise.resolve({data: adaptecRaidController, source: 'adaptecraid-controllers', store: store});
         } catch (e) {
-            return Promise.resolve({ source: 'adaptecraid-controllers', error: e });
+            return Promise.resolve({source: 'adaptecraid-controllers', error: e});
         }
     };
 
@@ -1813,7 +1796,7 @@ function commandParserFactory(_) {
      */
     CommandParser.prototype[hpssaraidAdapterInfo] = function (data) {
         if (data.error) {
-            return Promise.resolve({ source: 'hpssaraid-controllers', error: data.error });
+            return Promise.resolve({source: 'hpssaraid-controllers', error: data.error});
         }
         try {
             var store = true;
@@ -1889,9 +1872,9 @@ function commandParserFactory(_) {
                     });
                 });
             }
-            return Promise.resolve({ data: drives, source: 'hpssaraid-controllers', store: store });
+            return Promise.resolve({data: drives, source: 'hpssaraid-controllers', store: store});
         } catch (e) {
-            return Promise.resolve({ source: 'hpssaraid-controllers', error: e });
+            return Promise.resolve({source: 'hpssaraid-controllers', error: e});
         }
     };
 

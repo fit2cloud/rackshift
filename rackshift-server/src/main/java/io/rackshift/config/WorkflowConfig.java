@@ -75,29 +75,29 @@ public class WorkflowConfig {
                 LifeEventType.valueOf(wfEntry.getKey()).addWorkflow(wfEntry.getValue().stream().map(Workflow::getInjectableName).collect(Collectors.toList()));
             }
         }
+//
+//        EndpointExample e = new EndpointExample();
+//        e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.name());
+//        endPoints = endpointMapper.selectByExample(e);
+//        if (endPoints.size() > 0 && !endPoints.get(0).getIp().contains(":"))
+//            rackhdUrl = "http://" + endPoints.get(0).getIp() + ":9090";
+//        else if (endPoints.size() > 0 && endPoints.get(0).getIp().contains(":"))
+//            rackhdUrl = "http://" + endPoints.get(0).getIp();
+//        else
+//            rackhdUrl = "";
 
-        EndpointExample e = new EndpointExample();
-        e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.name());
-        endPoints = endpointMapper.selectByExample(e);
-        if (endPoints.size() > 0 && !endPoints.get(0).getIp().contains(":"))
-            rackhdUrl = "http://" + endPoints.get(0).getIp() + ":9090";
-        else if (endPoints.size() > 0 && endPoints.get(0).getIp().contains(":"))
-            rackhdUrl = "http://" + endPoints.get(0).getIp();
-        else
-            rackhdUrl = "";
-
-        e.clear();
-        endPoints = endpointMapper.selectByExample(e);
-        endPoints = endPoints.stream().map(endpoint -> {
-            if ("rackshift-proxy".equalsIgnoreCase(endpoint.getIp())) {
-                try {
-                    endpoint.setIp(getGateWayAddress(""));
-                } catch (Exception unknownHostException) {
-                    unknownHostException.printStackTrace();
-                }
-            }
-            return endpoint;
-        }).collect(Collectors.toList());
+//        e.clear();
+//        endPoints = endpointMapper.selectByExample(e);
+//        endPoints = endPoints.stream().map(endpoint -> {
+//            if ("rackshift-proxy".equalsIgnoreCase(endpoint.getIp())) {
+//                try {
+//                    endpoint.setIp(getGateWayAddress(""));
+//                } catch (Exception unknownHostException) {
+//                    unknownHostException.printStackTrace();
+//                }
+//            }
+//            return endpoint;
+//        }).collect(Collectors.toList());
 
         Flyway flyway = Flyway.configure().dataSource(dataSource, username, password).table(table).baselineVersion("0").locations("classpath:db/migration").validateOnMigrate(false).load();
 
@@ -216,6 +216,16 @@ public class WorkflowConfig {
         return getString(reader);
     }
 
+    private String getStringContent(File f) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(f));
+        String line = null;
+        StringBuffer sb = new StringBuffer();
+        while ((line = reader.readLine()) != null) {
+            sb.append(line + "\n");
+        }
+        return sb.toString();
+    }
+
     private String getString(BufferedReader reader) throws IOException, ScriptException, NoSuchMethodException {
         String line = null;
         StringBuffer sb = new StringBuffer();
@@ -287,7 +297,7 @@ public class WorkflowConfig {
             String filePath = "io/rackshift/engine/util/command-parser.js";
             if ("local".equalsIgnoreCase(runMode)) {
                 File file = new File(BaseTaskObject.class.getClassLoader().getResource(filePath).getFile());
-                return getString(file);
+                return getStringContent(file);
             } else {
 
                 String urlStr = BaseTaskObject.class.getClassLoader().getResource(filePath).toString();
@@ -327,7 +337,7 @@ public class WorkflowConfig {
             String filePath = "io/rackshift/engine/util/lodash.min.js";
             if ("local".equalsIgnoreCase(runMode)) {
                 File file = new File(BaseTaskObject.class.getClassLoader().getResource(filePath).getFile());
-                return getString(file);
+                return getStringContent(file);
             } else {
 
                 String urlStr = BaseTaskObject.class.getClassLoader().getResource(filePath).toString();

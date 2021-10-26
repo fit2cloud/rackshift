@@ -4,14 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.engine.util.CommandParser;
 import io.rackshift.model.RSException;
-import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.mapper.TaskMapper;
-import io.rackshift.service.OutBandService;
-import io.rackshift.utils.IPMIUtil;
 import io.rackshift.utils.JSONUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
+import java.io.IOException;
 import java.util.Map;
 
 @Jobs("Job.Linux.Catalog")
@@ -44,12 +43,13 @@ public class JobLinuxCatalog extends BaseJob {
 
     @Override
     public void run() {
+        JSONArray cmds = options.getJSONArray("commands");
         JSONObject r = new JSONObject();
         r.put("identifier", bareMetalId);
         this.subscribeForRequestCommand((o) -> {
             JSONArray taskArr = new JSONArray();
             JSONObject cmd = new JSONObject();
-            cmd.put("cmd", options.getJSONArray("commands"));
+            cmd.put("cmd", cmds);
             taskArr.add(cmd);
             r.put("tasks", taskArr);
             return r.toJSONString();
@@ -61,7 +61,30 @@ public class JobLinuxCatalog extends BaseJob {
 
         this.subscribeForCompleteCommands(o -> {
             CommandParser cp = (CommandParser) applicationContext.getBean("commandParser");
-//            cp.saveCatalog()
+            try {
+                JSONObject resultObj = JSONObject.parseObject((String) o);
+                String bareMetalId = resultObj.getString("identifier");
+                JSONArray tasksObj = resultObj.getJSONArray("tasks");
+                if (tasksObj == null || tasksObj.size() == 0)
+                    return "ok";
+                JSONObject taskObj = tasksObj.getJSONObject(0);
+                String cmd1 = null;
+                if (taskObj.getJSONArray("cmd") != null && taskObj.getJSONArray("cmd").size() > 0) {
+                    cmd1 = taskObj.getJSONArray("cmd").getString(0);
+                }
+                String originalContent = taskObj.getString("stdout");
+                String stderr = taskObj.getString("stderr");
+                if (StringUtils.isNotBlank(stderr)) {
+                    this.error(RSException.throwExceptions(stderr));
+                    return "ok";
+                }
+
+                cp.saveCatalog(bareMetalId, cmd1, taskObj);
+            } catch (IOException e) {
+                e.printStackTrace();
+                this.error(RSException.throwExceptions("save catalog error!" + e.getMessage()));
+                return "ok";
+            }
             this.complete();
             return "ok";
         });

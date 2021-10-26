@@ -1,6 +1,9 @@
 package io.rackshift.engine.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.eclipsesource.v8.*;
+import com.eclipsesource.v8.utils.V8ObjectUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -9,6 +12,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -23,62 +28,57 @@ public class CommandParser {
     private String commandParserScript;
     @Resource
     private String lodashScript;
-    private V8 v8;
+    private ThreadLocal<V8> v8ThreadLocal = new ThreadLocal<>();
 
-    @PostConstruct
-    public void init() throws IOException {
+    public void init() {
         NodeJS nodeJS = NodeJS.createNodeJS();
-        File f1 = File.createTempFile("tempCommandParser", "js");
-        File f2 = File.createTempFile("tempLodashScript", "js");
-
-        FileOutputStream fileOutputStream = new FileOutputStream(f1);
-        fileOutputStream.write(commandParserScript.getBytes(StandardCharsets.UTF_8));
-        fileOutputStream.flush();
-        fileOutputStream.close();
-
-        fileOutputStream = new FileOutputStream(f2);
-        fileOutputStream.write(lodashScript.getBytes(StandardCharsets.UTF_8));
-        fileOutputStream.flush();
-        fileOutputStream.close();
-
-        nodeJS.require(f1);
-        nodeJS.require(f2);
-        v8 = nodeJS.getRuntime();
-        if (f1.exists())
-            f1.delete();
-        if (f2.exists())
-            f2.delete();
+        V8 v8 = nodeJS.getRuntime();
+        v8.executeVoidScript(lodashScript);
+        v8.executeVoidScript(commandParserScript);
+        v8ThreadLocal.set(v8);
     }
 
-    public String saveCatalog(String cmd, String catalogContent) {
-        BlockingQueue<V8Value> blockingQueue = new ArrayBlockingQueue<V8Value>(2);
+    /**
+     * call command-parser.js to get transformed catalogs
+     *
+     * @param bareMetalId
+     * @param cmd
+     * @param catalogObj
+     * @throws IOException
+     */
+    public void saveCatalog(String bareMetalId, String cmd, JSONObject catalogObj) throws IOException {
+        init();
+        V8 v8 = v8ThreadLocal.get();
+        BlockingQueue<JSONObject> blockingQueue = new ArrayBlockingQueue<JSONObject>(1);
 
         JavaVoidCallback successCallback = (v8Object, v8Array) -> {
-            if (v8Object != null)
-                blockingQueue.add(v8Object);
-            if (v8Array != null)
-                blockingQueue.add(v8Array);
+            Object resultObj = V8ObjectUtils.getValue(v8Array, 0);
+            if (resultObj != null) {
+                blockingQueue.add((JSONObject) JSONObject.toJSON(resultObj));
+            }
         };
 
 
         JavaVoidCallback errorCallback = (v8Object, v8Array) -> {
-            if (v8Object != null)
-                blockingQueue.add(v8Object);
-            if (v8Array != null)
-                blockingQueue.add(v8Array);
+            Object resultObj = V8ObjectUtils.getValue(v8Array, 0);
+            if (resultObj != null) {
+                blockingQueue.add((JSONObject) JSONObject.toJSON(resultObj));
+            }
         };
 
         v8.registerJavaMethod(successCallback, "success");
         v8.registerJavaMethod(errorCallback, "error");
-        String script = "let cp = new CommandParserFactory(_); cp [" + "\"" + cmd + "\"](JSON.stringify(\"" + catalogContent + "\").then(success).catch(error);";
+        String script = "let cp = new commandParserFactory(_); cp[" + "\"" + cmd + "\"](" + catalogObj.toJSONString() + ").then(success).catch(error);";
         v8.executeScript(script);
         try {
-            V8Value v8Object = blockingQueue.poll(3, TimeUnit.MINUTES);
-            return v8Object.toString();
+            JSONObject result = blockingQueue.poll(1, TimeUnit.MINUTES);
+            if (result.containsKey("store") && result.getBoolean("store")) {
+
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        return null;
+        v8.release();
+        v8ThreadLocal.remove();
     }
 }
