@@ -31,7 +31,6 @@ public class OsWorkflowStartHandler extends AbstractHandler {
         WorkflowRequestDTO requestDTO = event.getWorkflowRequestDTO();
         JSONObject params = requestDTO.getParams();
         JSONObject extraParams = requestDTO.getExtraParams();
-        BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
 
         if (params == null) {
             revert(event);

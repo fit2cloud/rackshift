@@ -373,10 +373,8 @@ public class TaskService {
     public BareMetal createBMAndDiscoveryGraph(String macs) {
         BareMetal bareMetal = bareMetalManager.createNewFromPXE(macs);
         Task t = createDiscoveryGraph(bareMetal.getId());
-        JSONObject param = new JSONObject();
-        param.put("taskId", t.getId());
-        Message m = new Message(param.toJSONString().getBytes(StandardCharsets.UTF_8));
-        rabbitTemplate.send(MqConstants.RUN_TASKGRAPH_QUEUE_NAME, m);
+        //direct run discovery to avoid ipxe chainload timeout
+        stateMachine.runTaskGraph(t.getId());
         return bareMetal;
     }
 

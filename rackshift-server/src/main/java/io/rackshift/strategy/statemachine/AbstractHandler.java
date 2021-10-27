@@ -47,6 +47,8 @@ public abstract class AbstractHandler implements IStateHandler {
     private PluginConfig pluginConfig;
     @Resource
     private RabbitTemplate rabbitTemplate;
+    @Resource
+    private StateMachine stateMachine;
 
     protected BareMetal getBareMetalById(String id) {
         return bareMetalManager.getBareMetalById(id);
@@ -165,8 +167,9 @@ public abstract class AbstractHandler implements IStateHandler {
             JSONObject body = new JSONObject();
             body.put("taskId", task.getId());
             body.put("instanceId", tasksReadyToStart.get(0).getString("instanceId"));
-            Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
-            rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
+//            Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
+//            rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
+            stateMachine.runTask(body);
         } else {
             for (JSONObject jsonObject : tasksReadyToStart) {
                 boolean solo = true;
@@ -181,8 +184,9 @@ public abstract class AbstractHandler implements IStateHandler {
                     JSONObject body = new JSONObject();
                     body.put("taskId", task.getId());
                     body.put("instanceId", jsonObject.getString("instanceId"));
-                    Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
-                    rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
+//                    Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
+//                    rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
+                    stateMachine.runTask(body);
                     break;
                 }
             }
