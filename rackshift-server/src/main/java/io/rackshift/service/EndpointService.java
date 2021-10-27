@@ -2,10 +2,8 @@ package io.rackshift.service;
 
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.config.WorkflowConfig;
-import io.rackshift.constants.AuthorizationConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.job.EndpointPoller;
-import io.rackshift.job.SyncRackJob;
 import io.rackshift.model.EndpointDTO;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.*;
@@ -15,7 +13,6 @@ import io.rackshift.mybatis.mapper.ImageMapper;
 import io.rackshift.mybatis.mapper.NetworkMapper;
 import io.rackshift.utils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -29,8 +26,6 @@ public class EndpointService {
     private EndpointMapper endpointMapper;
     @Resource
     private WorkflowConfig workflowConfig;
-    @Resource
-    private SyncRackJob syncRackJob;
     @Resource
     private EndpointPoller endpointPoller;
     @Resource
@@ -152,7 +147,8 @@ public class EndpointService {
     }
 
     public boolean sync() {
-        return syncRackJob.run() && endpointPoller.run();
+//        return syncRackJob.run() && endpointPoller.run();
+        return true;
     }
 
     public Endpoint getMainEndpoint() {

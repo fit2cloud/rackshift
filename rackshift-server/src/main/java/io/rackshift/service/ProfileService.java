@@ -186,7 +186,7 @@ public class ProfileService {
         if (profiles.size() > 0) {
             LogUtil.info("profile:" + profileOptionMap.get("profile"));
             if (profiles.get(0).getName().endsWith(".ipxe"))
-                return render(getProfileByName("boilerplate.ipxe").getContent() + profiles.get(0).getContent(), (JSONObject) profileOptionMap.get("options"));
+                return render(getProfileByName("boilerplate.ipxe").getContent() + profiles.get(0).getContent(), JSONObject.parseObject((String) profileOptionMap.get("options")));
             else
                 return render(profiles.get(0).getContent(), (JSONObject) profileOptionMap.get("options"));
         }

@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 @Service
 public class ZDHProfileService {
@@ -24,7 +25,7 @@ public class ZDHProfileService {
      * @param macs
      * @return
      */
-    public String profiles(String macs) {
+    public String profiles(String macs) throws IOException, InterruptedException {
         if (StringUtils.isNotBlank(macs)) {
             BareMetal bareMetal = bareMetalService.getByPXEMAC(macs);
             if (bareMetal == null) {

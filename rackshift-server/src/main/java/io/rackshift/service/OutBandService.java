@@ -29,8 +29,6 @@ public class OutBandService {
     private BareMetalManager bareMetalManager;
     @Resource
     private RackHDService rackHDService;
-    @Resource
-    private OutBandService outBandService;
 
     public void saveOrUpdate(OutBand o, boolean modifyIp) {
         if (StringUtils.isBlank(o.getBareMetalId())) {
@@ -72,7 +70,7 @@ public class OutBandService {
         BareMetal bareMetal = bareMetalManager.getBareMetalById(bareMetalId);
         rackHDService.createOrUpdateObm(outBand, bareMetal);
         outBand.setBareMetalId(bareMetalId);
-        outBandService.saveOrUpdate(outBand, true);
+        saveOrUpdate(outBand, true);
     }
 
     public Object add(OutBandDTO queryVO) {

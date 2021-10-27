@@ -29,7 +29,7 @@ public class NewWorkflowJob {
     @Resource
     private RabbitTemplate rabbitTemplate;
 
-//    @Scheduled(fixedDelay = 1 * 30 * 1000)
+    @Scheduled(fixedDelay = 1 * 30 * 1000)
     public boolean run() {
         try {
             runCreatedTask();

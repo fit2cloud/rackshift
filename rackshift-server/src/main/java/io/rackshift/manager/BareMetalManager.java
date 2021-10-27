@@ -1,5 +1,6 @@
 package io.rackshift.manager;
 
+import io.rackshift.engine.util.CatalogParser;
 import io.rackshift.model.*;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.*;
@@ -24,7 +25,7 @@ public class BareMetalManager {
     @Resource
     private BareMetalMapper bareMetalMapper;
     @Resource
-    private RackHDService rackHDService;
+    private CatalogParser catalogParser;
     @Resource
     private CpuMapper cpuMapper;
     @Resource
@@ -42,9 +43,22 @@ public class BareMetalManager {
     @Resource
     private EndpointService endpointService;
 
+    public BareMetal getBareMetalByPXEMac(String mac) {
+        if (StringUtils.isBlank(mac)) {
+            return null;
+        }
+        BareMetalExample example = new BareMetalExample();
+        example.createCriteria().andPxeMacEqualTo(mac);
+        List<BareMetal> bareMetalList = bareMetalMapper.selectByExample(example);
+        if (bareMetalList.size() > 0) {
+            return bareMetalList.get(0);
+        }
+        return null;
+    }
+
     public BareMetal getBareMetalBySn(String sn) {
         if (StringUtils.isBlank(sn)) {
-            RSException.throwExceptions("error！ cannt get sn!");
+            return null;
         }
         BareMetalExample example = new BareMetalExample();
         example.createCriteria().andMachineSnEqualTo(sn);
@@ -111,33 +125,21 @@ public class BareMetalManager {
     }
 
     public BareMetal saveOrUpdateEntity(MachineEntity e) {
-        if (StringUtils.isBlank(e.getSerialNo())) {
+        if (StringUtils.isAllBlank(e.getPxeMac(), e.getSerialNo())) {
             return null;
         }
         BareMetal bareMetal = null;
         try {
-            bareMetal = rackHDService.convertToPm(e);
-            BareMetal dbBareMetal = getBareMetalBySn(bareMetal.getMachineSn());
+            bareMetal = catalogParser.convertToPm(e);
+            BareMetal dbBareMetal = getBareMetalByPXEMac(bareMetal.getPxeMac());
             if (dbBareMetal == null) {
-                dbBareMetal = getBareMetalByIp(bareMetal.getManagementIp());
+                dbBareMetal = getBareMetalBySn(bareMetal.getMachineSn());
             }
             if (dbBareMetal == null) {
                 bareMetalMapper.insertSelective(bareMetal);
             } else {
-                boolean changeStatus = false;
-                if (LifeStatus.provisioning.name().equalsIgnoreCase(dbBareMetal.getStatus()) || LifeStatus.deploying.name().equalsIgnoreCase(dbBareMetal.getStatus())) {
-                    bareMetal.setStatus(null);
-                }
-
-                if (LifeStatus.discovering.name().equalsIgnoreCase(dbBareMetal.getStatus()) && StringUtils.isNotBlank(dbBareMetal.getServerId()) && rackHDService.getActiveWorkflowByNodeId(dbBareMetal.getEndpointId(), dbBareMetal.getServerId()).size() == 0) {
-                    bareMetal.setStatus(LifeStatus.ready.name());
-                    changeStatus = true;
-                    //第一次发现已经完毕 同步带外账号至 RackHD
-                    syncOutBand(dbBareMetal);
-                }
-                bareMetal.setPower(null);
-                bareMetal.setRuleId(null);
-                update(bareMetal, changeStatus);
+                removeDuplicate(bareMetal);
+                update(bareMetal, true);
             }
             saveOrUpdateHardWare(e);
         } catch (Exception ex) {
@@ -146,11 +148,28 @@ public class BareMetalManager {
         return bareMetal;
     }
 
-    private void syncOutBand(BareMetal bareMetal) {
-        List<OutBand> olist = outBandManager.getByBareMetalId(bareMetal.getId());
-        if (olist.size() > 0) {
-            rackHDService.createOrUpdateObm(olist.get(0), bareMetal);
+    private void removeDuplicate(BareMetal bareMetal) {
+        if (StringUtils.isNotBlank(bareMetal.getMachineSn())) {
+            BareMetal bareMetal1 = getBareMetalBySn(bareMetal.getMachineSn());
+            if (bareMetal1 != null && !StringUtils.equals(bareMetal1.getId(), bareMetal.getId())) {
+                mergeTwoRecord(bareMetal, bareMetal1);
+            }
         }
+    }
+
+    private void mergeTwoRecord(BareMetal bareMetal, BareMetal dbBareMetal) {
+        List<OutBand> outBands = outBandManager.getByBareMetalId(dbBareMetal.getId());
+        if (outBands.size() > 0) {
+            OutBand outBand = new OutBand();
+            BeanUtils.copyBean(outBand, outBands.get(0));
+            outBand.setBareMetalId(bareMetal.getId());
+            outBand.setId(UUIDUtil.newUUID());
+            outBandManager.deleteById(dbBareMetal.getId());
+            outBandManager.save(outBand);
+        }
+        bareMetal.setRuleId(dbBareMetal.getRuleId());
+        bareMetal.setPower(dbBareMetal.getPower());
+        bareMetalMapper.deleteByPrimaryKey(dbBareMetal.getId());
     }
 
     private void saveOrUpdateHardWare(MachineEntity e) {
@@ -160,7 +179,9 @@ public class BareMetalManager {
         List<Disk> disks = e.getDisks();
         List<NetworkCard> nics = e.getNetworkCards();
 
-        BareMetal bareMetal = getBareMetalBySn(e.getSerialNo());
+        BareMetal bareMetal = getBareMetalByPXEMac(e.getPxeMac());
+        if (bareMetal == null)
+            bareMetal = getBareMetalBySn(e.getSerialNo());
         long now = System.currentTimeMillis();
 
         CpuExample cpuExample = new CpuExample();
@@ -175,10 +196,11 @@ public class BareMetalManager {
         NetworkCardExample networkCardExample = new NetworkCardExample();
         networkCardExample.createCriteria().andBareMetalIdEqualTo(bareMetal.getId());
 
+        BareMetal finalBareMetal = bareMetal;
         if (cpus.size() > 0) {
             cpuMapper.deleteByExample(cpuExample);
             cpus.forEach(c -> {
-                c.setBareMetalId(bareMetal.getId());
+                c.setBareMetalId(finalBareMetal.getId());
                 c.setSyncTime(now);
                 cpuMapper.insertSelective(c);
             });
@@ -187,7 +209,7 @@ public class BareMetalManager {
         if (memories.size() > 0) {
             memoryMapper.deleteByExample(memoryExample);
             memories.forEach(m -> {
-                m.setBareMetalId(bareMetal.getId());
+                m.setBareMetalId(finalBareMetal.getId());
                 m.setSyncTime(now);
                 memoryMapper.insertSelective(m);
             });
@@ -196,7 +218,7 @@ public class BareMetalManager {
         if (disks.size() > 0) {
             diskMapper.deleteByExample(diskExample);
             disks.forEach(d -> {
-                d.setBareMetalId(bareMetal.getId());
+                d.setBareMetalId(finalBareMetal.getId());
                 d.setSyncTime(now);
                 diskMapper.insertSelective(d);
             });
@@ -205,7 +227,7 @@ public class BareMetalManager {
         if (nics.size() > 0) {
             networkCardMapper.deleteByExample(networkCardExample);
             nics.forEach(d -> {
-                d.setBareMetalId(bareMetal.getId());
+                d.setBareMetalId(finalBareMetal.getId());
                 if (!StringUtils.isAnyBlank(e.getPxeMac(), d.getMac()) && d.getMac().equalsIgnoreCase(e.getPxeMac())) {
                     d.setPxe(true);
                 }

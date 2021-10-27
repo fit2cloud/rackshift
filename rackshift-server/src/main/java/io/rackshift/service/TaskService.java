@@ -31,6 +31,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -379,7 +380,7 @@ public class TaskService {
         return bareMetal;
     }
 
-    public Map<String, Object> getTaskProfile(String id) {
+    public Map<String, Object> getTaskProfile(String id) throws IOException, InterruptedException {
         TaskExample e = new TaskExample();
         e.createCriteria().andBareMetalIdEqualTo(id).andStatusIn(runningStatus);
         List<TaskWithBLOBs> tasks = taskMapper.selectByExampleWithBLOBs(e);
@@ -388,28 +389,9 @@ public class TaskService {
         }
         TaskWithBLOBs task = taskMapper.selectByExampleWithBLOBs(e).get(0);
         Map<String, Object> r = new HashMap<>();
-        r.put("profile", "redirect.ipxe");
-        r.put("options", new JSONObject());
+        r.put("profile", MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_PROFILES + id, ""));
+        r.put("options", MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_OPTIONS + id, ""));
 
-
-        JSONObject taskObj = JSONObject.parseObject(task.getGraphObjects());
-        List<JSONObject> tasksReadyToStart = new ArrayList<>();
-        for (String t : taskObj.keySet()) {
-            if (taskObj.getJSONObject(t).getJSONObject("waitingOn") == null) {
-                tasksReadyToStart.add(taskObj.getJSONObject(t));
-            }
-        }
-
-        BareMetal bareMetal = bareMetalManager.getBareMetalById(id);
-        for (JSONObject jsonObject : tasksReadyToStart) {
-            if (StringUtils.isNotBlank(jsonObject.getJSONObject("options").getString("profile"))) {
-                JSONUtils.merge(renderOptions, jsonObject.getJSONObject("options"));
-                jsonObject.getJSONObject("options").put("nodeId", jsonObject.getString("bareMetalId"));
-                jsonObject.getJSONObject("options").put("macaddress", bareMetal.getPxeMac());
-                r.put("profile", jsonObject.getJSONObject("options").getString("profile"));
-                r.put("options", jsonObject.getJSONObject("options"));
-            }
-        }
         return r;
     }
 

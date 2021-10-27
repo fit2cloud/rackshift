@@ -136,7 +136,6 @@ public class DiscoveryTask extends Thread {
                                 o.setIp(ip);
                                 o.setUserName(request.getUserName());
                                 o.setPwd(request.getPwd());
-
                                 outBandService.saveOrUpdate(o, false);
                             }
                         } else {

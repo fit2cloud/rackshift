@@ -8,15 +8,16 @@ import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.utils.MqUtil;
 import io.rackshift.utils.SpringUtils;
+import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+
+import static org.apache.http.client.methods.RequestBuilder.put;
 
 /**
  * graphObject sample
@@ -321,6 +322,11 @@ public abstract class BaseJob {
         add(ServiceConstants.TaskStatusEnum.succeeded.name());
     }};
 
+    protected Set<String> nextStateSet = new HashSet<String>() {{
+        add(ServiceConstants.TaskStatusEnum.finished.name());
+        add(ServiceConstants.TaskStatusEnum.succeeded.name());
+    }};
+
     protected BaseJob() {
         this.renderOptions = (Map<String, String>) SpringUtils.getApplicationContext().getBean("renderOptions");
     }
@@ -364,7 +370,9 @@ public abstract class BaseJob {
         nextTask(ServiceConstants.RackHDTaskStatusEnum.succeeded.name());
     }
 
+
     public void nextTask(String status) {
+        nextStateSet.add(status);
         JSONObject graphObjects = JSONObject.parseObject(this.task.getGraphObjects());
         boolean go = false;
         //没有 waitingOn 属性的任务，可能有多个需要分别处理
@@ -374,7 +382,7 @@ public abstract class BaseJob {
             JSONObject waitingOnObj = graphObjects.getJSONObject(s).getJSONObject("waitingOn");
             if (waitingOnObj != null) {
                 for (String waitInstance : waitingOnObj.keySet()) {
-                    if (waitInstance.equalsIgnoreCase(this.instanceId) && waitingOnObj.getString(waitInstance).equalsIgnoreCase(status)) {
+                    if (waitInstance.equalsIgnoreCase(this.instanceId) && nextStateSet.contains(waitingOnObj.getString(waitInstance))) {
                         JSONObject body = new JSONObject();
                         body.put("taskId", taskId);
                         body.put("instanceId", graphObjects.getJSONObject(s).getString("instanceId"));

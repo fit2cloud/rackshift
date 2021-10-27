@@ -1,18 +1,11 @@
 package io.rackshift.strategy.statemachine.handler;
 
-import io.rackshift.config.WorkflowConfig;
-import io.rackshift.job.SyncRackJob;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.manager.OutBandManager;
-import io.rackshift.model.WorkflowRequestDTO;
-import io.rackshift.mybatis.domain.BareMetal;
-import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.service.RackHDService;
 import io.rackshift.service.TaskService;
 import io.rackshift.strategy.statemachine.*;
-import io.rackshift.utils.IPMIUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Resource;
 
@@ -24,8 +17,6 @@ public class DiscoveryStartHandler extends AbstractHandler {
     private OutBandManager outBandManager;
     @Resource
     private BareMetalManager bareMetalManager;
-    @Resource
-    private SyncRackJob syncRackJob;
     @Resource
     private TaskService taskService;
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 @RestController
 public class ZDHProfileController {
@@ -13,7 +14,7 @@ public class ZDHProfileController {
     private ZDHProfileService zdhProfileService;
 
     @GetMapping(value = "/api/current/profiles", produces = "text/plain;charset=UTF-8")
-    public String profiles(@RequestParam(required = false) String macs) {
+    public String profiles(@RequestParam(required = false) String macs) throws IOException, InterruptedException {
         return zdhProfileService.profiles(macs);
     }
 

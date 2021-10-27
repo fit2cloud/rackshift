@@ -11,7 +11,9 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Jobs("Job.Linux.Catalog")
 public class JobLinuxCatalog extends BaseJob {
@@ -44,13 +46,20 @@ public class JobLinuxCatalog extends BaseJob {
     @Override
     public void run() {
         JSONArray cmds = options.getJSONArray("commands");
+        List cmdList = cmds.stream().map(c->{
+            if(c instanceof JSONObject && ((JSONObject)c).containsKey("command"))
+                return ((JSONObject)c).getString("command");
+            return c;
+        }).collect(Collectors.toList());
         JSONObject r = new JSONObject();
         r.put("identifier", bareMetalId);
         this.subscribeForRequestCommand((o) -> {
             JSONArray taskArr = new JSONArray();
-            JSONObject cmd = new JSONObject();
-            cmd.put("cmd", cmds);
-            taskArr.add(cmd);
+            cmdList.forEach(c->{
+                JSONObject cmd = new JSONObject();
+                cmd.put("cmd", c);
+                taskArr.add(cmd);
+            });
             r.put("tasks", taskArr);
             return r.toJSONString();
         });
@@ -68,18 +77,13 @@ public class JobLinuxCatalog extends BaseJob {
                 if (tasksObj == null || tasksObj.size() == 0)
                     return "ok";
                 JSONObject taskObj = tasksObj.getJSONObject(0);
-                String cmd1 = null;
-                if (taskObj.getJSONArray("cmd") != null && taskObj.getJSONArray("cmd").size() > 0) {
-                    cmd1 = taskObj.getJSONArray("cmd").getString(0);
-                }
-                String originalContent = taskObj.getString("stdout");
                 String stderr = taskObj.getString("stderr");
                 if (StringUtils.isNotBlank(stderr)) {
                     this.error(RSException.throwExceptions(stderr));
                     return "ok";
                 }
 
-                cp.saveCatalog(bareMetalId, cmd1, taskObj);
+                cp.saveCatalog(bareMetalId, tasksObj);
             } catch (IOException e) {
                 e.printStackTrace();
                 this.error(RSException.throwExceptions("save catalog error!" + e.getMessage()));
