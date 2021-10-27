@@ -387,11 +387,10 @@ public class TaskService {
         if (tasks.isEmpty()) {
             return null;
         }
-        TaskWithBLOBs task = taskMapper.selectByExampleWithBLOBs(e).get(0);
         Map<String, Object> r = new HashMap<>();
         r.put("profile", MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_PROFILES + id, ""));
         r.put("options", MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_OPTIONS + id, ""));
-
+        r.put("macaddress", bareMetalManager.getBareMetalById(id).getPxeMac());
         return r;
     }
 

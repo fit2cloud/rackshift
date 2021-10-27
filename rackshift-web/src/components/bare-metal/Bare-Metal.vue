@@ -46,7 +46,7 @@
       >
         <el-table-column type="selection" align="left"></el-table-column>
 
-        <el-table-column prop="pxe_mac" :label="$t('pxe_mac')" align="left"
+        <el-table-column prop="pxe_mac" :label="$t('pxe_mac')" align="left"  width="140"
                          sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.pxeMac }}
@@ -1542,7 +1542,7 @@ export default {
       if (that.getWorkflowById()) {
         let originWf = _.find(that.supportedWorkflow, s => s.id == that.getWorkflowById().id);
         for (let k = 0; k < that.multipleSelection.length; k++) {
-          if (!that.multipleSelection[k].serverId) {
+          if (!that.multipleSelection[k].pxeMac) {
             that.$message.warning(that.multipleSelection[k].machineModel + ' [' + that.multipleSelection[k].machineSn + ']' + that.$t('not_discoveryed'));
             continue;
           }

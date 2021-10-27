@@ -79,7 +79,7 @@ public class BareMetal {
 
     public boolean isRequestProfile() {
         String graphObjectStr = null;
-        ResultSet r = MySqlUtil.select("select grapht_objects from task where bare_metal_id = ? and status = 'running'", id);
+        ResultSet r = MySqlUtil.select("select graph_objects from task where bare_metal_id = ? and status = 'running'", id);
         try {
             if (r != null && r.next()) {
                 graphObjectStr = r.getString(1);
