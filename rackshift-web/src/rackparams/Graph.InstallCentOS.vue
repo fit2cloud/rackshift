@@ -31,7 +31,7 @@
 
           <el-form-item :label="$t('custom_partition')">
             <el-switch
-                v-model="extraParams.customPartition">
+                v-model="extraParams.customPartition" @change="changePartition">
             </el-switch>
             <el-tooltip class="dark" :content="partitionTips">
               <i class="el-icon-question" style="font-size: 20px; "></i>
@@ -434,10 +434,43 @@ export default {
         }
       }
       this.extraParams.unit = newV;
+      this.changePartition();
     })
   }
   ,
   methods: {
+    changePartition() {
+      if (!this.extraParams.customPartition) {
+        delete this.payLoad.options.defaults.installPartitions;
+      } else {
+        this.payLoad.options.defaults.installPartitions = [
+          {
+            "mountPoint": "/",
+            "size": "auto",
+            "fsType": "ext3",
+            "deviceType": "standard"
+          },
+          {
+            "mountPoint": "swap",
+            "size": "4096",
+            "fsType": "swap",
+            "deviceType": "standard"
+          },
+          {
+            "mountPoint": "/boot",
+            "size": "4096",
+            "fsType": "ext3",
+            "deviceType": "standard"
+          },
+          {
+            "mountPoint": "biosboot",
+            "size": "1",
+            "fsType": "biosboot",
+            "deviceType": "standard"
+          }
+        ];
+      }
+    },
     updateScript() {
       let image = _.find(this.allImages, i => i.url == this.payLoad.options.defaults.repo);
       if (image == null) return;
@@ -661,7 +694,7 @@ export default {
       }
 
       let exists = 0;
-      for (let j = 0; j < this.payLoad.options.defaults.installPartitions.length; j++) {
+      for (let j = 0; this.payLoad.options.defaults.installPartitions && j < this.payLoad.options.defaults.installPartitions.length; j++) {
         let p = this.payLoad.options.defaults.installPartitions[j];
         if (p.deviceType == 'lvm' && !p.lvmName) {
           this.$message.error(this.$t('i18n_lvmname_null'));
@@ -706,12 +739,12 @@ export default {
           }
         }
       }
-      if (exists != 4) {
+      if (this.extraParams.customPartition && exists != 4) {
         this.$message.error(this.$t('i18n_mut_only_one'));
         this.validateResult = false;
       }
 
-      if (this.payLoad.options.defaults.installPartitions.length < 4) {
+      if (this.extraParams.customPartition && this.payLoad.options.defaults.installPartitions.length < 4) {
         this.$message.error(this.$t('i18n_must_be_root_swap_boot'));
         this.validateResult = false;
       }
