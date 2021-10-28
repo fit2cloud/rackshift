@@ -2,18 +2,22 @@ package io.rackshift.engine.job;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import io.rackshift.engine.util.CommandParser;
-import io.rackshift.model.RSException;
+import com.eclipsesource.v8.*;
+import com.eclipsesource.v8.utils.MemoryManager;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.utils.JSONUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
-import java.io.IOException;
-import java.util.List;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Jobs("Job.Os.Install")
 public class JobOsInstall extends BaseJob {
@@ -58,11 +62,40 @@ public class JobOsInstall extends BaseJob {
 
         this.subscribeForRequestProfile(o -> this.options.getString("profile"));
 
-        this.subscribeForRequestOptions(o -> JSONUtils.merge(this.options, this.renderOptions).toJSONString());
+        this.subscribeForRequestOptions(o -> {
+            JSONObject options = JSONUtils.merge(this.options, this.renderOptions);
+            if (options.containsKey("rootPassword")) {
+                //encry password for linux
+                try {
+                    options.put("rootEncryptedPassword", encrypt(options.getString("rootPassword")));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return options.toJSONString();
+        });
 
         this.subscribeForCompleteCommands(o -> {
             this.complete();
             return "ok";
         });
+    }
+
+    private static String encrypt(String rootPassword) throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder("python3", "-c", "import crypt;print(crypt.crypt(\"" + rootPassword + "\"));");
+        processBuilder.redirectErrorStream(true);
+        Process p = processBuilder.start();
+        InputStreamReader re = new InputStreamReader(p.getInputStream(), "utf-8");
+        BufferedReader b = new BufferedReader(re);
+        String line;
+        StringBuffer sb = new StringBuffer();
+        while ((line = b.readLine()) != null) {
+            sb.append(line + "\n");
+        }
+        p.getInputStream().close();
+        re.close();
+        b.close();
+        p.destroy();
+        return sb.toString();
     }
 }

@@ -66,16 +66,8 @@ public class ProfileService {
     }
 
     public Object update(Profile queryVO) throws Exception {
-        Profile image = profileMapper.selectByPrimaryKey(queryVO.getId());
-//        if (ServiceConstants.SYSTEM.equalsIgnoreCase(image.getType())) {
-//            return false;
-//        }
-        queryVO.setId(image.getId());
-        if (uploadToServer(queryVO)) {
-            profileMapper.updateByPrimaryKeySelective(image);
-            return true;
-        }
-        return false;
+        profileMapper.updateByPrimaryKeySelective(queryVO);
+        return true;
     }
 
     public boolean del(String id) {

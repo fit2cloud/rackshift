@@ -57,16 +57,8 @@ public class TemplateService {
     }
 
     public Object update(Template queryVO) throws Exception {
-        Template template = templateMapper.selectByPrimaryKey(queryVO.getId());
-//        if (ServiceConstants.SYSTEM.equalsIgnoreCase(template.getType())) {
-//            return false;
-//        }
-        queryVO.setId(template.getId());
-        if (uploadToServer(queryVO)) {
-            templateMapper.updateByPrimaryKeySelective(queryVO);
-            return true;
-        }
-        return false;
+        templateMapper.updateByPrimaryKeySelective(queryVO);
+        return true;
     }
 
     public boolean del(String id) {
@@ -133,7 +125,7 @@ public class TemplateService {
         TemplateExample e = new TemplateExample();
         e.createCriteria().andNameEqualTo(id);
         List<Template> tes = templateMapper.selectByExampleWithBLOBs(e);
-        if(tes.size() > 0)
+        if (tes.size() > 0)
             return tes.get(0);
         return null;
     }

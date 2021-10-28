@@ -16,8 +16,9 @@ public class ZDHTemplatesController {
     @Resource
     private ZDHTemplatesService zdhTemplatesService;
 
-    @GetMapping(value = "/api/current/templates/{templateName}", produces = "text/plain")
+    @GetMapping(value = {"/api/current/templates/{templateName}", "/api/templates/{templateName}"}, produces = "text/plain")
     public String getTemplateName(@PathVariable String templateName, @RequestParam(required = false) String nodeId) throws IOException, InterruptedException {
         return zdhTemplatesService.getTemplateName(templateName, nodeId);
     }
+
 }

@@ -1,6 +1,7 @@
 FROM rackshift/rackshift-base:1.0
 
-RUN mkdir -p /opt/rackshift
+RUN mkdir -p /opt/rackshift\
+
 
 ADD ./target/rackshift-server-1.0.0.jar /opt
 
