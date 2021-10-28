@@ -488,6 +488,10 @@ public abstract class BaseJob {
         MqUtil.subscribe(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMPLETE + this.bareMetalId, callback);
     }
 
+    protected void subscribeForNotification(Function callback) {
+        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_NOTIFICATION + this.bareMetalId, callback);
+    }
+
     private void deleteQueue() {
         MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMMANDS + this.bareMetalId);
         MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_PROFILES + this.bareMetalId);

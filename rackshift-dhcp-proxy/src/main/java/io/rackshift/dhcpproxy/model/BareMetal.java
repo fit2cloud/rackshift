@@ -95,7 +95,7 @@ public class BareMetal {
             for (String s : tasks.keySet()) {
                 JSONObject task = tasks.getJSONObject(s);
                 if (task.containsKey("options")) {
-                    if (task.getJSONObject("options").containsKey("profile")) {
+                    if (task.getJSONObject("options").containsKey("profile") && !StringUtils.equals(task.getString("state"), "succeeded") ) {
                         shouldProxy = true;
                         break;
                     }

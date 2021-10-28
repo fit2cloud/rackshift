@@ -48,12 +48,9 @@ public class TemplateService {
         }
         Template image = new Template();
         BeanUtils.copyBean(image, queryVO);
-        if (uploadToServer(queryVO)) {
-            image.setId(UUIDUtil.newUUID());
-            templateMapper.insertSelective(image);
-            return true;
-        }
-        return false;
+        image.setId(UUIDUtil.newUUID());
+        templateMapper.insertSelective(image);
+        return true;
     }
 
     public Object update(Template queryVO) throws Exception {

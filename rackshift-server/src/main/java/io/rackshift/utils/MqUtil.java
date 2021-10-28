@@ -100,7 +100,7 @@ public class MqUtil {
             }
 
         });
-        String r = "";
+        String r = "not ok!";
         try {
             r = blockQueue.poll(3, TimeUnit.MINUTES);
         } catch (Exception e) {

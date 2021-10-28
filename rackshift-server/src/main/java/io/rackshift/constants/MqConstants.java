@@ -26,4 +26,5 @@ public class MqConstants {
     public static final String MQ_ROUTINGKEY_PROFILES= "methods.requestProfile.";
     public static final String MQ_ROUTINGKEY_OPTIONS= "methods.requestOptions.";
     public static final String MQ_ROUTINGKEY_COMPLETE= "methods.completeCommands.";
+    public static final String MQ_ROUTINGKEY_NOTIFICATION= "methods.notification.";
 }
