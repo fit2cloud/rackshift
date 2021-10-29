@@ -1,9 +1,8 @@
 package io.rackshift.engine.job;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.mybatis.mapper.TaskMapper;
-import io.rackshift.utils.JSONUtils;
+import io.rackshift.strategy.statemachine.LifeEventType;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
@@ -42,6 +41,9 @@ public class JobWaitNotification extends BaseJob {
         //success
         this.subscribeForNotification(o -> {
             this.complete();
+            JSONObject result = new JSONObject();
+            result.put("result", true);
+            sendBMLifecycleEvent(LifeEventType.POST_OS_WORKFLOW_END, result);
             return "ok";
         });
     }

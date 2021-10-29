@@ -35,8 +35,6 @@ public class MqUtil {
             // 2.declare queue
             channel.queueDeclare(queueName(exchange, routingKey), durable, exclusive, true, null);
 
-            System.out.println("****** rpc server waiting for client request ......");
-
             // 3.Receive only one message at a time (task)
             channel.basicQos(1);
             //4.Get consumer instances
@@ -50,7 +48,6 @@ public class MqUtil {
                     try {
                         String msg = new String(body, "UTF-8");
                         resp = (String) callback.apply(msg);
-                        System.out.println("*** will response to rpc client :" + resp);
                         LogUtil.info("*** will response to rpc client :" + resp);
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -88,7 +85,6 @@ public class MqUtil {
                     String msg = new String(body, "UTF-8");
 
                     blockQueue.offer(msg);
-                    System.out.println("**** rpc client reciver response :[" + msg + "]");
                     LogUtil.info("**** rpc client reciver response :[" + msg + "]");
                     channel.queueDelete(queueName);
                     try {

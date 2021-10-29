@@ -3,12 +3,15 @@ package io.rackshift.engine.job;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.MqConstants;
 import io.rackshift.constants.ServiceConstants;
+import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.Task;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.mybatis.mapper.TaskMapper;
+import io.rackshift.strategy.statemachine.LifeEvent;
+import io.rackshift.strategy.statemachine.LifeEventType;
+import io.rackshift.strategy.statemachine.StateMachine;
 import io.rackshift.utils.MqUtil;
 import io.rackshift.utils.SpringUtils;
-import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
@@ -16,8 +19,6 @@ import org.springframework.context.ApplicationContext;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
-
-import static org.apache.http.client.methods.RequestBuilder.put;
 
 /**
  * graphObject sample
@@ -497,7 +498,28 @@ public abstract class BaseJob {
         MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_PROFILES + this.bareMetalId);
         MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_OPTIONS + this.bareMetalId);
         MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMPLETE + this.bareMetalId);
+        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_NOTIFICATION + this.bareMetalId);
+    }
+    
+    protected void sendBMLifecycleEvent(LifeEventType lifeEventType){
+        WorkflowRequestDTO r = new WorkflowRequestDTO();
+        r.setBareMetalId(bareMetalId);
+        r.setTaskId(taskId);
+        extracted(lifeEventType, r);
     }
 
+    private void extracted(LifeEventType lifeEventType, WorkflowRequestDTO r) {
+        LifeEvent event = LifeEvent.builder().withEventType(lifeEventType).withWorkflowRequestDTO(r);
+        StateMachine stateMachine = (StateMachine) applicationContext.getBean("stateMachine");
+        stateMachine.sendEvent(event);
+    }
+
+    protected void sendBMLifecycleEvent(LifeEventType lifeEventType, JSONObject params){
+        WorkflowRequestDTO r = new WorkflowRequestDTO();
+        r.setBareMetalId(bareMetalId);
+        r.setTaskId(taskId);
+        r.setParams(params);
+        extracted(lifeEventType, r);
+    }
 
 }
