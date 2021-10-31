@@ -2,11 +2,11 @@ package io.rackshift.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.Gson;
 import io.rackshift.constants.MqConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.engine.basetask.BaseTask;
 import io.rackshift.engine.taskobject.BaseTaskObject;
+import io.rackshift.engine.util.HoganService;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.RSException;
 import io.rackshift.model.TaskDTO;
@@ -20,19 +20,14 @@ import io.rackshift.strategy.statemachine.LifeEventType;
 import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.strategy.statemachine.StateMachine;
 import io.rackshift.utils.*;
-import net.sf.cglib.core.Local;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -46,15 +41,11 @@ public class TaskService {
     @Resource
     private ExtTaskMapper extTaskMapper;
     @Resource
-    private RackHDService rackHDService;
-    @Resource
     private BareMetalManager bareMetalManager;
     @Resource
     private StateMachine stateMachine;
     @Resource
     private ExecutionLogDetailsMapper executionLogDetailsMapper;
-    @Resource
-    private EndpointService endpointService;
     @Resource
     private WorkflowService workflowService;
     @Autowired
@@ -66,7 +57,7 @@ public class TaskService {
     @Resource
     private Map<String, String> renderOptions;
     @Resource
-    private RabbitTemplate rabbitTemplate;
+    private HoganService hoganService;
 
     private List<String> runningStatus = new ArrayList<String>() {{
         add(ServiceConstants.TaskStatusEnum.created.name());
@@ -241,7 +232,10 @@ public class TaskService {
                     optionStr = optionStr.replace(m.group(), renderOptions.get(m.group(1).trim()));
                 }
             }
-            task.put("options", JSONObject.parseObject(optionStr));
+//            task.put("options", JSONObject.parseObject(optionStr));
+            JSONObject params = JSONUtils.merge(renderOptions, (JSONObject) JSONObject.toJSON(thisOptions));
+            params.put("options", thisOptions);
+            task.put("options", JSONObject.parseObject(hoganService.renderWithHogan(optionStr, params)));
 //            thisOptions.keySet().forEach(k -> {
 //                if (thisOptions.get(k) instanceof String && thisOptions.get(k).contains("{{")) {
 //                    Matcher m = p.matcher(thisOptions.get(k));
