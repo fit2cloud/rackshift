@@ -45,18 +45,11 @@ public class OsWorkflowStartHandler extends AbstractHandler {
             }
         }
 
-        customizeParams(requestDTO.getWorkflowName(), params);
-
         startTask(task);
         taskService.update(task);
         changeStatus(event, LifeStatus.deploying, true);
     }
 
-    private void customizeParams(String injectableName, JSONObject params) {
-        if (abstractParamHandler.getHandler(injectableName) != null) {
-            abstractParamHandler.getHandler(injectableName).process(params);
-        }
-    }
 
     private void removePartitions(JSONObject params) {
         params.getJSONObject("options").getJSONObject("defaults").remove("installPartitions");

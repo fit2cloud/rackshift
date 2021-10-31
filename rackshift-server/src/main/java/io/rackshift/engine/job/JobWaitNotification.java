@@ -3,6 +3,7 @@ package io.rackshift.engine.job;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.strategy.statemachine.LifeEventType;
+import io.rackshift.utils.JSONUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
@@ -38,6 +39,7 @@ public class JobWaitNotification extends BaseJob {
 
     @Override
     public void run() {
+        this.subscribeForRequestOptions(o -> JSONUtils.merge(this.options, this.renderOptions).toJSONString());
         //success
         this.subscribeForNotification(o -> {
             this.complete();

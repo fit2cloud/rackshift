@@ -1024,7 +1024,7 @@ export default {
     },
     statusFilter(row) {
       if (row.status.indexOf("ing") == -1) {
-        if (row.serverId)
+        if (row.pxeMac)
           return '<span style="display: inline-block;white-space: nowrap;">' +
               this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i><br>'
               + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';

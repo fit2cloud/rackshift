@@ -1,7 +1,6 @@
 package io.rackshift.strategy.statemachine;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.ExecutionLogConstants;
 import io.rackshift.constants.ServiceConstants;
@@ -9,7 +8,6 @@ import io.rackshift.engine.job.BaseJob;
 import io.rackshift.model.RSException;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.Task;
-import io.rackshift.mybatis.domain.TaskExample;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.mybatis.domain.Workflow;
 import io.rackshift.mybatis.mapper.TaskMapper;
@@ -18,7 +16,6 @@ import io.rackshift.service.TaskService;
 import io.rackshift.service.WorkflowService;
 import io.rackshift.utils.LogUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.util.Asserts;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -126,7 +123,7 @@ public class StateMachine {
                     Constructor c = c1.getConstructor(String.class, String.class, JSONObject.class, TaskMapper.class, ApplicationContext.class, RabbitTemplate.class);
                     if (c != null) {
                         BaseJob bj = (BaseJob) c.newInstance(taskId, instanceId, graphObject.getJSONObject(instanceId), taskMapper, applicationContext, rabbitTemplate);
-                        bj.initParams();
+                        bj.init();
                         bj.run();
                     }
                 } catch (Exception e) {

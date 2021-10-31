@@ -2,6 +2,7 @@ package io.rackshift.service;
 
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.ServiceConstants;
+import io.rackshift.engine.util.EjsService;
 import io.rackshift.model.ProfileDTO;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.Profile;
@@ -43,6 +44,8 @@ public class ProfileService {
     private ExtImageMapper extImageMapper;
     @Resource
     private Map<String, String> renderOptions;
+    @Resource
+    private EjsService ejsService;
 
     private boolean test = false;
     private String content;
@@ -180,9 +183,9 @@ public class ProfileService {
         if (profiles.size() > 0) {
             LogUtil.info("profile:" + profileOptionMap.get("profile"));
             if (profiles.get(0).getName().endsWith(".ipxe"))
-                return render(getProfileByName("boilerplate.ipxe").getContent() + profiles.get(0).getContent(), options);
+                return ejsService.renderWithEjs(getProfileByName("boilerplate.ipxe").getContent() + profiles.get(0).getContent(), options);
             else
-                return render(profiles.get(0).getContent(), options);
+                return ejsService.renderWithEjs(profiles.get(0).getContent(), options);
         }
         return "echo RackShift: No profile is provided !";
 
@@ -207,9 +210,9 @@ public class ProfileService {
             Map<String, String> options = new HashMap<>();
             options.putAll(renderOptions);
             options.put("macaddress", "");
-            return render(getProfileByName("boilerplate.ipxe").getContent() + profile.getContent(), options);
+            return ejsService.renderWithEjs(getProfileByName("boilerplate.ipxe").getContent() + profile.getContent(), (JSONObject) JSONObject.toJSON(options));
         }
-        return render(profile.getContent(), renderOptions);
+        return ejsService.renderWithEjs(profile.getContent(), (JSONObject) JSONObject.toJSON(renderOptions));
     }
 
     public void test(String content, boolean test) {

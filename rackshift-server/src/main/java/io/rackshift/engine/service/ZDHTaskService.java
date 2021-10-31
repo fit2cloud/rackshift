@@ -43,7 +43,7 @@ public class ZDHTaskService {
     public String bootstrap(String macAddress) throws IOException, InterruptedException {
         BareMetal bareMetal = bareMetalService.getByPXEMAC(macAddress);
         if (bareMetal != null)
-            return zdhTemplatesService.getTemplateName("bootstrap.js", bareMetal.getId());
+            return zdhTemplatesService.getTemplateName("bootstrap.js", bareMetal.getId(), null);
         return "";
     }
 }

@@ -645,6 +645,8 @@ export default {
       //   this.$message.error(this.$t("i18n_ms_7_long"));
       //   that.validateResult = false;
       // }
+      this.payLoad.options.defaults.kargs = "";
+      
 
       return this.validateResult;
     }

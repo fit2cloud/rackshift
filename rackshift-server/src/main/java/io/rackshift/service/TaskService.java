@@ -90,37 +90,14 @@ public class TaskService {
         Task task = taskMapper.selectByPrimaryKey(id);
         if (task == null) return false;
         if (bareMetalManager.getBareMetalById(task.getBareMetalId()) == null || StringUtils.isBlank(task.getInstanceId())) {
+            failTask(task);
             taskMapper.deleteByPrimaryKey(id);
+            try {
+                MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_DELETION + task.getBareMetalId(), "");
+            } catch (Exception e) {
+                LogUtil.error(String.format("delete queue failed!%s", task.getBareMetalId()));
+            }
             return true;
-        }
-        if (StringUtils.isNotBlank(task.getInstanceId())) {
-            //rackhd 清除 任务
-            Endpoint endpoint = endpointService.getById(bareMetalManager.getBareMetalById(task.getBareMetalId()).getEndpointId());
-            if (endpoint == null) {
-                taskMapper.deleteByPrimaryKey(id);
-                return true;
-            }
-            String status = rackHDService.getWorkflowStatusById(endpoint, task.getInstanceId());
-            if (!ServiceConstants.TaskStatusEnum.running.name().equalsIgnoreCase(status)) {
-                taskMapper.deleteByPrimaryKey(id);
-                return true;
-            }
-            boolean r = rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()));
-            if (r) {
-                WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
-                requestDTO.setTaskId(task.getId());
-                requestDTO.setParams(JSONObject.parseObject("{ \"result\" : false}"));
-
-                requestDTO.setBareMetalId(task.getBareMetalId());
-                Workflow workflow = workflowService.getById(task.getWorkFlowId());
-                LifeEventType type = LifeEventType.valueOf(workflow.getEventType().replace("START", "END"));
-                LifeEvent event = LifeEvent.builder().withEventType(type).withWorkflowRequestDTO(requestDTO);
-                stateMachine.sendEvent(event);
-
-                taskMapper.deleteByPrimaryKey(id);
-            } else {
-                RSException.throwExceptions("取消任务失败！instanceID：" + task.getInstanceId());
-            }
         }
         return true;
     }
@@ -286,7 +263,12 @@ public class TaskService {
     }
 
     private Map getThisOptions(JSONObject task) {
-        return task.getJSONObject("options").keySet().stream().collect(Collectors.toMap(k -> k, k -> task.getJSONObject("options").get(k)));
+        Map<String, String> optionMap = new HashMap<>();
+        task.getJSONObject("options").keySet().stream().forEach(k -> {
+            optionMap.put(k, task.getJSONObject("options").getString(k));
+        });
+
+        return optionMap;
     }
 
     private JSONObject extract(JSONObject params) {
@@ -334,22 +316,31 @@ public class TaskService {
         for (String id : ids) {
             Task task = taskMapper.selectByPrimaryKey(id);
             if (task != null && task.getBareMetalId() != null) {
-                if (StringUtils.isNotBlank(task.getInstanceId())) {
-                    if (rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()))) {
-                        task.setStatus(ServiceConstants.TaskStatusEnum.cancelled.name());
-                        taskMapper.updateByPrimaryKey(task);
-                        template.convertAndSend("/topic/lifecycle", "");
-                    } else {
-                        return false;
-                    }
-                } else {
-                    task.setStatus(ServiceConstants.TaskStatusEnum.cancelled.name());
-                    taskMapper.updateByPrimaryKey(task);
-                    template.convertAndSend("/topic/lifecycle", "");
+                task.setStatus(ServiceConstants.TaskStatusEnum.cancelled.name());
+                taskMapper.updateByPrimaryKey(task);
+                try {
+                    MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_DELETION + task.getBareMetalId(), "");
+                } catch (Exception e) {
+                    LogUtil.error(String.format("delete queue failed!%s", task.getBareMetalId()));
                 }
+                failTask(task);
             }
+
         }
         return true;
+    }
+
+    private void failTask(Task task) {
+        WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
+        requestDTO.setTaskId(task.getId());
+        requestDTO.setParams(JSONObject.parseObject("{ \"result\" : false}"));
+
+        requestDTO.setBareMetalId(task.getBareMetalId());
+        Workflow workflow = workflowService.getById(task.getWorkFlowId());
+        LifeEventType type = LifeEventType.valueOf(workflow.getEventType().replace("START", "END"));
+        LifeEvent event = LifeEvent.builder().withEventType(type).withWorkflowRequestDTO(requestDTO);
+        stateMachine.sendEvent(event);
+        template.convertAndSend("/topic/lifecycle", "");
     }
 
     public TaskWithBLOBs createDiscoveryGraph(String bareMetalId) {

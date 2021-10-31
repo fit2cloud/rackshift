@@ -332,9 +332,13 @@ public abstract class BaseJob {
         this.renderOptions = (Map<String, String>) SpringUtils.getApplicationContext().getBean("renderOptions");
     }
 
-    public void initParams() {
+    public void init() {
         Task task = taskMapper.selectByPrimaryKey(taskId);
         this.options.put("nodeId", task.getBareMetalId());
+        this.subscribeForDeletion(o -> {
+            this.deleteQueue();
+            return "ok";
+        });
     }
 
     abstract public void run();
@@ -493,15 +497,20 @@ public abstract class BaseJob {
         MqUtil.subscribe(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_NOTIFICATION + this.bareMetalId, callback);
     }
 
+    protected void subscribeForDeletion(Function callback) {
+        MqUtil.subscribe(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_DELETION + this.bareMetalId, callback);
+    }
+
     private void deleteQueue() {
         MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMMANDS + this.bareMetalId);
         MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_PROFILES + this.bareMetalId);
         MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_OPTIONS + this.bareMetalId);
         MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_COMPLETE + this.bareMetalId);
         MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_NOTIFICATION + this.bareMetalId);
+        MqUtil.delQueue(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_DELETION + this.bareMetalId);
     }
-    
-    protected void sendBMLifecycleEvent(LifeEventType lifeEventType){
+
+    protected void sendBMLifecycleEvent(LifeEventType lifeEventType) {
         WorkflowRequestDTO r = new WorkflowRequestDTO();
         r.setBareMetalId(bareMetalId);
         r.setTaskId(taskId);
@@ -514,7 +523,7 @@ public abstract class BaseJob {
         stateMachine.sendEvent(event);
     }
 
-    protected void sendBMLifecycleEvent(LifeEventType lifeEventType, JSONObject params){
+    protected void sendBMLifecycleEvent(LifeEventType lifeEventType, JSONObject params) {
         WorkflowRequestDTO r = new WorkflowRequestDTO();
         r.setBareMetalId(bareMetalId);
         r.setTaskId(taskId);
