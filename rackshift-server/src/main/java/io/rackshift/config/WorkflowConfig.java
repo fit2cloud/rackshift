@@ -317,7 +317,7 @@ public class WorkflowConfig {
                         // 开始读取文件内容
                         InputStream in = this.getClass().getClassLoader().getResourceAsStream(name);
                         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                        return getString(reader);
+                        return getStringContent(reader);
 
                     }
                 }
