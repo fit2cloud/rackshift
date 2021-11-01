@@ -218,6 +218,10 @@ public class WorkflowConfig {
 
     private String getStringContent(File f) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(f));
+        return getStringContent(reader);
+    }
+
+    private String getStringContent(BufferedReader reader) throws IOException {
         String line = null;
         StringBuffer sb = new StringBuffer();
         while ((line = reader.readLine()) != null) {
@@ -348,7 +352,7 @@ public class WorkflowConfig {
                         // 开始读取文件内容
                         InputStream in = this.getClass().getClassLoader().getResourceAsStream(name);
                         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                        return getString(reader);
+                        return getStringContent(reader);
 
                     }
                 }
@@ -383,7 +387,7 @@ public class WorkflowConfig {
                         // 开始读取文件内容
                         InputStream in = this.getClass().getClassLoader().getResourceAsStream(name);
                         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                        return getString(reader);
+                        return getStringContent(reader);
 
                     }
                 }
