@@ -535,5 +535,5 @@ export default {
     "front_upload": "前端上傳",
     "mount_text" : "默認 http 服務器掛載地址在 /opt/rackshift/rackhd/files/mount/common，也可以直接使用其他第三方 http 服務器",
     "i18n_lvmname_null": "LVM 卷名不能為空",
-    "no_param" : ""
+    "no_param" : "參數不存在"
 }
