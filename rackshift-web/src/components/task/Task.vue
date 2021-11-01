@@ -68,8 +68,8 @@
             <template slot-scope="scope">
               <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
               <span>{{ $t(scope.row.status) }}</span>
-              <span class="percent" v-if="scope.row.status.indexOf('ing') != -1 && scope.row.totalCount != 0">{{
-                  scope.row.successCount + '/' + scope.row.totalCount
+              <span class="percent" v-if="scope.row.status.indexOf('ing') != -1">{{
+                  getSuccessRate(scope.row)
                 }}</span>
             </template>
           </el-table-column>
@@ -151,10 +151,9 @@
 
             <span v-else class="mb10">{{ $t('no_more_logs') }}</span>
 
-<!--                <workflow-chart-->
-<!--                    :transitions="transitions"-->
-<!--                    :states="states" />-->
-
+            <!--                <workflow-chart-->
+            <!--                    :transitions="transitions"-->
+            <!--                    :states="states" />-->
 
 
             <div class="demo-drawer__footer">
@@ -184,6 +183,7 @@ import JsonViewer from 'vue-json-viewer'
 import Vue from 'vue'
 // Import JsonViewer as a Vue.js plugin
 import WorkflowChart from 'vue-workflow-chart';
+
 Vue.use(JsonViewer)
 let _ = require('lodash');
 export default {
@@ -213,22 +213,22 @@ export default {
         "label": "this is a transition",
         "target": "state_2",
         "source": "state_1",
-      },{
+      }, {
         "id": "transition_1",
         "label": "this is a transition",
         "target": "state_3",
         "source": "state_2",
-      },{
+      }, {
         "id": "transition_1",
         "label": "this is a transition",
         "target": "state_4",
         "source": "state_3",
-      },{
+      }, {
         "id": "transition_1",
         "label": "this is a transition",
         "target": "state_5",
         "source": "state_4",
-      },{
+      }, {
         "id": "transition_1",
         "label": "this is a transition",
         "target": "state_6",
@@ -307,13 +307,22 @@ export default {
       clearInterval(this.refreshSubTaskPointer);
     }
   },
-  components :{
+  components: {
     WorkflowChart
   },
   mounted() {
     this.getData();
   },
   methods: {
+    getSuccessRate(row) {
+      let graph = JSON.parse(row.graphObjects);
+      let suc = [];
+      _.forIn(graph, function (value, key) {
+        if (value.state == "succeeded")
+          suc.push(value);
+      });
+      return suc.length + '/' + Object.keys(graph).length
+    },
     copy(e) {
       e.preventDefault();
       var content = JSON.stringify(this.jsonData);
@@ -330,6 +339,10 @@ export default {
       this.paramVisable = false;
     },
     viewParam(param) {
+      if (!param) {
+        this.$message.info(this.$t("no_param"));
+        return;
+      }
       this.jsonData = JSON.parse(param);
       this.paramVisable = true;
     },
@@ -538,7 +551,8 @@ export default {
 .vue-workflow-chart-transition-path-delete {
   stroke: red;
 }
-  .handle-box {
+
+.handle-box {
   margin-bottom: 20px;
 }
 
