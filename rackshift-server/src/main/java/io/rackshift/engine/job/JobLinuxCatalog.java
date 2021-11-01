@@ -79,14 +79,14 @@ public class JobLinuxCatalog extends BaseJob {
                 JSONObject taskObj = tasksObj.getJSONObject(0);
                 String stderr = taskObj.getString("stderr");
                 if (StringUtils.isNotBlank(stderr)) {
-                    this.error(RSException.throwExceptions(stderr));
+                    this.error(new RSException(stderr));
                     return "ok";
                 }
 
                 cp.saveCatalog(bareMetalId, tasksObj);
             } catch (IOException e) {
                 e.printStackTrace();
-                this.error(RSException.throwExceptions("save catalog error!" + e.getMessage()));
+                this.error(new RSException("save catalog error!" + e.getMessage()));
                 return "ok";
             }
             this.complete();

@@ -219,38 +219,25 @@ public class TaskService {
     private void renderTaskOptions(JSONObject task) {
         try {
             Map<String, String> thisOptions = getThisOptions(task);
-            Pattern p = Pattern.compile("\\{\\{([a-zA-Z\\.\\s]+)\\}\\}");
-
             String optionStr = task.getJSONObject("options").toJSONString();
-            Matcher m = p.matcher(optionStr);
-            while (m.find()) {
-                if (m.group(1).contains("options")) {
-                    optionStr = optionStr.replace(m.group(), thisOptions.get(m.group(1).trim().replace("options.", "")));
-                } else if (m.group(1).contains("task.nodeId")) {
-                    optionStr = optionStr.replace(m.group(), task.getString("bareMetalId"));
-                } else {
-                    optionStr = optionStr.replace(m.group(), renderOptions.get(m.group(1).trim()));
+            //temp code
+            if (!"create-raid".equalsIgnoreCase(task.getString("label"))) {
+                Pattern p = Pattern.compile("\\{\\{([a-zA-Z\\.\\s]+)\\}\\}");
+
+                Matcher m = p.matcher(optionStr);
+                while (m.find()) {
+                    if (m.group(1).contains("options")) {
+                        optionStr = optionStr.replace(m.group(), thisOptions.get(m.group(1).trim().replace("options.", "")));
+                    } else if (m.group(1).contains("task.nodeId")) {
+                        optionStr = optionStr.replace(m.group(), task.getString("bareMetalId"));
+                    } else {
+                        optionStr = optionStr.replace(m.group(), renderOptions.get(m.group(1).trim()));
+                    }
                 }
             }
-//            task.put("options", JSONObject.parseObject(optionStr));
             JSONObject params = JSONUtils.merge(renderOptions, (JSONObject) JSONObject.toJSON(thisOptions));
             params.put("options", thisOptions);
             task.put("options", JSONObject.parseObject(hoganService.renderWithHogan(optionStr, params)));
-//            thisOptions.keySet().forEach(k -> {
-//                if (thisOptions.get(k) instanceof String && thisOptions.get(k).contains("{{")) {
-//                    Matcher m = p.matcher(thisOptions.get(k));
-//                    while (m.find()) {
-//                        if (m.group(1).contains("options")) {
-//                            thisOptions.put(k, thisOptions.get(k).replace(m.group(), thisOptions.get(m.group(1).trim().replace("options.", ""))));
-//                        } else if (m.group(1).contains("task.nodeId")) {
-//                            thisOptions.put(k, thisOptions.get(k).replace(m.group(), task.getString("bareMetalId")));
-//                        } else {
-//                            thisOptions.put(k, thisOptions.get(k).replace(m.group(), renderOptions.get(m.group(1).trim())));
-//                        }
-//                    }
-//                }
-//                task.getJSONObject("options").put(k, thisOptions.get(k));
-//            });
         } catch (Exception e) {
             RSException.throwExceptions("参数校验失败！请检查是否有必填参数缺失！");
         }

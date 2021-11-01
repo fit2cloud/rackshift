@@ -6,6 +6,7 @@ import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.utils.JSONUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
@@ -49,9 +50,16 @@ public class JobLinuxCommands extends BaseJob {
             JSONArray taskArr = new JSONArray();
             JSONObject cmd = new JSONObject();
             if (options.get("commands") instanceof JSONArray) {
-                JSONObject downloadURLOBj = options.getJSONArray("commands").getJSONObject(0);
-                cmd.put("downloadUrl", downloadURLOBj.getString("downloadUrl"));
-                cmd.put("cmd", downloadURLOBj.getString("command"));
+                Object commandObj = options.getJSONArray("commands").get(0);
+                if (commandObj instanceof String) {
+                    cmd.put("cmd", commandObj);
+                } else if (commandObj instanceof JSONObject) {
+                    JSONObject downloadURLOBj = options.getJSONArray("commands").getJSONObject(0);
+                    if (downloadURLOBj.containsKey("downloadUrl"))
+                        cmd.put("downloadUrl", downloadURLOBj.getString("downloadUrl"));
+                    if (downloadURLOBj.containsKey("command"))
+                        cmd.put("cmd", downloadURLOBj.getString("command"));
+                }
             } else if (options.get("commands") instanceof String) {
                 cmd.put("cmd", options.getString("commands"));
             }
@@ -79,7 +87,11 @@ public class JobLinuxCommands extends BaseJob {
 //                this.complete();
 //            }
             //还没调通先直接成功好了
-            this.complete();
+            if(StringUtils.isNotBlank((String)o) && ((String) o).contains("error")){
+                this.error(new RSException((String)o));
+            }else {
+                this.complete();
+            }
             return "ok";
         });
     }

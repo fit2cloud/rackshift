@@ -451,8 +451,10 @@ public abstract class BaseJob {
             this.task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
             setTask(task);
             deleteQueue();
+            JSONObject result = new JSONObject();
+            result.put("result", false);
+            sendBMLifecycleEvent(LifeEventType.POST_OTHER_WORKFLOW_END, result);
         }
-        complete();
     }
 
     public void complete() {
