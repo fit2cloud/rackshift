@@ -429,6 +429,9 @@ public abstract class BaseJob {
                 this._status = ServiceConstants.RackHDTaskStatusEnum.succeeded.name();
                 this.task.setStatus(ServiceConstants.TaskStatusEnum.succeeded.name());
                 setTask(task);
+                JSONObject result = new JSONObject();
+                result.put("result", true);
+                sendBMLifecycleEvent(LifeEventType.POST_OTHER_WORKFLOW_END, result);
             }
         }
     }
