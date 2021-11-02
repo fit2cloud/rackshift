@@ -1,14 +1,9 @@
 package io.rackshift.config;
 
-import com.alibaba.fastjson.JSONArray;
 import com.google.gson.Gson;
-import io.rackshift.constants.RackHDConstants;
-import io.rackshift.constants.ServiceConstants;
 import io.rackshift.engine.basetask.BaseTask;
-import io.rackshift.engine.job.Jobs;
 import io.rackshift.engine.taskgraph.BaseTaskGraph;
 import io.rackshift.engine.taskobject.BaseTaskObject;
-import io.rackshift.metal.sdk.util.HttpFutureUtils;
 import io.rackshift.metal.sdk.util.LogUtil;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.EndpointMapper;
@@ -17,9 +12,7 @@ import io.rackshift.service.WorkflowService;
 import io.rackshift.strategy.statemachine.LifeEventType;
 import org.apache.commons.lang3.StringUtils;
 import org.flywaydb.core.Flyway;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,7 +23,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.*;
-import java.lang.annotation.Annotation;
 import java.net.*;
 import java.util.*;
 import java.util.jar.JarEntry;
@@ -67,6 +59,7 @@ public class WorkflowConfig {
 
     @PostConstruct
     public void initWorkflow() {
+
         Map<String, List<Workflow>> typeMap = workflowMapper.selectByExample(new WorkflowExample()).stream().collect(Collectors.groupingBy(Workflow::getEventType));
         if (typeMap != null && typeMap.keySet().size() > 0) {
             for (Map.Entry<String, List<Workflow>> wfEntry : typeMap.entrySet()) {
@@ -121,7 +114,8 @@ public class WorkflowConfig {
                     if (f.getName().indexOf(".js") == -1)
                         continue;
                     String r = getString(f);
-                    objs.add(new Gson().fromJson(r, BaseTask.class));
+                    objs.add(JSONObject.parseObject(r, BaseTask.class));
+
                 }
                 return objs.stream().collect(Collectors.toMap(BaseTask::getInjectableName, c -> c));
             } else {
@@ -140,7 +134,8 @@ public class WorkflowConfig {
                         InputStream in = this.getClass().getClassLoader().getResourceAsStream(name);
                         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                         String r = getString(reader);
-                        objs.add(new Gson().fromJson(r, BaseTask.class));
+                        objs.add(JSONObject.parseObject(r, BaseTask.class));
+
                     }
                 }
                 return objs.stream().collect(Collectors.toMap(BaseTask::getInjectableName, c -> c));
@@ -168,7 +163,8 @@ public class WorkflowConfig {
                     if (f.getName().indexOf(".js") == -1)
                         continue;
                     String r = getString(f);
-                    objs.add(new Gson().fromJson(r, BaseTaskGraph.class));
+                    objs.add(JSONObject.parseObject(r, BaseTaskGraph.class));
+
                 }
                 return objs.stream().collect(Collectors.toMap(BaseTaskGraph::getInjectableName, c -> c));
             } else {
@@ -187,7 +183,7 @@ public class WorkflowConfig {
                         InputStream in = this.getClass().getClassLoader().getResourceAsStream(name);
                         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                         String r = getString(reader);
-                        objs.add(new Gson().fromJson(r, BaseTaskGraph.class));
+                        objs.add(JSONObject.parseObject(r, BaseTaskGraph.class));
                     }
                 }
                 return objs.stream().collect(Collectors.toMap(BaseTaskGraph::getInjectableName, c -> c));
@@ -247,7 +243,7 @@ public class WorkflowConfig {
                     if (f.getName().indexOf(".js") == -1)
                         continue;
                     String r = getString(f);
-                    objs.add(new Gson().fromJson(r, BaseTaskObject.class));
+                    objs.add(JSONObject.parseObject(r, BaseTaskObject.class));
                 }
                 return objs.stream().collect(Collectors.toMap(BaseTaskObject::getInjectableName, c -> c));
             } else {
@@ -266,7 +262,7 @@ public class WorkflowConfig {
                         InputStream in = this.getClass().getClassLoader().getResourceAsStream(name);
                         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                         String r = getString(reader);
-                        objs.add(new Gson().fromJson(r, BaseTaskObject.class));
+                        objs.add(JSONObject.parseObject(r, BaseTaskObject.class));
                     }
                 }
                 return objs.stream().collect(Collectors.toMap(BaseTaskObject::getInjectableName, c -> c));
