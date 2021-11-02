@@ -7,6 +7,6 @@ module.exports = {
     injectableName: "Task.Base.Rest.Catalog",
     runJob:"Job.Rest.Catalog",
     requiredOptions:["url", "method", "source"],
-    requiredProperties:[],
+    requiredProperties:{},
     properties:{}
 };

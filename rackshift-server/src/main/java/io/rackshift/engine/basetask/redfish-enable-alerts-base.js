@@ -7,6 +7,6 @@ module.exports = {
     injectableName: "Task.Base.Redfish.Alert.Enable",
     runJob:"Job.Redfish.Alert.Enable",
     requiredOptions:[],
-    requiredProperties:[],
+    requiredProperties:{},
     properties:{}
 };
