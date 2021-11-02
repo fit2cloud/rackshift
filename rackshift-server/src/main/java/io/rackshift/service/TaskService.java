@@ -157,6 +157,7 @@ public class TaskService {
             for (int i = 0; i < tasks.size(); i++) {
                 JSONObject task = tasks.getJSONObject(i);
                 String taskName = task.getString("taskName");
+                String taskFName = task.getString("label");
                 JSONObject taskObj = null;
                 JSONObject baseTaskObj = null;
                 if (StringUtils.isNotBlank(taskName)) {
@@ -175,9 +176,9 @@ public class TaskService {
                 task.put("state", ServiceConstants.RackHDTaskStatusEnum.pending.name());
                 task.put("taskStartTime", LocalDateTime.now());
                 if (task.getJSONObject("options") == null) {
-                    task.put("options", extract(e.getWorkflowRequestDTO().getParams()));
+                    task.put("options", extract(e.getWorkflowRequestDTO().getParams(), taskFName));
                 } else {
-                    JSONObject userOptions = extract(e.getWorkflowRequestDTO().getParams());
+                    JSONObject userOptions = extract(e.getWorkflowRequestDTO().getParams(), taskFName);
                     JSONObject options = task.getJSONObject("options");
                     if (userOptions != null)
                         userOptions.keySet().forEach(k -> {
@@ -252,8 +253,19 @@ public class TaskService {
         return optionMap;
     }
 
-    private JSONObject extract(JSONObject params) {
+    /**
+     * 从参数里面获取参数对应的标签名称
+     *
+     * @param params
+     * @param label
+     * @return
+     */
+    private JSONObject extract(JSONObject params, String label) {
         if (params != null && params.containsKey("options")) {
+            JSONObject options = params.getJSONObject("options");
+            JSONObject p = options.getJSONObject(label);
+            if (p != null)
+                return p;
             return params.getJSONObject("options").getJSONObject("defaults");
         }
         return params;
