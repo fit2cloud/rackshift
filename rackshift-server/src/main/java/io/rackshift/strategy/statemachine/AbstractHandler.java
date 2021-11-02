@@ -91,8 +91,6 @@ public class AbstractHandler implements IStateHandler {
     }
 
     public void paramPreProcess(LifeEvent event) {
-        String taskId = event.getWorkflowRequestDTO().getTaskId();
-        String user = taskService.getById(taskId).getUserId();
         if (preProcessRaidWf.contains(event.getWorkflowRequestDTO().getWorkflowName())) {
             if (Optional.of(event.getWorkflowRequestDTO()).isPresent()) {
                 WorkflowRequestDTO workflowRequestDTO = event.getWorkflowRequestDTO();
@@ -101,7 +99,6 @@ public class AbstractHandler implements IStateHandler {
                 IMetalProvider iMetalProvider = pluginConfig.getPlugin(getBareMetalById(event.getBareMetalId()));
                 if (params != null) {
                     JSONObject param = iMetalProvider.getRaidPayLoad(params.toJSONString());
-                    executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), String.format("调用插件处理后参数为:%s", (Optional.ofNullable(param).orElse(new JSONObject())).toJSONString()));
                     workflowRequestDTO.setParams(param);
                 }
             }
