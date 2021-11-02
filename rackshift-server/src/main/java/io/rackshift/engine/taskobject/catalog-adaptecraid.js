@@ -8,7 +8,7 @@ module.exports = {
     implementsTask: 'Task.Base.Linux.Catalog',
     optionsSchema: 'catalog-raid.json',
     options: {
-        adapter: '0',
+        adapter: '1',
         commands: [
             'sudo /usr/Arcconf/arcconf getconfig 1 al'
         ]

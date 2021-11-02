@@ -13,12 +13,7 @@ module.exports = {
         raidIds: [], //[0,1,2]
         path: '/opt/MegaRAID/storcli/storcli64',
         commands: [
-            '{{#options.deleteAll}}' +
-                'sudo {{options.path}} /c{{options.controller}}/vall del force' +
-            '{{/options.deleteAll}}' +
-            '{{^options.deleteAll}}{{#options.raidIds}}' +
-                'sudo {{options.path}} /c{{options.controller}}/v{{.}} del force;' +
-            '{{/options.raidIds}}{{/options.deleteAll}}'
+            'sudo {{options.path}} /c{{options.controller}}/vall del force'
         ]
     },
     properties: {}

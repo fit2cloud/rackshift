@@ -13,12 +13,7 @@ module.exports = {
         raidIds: [], //[0,1,2]
         path: '/usr/Arcconf/arcconf',
         commands: [
-            '{{#options.deleteAll}}' +
-                'sudo {{options.path}} delete {{options.controller}} logicaldrive all noprompt' +
-            '{{/options.deleteAll}}' +
-            '{{^options.deleteAll}}{{#options.raidIds}}' +
-                'sudo {{options.path}} /c{{options.controller}}/v{{.}} del force;' +
-            '{{/options.raidIds}}{{/options.deleteAll}}'
+            'sudo {{options.path}} delete {{options.controller}} logicaldrive all noprompt'
         ]
     },
     properties: {}
