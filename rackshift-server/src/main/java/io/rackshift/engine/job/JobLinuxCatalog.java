@@ -112,7 +112,7 @@ public class JobLinuxCatalog extends BaseJob {
         en.setStatus(bm.getStatus());
         try {
             bareMetalManager.saveOrUpdateEntity(en);
-            template.convertAndSend("/topic/lifecycle", String.format("裸金属：%s,硬件信息更新", bm.getMachineModel() + " " + bm.getManagementIp()));
+            template.convertAndSend("/topic/lifecycle", "");
         } catch (Exception e) {
             e.printStackTrace();
         }
