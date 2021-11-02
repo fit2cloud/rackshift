@@ -72,7 +72,7 @@ public class CatalogParser {
 
         physicalMachine.setEndpointId(machineEntity.getEndPoint());
         physicalMachine.setProviderId(Optional.ofNullable(machineEntity.getProviderId()).orElse("rackhd"));
-        physicalMachine.setRuleId("");
+        physicalMachine.setRuleId(machineEntity.getRuleId());
         physicalMachine.setMachineBrand(machineEntity.getBrand());
         physicalMachine.setCreateTime(System.currentTimeMillis());
         physicalMachine.setMemory(physicalMachine.getMemory());
