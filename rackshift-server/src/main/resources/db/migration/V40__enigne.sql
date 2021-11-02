@@ -79,7 +79,7 @@ CREATE TABLE catalog
     id            VARCHAR(50) NOT NULL,
     bare_metal_id VARCHAR(50) NOT NULL,
     source        VARCHAR(50) NOT NULL COMMENT 'source',
-    `data`        text COMMENT 'data',
+    `data`        MEDIUMTEXT COMMENT 'data',
     create_time   BIGINT      NOT NULL,
     PRIMARY KEY (id)
 );
