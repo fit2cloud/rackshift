@@ -107,17 +107,15 @@ public class WorkflowConfig {
     @Bean
     public Map<String, BaseTask> baseTask() {
         try {
+            List<BaseTask> objs = new LinkedList<>();
             if ("local".equalsIgnoreCase(runMode)) {
                 File[] files = new File(BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/basetask").getFile()).listFiles();
-                List<BaseTask> objs = new LinkedList<>();
                 for (File f : files) {
                     if (f.getName().indexOf(".js") == -1)
                         continue;
                     String r = getString(f);
                     objs.add(JSONObject.parseObject(r, BaseTask.class));
-
                 }
-                return objs.stream().collect(Collectors.toMap(BaseTask::getInjectableName, c -> c));
             } else {
                 String urlStr = BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/basetask").toString();
                 String jarPath = urlStr.substring(0, urlStr.indexOf("!/") + 2);
@@ -125,7 +123,6 @@ public class WorkflowConfig {
                 JarURLConnection jarCon = (JarURLConnection) jarURL.openConnection();
                 JarFile jarFile = jarCon.getJarFile();
                 Enumeration<JarEntry> jarEntrys = jarFile.entries();
-                List<BaseTask> objs = new LinkedList<>();
                 while (jarEntrys.hasMoreElements()) {
                     JarEntry entry = jarEntrys.nextElement();
                     String name = entry.getName();
@@ -135,11 +132,17 @@ public class WorkflowConfig {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                         String r = getString(reader);
                         objs.add(JSONObject.parseObject(r, BaseTask.class));
-
                     }
                 }
-                return objs.stream().collect(Collectors.toMap(BaseTask::getInjectableName, c -> c));
             }
+
+            Map<String, BaseTask> map = new HashMap<>();
+            for (BaseTask o : objs) {
+                if (map.get(o.getInjectableName()) == null) {
+                    map.put(o.getInjectableName(), o);
+                }
+            }
+            return map;
         } catch (Exception e) {
             LogUtil.error("初始化 " + BaseTask.class + " 失败！", e);
         }
@@ -156,17 +159,15 @@ public class WorkflowConfig {
     @Bean
     public Map<String, BaseTaskGraph> taskGraph() {
         try {
+            List<BaseTaskGraph> objs = new LinkedList<>();
             if ("local".equalsIgnoreCase(runMode)) {
                 File[] files = new File(BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/taskgraph").getFile()).listFiles();
-                List<BaseTaskGraph> objs = new LinkedList<>();
                 for (File f : files) {
                     if (f.getName().indexOf(".js") == -1)
                         continue;
                     String r = getString(f);
                     objs.add(JSONObject.parseObject(r, BaseTaskGraph.class));
-
                 }
-                return objs.stream().collect(Collectors.toMap(BaseTaskGraph::getInjectableName, c -> c));
             } else {
                 String urlStr = BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/taskobject").toString();
                 String jarPath = urlStr.substring(0, urlStr.indexOf("!/") + 2);
@@ -174,7 +175,6 @@ public class WorkflowConfig {
                 JarURLConnection jarCon = (JarURLConnection) jarURL.openConnection();
                 JarFile jarFile = jarCon.getJarFile();
                 Enumeration<JarEntry> jarEntrys = jarFile.entries();
-                List<BaseTaskGraph> objs = new LinkedList<>();
                 while (jarEntrys.hasMoreElements()) {
                     JarEntry entry = jarEntrys.nextElement();
                     String name = entry.getName();
@@ -186,8 +186,15 @@ public class WorkflowConfig {
                         objs.add(JSONObject.parseObject(r, BaseTaskGraph.class));
                     }
                 }
-                return objs.stream().collect(Collectors.toMap(BaseTaskGraph::getInjectableName, c -> c));
             }
+
+            Map<String, BaseTaskGraph> map = new HashMap<>();
+            for (BaseTaskGraph o : objs) {
+                if (map.get(o.getInjectableName()) == null) {
+                    map.put(o.getInjectableName(), o);
+                }
+            }
+            return map;
         } catch (Exception e) {
             LogUtil.error("初始化 " + BaseTaskGraph.class + " 失败！", e);
         }
@@ -236,16 +243,15 @@ public class WorkflowConfig {
     @Bean
     public Map<String, BaseTaskObject> taskObject() {
         try {
+            List<BaseTaskObject> objs = new LinkedList<>();
             if ("local".equalsIgnoreCase(runMode)) {
                 File[] files = new File(BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/taskobject").getFile()).listFiles();
-                List<BaseTaskObject> objs = new LinkedList<>();
                 for (File f : files) {
                     if (f.getName().indexOf(".js") == -1)
                         continue;
                     String r = getString(f);
                     objs.add(JSONObject.parseObject(r, BaseTaskObject.class));
                 }
-                return objs.stream().collect(Collectors.toMap(BaseTaskObject::getInjectableName, c -> c));
             } else {
                 String urlStr = BaseTaskObject.class.getClassLoader().getResource("io/rackshift/engine/taskobject").toString();
                 String jarPath = urlStr.substring(0, urlStr.indexOf("!/") + 2);
@@ -253,7 +259,6 @@ public class WorkflowConfig {
                 JarURLConnection jarCon = (JarURLConnection) jarURL.openConnection();
                 JarFile jarFile = jarCon.getJarFile();
                 Enumeration<JarEntry> jarEntrys = jarFile.entries();
-                List<BaseTaskObject> objs = new LinkedList<>();
                 while (jarEntrys.hasMoreElements()) {
                     JarEntry entry = jarEntrys.nextElement();
                     String name = entry.getName();
@@ -265,8 +270,15 @@ public class WorkflowConfig {
                         objs.add(JSONObject.parseObject(r, BaseTaskObject.class));
                     }
                 }
-                return objs.stream().collect(Collectors.toMap(BaseTaskObject::getInjectableName, c -> c));
             }
+
+            Map<String, BaseTaskObject> map = new HashMap<>();
+            for (BaseTaskObject o : objs) {
+                if (map.get(o.getInjectableName()) == null) {
+                    map.put(o.getInjectableName(), o);
+                }
+            }
+            return map;
         } catch (Exception e) {
             LogUtil.error("初始化 " + BaseTaskObject.class + " 失败！", e);
         }
