@@ -23,10 +23,6 @@ public class TaskGraphListener {
         stateMachine.runTaskGraph(messageObj.getString("taskId"));
     }
 
-    @RabbitListener(queues = {MqConstants.CANCEL_TASKGRAPH_QUEUE_NAME}, messageConverter = "mqMessageConverter")
-    public void cancelTaskgraph(JSONObject messageObj) {
-    }
-
     /**
      * 执行工作流的子任务
      *
@@ -37,7 +33,4 @@ public class TaskGraphListener {
         stateMachine.runTask(messageObj);
     }
 
-    @RabbitListener(queues = {MqConstants.CANCEL_TASK_QUEUE_NAME}, messageConverter = "mqMessageConverter")
-    public void cancelTask(JSONObject messageObj) {
-    }
 }
