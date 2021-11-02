@@ -20,8 +20,6 @@ import javax.annotation.Resource;
 public class MongoConfig {
     @Value("${run.mode:local}")
     private String runMode;
-    @Value("${mongo.url:localhost}")
-    private String mongoUrl;
     @Resource
     private EndpointService endpointService;
 

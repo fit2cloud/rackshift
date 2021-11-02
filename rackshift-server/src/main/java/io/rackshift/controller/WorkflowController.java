@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("workflow")
@@ -21,9 +22,7 @@ public class WorkflowController {
     @Resource
     private WorkflowService workflowService;
     @Resource
-    private JSONArray allWorkflow;
-    @Resource
-    private JSONArray allTask;
+    private Map taskGraph;
 
     @GetMapping("/params/{name}")
     public ResultHolder getParamsByName(@PathVariable String name) {
@@ -52,12 +51,7 @@ public class WorkflowController {
 
     @GetMapping("listallRackHDWorkflows")
     public ResultHolder listallRackHDWorkflows() {
-        return ResultHolder.success(allWorkflow);
-    }
-
-    @GetMapping("listallRackHDTasks")
-    public ResultHolder listallRackHDTasks() {
-        return ResultHolder.success(allTask);
+        return ResultHolder.success(taskGraph);
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)

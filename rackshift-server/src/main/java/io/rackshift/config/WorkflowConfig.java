@@ -45,7 +45,6 @@ public class WorkflowConfig {
     private WorkflowService workflowService;
     @Resource
     private EndpointMapper endpointMapper;
-    private String rackhdUrl;
     private List<Endpoint> endPoints;
     static EndpointMapper staticEndpointMapper;
 
@@ -75,29 +74,18 @@ public class WorkflowConfig {
                 LifeEventType.valueOf(wfEntry.getKey()).addWorkflow(wfEntry.getValue().stream().map(Workflow::getInjectableName).collect(Collectors.toList()));
             }
         }
-//
-//        EndpointExample e = new EndpointExample();
-//        e.createCriteria().andTypeEqualTo(ServiceConstants.EndPointType.main_endpoint.name());
-//        endPoints = endpointMapper.selectByExample(e);
-//        if (endPoints.size() > 0 && !endPoints.get(0).getIp().contains(":"))
-//            rackhdUrl = "http://" + endPoints.get(0).getIp() + ":9090";
-//        else if (endPoints.size() > 0 && endPoints.get(0).getIp().contains(":"))
-//            rackhdUrl = "http://" + endPoints.get(0).getIp();
-//        else
-//            rackhdUrl = "";
-
-//        e.clear();
-//        endPoints = endpointMapper.selectByExample(e);
-//        endPoints = endPoints.stream().map(endpoint -> {
-//            if ("rackshift-proxy".equalsIgnoreCase(endpoint.getIp())) {
-//                try {
-//                    endpoint.setIp(getGateWayAddress(""));
-//                } catch (Exception unknownHostException) {
-//                    unknownHostException.printStackTrace();
-//                }
-//            }
-//            return endpoint;
-//        }).collect(Collectors.toList());
+        EndpointExample e = new EndpointExample();
+        endPoints = endpointMapper.selectByExample(e);
+        endPoints = endPoints.stream().map(endpoint -> {
+            if ("rackshift-proxy".equalsIgnoreCase(endpoint.getIp())) {
+                try {
+                    endpoint.setIp(getGateWayAddress(""));
+                } catch (Exception unknownHostException) {
+                    unknownHostException.printStackTrace();
+                }
+            }
+            return endpoint;
+        }).collect(Collectors.toList());
 
         Flyway flyway = Flyway.configure().dataSource(dataSource, username, password).table(table).baselineVersion("0").locations("classpath:db/migration").validateOnMigrate(false).load();
 
@@ -492,34 +480,7 @@ public class WorkflowConfig {
         return "http://" + endpoint.getIp();
     }
 
-    public String getRackhdUrl() {
-        return rackhdUrl;
-    }
-
     public List<Endpoint> getEndPoints() {
         return endPoints;
-    }
-
-    @Bean
-    public JSONArray allWorkflow() {
-        try {
-            String res = HttpFutureUtils.getHttp(getRackhdUrl() + RackHDConstants.WORKFLOWS, null);
-            if (StringUtils.isNotBlank(res))
-                return JSONArray.parseArray(res);
-        } catch (Exception e) {
-        }
-        return new JSONArray();
-    }
-
-    @Bean
-    public JSONArray allTask() {
-        try {
-            String res = HttpFutureUtils.getHttp(getRackhdUrl() + RackHDConstants.TASKS, null);
-            if (StringUtils.isNotBlank(res))
-                return JSONArray.parseArray(res);
-            return JSONArray.parseArray(res);
-        } catch (Exception e) {
-        }
-        return new JSONArray();
     }
 }
