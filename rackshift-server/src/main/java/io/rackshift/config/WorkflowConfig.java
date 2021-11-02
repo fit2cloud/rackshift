@@ -1,9 +1,9 @@
 package io.rackshift.config;
 
 import com.alibaba.fastjson.JSONObject;
-import io.rackshift.engine.basetask.BaseTask;
-import io.rackshift.engine.taskgraph.BaseTaskGraph;
-import io.rackshift.engine.taskobject.BaseTaskObject;
+import io.rackshift.engine.model.BaseTask;
+import io.rackshift.engine.model.BaseTaskGraph;
+import io.rackshift.engine.model.BaseTaskObject;
 import io.rackshift.metal.sdk.util.LogUtil;
 import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.EndpointMapper;

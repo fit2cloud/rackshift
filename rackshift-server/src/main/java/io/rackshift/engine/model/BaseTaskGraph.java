@@ -1,14 +1,11 @@
-package io.rackshift.engine.taskgraph;
+package io.rackshift.engine.model;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import io.rackshift.engine.taskobject.BaseTaskObject;
 import lombok.Data;
 
-import java.io.InputStream;
-
 @Data
-public class BaseTaskGraph {
+public class BaseTaskGraph implements BaseWorkflowObject{
     protected String friendlyName;
     protected String injectableName;
     protected JSONObject options;
