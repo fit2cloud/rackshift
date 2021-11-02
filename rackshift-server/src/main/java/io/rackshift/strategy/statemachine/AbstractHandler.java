@@ -1,10 +1,8 @@
 package io.rackshift.strategy.statemachine;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.config.PluginConfig;
 import io.rackshift.constants.ExecutionLogConstants;
-import io.rackshift.constants.MqConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.metal.sdk.IMetalProvider;
@@ -18,20 +16,17 @@ import io.rackshift.service.TaskService;
 import io.rackshift.service.WorkflowService;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.Translator;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service("abstractHandler")
 public abstract class AbstractHandler implements IStateHandler {
     @Resource
     private BareMetalManager bareMetalManager;
