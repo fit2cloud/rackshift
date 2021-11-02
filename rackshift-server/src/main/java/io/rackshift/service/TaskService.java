@@ -15,10 +15,7 @@ import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.ExecutionLogDetailsMapper;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.mybatis.mapper.ext.ExtTaskMapper;
-import io.rackshift.strategy.statemachine.LifeEvent;
-import io.rackshift.strategy.statemachine.LifeEventType;
-import io.rackshift.strategy.statemachine.LifeStatus;
-import io.rackshift.strategy.statemachine.StateMachine;
+import io.rackshift.strategy.statemachine.*;
 import io.rackshift.utils.*;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -58,6 +55,8 @@ public class TaskService {
     private Map<String, String> renderOptions;
     @Resource
     private HoganService hoganService;
+    @Resource
+    private AbstractHandler abstractHandler;
 
     private List<String> runningStatus = new ArrayList<String>() {{
         add(ServiceConstants.TaskStatusEnum.created.name());
@@ -145,6 +144,7 @@ public class TaskService {
     public String generateGraphObjects(LifeEvent e) {
         String bareMetalId = e.getBareMetalId();
         String workflowName = e.getWorkflowRequestDTO().getWorkflowName();
+        abstractHandler.paramPreProcess(e);
         WorkflowWithBLOBs w = workflowService.getByInjectableName(workflowName);
         LinkedHashMap taskObjects = new LinkedHashMap();
         if (w != null) {
@@ -176,9 +176,9 @@ public class TaskService {
                 task.put("state", ServiceConstants.RackHDTaskStatusEnum.pending.name());
                 task.put("taskStartTime", LocalDateTime.now());
                 if (task.getJSONObject("options") == null) {
-                    task.put("options", extract(e.getWorkflowRequestDTO().getParams(), taskFName));
+                    task.put("options", extract(workflowName, e.getWorkflowRequestDTO().getParams(), taskFName));
                 } else {
-                    JSONObject userOptions = extract(e.getWorkflowRequestDTO().getParams(), taskFName);
+                    JSONObject userOptions = extract(workflowName, e.getWorkflowRequestDTO().getParams(), taskFName);
                     JSONObject options = task.getJSONObject("options");
                     if (userOptions != null)
                         userOptions.keySet().forEach(k -> {
@@ -256,11 +256,12 @@ public class TaskService {
     /**
      * 从参数里面获取参数对应的标签名称
      *
+     * @param workflowName
      * @param params
      * @param label
      * @return
      */
-    private JSONObject extract(JSONObject params, String label) {
+    private JSONObject extract(String workflowName, JSONObject params, String label) {
         if (params != null && params.containsKey("options")) {
             JSONObject options = params.getJSONObject("options");
             JSONObject p = options.getJSONObject(label);

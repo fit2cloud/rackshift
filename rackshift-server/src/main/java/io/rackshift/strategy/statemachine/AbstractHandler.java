@@ -81,7 +81,6 @@ public abstract class AbstractHandler implements IStateHandler {
 
     @Override
     public void handle(LifeEvent event) {
-        BareMetal bareMetal = getBareMetalById(event.getWorkflowRequestDTO().getBareMetalId());
         Task task = taskService.getById(event.getWorkflowRequestDTO().getTaskId());
 
         try {
@@ -94,7 +93,7 @@ public abstract class AbstractHandler implements IStateHandler {
         }
     }
 
-    private void paramPreProcess(LifeEvent event) {
+    public void paramPreProcess(LifeEvent event) {
         String taskId = event.getWorkflowRequestDTO().getTaskId();
         String user = taskService.getById(taskId).getUserId();
         if (preProcessRaidWf.contains(event.getWorkflowRequestDTO().getWorkflowName())) {
@@ -103,7 +102,6 @@ public abstract class AbstractHandler implements IStateHandler {
                 JSONObject params = workflowRequestDTO.getParams();
 
                 IMetalProvider iMetalProvider = pluginConfig.getPlugin(getBareMetalById(event.getBareMetalId()));
-//                        metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginName(getBareMetalById(event.getBareMetalId())));
                 if (params != null) {
                     JSONObject param = iMetalProvider.getRaidPayLoad(params.toJSONString());
                     executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), String.format("调用插件处理后参数为:%s", (Optional.ofNullable(param).orElse(new JSONObject())).toJSONString()));
