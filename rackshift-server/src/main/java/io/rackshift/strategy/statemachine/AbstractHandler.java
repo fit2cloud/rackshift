@@ -19,15 +19,15 @@ import io.rackshift.utils.Translator;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Service("abstractHandler")
-public abstract class AbstractHandler implements IStateHandler {
+@Component("abstractHandler")
+public class AbstractHandler implements IStateHandler {
     @Resource
     private BareMetalManager bareMetalManager;
     @Resource
@@ -61,7 +61,9 @@ public abstract class AbstractHandler implements IStateHandler {
         add("Graph.Raid.Create.PercRAID");
     }};
 
-    public abstract void handleYourself(LifeEvent event) throws Exception;
+    public void handleYourself(LifeEvent event) throws Exception {
+
+    }
 
     @Override
     public void handleNoSession(LifeEvent event) {
