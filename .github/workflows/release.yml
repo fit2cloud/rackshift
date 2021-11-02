@@ -55,7 +55,7 @@ jobs:
             # 产品文档
             点击 [完整文档](https://rackshift.io) 查看完整的安装和使用文档
             # 离线安装包
-            [离线安装包下载地址](https://community.fit2cloud.com/#/download/rackshift/v1-5-0)
+            [离线安装包下载地址](https://community.fit2cloud.com/#/download/rackshift/v1-6-0)
 
       - name: Upload Release Asset
         id: upload-release-asset
@@ -78,3 +78,4 @@ jobs:
           asset_path: ./${{ steps.create_release_file.outputs.FILENAME }}/installer/quick_start.sh
           asset_name: quick_start.sh
           asset_content_type: application/text
+`
