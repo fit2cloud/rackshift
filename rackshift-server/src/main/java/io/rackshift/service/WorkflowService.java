@@ -12,6 +12,7 @@ import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.Workflow;
 import io.rackshift.mybatis.domain.WorkflowExample;
+import io.rackshift.mybatis.domain.WorkflowWithBLOBs;
 import io.rackshift.mybatis.mapper.WorkflowMapper;
 import io.rackshift.strategy.statemachine.LifeEvent;
 import io.rackshift.strategy.statemachine.LifeEventType;
@@ -45,19 +46,6 @@ public class WorkflowService {
     private WorkflowMapper workflowMapper;
     @Resource
     private TaskService taskService;
-
-    public Pager<JSONArray> getGraphDefinitions(String name, int page, int pageSize) {
-        String collections = "graphdefinitions";
-        Pattern pattern = Pattern.compile(".*" + name + ".*", Pattern.CASE_INSENSITIVE);
-        List<BasicDBObject> cond = new ArrayList<BasicDBObject>() {{
-            add(new BasicDBObject("friendlyName", pattern));
-            add(new BasicDBObject("injectableName", pattern));
-        }};
-        if (StringUtils.isNotBlank(name)) {
-            return MongoUtil.page(collections, new BasicDBObject("$or", cond), page, pageSize);
-        }
-        return MongoUtil.page(collections, new BasicDBObject(), page, pageSize);
-    }
 
     public ResultHolder getParamsByName(String name) {
         return ResultHolder.success(workflowManager.getParamsByName(name));
@@ -100,12 +88,12 @@ public class WorkflowService {
         return ResultHolder.success(workflowMapper.selectByExampleWithBLOBs(e));
     }
 
-    public List<Workflow> list(WorkflowDTO queryVO) {
+    public List<WorkflowWithBLOBs> list(WorkflowDTO queryVO) {
         WorkflowExample workflowExample = buildExample(queryVO);
         return workflowMapper.selectByExampleWithBLOBs(workflowExample);
     }
 
-    private WorkflowExample buildExample(WorkflowDTO queryVO) {
+    private WorkflowExample buildExample(WorkflowWithBLOBs queryVO) {
         WorkflowExample e = new WorkflowExample();
 
         if (queryVO.getId() != null) {
@@ -115,13 +103,13 @@ public class WorkflowService {
     }
 
     public boolean add(WorkflowDTO queryVO) {
-        Workflow workflow = new Workflow();
+        WorkflowWithBLOBs workflow = new WorkflowWithBLOBs();
         BeanUtils.copyBean(workflow, queryVO);
         workflowMapper.insertSelective(workflow);
         return true;
     }
 
-    public boolean update(WorkflowDTO queryVO) {
+    public boolean update(WorkflowWithBLOBs queryVO) {
         WorkflowExample workflowExample = buildExample(queryVO);
         workflowMapper.updateByExampleWithBLOBs(queryVO, workflowExample);
         return true;
@@ -154,5 +142,12 @@ public class WorkflowService {
 
     public Workflow getById(String workFlowId) {
         return workflowMapper.selectByPrimaryKey(workFlowId);
+    }
+
+    public WorkflowWithBLOBs getByInjectableName(String injectableName) {
+        WorkflowExample e = new WorkflowExample();
+        e.createCriteria().andInjectableNameEqualTo(injectableName);
+        List<WorkflowWithBLOBs> r = workflowMapper.selectByExampleWithBLOBs(e);
+        return r.size() > 0 ? r.get(0) : null;
     }
 }

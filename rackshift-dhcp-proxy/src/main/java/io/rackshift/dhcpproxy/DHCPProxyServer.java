@@ -38,7 +38,6 @@ public class DHCPProxyServer {
         if (args.length > 0) {
             port = Integer.parseInt(args[0]);
         }
-        ConfigurationUtil.init();
         new DHCPProxyServer(port).run();
     }
 }

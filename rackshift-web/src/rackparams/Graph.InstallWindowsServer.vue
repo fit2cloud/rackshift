@@ -186,6 +186,7 @@ export default {
   },
   mounted() {
     this.getHardware();
+    this.getWinpeURL();
   }
   ,
   methods: {
@@ -265,11 +266,23 @@ export default {
         this.memories = res.data.memories;
         this.disks = res.data.disks;
         this.nics = res.data.nics;
+        if(this.nics && this.nics.length){
+          _.map(this.nics, function(n){
+            return n.mac.replace(":", "-");
+          });
+        }
 
         if (this.payLoad.options.defaults.networkDevices[0].device == 'em1' && this.nics.length > 0) {
           this.payLoad.options.defaults.networkDevices[0].device = this.nics[0].mac;
         }
       })
+    },
+
+    getWinpeURL(){
+      let that = this;
+       HttpUtil.get("/api/current/winpeURL", null, (res) => {
+         that.payLoad.options.defaults.repo = res.data;
+       });
     }
     ,
   }

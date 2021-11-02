@@ -35,15 +35,15 @@ RackShift 的技术优势包括：
 
 仅需两步快速安装 RackShift：
 
- * 准备一台不小于 8G 内存，50G 硬盘且可以访问互联网的 64位 Linux 主机；
- * 以 root 用户执行如下命令一键安装 RackShift。
+* 准备一台不小于 8G 内存，50G 硬盘且可以访问互联网的 64位 Linux 主机；
+* 以 root 用户执行如下命令一键安装 RackShift。
 
 ```sh
 sh -c "$(curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh)"
 ```
-文档和演示视频：  
+文档和演示视频：
 
--  [帮助文档](https://docs.rackshift.io/) 
+-  [帮助文档](https://docs.rackshift.io/)
 -  [演示视频](https://www.bilibili.com/video/BV19y4y1t75E)
 
 ## 微信群
@@ -65,7 +65,7 @@ RackShift 使用、集成、借鉴的开源项目如下，在此致谢：
 -  [RackHD](https://rackhd.github.io/)：RackShift 集成和参考了 RackHD 提供的裸金属服务器管理能力和思路；
 -  [MAAS](https://maas.io/)：RackShift 参考了 MAAS 提供的裸金属服务器生命周期纳管思路；
 -  [Digital Rebar](https://rackn.com/rebar/)：RackShift 参考了 Digital Rebar 提供的操作方式和 UI 参考；
--  [Element](https://element.eleme.cn/#/)：RackShift 使用 Element 提供的优秀前端组件库。 
+-  [Element](https://element.eleme.cn/#/)：RackShift 使用 Element 提供的优秀前端组件库。
 
 ## License & Copyright
 

@@ -1,6 +1,8 @@
 package io.rackshift.service;
 
+import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.ServiceConstants;
+import io.rackshift.engine.util.EjsService;
 import io.rackshift.model.ProfileDTO;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.Profile;
@@ -24,7 +26,12 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +42,13 @@ public class ProfileService {
     private EndpointService endpointService;
     @Resource
     private ExtImageMapper extImageMapper;
+    @Resource
+    private Map<String, String> renderOptions;
+    @Resource
+    private EjsService ejsService;
+
+    private boolean test = false;
+    private String content;
 
     public Object add(ProfileDTO queryVO) throws Exception {
         if (StringUtils.isNotBlank(queryVO.getName())) {
@@ -55,16 +69,8 @@ public class ProfileService {
     }
 
     public Object update(Profile queryVO) throws Exception {
-        Profile image = profileMapper.selectByPrimaryKey(queryVO.getId());
-//        if (ServiceConstants.SYSTEM.equalsIgnoreCase(image.getType())) {
-//            return false;
-//        }
-        queryVO.setId(image.getId());
-        if (uploadToServer(queryVO)) {
-            profileMapper.updateByPrimaryKeySelective(image);
-            return true;
-        }
-        return false;
+        profileMapper.updateByPrimaryKeySelective(queryVO);
+        return true;
     }
 
     public boolean del(String id) {
@@ -154,5 +160,67 @@ public class ProfileService {
 
     public Object getAllProfiles() {
         return list(new ProfileDTO());
+    }
+
+    public Profile getProfileByName(String name) {
+        ProfileExample e = new ProfileExample();
+        e.createCriteria().andNameEqualTo(name);
+        List<Profile> profiles = profileMapper.selectByExampleWithBLOBs(e);
+        if (profiles.size() > 0) {
+            return profiles.get(0);
+        }
+        return null;
+    }
+
+    public String getProfileContentByName(Map profileOptionMap) {
+        if (profileOptionMap == null)
+            return "echo RackShift: No active task is running !";
+        ProfileExample e = new ProfileExample();
+        e.createCriteria().andNameEqualTo((String) profileOptionMap.get("profile"));
+        List<Profile> profiles = profileMapper.selectByExampleWithBLOBs(e);
+        JSONObject options = JSONObject.parseObject((String) profileOptionMap.get("options"));
+        options.put("macaddress", profileOptionMap.get("macaddress"));
+        if (profiles.size() > 0) {
+            LogUtil.info("profile:" + profileOptionMap.get("profile"));
+            if (profiles.get(0).getName().endsWith(".ipxe"))
+                return ejsService.renderWithEjs(getProfileByName("boilerplate.ipxe").getContent() + profiles.get(0).getContent(), options);
+            else
+                return ejsService.renderWithEjs(profiles.get(0).getContent(), options);
+        }
+        return "echo RackShift: No profile is provided !";
+
+    }
+
+    public String render(String originContent, Map optionsForRender) {
+        Pattern p = Pattern.compile("<%=(\\w+)%>");
+        Matcher m = p.matcher(originContent);
+        while (m.find()) {
+            originContent = originContent.replace(m.group(), ((String) optionsForRender.get(m.group(1))));
+        }
+        if (!test) {
+            return new String(originContent.getBytes(StandardCharsets.UTF_8), StandardCharsets.US_ASCII);
+        } else {
+            return new String(content.getBytes(StandardCharsets.UTF_8), StandardCharsets.US_ASCII);
+        }
+    }
+
+    public String getDefaultProfile(String profileName) {
+        Profile profile = getProfileByName(profileName);
+        if (profile != null) {
+            Map<String, String> options = new HashMap<>();
+            options.putAll(renderOptions);
+            options.put("macaddress", "");
+            return ejsService.renderWithEjs(getProfileByName("boilerplate.ipxe").getContent() + profile.getContent(), (JSONObject) JSONObject.toJSON(options));
+        }
+        return ejsService.renderWithEjs(profile.getContent(), (JSONObject) JSONObject.toJSON(renderOptions));
+    }
+
+    public void test(String content, boolean test) {
+        if (test) {
+            this.test = true;
+            this.content = content;
+        } else {
+            this.test = false;
+        }
     }
 }

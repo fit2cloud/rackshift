@@ -21,7 +21,6 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import sun.rmi.runtime.Log;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -137,7 +136,6 @@ public class DiscoveryTask extends Thread {
                                 o.setIp(ip);
                                 o.setUserName(request.getUserName());
                                 o.setPwd(request.getPwd());
-
                                 outBandService.saveOrUpdate(o, false);
                             }
                         } else {

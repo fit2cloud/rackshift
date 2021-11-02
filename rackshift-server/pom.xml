@@ -17,7 +17,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <shiro.version>1.5.1</shiro.version>
-        <java.version>1.8</java.version>
+        <java.version>8</java.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -72,6 +74,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
         </dependency>
 
         <dependency>
@@ -206,8 +209,65 @@
             <!-- use latest version https://github.com/docker-java/docker-java/releases -->
             <version>3.2.7</version>
         </dependency>
-    </dependencies>
 
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+            <version>2.3.10</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.amqp</groupId>
+                    <artifactId>spring-amqp</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-amqp</artifactId>
+            <version>2.3.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>9.0.39</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.eclipsesource.j2v8</groupId>
+            <artifactId>j2v8_linux_x86_64</artifactId>
+            <version>4.8.0</version>
+        </dependency>
+
+    </dependencies>
+    <profiles>
+
+        <profile>
+            <activation>
+                <os>
+                    <name>windows</name>
+                    <version>10</version>
+                </os>
+            </activation>
+            <id>windows</id>
+            <properties>
+                <j2v8_id>j2v8_win32_x86_64</j2v8_id>
+                <j2v8_version>4.6.0</j2v8_version>
+            </properties>
+        </profile>
+        <profile>
+            <activation>
+                <os>
+                    <name>linux</name>
+                </os>
+            </activation>
+            <id>linux</id>
+            <properties>
+                <j2v8_id>j2v8_linux_x86_64</j2v8_id>
+                <j2v8_version>4.8.0</j2v8_version>
+            </properties>
+        </profile>
+    </profiles>
     <build>
         <resources>
             <resource>
@@ -215,6 +275,7 @@
                 <includes>
                     <include>**/*.properties</include>
                     <include>**/*.xml</include>
+                    <include>**/*.js</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>

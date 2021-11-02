@@ -3,32 +3,31 @@ package io.rackshift.strategy.statemachine;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.config.PluginConfig;
 import io.rackshift.constants.ExecutionLogConstants;
-import io.rackshift.constants.PluginConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.metal.sdk.IMetalProvider;
-import io.rackshift.metal.sdk.util.CloudProviderManager;
 import io.rackshift.model.RSException;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.Task;
+import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.service.ExecutionLogService;
 import io.rackshift.service.TaskService;
 import io.rackshift.service.WorkflowService;
 import io.rackshift.utils.ExceptionUtils;
 import io.rackshift.utils.Translator;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public abstract class AbstractHandler implements IStateHandler {
+@Component("abstractHandler")
+public class AbstractHandler implements IStateHandler {
     @Resource
     private BareMetalManager bareMetalManager;
     @Resource
@@ -36,13 +35,15 @@ public abstract class AbstractHandler implements IStateHandler {
     @Autowired
     private SimpMessagingTemplate template;
     @Resource
-    private CloudProviderManager metalProviderManager;
-    @Resource
     private TaskService taskService;
     @Resource
     private WorkflowService workflowService;
     @Resource
     private PluginConfig pluginConfig;
+    @Resource
+    private RabbitTemplate rabbitTemplate;
+    @Resource
+    private StateMachine stateMachine;
 
     protected BareMetal getBareMetalById(String id) {
         return bareMetalManager.getBareMetalById(id);
@@ -60,7 +61,9 @@ public abstract class AbstractHandler implements IStateHandler {
         add("Graph.Raid.Create.PercRAID");
     }};
 
-    public abstract void handleYourself(LifeEvent event) throws Exception;
+    public void handleYourself(LifeEvent event) throws Exception {
+
+    }
 
     @Override
     public void handleNoSession(LifeEvent event) {
@@ -75,13 +78,7 @@ public abstract class AbstractHandler implements IStateHandler {
 
     @Override
     public void handle(LifeEvent event) {
-        BareMetal bareMetal = getBareMetalById(event.getWorkflowRequestDTO().getBareMetalId());
         Task task = taskService.getById(event.getWorkflowRequestDTO().getTaskId());
-        if (StringUtils.isAnyBlank(bareMetal.getEndpointId(), bareMetal.getServerId())) {
-            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), "该裸金属未执行discovery流程,无法进行部署");
-            revert(event);
-            return;
-        }
 
         try {
             paramPreProcess(event);
@@ -93,19 +90,15 @@ public abstract class AbstractHandler implements IStateHandler {
         }
     }
 
-    private void paramPreProcess(LifeEvent event) {
-        String taskId = event.getWorkflowRequestDTO().getTaskId();
-        String user = taskService.getById(taskId).getUserId();
+    public void paramPreProcess(LifeEvent event) {
         if (preProcessRaidWf.contains(event.getWorkflowRequestDTO().getWorkflowName())) {
             if (Optional.of(event.getWorkflowRequestDTO()).isPresent()) {
                 WorkflowRequestDTO workflowRequestDTO = event.getWorkflowRequestDTO();
                 JSONObject params = workflowRequestDTO.getParams();
 
                 IMetalProvider iMetalProvider = pluginConfig.getPlugin(getBareMetalById(event.getBareMetalId()));
-//                        metalProviderManager.getCloudProvider(PluginConstants.PluginType.getPluginName(getBareMetalById(event.getBareMetalId())));
                 if (params != null) {
                     JSONObject param = iMetalProvider.getRaidPayLoad(params.toJSONString());
-                    executionLogService.saveLogDetail(taskId, user, ExecutionLogConstants.OperationEnum.START.name(), event.getBareMetalId(), String.format("调用插件处理后参数为:%s", (Optional.ofNullable(param).orElse(new JSONObject())).toJSONString()));
                     workflowRequestDTO.setParams(param);
                 }
             }
@@ -150,5 +143,45 @@ public abstract class AbstractHandler implements IStateHandler {
             msg = String.format("裸金属：%s,任务开始：%s,状态变更为：%s", bareMetal.getMachineModel() + " " + bareMetal.getManagementIp(), workflowService.getFriendlyName(task.getWorkFlowId()), taskStatus);
         }
         template.convertAndSend("/topic/taskLifecycle", msg);
+    }
+
+    protected void startTask(TaskWithBLOBs task) {
+        JSONObject taskObj = JSONObject.parseObject(task.getGraphObjects());
+        List<JSONObject> tasksReadyToStart = new ArrayList<>();
+        for (String t : taskObj.keySet()) {
+            if (taskObj.getJSONObject(t).getJSONObject("waitingOn") == null) {
+                tasksReadyToStart.add(taskObj.getJSONObject(t));
+            }
+        }
+
+        if (tasksReadyToStart.size() == 1) {
+            //假如有多个启动任务只启动一个
+            JSONObject body = new JSONObject();
+            body.put("taskId", task.getId());
+            body.put("instanceId", tasksReadyToStart.get(0).getString("instanceId"));
+//            Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
+//            rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
+            stateMachine.runTask(body);
+        } else {
+            for (JSONObject jsonObject : tasksReadyToStart) {
+                boolean solo = true;
+                for (String s : taskObj.keySet()) {
+                    JSONObject t = taskObj.getJSONObject(s);
+                    if (t.getJSONObject("waitingOn") != null && t.getJSONObject("waitingOn").containsKey(jsonObject.getString("instanceId"))) {
+                        solo = false;
+                        break;
+                    }
+                }
+                if (solo) {
+                    JSONObject body = new JSONObject();
+                    body.put("taskId", task.getId());
+                    body.put("instanceId", jsonObject.getString("instanceId"));
+//                    Message message = new Message(body.toJSONString().getBytes(StandardCharsets.UTF_8));
+//                    rabbitTemplate.send(MqConstants.RUN_TASK_QUEUE_NAME, message);
+                    stateMachine.runTask(body);
+                    break;
+                }
+            }
+        }
     }
 }

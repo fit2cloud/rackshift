@@ -3,7 +3,7 @@ name: upload release asset
 on:
   create:
     tag:
-      - "v1.*"
+      - "v1.6.0"
 
 jobs:
   build:
@@ -48,19 +48,14 @@ jobs:
             sh -c "$(curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh)"
             ```
 
-            ## 新增功能
-             - Huawei 2288H V3 V5 RAID
-
-            ## 问题修复
-             - 浪潮M5 删除与创建 RAID 失败
-             - CentOS 装机指定脚本安装 ip 指定失效
-             - IDRAC6 远程 kvm 报错
-             - 更新删除镜像报错
+            ## 重构
+            - 重写了装机引擎
+            - 去掉了 RackHD 的服务依赖，减小了一半安装包体积
 
             # 产品文档
-             点击 [完整文档](https://rackshift.io) 查看完整的安装和使用文档
+            点击 [完整文档](https://rackshift.io) 查看完整的安装和使用文档
             # 离线安装包
-             - [离线安装包下载地址](https://community.fit2cloud.com/#/download/rackshift/v1-5-1)
+            [离线安装包下载地址](https://community.fit2cloud.com/#/download/rackshift/v1-5-0)
 
       - name: Upload Release Asset
         id: upload-release-asset

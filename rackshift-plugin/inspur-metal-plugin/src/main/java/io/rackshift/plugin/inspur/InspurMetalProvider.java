@@ -60,7 +60,9 @@ public class InspurMetalProvider extends AbstractMetalProvider {
 
     @Override
     public List<String> getSupportedModels() {
-        return new ArrayList<>();
+        return new ArrayList<String>() {{
+            add("Inspur NF5280M4");
+        }};
     }
 
     @Override

@@ -13,9 +13,19 @@ public class OutBandManager {
     @Resource
     private OutBandMapper outBandMapper;
 
-    public List<OutBand> getByBareMetalId(String id){
+    public List<OutBand> getByBareMetalId(String id) {
         OutBandExample example = new OutBandExample();
         example.createCriteria().andBareMetalIdEqualTo(id);
         return outBandMapper.selectByExample(example);
+    }
+
+    public void save(OutBand outBand) {
+        outBandMapper.insertSelective(outBand);
+    }
+
+    public void deleteById(String id) {
+        OutBandExample e = new OutBandExample();
+        e.createCriteria().andBareMetalIdEqualTo(id);
+        outBandMapper.deleteByExample(e);
     }
 }

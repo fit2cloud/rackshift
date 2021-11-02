@@ -34,7 +34,7 @@ public class ImageController {
     private ImageService imageService;
 
     @Value("${file.upload.dir}")
-    private String fileUploadBase;
+    private String  fileUploadBase;
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @PostMapping("list/{page}/{pageSize}")

@@ -5,10 +5,8 @@ import io.rackshift.constants.RackHDConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.*;
-import io.rackshift.mybatis.domain.BareMetal;
-import io.rackshift.mybatis.domain.OutBand;
-import io.rackshift.mybatis.domain.OutBandExample;
-import io.rackshift.mybatis.domain.SystemParameter;
+import io.rackshift.mybatis.domain.*;
+import io.rackshift.mybatis.mapper.BareMetalMapper;
 import io.rackshift.mybatis.mapper.OutBandMapper;
 import io.rackshift.mybatis.mapper.SystemParameterMapper;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
@@ -26,6 +24,8 @@ import java.util.*;
 public class BareMetalService {
     @Resource
     private BareMetalManager bareMetalManager;
+    @Resource
+    private BareMetalMapper bareMetalMapper;
     @Resource
     private OutBandMapper outBandMapper;
     @Resource
@@ -246,7 +246,7 @@ public class BareMetalService {
             }
             bareMetalManager.update(b);
         } catch (Exception e) {
-            return ResultHolder.error("带外链接失败！");
+            return ResultHolder.error("与服务器得带外连接失败！");
         }
         return ResultHolder.success("");
     }
@@ -265,5 +265,19 @@ public class BareMetalService {
         }
 
         return ResultHolder.success(systemParameter.getParamValue().split("\\|"));
+    }
+
+    public BareMetal getByPXEMAC(String macs) {
+        BareMetalExample e = new BareMetalExample();
+        e.createCriteria().andPxeMacEqualTo(macs);
+        List<BareMetal> bareMetals = bareMetalMapper.selectByExample(e);
+        if (bareMetals.size() == 1) {
+            return bareMetals.get(0);
+        }
+        return null;
+    }
+
+    public BareMetal getById(String nodeId) {
+        return bareMetalManager.getBareMetalById(nodeId);
     }
 }

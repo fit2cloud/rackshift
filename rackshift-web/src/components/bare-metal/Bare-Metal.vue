@@ -46,6 +46,13 @@
       >
         <el-table-column type="selection" align="left"></el-table-column>
 
+        <el-table-column prop="pxe_mac" :label="$t('pxe_mac')" align="left"  width="140"
+                         sortable="custom">
+          <template slot-scope="scope">
+            {{ scope.row.pxeMac }}
+          </template>
+        </el-table-column>
+
         <el-table-column prop="machine_model" :label="$t('machine_model')" align="left"
                          sortable="custom" style="overflow: scroll" width="180">
           <template slot-scope="scope">
@@ -1017,7 +1024,7 @@ export default {
     },
     statusFilter(row) {
       if (row.status.indexOf("ing") == -1) {
-        if (row.serverId)
+        if (row.pxeMac)
           return '<span style="display: inline-block;white-space: nowrap;">' +
               this.$t('PXE') + ' ' + this.$t(row.status) + '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i><br>'
               + this.$t('OBM') + ' ' + this.$t('info') + (row.outBandList.length > 0 ? '<i class="el-icon-check" style="color:#55BA23;margin-left:5px;"></i>' : '<i class="el-icon-close" style="margin-left:5px;color: red;"></i>') + '</span>';
@@ -1490,6 +1497,11 @@ export default {
             title: this.$t('server_message'),
             message: this.$t('workflow_submitted'),
           });
+        } else {
+          this.$notify({
+            title: this.$t('server_message'),
+            message: res.message,
+          });
         }
       });
     }
@@ -1530,7 +1542,7 @@ export default {
       if (that.getWorkflowById()) {
         let originWf = _.find(that.supportedWorkflow, s => s.id == that.getWorkflowById().id);
         for (let k = 0; k < that.multipleSelection.length; k++) {
-          if (!that.multipleSelection[k].serverId) {
+          if (!that.multipleSelection[k].pxeMac) {
             that.$message.warning(that.multipleSelection[k].machineModel + ' [' + that.multipleSelection[k].machineSn + ']' + that.$t('not_discoveryed'));
             continue;
           }

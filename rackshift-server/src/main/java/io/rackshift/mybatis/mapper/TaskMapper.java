@@ -3,9 +3,8 @@ package io.rackshift.mybatis.mapper;
 import io.rackshift.mybatis.domain.Task;
 import io.rackshift.mybatis.domain.TaskExample;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface TaskMapper {
     long countByExample(TaskExample example);

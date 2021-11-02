@@ -513,7 +513,7 @@ export default {
     "partition_tips": "自動分配等於 kickstart autopart，自定義分區默認只操作第一塊磁盤 不管是 standard 標准設備還是 lvm 邏輯設備",
     "ubuntu_pwd": "默認賬號密碼 ubuntu/root",
     "open_webkvm": "遠程 KVM 控制台",
-    "post_install" : "POST-INSTALL 腳本",
+    "post_install": "POST-INSTALL 腳本",
     "view_example": "查看實例",
     "Profile": "引導文件",
     "InstallScript": "安裝腳本",
@@ -533,5 +533,8 @@ export default {
     "not_support_validate": "已選擇的鏡像已有裝機腳本，因此 UI 填寫的參數將可能不會生效",
     "backend_upload": "後端掛載",
     "front_upload": "前端上傳",
-    "mount_text" : "默認 http 服務器掛載地址在 /opt/rackshift/rackhd/files/mount/common，也可以直接使用其他第三方 http 服務器"
+    "mount_text": "默認 http 服務器掛載地址在 /opt/rackshift/rackhd/files/mount/common，也可以直接使用其他第三方 http 服務器",
+    "i18n_lvmname_null": "LVM 卷名不能為空",
+    "no_param": "參數不存在",
+    "pxe_mac": "PXE MAC"
 }

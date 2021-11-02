@@ -1,16 +1,11 @@
 package io.rackshift.strategy.statemachine.handler;
 
-import io.rackshift.config.WorkflowConfig;
-import io.rackshift.job.SyncRackJob;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.manager.OutBandManager;
-import io.rackshift.model.WorkflowRequestDTO;
-import io.rackshift.mybatis.domain.BareMetal;
-import io.rackshift.mybatis.domain.OutBand;
+import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.service.RackHDService;
+import io.rackshift.service.TaskService;
 import io.rackshift.strategy.statemachine.*;
-import io.rackshift.utils.IPMIUtil;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Resource;
 
@@ -23,7 +18,7 @@ public class DiscoveryStartHandler extends AbstractHandler {
     @Resource
     private BareMetalManager bareMetalManager;
     @Resource
-    private SyncRackJob syncRackJob;
+    private TaskService taskService;
 
     /**
      * 执行发现分为两种情况
@@ -36,33 +31,8 @@ public class DiscoveryStartHandler extends AbstractHandler {
      */
     @Override
     public void handleYourself(LifeEvent event) throws Exception {
-
-        WorkflowRequestDTO requestDTO = event.getWorkflowRequestDTO();
-        BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
-        OutBand o = outBandManager.getByBareMetalId(bareMetal.getManagementIp()).get(0);
-        String originStatus = bareMetal.getStatus();
-        beforeChange(LifeStatus.valueOf(originStatus));
-        if (StringUtils.isBlank(bareMetal.getServerId())) {
-            IPMIUtil.Account account = IPMIUtil.Account.build(o);
-            IPMIUtil.exeCommand(account, "chassis bootdev pxe");
-            IPMIUtil.exeCommand(account, "power off");
-            IPMIUtil.exeCommand(account, "power on");
-            bareMetal.setStatus(LifeStatus.discovering.name());
-            bareMetalManager.update(bareMetal, true);
-        } else {
-                //清空之前所有正在运行的任务
-            rackHDService.clearActiveWorkflow(bareMetal);
-            boolean result = rackHDService.postWorkflow(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), "Graph.BootstrapRancher", null);
-            if (result) {
-                result = rackHDService.postWorkflow(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), "Graph.Discovery", null);
-                //同步执行一次最新的发现
-                if (result) {
-                    syncRackJob.run();
-                }
-                changeStatus(event, LifeStatus.ready, false);
-            } else {
-                revert(event);
-            }
-        }
+        String taskId = event.getWorkflowRequestDTO().getTaskId();
+        TaskWithBLOBs task = taskService.getById(taskId);
+        startTask(task);
     }
 }

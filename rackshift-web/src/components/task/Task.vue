@@ -68,8 +68,8 @@
             <template slot-scope="scope">
               <i class="el-icon-loading" v-if="scope.row.status.indexOf('ing') != -1"></i>
               <span>{{ $t(scope.row.status) }}</span>
-              <span class="percent" v-if="scope.row.status.indexOf('ing') != -1 && scope.row.totalCount != 0">{{
-                  scope.row.successCount + '/' + scope.row.totalCount
+              <span class="percent" v-if="scope.row.status.indexOf('ing') != -1">{{
+                  getSuccessRate(scope.row)
                 }}</span>
             </template>
           </el-table-column>
@@ -136,11 +136,38 @@
             </div>
           </div>
         </el-drawer>
+
+
+        <el-drawer
+            :title="$t('view_log')"
+            :visible.sync="editDialogVisible2"
+            direction="rtl"
+            size="50%"
+            :wrapperClosable="false"
+            :before-close="handleClose2">
+          <div class="demo-drawer__content">
+            <json-viewer v-if="editObj.graphObjects" :value="editObj.graphObjects" :expand-depth=2
+                         :copyable="{copyText: $t('copy'), copiedText: $t('copied'), timeout: 2000}"></json-viewer>
+
+            <span v-else class="mb10">{{ $t('no_more_logs') }}</span>
+
+            <!--                <workflow-chart-->
+            <!--                    :transitions="transitions"-->
+            <!--                    :states="states" />-->
+
+
+            <div class="demo-drawer__footer">
+              <el-button @click="handleClose2">{{ $t('close') }}</el-button>
+            </div>
+          </div>
+        </el-drawer>
+
         <el-dialog
             :title="$t('param')"
             :append-to-body="true"
             :visible.sync="paramVisable" class="about-us">
-          <json-viewer :value="jsonData" :expand-depth=6 :copyable="{copyText: $t('copy'), copiedText: $t('copied'), timeout: 2000}"></json-viewer>
+          <json-viewer :value="jsonData" :expand-depth=6
+                       :copyable="{copyText: $t('copy'), copiedText: $t('copied'), timeout: 2000}"></json-viewer>
         </el-dialog>
       </div>
     </el-tab-pane>
@@ -155,11 +182,59 @@ import {humpToLine} from "@/common/utils/CommonUtil"
 import JsonViewer from 'vue-json-viewer'
 import Vue from 'vue'
 // Import JsonViewer as a Vue.js plugin
+import WorkflowChart from 'vue-workflow-chart';
+
 Vue.use(JsonViewer)
 let _ = require('lodash');
 export default {
   data() {
     return {
+      states: [{
+        "id": "state_1",
+        "label": "State 1",
+      }, {
+        "id": "state_2",
+        "label": "State 2",
+      }, {
+        "id": "state_3",
+        "label": "State 3",
+      }, {
+        "id": "state_4",
+        "label": "State 4",
+      }, {
+        "id": "state_5",
+        "label": "State 5",
+      }, {
+        "id": "state_6",
+        "label": "State 6",
+      }],
+      transitions: [{
+        "id": "transition_1",
+        "label": "this is a transition",
+        "target": "state_2",
+        "source": "state_1",
+      }, {
+        "id": "transition_1",
+        "label": "this is a transition",
+        "target": "state_3",
+        "source": "state_2",
+      }, {
+        "id": "transition_1",
+        "label": "this is a transition",
+        "target": "state_4",
+        "source": "state_3",
+      }, {
+        "id": "transition_1",
+        "label": "this is a transition",
+        "target": "state_5",
+        "source": "state_4",
+      }, {
+        "id": "transition_1",
+        "label": "this is a transition",
+        "target": "state_6",
+        "source": "state_5",
+      },],
+      editDialogVisible2: false,
       paramVisable: false,
       jsonData: {},
       queryVO: {},
@@ -232,10 +307,22 @@ export default {
       clearInterval(this.refreshSubTaskPointer);
     }
   },
+  components: {
+    WorkflowChart
+  },
   mounted() {
     this.getData();
   },
   methods: {
+    getSuccessRate(row) {
+      let graph = JSON.parse(row.graphObjects);
+      let suc = [];
+      _.forIn(graph, function (value, key) {
+        if (value.state == "succeeded")
+          suc.push(value);
+      });
+      return suc.length + '/' + Object.keys(graph).length
+    },
     copy(e) {
       e.preventDefault();
       var content = JSON.stringify(this.jsonData);
@@ -252,6 +339,10 @@ export default {
       this.paramVisable = false;
     },
     viewParam(param) {
+      if (!param) {
+        this.$message.info(this.$t("no_param"));
+        return;
+      }
       this.jsonData = JSON.parse(param);
       this.paramVisable = true;
     },
@@ -363,6 +454,10 @@ export default {
       this.editDialogVisible = false;
       window.clearInterval(this.refreshSubTaskPointer);
     },
+    handleClose2() {
+      this.editDialogVisible2 = false;
+      window.clearInterval(this.refreshSubTaskPointer);
+    },
     add() {
       this.editDialogVisible = true;
       this.editType = 'add';
@@ -420,13 +515,15 @@ export default {
         })
       } else if (type == 'view') {
         this.editObj = JSON.parse(JSON.stringify(row));
-        const that = this;
-        this.refreshOne = false;
-        HttpUtil.get("/task/logs?id=" + that.editObj.id, {}, (res) => {
-          that.editDialogVisible = true;
-          that.logs = res.data;
-          that.refreshSubTaskPointer = setInterval(that.getLogs, 5000);
-        });
+        this.editObj.graphObjects = JSON.parse(this.editObj.graphObjects);
+        this.editDialogVisible2 = true;
+        // const that = this;
+        // this.refreshOne = false;
+        // HttpUtil.get("/task/logs?id=" + that.editObj.id, {}, (res) => {
+        //   that.editDialogVisible2 = true;
+        //   that.logs = res.data;
+        //   that.refreshSubTaskPointer = setInterval(that.getLogs, 5000);
+        // });
       }
     },
 // 分页导航
@@ -440,6 +537,21 @@ export default {
 </script>
 
 <style scoped>
+@import '~vue-workflow-chart/dist/vue-workflow-chart.css';
+
+.vue-workflow-chart-state-delete {
+  color: white;
+  background: red;
+}
+
+.vue-workflow-chart-transition-arrow-delete {
+  fill: red;
+}
+
+.vue-workflow-chart-transition-path-delete {
+  stroke: red;
+}
+
 .handle-box {
   margin-bottom: 20px;
 }

@@ -2,11 +2,9 @@ package io.rackshift.strategy.statemachine.handler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import io.rackshift.config.WorkflowConfig;
-import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.WorkflowRequestDTO;
 import io.rackshift.mybatis.domain.BareMetal;
-import io.rackshift.mybatis.domain.Task;
+import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.service.RackHDService;
 import io.rackshift.service.TaskService;
 import io.rackshift.strategy.statemachine.*;
@@ -27,13 +25,12 @@ public class OsWorkflowStartHandler extends AbstractHandler {
     @Override
     public void handleYourself(LifeEvent event) {
         String taskId = event.getWorkflowRequestDTO().getTaskId();
-        Task task = taskService.getById(taskId);
+        TaskWithBLOBs task = taskService.getById(taskId);
 
         //下发装机workflow
         WorkflowRequestDTO requestDTO = event.getWorkflowRequestDTO();
         JSONObject params = requestDTO.getParams();
         JSONObject extraParams = requestDTO.getExtraParams();
-        BareMetal bareMetal = getBareMetalById(requestDTO.getBareMetalId());
 
         if (params == null) {
             revert(event);
@@ -48,20 +45,11 @@ public class OsWorkflowStartHandler extends AbstractHandler {
             }
         }
 
-        customizeParams(requestDTO.getWorkflowName(), params);
-
-        String workflowId = rackHDService.postWorkflowNoWait(WorkflowConfig.geRackhdUrlById(bareMetal.getEndpointId()), bareMetal.getServerId(), requestDTO.getWorkflowName(), params);
-        task.setStatus(ServiceConstants.TaskStatusEnum.running.name());
-        task.setInstanceId(workflowId);
+        startTask(task);
         taskService.update(task);
         changeStatus(event, LifeStatus.deploying, true);
     }
 
-    private void customizeParams(String injectableName, JSONObject params) {
-        if (abstractParamHandler.getHandler(injectableName) != null) {
-            abstractParamHandler.getHandler(injectableName).process(params);
-        }
-    }
 
     private void removePartitions(JSONObject params) {
         params.getJSONObject("options").getJSONObject("defaults").remove("installPartitions");

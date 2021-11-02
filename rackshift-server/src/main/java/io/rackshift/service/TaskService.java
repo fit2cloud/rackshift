@@ -1,7 +1,12 @@
 package io.rackshift.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.constants.MqConstants;
 import io.rackshift.constants.ServiceConstants;
+import io.rackshift.engine.model.BaseTask;
+import io.rackshift.engine.model.BaseTaskObject;
+import io.rackshift.engine.util.HoganService;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.model.RSException;
 import io.rackshift.model.TaskDTO;
@@ -10,22 +15,22 @@ import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.ExecutionLogDetailsMapper;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.mybatis.mapper.ext.ExtTaskMapper;
-import io.rackshift.strategy.statemachine.LifeEvent;
-import io.rackshift.strategy.statemachine.LifeEventType;
-import io.rackshift.strategy.statemachine.StateMachine;
-import io.rackshift.utils.BeanUtils;
-import io.rackshift.utils.SessionUtil;
-import io.rackshift.utils.UUIDUtil;
+import io.rackshift.strategy.statemachine.*;
+import io.rackshift.utils.*;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.type.Alias;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,19 +40,30 @@ public class TaskService {
     @Resource
     private ExtTaskMapper extTaskMapper;
     @Resource
-    private RackHDService rackHDService;
-    @Resource
     private BareMetalManager bareMetalManager;
     @Resource
     private StateMachine stateMachine;
     @Resource
     private ExecutionLogDetailsMapper executionLogDetailsMapper;
     @Resource
-    private EndpointService endpointService;
-    @Resource
     private WorkflowService workflowService;
     @Autowired
     private SimpMessagingTemplate template;
+    @Resource
+    private Map<String, BaseTaskObject> taskObject;
+    @Resource
+    private Map<String, BaseTask> baseTask;
+    @Resource
+    private Map<String, String> renderOptions;
+    @Resource
+    private HoganService hoganService;
+    @Resource
+    private AbstractHandler abstractHandler;
+
+    private List<String> runningStatus = new ArrayList<String>() {{
+        add(ServiceConstants.TaskStatusEnum.created.name());
+        add(ServiceConstants.TaskStatusEnum.running.name());
+    }};
 
     public Object add(TaskDTO queryVO) {
         TaskWithBLOBs task = new TaskWithBLOBs();
@@ -66,37 +82,14 @@ public class TaskService {
         Task task = taskMapper.selectByPrimaryKey(id);
         if (task == null) return false;
         if (bareMetalManager.getBareMetalById(task.getBareMetalId()) == null || StringUtils.isBlank(task.getInstanceId())) {
+            failTask(task);
             taskMapper.deleteByPrimaryKey(id);
+            try {
+                MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_DELETION + task.getBareMetalId(), "");
+            } catch (Exception e) {
+                LogUtil.error(String.format("delete queue failed!%s", task.getBareMetalId()));
+            }
             return true;
-        }
-        if (StringUtils.isNotBlank(task.getInstanceId())) {
-            //rackhd 清除 任务
-            Endpoint endpoint = endpointService.getById(bareMetalManager.getBareMetalById(task.getBareMetalId()).getEndpointId());
-            if (endpoint == null) {
-                taskMapper.deleteByPrimaryKey(id);
-                return true;
-            }
-            String status = rackHDService.getWorkflowStatusById(endpoint, task.getInstanceId());
-            if (!ServiceConstants.TaskStatusEnum.running.name().equalsIgnoreCase(status)) {
-                taskMapper.deleteByPrimaryKey(id);
-                return true;
-            }
-            boolean r = rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()));
-            if (r) {
-                WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
-                requestDTO.setTaskId(task.getId());
-                requestDTO.setParams(JSONObject.parseObject("{ \"result\" : false}"));
-
-                requestDTO.setBareMetalId(task.getBareMetalId());
-                Workflow workflow = workflowService.getById(task.getWorkFlowId());
-                LifeEventType type = LifeEventType.valueOf(workflow.getEventType().replace("START", "END"));
-                LifeEvent event = LifeEvent.builder().withEventType(type).withWorkflowRequestDTO(requestDTO);
-                stateMachine.sendEvent(event);
-
-                taskMapper.deleteByPrimaryKey(id);
-            } else {
-                RSException.throwExceptions("取消任务失败！instanceID：" + task.getInstanceId());
-            }
         }
         return true;
     }
@@ -130,6 +123,8 @@ public class TaskService {
                 task.setExtparams(Optional.ofNullable(e.getWorkflowRequestDTO().getExtraParams()).orElse(new JSONObject()).toJSONString());
                 task.setStatus(ServiceConstants.TaskStatusEnum.created.name());
                 task.setCreateTime(System.currentTimeMillis());
+                //生成真正的 taskgraph 实例对象
+                task.setGraphObjects(generateGraphObjects(e));
                 list.add(task);
             });
 
@@ -146,6 +141,135 @@ public class TaskService {
                 taskMapper.insertSelective(taskWithBLOBs);
             }
         }
+    }
+
+    public String generateGraphObjects(LifeEvent e) {
+        String bareMetalId = e.getBareMetalId();
+        String workflowName = e.getWorkflowRequestDTO().getWorkflowName();
+        abstractHandler.paramPreProcess(e);
+        WorkflowWithBLOBs w = workflowService.getByInjectableName(workflowName);
+        LinkedHashMap taskObjects = new LinkedHashMap();
+        if (w != null) {
+            JSONArray tasks = JSONArray.parseArray(w.getTasks());
+            // 原 rackhd graph 定义默认参数
+            JSONObject definitionOptions = JSONObject.parseObject(w.getOptions());
+            Map<String, JSONObject> taskOptions = definitionOptions.keySet().stream().collect(Collectors.toMap(k -> k, k -> definitionOptions.getJSONObject(k)));
+            Map<String, String> instanceMap = new HashedMap();
+
+            for (int i = 0; i < tasks.size(); i++) {
+                JSONObject task = tasks.getJSONObject(i);
+                String taskName = task.getString("taskName");
+                String taskFName = task.getString("label");
+                JSONObject taskObj = null;
+                JSONObject baseTaskObj = null;
+                if (StringUtils.isNotBlank(taskName)) {
+                    taskObj = (JSONObject) JSONObject.toJSON(taskObject.get(taskName));
+                    baseTaskObj = (JSONObject) JSONObject.toJSON(baseTask.get(taskObj.getString("implementsTask")));
+                } else if (task.getJSONObject("taskDefinition") != null) {
+                    taskObj = task.getJSONObject("taskDefinition");
+                    baseTaskObj = (JSONObject) JSONObject.toJSON(baseTask.get(taskObj.getString("implementsTask")));
+                }
+                JSONObject finalTaskObj = taskObj;
+                taskObj.keySet().forEach(k -> {
+                    task.put(k, finalTaskObj.get(k));
+                });
+
+                task.put("runJob", baseTaskObj.get("runJob"));
+                task.put("state", ServiceConstants.RackHDTaskStatusEnum.pending.name());
+                task.put("taskStartTime", LocalDateTime.now());
+                if (task.getJSONObject("options") == null) {
+                    task.put("options", extract(workflowName, e.getWorkflowRequestDTO().getParams(), taskFName));
+                } else {
+                    JSONObject userOptions = extract(workflowName, e.getWorkflowRequestDTO().getParams(), taskFName);
+                    JSONObject options = task.getJSONObject("options");
+                    if (userOptions != null)
+                        userOptions.keySet().forEach(k -> {
+                            options.put(k, userOptions.get(k));
+                        });
+                }
+
+                if (taskOptions.get(task.getString("label")) != null) {
+                    taskOptions.get(task.getString("label")).keySet().forEach(k -> {
+                        if (!task.getJSONObject("options").containsKey(k)) {
+                            task.getJSONObject("options").put(k, taskOptions.get(task.getString("label")).get(k));
+                        }
+                    });
+                }
+
+                task.put("bareMetalId", bareMetalId);
+                task.put("instanceId", UUIDUtil.newUUID());
+
+                //将 waiton的 task label 替换成实例的 instancId
+                instanceMap.put(task.getString("label"), task.getString("instanceId"));
+                if (task.getJSONObject("waitOn") != null) {
+                    JSONObject waitOnObj = task.getJSONObject("waitOn");
+                    String label = waitOnObj.keySet().stream().findFirst().get();
+                    waitOnObj.put(instanceMap.get(label), waitOnObj.getString(label));
+                    waitOnObj.remove(label);
+                    task.put("waitingOn", waitOnObj);
+                    task.remove("waitOn");
+                }
+
+                //渲染参数中的 {{}} 形式变量
+                renderTaskOptions(task);
+                taskObjects.put(task.getString("instanceId"), task);
+            }
+        }
+
+        return JSONObject.toJSONString(taskObjects);
+    }
+
+    private void renderTaskOptions(JSONObject task) {
+        try {
+            Map<String, String> thisOptions = getThisOptions(task);
+            String optionStr = task.getJSONObject("options").toJSONString();
+            //temp code
+            if (!"create-raid".equalsIgnoreCase(task.getString("label"))) {
+                Pattern p = Pattern.compile("\\{\\{([a-zA-Z\\.\\s]+)\\}\\}");
+
+                Matcher m = p.matcher(optionStr);
+                while (m.find()) {
+                    if (m.group(1).contains("options")) {
+                        optionStr = optionStr.replace(m.group(), thisOptions.get(m.group(1).trim().replace("options.", "")));
+                    } else if (m.group(1).contains("task.nodeId")) {
+                        optionStr = optionStr.replace(m.group(), task.getString("bareMetalId"));
+                    } else {
+                        optionStr = optionStr.replace(m.group(), renderOptions.get(m.group(1).trim()));
+                    }
+                }
+            }
+            task.put("options", JSONObject.parseObject(hoganService.renderWithHogan(optionStr, task)));
+        } catch (Exception e) {
+            RSException.throwExceptions("参数校验失败！请检查是否有必填参数缺失！");
+        }
+    }
+
+    private Map getThisOptions(JSONObject task) {
+        Map<String, String> optionMap = new HashMap<>();
+        task.getJSONObject("options").keySet().stream().forEach(k -> {
+            optionMap.put(k, task.getJSONObject("options").getString(k));
+        });
+
+        return optionMap;
+    }
+
+    /**
+     * 从参数里面获取参数对应的标签名称
+     *
+     * @param workflowName
+     * @param params
+     * @param label
+     * @return
+     */
+    private JSONObject extract(String workflowName, JSONObject params, String label) {
+        if (params != null && params.containsKey("options")) {
+            JSONObject options = params.getJSONObject("options");
+            JSONObject p = options.getJSONObject(label);
+            if (p != null)
+                return p;
+            return params.getJSONObject("options").getJSONObject("defaults");
+        }
+        return params;
     }
 
     private String findLastTaskId(String bareMetalId) {
@@ -179,10 +303,6 @@ public class TaskService {
     }
 
 
-    public static void main(String[] args) {
-        new ArrayList<>().get(0);
-    }
-
     public boolean cancel(String[] ids) {
         if (ids == null || ids.length == 0) {
             return false;
@@ -190,21 +310,76 @@ public class TaskService {
         for (String id : ids) {
             Task task = taskMapper.selectByPrimaryKey(id);
             if (task != null && task.getBareMetalId() != null) {
-                if (StringUtils.isNotBlank(task.getInstanceId())) {
-                    if (rackHDService.cancelWorkflow(bareMetalManager.getBareMetalById(task.getBareMetalId()))) {
-                        task.setStatus(ServiceConstants.TaskStatusEnum.cancelled.name());
-                        taskMapper.updateByPrimaryKey(task);
-                        template.convertAndSend("/topic/lifecycle", "");
-                    } else {
-                        return false;
-                    }
-                } else {
-                    task.setStatus(ServiceConstants.TaskStatusEnum.cancelled.name());
-                    taskMapper.updateByPrimaryKey(task);
-                    template.convertAndSend("/topic/lifecycle", "");
+                task.setStatus(ServiceConstants.TaskStatusEnum.cancelled.name());
+                taskMapper.updateByPrimaryKey(task);
+                try {
+                    MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_DELETION + task.getBareMetalId(), "");
+                } catch (Exception e) {
+                    LogUtil.error(String.format("delete queue failed!%s", task.getBareMetalId()));
                 }
+                failTask(task);
             }
+
         }
         return true;
+    }
+
+    private void failTask(Task task) {
+        WorkflowRequestDTO requestDTO = new WorkflowRequestDTO();
+        requestDTO.setTaskId(task.getId());
+        requestDTO.setParams(JSONObject.parseObject("{ \"result\" : false}"));
+
+        requestDTO.setBareMetalId(task.getBareMetalId());
+        Workflow workflow = workflowService.getById(task.getWorkFlowId());
+        LifeEventType type = LifeEventType.valueOf(workflow.getEventType().replace("START", "END"));
+        LifeEvent event = LifeEvent.builder().withEventType(type).withWorkflowRequestDTO(requestDTO);
+        stateMachine.sendEvent(event);
+        template.convertAndSend("/topic/lifecycle", "");
+    }
+
+    public TaskWithBLOBs createDiscoveryGraph(String bareMetalId) {
+        WorkflowWithBLOBs w = workflowService.getByInjectableName("Graph.rancherDiscovery");
+        TaskWithBLOBs task = new TaskWithBLOBs();
+        task.setId(UUIDUtil.newUUID());
+        task.setBareMetalId(bareMetalId);
+        task.setWorkFlowId(w.getId());
+        task.setStatus(ServiceConstants.TaskStatusEnum.created.name());
+        task.setCreateTime(System.currentTimeMillis());
+        //生成真正的 taskgraph 实例对象
+        WorkflowRequestDTO workflowRequestDTO = new WorkflowRequestDTO();
+        workflowRequestDTO.setWorkflowName(w.getInjectableName());
+        LifeEvent e = LifeEvent.builder().withEventType(LifeEventType.POST_DISCOVERY_WORKFLOW_START).withWorkflowRequestDTO(workflowRequestDTO).withBareMetalId(bareMetalId);
+        task.setGraphObjects(generateGraphObjects(e));
+        task.setBeforeStatus(LifeStatus.onrack.name());
+        taskMapper.insertSelective(task);
+        return task;
+    }
+
+    public BareMetal createBMAndDiscoveryGraph(String macs) {
+        BareMetal bareMetal = bareMetalManager.createNewFromPXE(macs);
+        Task t = createDiscoveryGraph(bareMetal.getId());
+        //direct run discovery to avoid ipxe chainload timeout
+        stateMachine.runTaskGraph(t.getId());
+        return bareMetal;
+    }
+
+    public Map<String, Object> getTaskProfile(String id) throws IOException, InterruptedException {
+        TaskExample e = new TaskExample();
+        e.createCriteria().andBareMetalIdEqualTo(id).andStatusIn(runningStatus);
+        List<TaskWithBLOBs> tasks = taskMapper.selectByExampleWithBLOBs(e);
+        if (tasks.isEmpty()) {
+            return null;
+        }
+        Map<String, Object> r = new HashMap<>();
+        r.put("profile", MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_PROFILES + id, ""));
+        r.put("options", MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_OPTIONS + id, ""));
+        r.put("macaddress", bareMetalManager.getBareMetalById(id).getPxeMac());
+        return r;
+    }
+
+    public List<Task> getActiveTasks(String bareMetalId) {
+        TaskExample e = new TaskExample();
+        e.createCriteria().andBareMetalIdEqualTo(bareMetalId).andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
+        return taskMapper.selectByExample(e);
     }
 }

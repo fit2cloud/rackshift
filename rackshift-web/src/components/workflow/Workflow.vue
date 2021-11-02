@@ -277,12 +277,11 @@ export default {
     },
     getAllRackHDWorkflows: function () {
       HttpUtil.get("workflow/listallRackHDWorkflows", null, (res) => {
-        this.allRackHDWorkflows = res.data;
-        if (res.data && res.data.length) {
-          res.data.forEach(d => {
-            this.workflowMap[d.injectableName] = d;
-          });
-        }
+        this.workflowMap = res.data;
+        let that = this;
+        Object.keys(this.workflowMap).forEach(k => {
+          that.allRackHDWorkflows.push(that.workflowMap[k]);
+        });
       });
     },
     getAllEventType: function () {

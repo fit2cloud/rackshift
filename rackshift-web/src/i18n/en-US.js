@@ -525,5 +525,8 @@ export default {
     "not_support_validate": "UI param will not be supported",
     "backend_upload": "Mount",
     "front_upload": "Upload",
-    "mount_text" : "default mount point is under /opt/rackshift/rackhd/files/mount/common，third part http server is also available"
+    "mount_text": "default mount point is under /opt/rackshift/rackhd/files/mount/common，third part http server is also available",
+    "i18n_lvmname_null": "LVM Name can not be null",
+    "no_param": "No param!",
+    "pxe_mac": "PXE MAC"
 }
