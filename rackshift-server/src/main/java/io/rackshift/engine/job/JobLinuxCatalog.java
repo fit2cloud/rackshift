@@ -2,13 +2,19 @@ package io.rackshift.engine.job;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.engine.util.CatalogParser;
 import io.rackshift.engine.util.CommandParser;
+import io.rackshift.manager.BareMetalManager;
+import io.rackshift.model.MachineEntity;
 import io.rackshift.model.RSException;
+import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.mapper.TaskMapper;
+import io.rackshift.strategy.statemachine.LifeEvent;
 import io.rackshift.utils.JSONUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,16 +52,16 @@ public class JobLinuxCatalog extends BaseJob {
     @Override
     public void run() {
         JSONArray cmds = options.getJSONArray("commands");
-        List cmdList = cmds.stream().map(c->{
-            if(c instanceof JSONObject && ((JSONObject)c).containsKey("command"))
-                return ((JSONObject)c).getString("command");
+        List cmdList = cmds.stream().map(c -> {
+            if (c instanceof JSONObject && ((JSONObject) c).containsKey("command"))
+                return ((JSONObject) c).getString("command");
             return c;
         }).collect(Collectors.toList());
         JSONObject r = new JSONObject();
         r.put("identifier", bareMetalId);
         this.subscribeForRequestCommand((o) -> {
             JSONArray taskArr = new JSONArray();
-            cmdList.forEach(c->{
+            cmdList.forEach(c -> {
                 JSONObject cmd = new JSONObject();
                 cmd.put("cmd", c);
                 taskArr.add(cmd);
@@ -70,6 +76,7 @@ public class JobLinuxCatalog extends BaseJob {
 
         this.subscribeForCompleteCommands(o -> {
             CommandParser cp = (CommandParser) applicationContext.getBean("commandParser");
+
             try {
                 JSONObject resultObj = JSONObject.parseObject((String) o);
                 String bareMetalId = resultObj.getString("identifier");
@@ -89,8 +96,25 @@ public class JobLinuxCatalog extends BaseJob {
                 this.error(new RSException("save catalog error!" + e.getMessage()));
                 return "ok";
             }
+            refreshNodeHardWare();
             this.complete();
             return "ok";
         });
+    }
+
+    private void refreshNodeHardWare() {
+        CatalogParser catalogParser = (CatalogParser) applicationContext.getBean("catalogParser");
+        BareMetalManager bareMetalManager = (BareMetalManager) applicationContext.getBean("bareMetalManager");
+        SimpMessagingTemplate template = (SimpMessagingTemplate) applicationContext.getBean("template");
+        BareMetal bm = bareMetalManager.getBareMetalById(bareMetalId);
+        LifeEvent event = LifeEvent.builder().withBareMetalId(bareMetalId);
+        MachineEntity en = catalogParser.parse(event);
+        en.setStatus(bm.getStatus());
+        try {
+            bareMetalManager.saveOrUpdateEntity(en);
+            template.convertAndSend("/topic/lifecycle", String.format("裸金属：%s,硬件信息更新", bm.getMachineModel() + " " + bm.getManagementIp()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
