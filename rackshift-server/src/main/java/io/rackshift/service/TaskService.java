@@ -238,9 +238,7 @@ public class TaskService {
                     }
                 }
             }
-            JSONObject params = JSONUtils.merge(renderOptions, (JSONObject) JSONObject.toJSON(thisOptions));
-            params.put("options", thisOptions);
-            task.put("options", JSONObject.parseObject(hoganService.renderWithHogan(optionStr, params)));
+            task.put("options", JSONObject.parseObject(hoganService.renderWithHogan(optionStr, task)));
         } catch (Exception e) {
             RSException.throwExceptions("参数校验失败！请检查是否有必填参数缺失！");
         }
