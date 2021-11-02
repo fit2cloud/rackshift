@@ -10,10 +10,7 @@ import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.domain.OutBandExample;
 import io.rackshift.mybatis.mapper.OutBandMapper;
-import io.rackshift.utils.BeanUtils;
-import io.rackshift.utils.IPMIUtil;
-import io.rackshift.utils.LogUtil;
-import io.rackshift.utils.Translator;
+import io.rackshift.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +35,7 @@ public class OutBandService {
             OutBand dbOutBand = outBandMapper.selectByPrimaryKey(o.getId());
             o.setId(dbOutBand.getId());
             BeanUtils.copyBean(dbOutBand, o);
-            outBandMapper.updateByPrimaryKeySelective(dbOutBand);
+            outBandMapper.updateByPrimaryKeySelective(o);
             return;
         }
 
@@ -62,6 +59,7 @@ public class OutBandService {
                 outBandMapper.updateByPrimaryKey(o1);
             });
         } else {
+            o.setId(UUIDUtil.newUUID());
             outBandMapper.insertSelective(o);
         }
     }
