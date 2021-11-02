@@ -105,7 +105,7 @@ public class JobLinuxCatalog extends BaseJob {
     private void refreshNodeHardWare() {
         CatalogParser catalogParser = (CatalogParser) applicationContext.getBean("catalogParser");
         BareMetalManager bareMetalManager = (BareMetalManager) applicationContext.getBean("bareMetalManager");
-        SimpMessagingTemplate template = (SimpMessagingTemplate) applicationContext.getBean("template");
+        SimpMessagingTemplate template = applicationContext.getBean(SimpMessagingTemplate.class);
         BareMetal bm = bareMetalManager.getBareMetalById(bareMetalId);
         LifeEvent event = LifeEvent.builder().withBareMetalId(bareMetalId);
         MachineEntity en = catalogParser.parse(event);
