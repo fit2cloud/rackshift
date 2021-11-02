@@ -48,16 +48,9 @@ jobs:
             sh -c "$(curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh)"
             ```
 
-            ## 新增功能
-            - 支持 自定义 KS，iPXE 装机
-            - 自定义品牌
-            - 镜像支持后台挂载
-
-            ## 功能优化
-            - 重写 DHCP-PROXY 服务减小离线包体积
-
-            ## 问题修复
-            - 修复了一些已知问题
+            ## 重构
+            - 重写了装机引擎
+            - 去掉了 RackHD 的服务依赖，减小了一半安装包体积
 
             # 产品文档
             点击 [完整文档](https://rackshift.io) 查看完整的安装和使用文档
