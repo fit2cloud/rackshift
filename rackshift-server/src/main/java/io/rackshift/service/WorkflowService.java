@@ -1,7 +1,5 @@
 package io.rackshift.service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.mongodb.BasicDBObject;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.manager.BareMetalManager;
 import io.rackshift.manager.WorkflowManager;
@@ -18,24 +16,18 @@ import io.rackshift.strategy.statemachine.LifeEvent;
 import io.rackshift.strategy.statemachine.LifeEventType;
 import io.rackshift.strategy.statemachine.StateMachine;
 import io.rackshift.utils.BeanUtils;
-import io.rackshift.utils.MongoUtil;
-import io.rackshift.utils.Pager;
 import io.rackshift.utils.Translator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 public class WorkflowService {
-    @Resource
-    private RackHDService rackHDService;
     @Resource
     private WorkflowManager workflowManager;
     @Resource

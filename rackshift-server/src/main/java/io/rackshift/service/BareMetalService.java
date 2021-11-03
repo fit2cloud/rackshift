@@ -11,7 +11,9 @@ import io.rackshift.mybatis.mapper.OutBandMapper;
 import io.rackshift.mybatis.mapper.SystemParameterMapper;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
 import io.rackshift.strategy.statemachine.LifeStatus;
-import io.rackshift.utils.*;
+import io.rackshift.utils.BeanUtils;
+import io.rackshift.utils.IPMIUtil;
+import io.rackshift.utils.Translator;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 import org.apache.commons.lang3.StringUtils;
@@ -30,10 +32,6 @@ public class BareMetalService {
     private OutBandMapper outBandMapper;
     @Resource
     private IPMIHandlerDecorator ipmiHandlerDecorator;
-    @Resource
-    private RackHDService rackHDService;
-    @Resource
-    private EndpointService endpointService;
     @Resource
     private TaskService taskService;
     @Resource
@@ -97,16 +95,6 @@ public class BareMetalService {
         }
         for (String id : ids) {
             BareMetal bareMetal = bareMetalManager.getBareMetalById(id);
-            if (endpointService.getById(bareMetal.getEndpointId()) != null) {
-                if (StringUtils.isNotBlank(bareMetal.getServerId())) {
-                    try {
-                        rackHDService.cancelWorkflow(bareMetal);
-                        rackHDService.deleteNode(bareMetal);
-                    } catch (Exception e) {
-                        LogUtil.info("删除RackHD节点失败！", ExceptionUtils.getExceptionDetail(e));
-                    }
-                }
-            }
             bareMetalManager.delBareMetalById(id);
             outBandService.delBareMetalById(id);
             taskService.delByBareMetalId(id);

@@ -7,7 +7,6 @@ import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.domain.OutBandExample;
 import io.rackshift.mybatis.mapper.BareMetalMapper;
 import io.rackshift.mybatis.mapper.OutBandMapper;
-import io.rackshift.service.RackHDService;
 import io.rackshift.utils.IPMIUtil;
 import io.rackshift.utils.LogUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -30,8 +29,6 @@ public class SyncOutBandJob {
     private OutBandMapper outBandMapper;
     @Resource
     private BareMetalMapper bareMetalMapper;
-    @Resource
-    private RackHDService rackHDService;
 
     @Scheduled(fixedDelay = 300 * 1000)
     public void updatePowerOutBandStatusScheduler() {
@@ -80,7 +77,6 @@ public class SyncOutBandJob {
                             if (StringUtils.isBlank(nodeId)) {
                                 return;
                             }
-                            if (rackHDService.createOrUpdateObm(o, p)) return;
                         });
                     }
                 } catch (Exception e) {
@@ -90,7 +86,7 @@ public class SyncOutBandJob {
         }
     }
 
-    private void setStatusBeforeIPMI(OutBand o,     List<BareMetal> pms, String outBandStatus) {
+    private void setStatusBeforeIPMI(OutBand o, List<BareMetal> pms, String outBandStatus) {
         o.setStatus(outBandStatus);
         outBandMapper.updateByPrimaryKeySelective(o);
         pms.stream().forEach(p -> {

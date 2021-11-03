@@ -24,8 +24,6 @@ public class OutBandService {
     private OutBandMapper outBandMapper;
     @Resource
     private BareMetalManager bareMetalManager;
-    @Resource
-    private RackHDService rackHDService;
 
     public void saveOrUpdate(OutBand o, boolean modifyIp) {
         if (StringUtils.isBlank(o.getBareMetalId())) {
@@ -65,8 +63,6 @@ public class OutBandService {
     }
 
     public void fillOBMS(String bareMetalId, OutBand outBand) {
-        BareMetal bareMetal = bareMetalManager.getBareMetalById(bareMetalId);
-        rackHDService.createOrUpdateObm(outBand, bareMetal);
         outBand.setBareMetalId(bareMetalId);
         saveOrUpdate(outBand, true);
     }
@@ -80,7 +76,6 @@ public class OutBandService {
         }
         image.setBareMetalId(bareMetal.getId());
         outBandMapper.insertSelective(image);
-        rackHDService.createOrUpdateObm(queryVO, bareMetal);
         return true;
     }
 
@@ -93,7 +88,6 @@ public class OutBandService {
         if (bareMetal == null) {
             return null;
         }
-        rackHDService.createOrUpdateObm(queryVO, bareMetal);
         return true;
     }
 

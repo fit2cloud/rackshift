@@ -1,22 +1,16 @@
 package io.rackshift.strategy.statemachine.handler;
 
-import io.rackshift.manager.BareMetalManager;
-import io.rackshift.manager.OutBandManager;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
-import io.rackshift.service.RackHDService;
 import io.rackshift.service.TaskService;
-import io.rackshift.strategy.statemachine.*;
+import io.rackshift.strategy.statemachine.AbstractHandler;
+import io.rackshift.strategy.statemachine.EventHandlerAnnotation;
+import io.rackshift.strategy.statemachine.LifeEvent;
+import io.rackshift.strategy.statemachine.LifeEventType;
 
 import javax.annotation.Resource;
 
 @EventHandlerAnnotation(LifeEventType.POST_DISCOVERY_WORKFLOW_START)
 public class DiscoveryStartHandler extends AbstractHandler {
-    @Resource
-    private RackHDService rackHDService;
-    @Resource
-    private OutBandManager outBandManager;
-    @Resource
-    private BareMetalManager bareMetalManager;
     @Resource
     private TaskService taskService;
 

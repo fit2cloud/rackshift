@@ -6,7 +6,6 @@ import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.*;
 import io.rackshift.mybatis.mapper.ext.ExtNetworkCardMapper;
 import io.rackshift.service.EndpointService;
-import io.rackshift.service.RackHDService;
 import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.ExceptionUtils;

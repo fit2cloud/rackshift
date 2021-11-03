@@ -3,12 +3,9 @@ package io.rackshift.strategy.statemachine.handler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.model.WorkflowRequestDTO;
-import io.rackshift.mybatis.domain.BareMetal;
 import io.rackshift.mybatis.domain.TaskWithBLOBs;
-import io.rackshift.service.RackHDService;
 import io.rackshift.service.TaskService;
 import io.rackshift.strategy.statemachine.*;
-import io.rackshift.strategy.statemachine.handler.param.AbstractParamHandler;
 
 import javax.annotation.Resource;
 
@@ -16,11 +13,7 @@ import javax.annotation.Resource;
 public class OsWorkflowStartHandler extends AbstractHandler {
 
     @Resource
-    private RackHDService rackHDService;
-    @Resource
     private TaskService taskService;
-    @Resource
-    private AbstractParamHandler abstractParamHandler;
 
     @Override
     public void handleYourself(LifeEvent event) {
