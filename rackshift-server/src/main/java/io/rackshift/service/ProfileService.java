@@ -173,7 +173,7 @@ public class ProfileService {
     }
 
     public String getProfileContentByName(Map profileOptionMap) {
-        if (profileOptionMap == null)
+        if (profileOptionMap == null || profileOptionMap.get("profile") == null)
             return "echo RackShift: No active task is running !";
         ProfileExample e = new ProfileExample();
         e.createCriteria().andNameEqualTo((String) profileOptionMap.get("profile"));

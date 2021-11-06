@@ -371,9 +371,19 @@ public class TaskService {
             return null;
         }
         Map<String, Object> r = new HashMap<>();
-        r.put("profile", MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_PROFILES + id, ""));
-        r.put("options", MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_OPTIONS + id, ""));
-        r.put("macaddress", bareMetalManager.getBareMetalById(id).getPxeMac());
+        try {
+            String profile = MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_PROFILES + id, "");
+            String options = MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_OPTIONS + id, "");
+            if (!"no".equals(profile)) {
+                r.put("profile", profile);
+            }
+            if (!"no".equals(options)) {
+                r.put("options", options);
+            }
+            r.put("macaddress", bareMetalManager.getBareMetalById(id).getPxeMac());
+        } catch (Exception e1) {
+
+        }
         return r;
     }
 
