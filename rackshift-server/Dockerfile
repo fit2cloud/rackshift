@@ -1,4 +1,4 @@
-FROM rackshift/rackshift-base:2.0
+FROM registry.cn-qingdao.aliyuncs.com/x-lab/rackshift-base:2.0
 
 RUN mkdir -p /opt/rackshift
 
