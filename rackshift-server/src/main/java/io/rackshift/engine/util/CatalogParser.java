@@ -217,7 +217,7 @@ public class CatalogParser {
                     }
                 }
                 if (StringUtils.equalsIgnoreCase("N/A", en.getSerialNo())) {
-                    en.setModel(dmi.getJSONObject("System Information").getString("Serial Number"));
+                    en.setSerialNo(dmi.getJSONObject("System Information").getString("Serial Number"));
                 }
                 if (StringUtils.isBlank(en.getModel())) {
                     en.setModel(dmi.getJSONObject("System Information").getString("Product Name"));
