@@ -43,7 +43,7 @@ public class IPMIUtil {
                 ProcessBuilder builder = new ProcessBuilder(cmds);
                 builder.redirectErrorStream(true);
                 Process p = builder.start();
-                InputStreamReader re = new InputStreamReader(p.getErrorStream(), "utf-8");
+                InputStreamReader re = new InputStreamReader(p.getInputStream(), "utf-8");
                 BufferedReader b = new BufferedReader(re);
                 String line = null;
                 StringBuffer sb = new StringBuffer();
@@ -189,6 +189,7 @@ public class IPMIUtil {
                 "Attempt Count Reset Int.: 0\n" +
                 "User Lockout Interval   : 0"));
     }
+
     public static class Account {
         String host;
         String userName;
