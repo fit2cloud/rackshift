@@ -43,13 +43,14 @@ public class IPMIUtil {
                 ProcessBuilder builder = new ProcessBuilder(cmds);
                 builder.redirectErrorStream(true);
                 Process p = builder.start();
-                InputStreamReader re = new InputStreamReader(p.getInputStream(), "utf-8");
+                InputStreamReader re = new InputStreamReader(p.getErrorStream(), "utf-8");
                 BufferedReader b = new BufferedReader(re);
                 String line = null;
                 StringBuffer sb = new StringBuffer();
                 while ((line = b.readLine()) != null) {
                     sb.append(line + "\n");
                 }
+                p.waitFor();
                 p.getInputStream().close();
                 re.close();
                 b.close();
