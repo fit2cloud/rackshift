@@ -299,6 +299,11 @@ public class TaskService {
     public int delByBareMetalId(String id) {
         TaskExample e = new TaskExample();
         e.createCriteria().andBareMetalIdEqualTo(id);
+        try {
+            MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_DELETION + id, "");
+        } catch (Exception e1) {
+            LogUtil.error(String.format("delete queue failed!%s", id));
+        }
         return taskMapper.deleteByExample(e);
     }
 

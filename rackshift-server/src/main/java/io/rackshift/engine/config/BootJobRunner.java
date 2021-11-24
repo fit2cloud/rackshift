@@ -1,7 +1,6 @@
 package io.rackshift.engine.config;
 
 import io.rackshift.mybatis.domain.Task;
-import io.rackshift.mybatis.domain.TaskWithBLOBs;
 import io.rackshift.service.TaskService;
 import io.rackshift.strategy.statemachine.StateMachine;
 import org.springframework.boot.ApplicationArguments;
@@ -21,8 +20,6 @@ public class BootJobRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         List<Task> runningTasks = taskService.getActiveTasks();
-        runningTasks.forEach(t ->
-                stateMachine.runTaskGraph(t.getId())
-        );
+        runningTasks.forEach(t -> stateMachine.runTaskGraph(t.getId()));
     }
 }

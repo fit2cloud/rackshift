@@ -94,7 +94,6 @@ public class BareMetalService {
             return false;
         }
         for (String id : ids) {
-            BareMetal bareMetal = bareMetalManager.getBareMetalById(id);
             bareMetalManager.delBareMetalById(id);
             outBandService.delBareMetalById(id);
             taskService.delByBareMetalId(id);
