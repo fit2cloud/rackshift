@@ -81,8 +81,10 @@ public class JobLinuxCatalog extends BaseJob {
                 JSONObject resultObj = JSONObject.parseObject((String) o);
                 String bareMetalId = resultObj.getString("identifier");
                 JSONArray tasksObj = resultObj.getJSONArray("tasks");
-                if (tasksObj == null || tasksObj.size() == 0)
+                if (tasksObj == null || tasksObj.size() == 0) {
+                    this.complete();
                     return "ok";
+                }
                 JSONObject taskObj = tasksObj.getJSONObject(0);
                 String stderr = taskObj.getString("stderr");
                 if (StringUtils.isNotBlank(stderr)) {
