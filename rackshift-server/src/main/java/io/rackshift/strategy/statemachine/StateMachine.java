@@ -66,7 +66,7 @@ public class StateMachine {
         tasks.forEach(task -> {
             if (StringUtils.isBlank(task.getId())) return;
             LifeEvent event = buildEvent(task);
-            if (task != null && ServiceConstants.TaskStatusEnum.created.name().equals(task.getStatus())) {
+            if (task != null) {
                 Task preTask = taskService.getById(task.getPreTaskId());
                 //等待前置任务处理结束才能执行
                 if (preTask == null || (preTask != null && endStatusList.contains(preTask.getStatus()))) {

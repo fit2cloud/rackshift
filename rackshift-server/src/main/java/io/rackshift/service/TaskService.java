@@ -392,4 +392,10 @@ public class TaskService {
         e.createCriteria().andBareMetalIdEqualTo(bareMetalId).andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
         return taskMapper.selectByExample(e);
     }
+
+    public List<Task> getActiveTasks() {
+        TaskExample e = new TaskExample();
+        e.createCriteria().andStatusEqualTo(ServiceConstants.TaskStatusEnum.running.name());
+        return taskMapper.selectByExample(e);
+    }
 }
