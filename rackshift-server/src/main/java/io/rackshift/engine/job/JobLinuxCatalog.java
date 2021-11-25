@@ -17,9 +17,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Jobs("Job.Linux.Catalog")
 public class JobLinuxCatalog extends BaseJob {
@@ -52,20 +50,24 @@ public class JobLinuxCatalog extends BaseJob {
     @Override
     public void run() {
         JSONArray cmds = options.getJSONArray("commands");
-        List cmdList = cmds.stream().map(c -> {
-            if (c instanceof JSONObject && ((JSONObject) c).containsKey("command"))
-                return ((JSONObject) c).getString("command");
-            return c;
-        }).collect(Collectors.toList());
         JSONObject r = new JSONObject();
         r.put("identifier", bareMetalId);
         this.subscribeForRequestCommand((o) -> {
             JSONArray taskArr = new JSONArray();
-            cmdList.forEach(c -> {
-                JSONObject cmd = new JSONObject();
-                cmd.put("cmd", c);
-                taskArr.add(cmd);
-            });
+            for (int i = 0; i < cmds.size(); i++) {
+                if (cmds.get(i) instanceof JSONObject) {
+                    JSONObject c = cmds.getJSONObject(i);
+                    if (c instanceof JSONObject && c.containsKey("command")) {
+                        c.put("cmd", c.getString("command"));
+                        c.remove("command");
+                    }
+                    taskArr.add(c);
+                } else if (cmds.get(i) instanceof String) {
+                    JSONObject c = new JSONObject();
+                    c.put("cmd", cmds.getString(i));
+                    taskArr.add(c);
+                }
+            }
             r.put("tasks", taskArr);
             return r.toJSONString();
         });
