@@ -77,10 +77,7 @@ public class JobLinuxCommands extends BaseJob {
         acceptResponseCode.add(1);
         this.subscribeForCompleteCommands(o -> {
             if (StringUtils.isNotBlank((String) o) && ((String) o).contains("error")) {
-                if (context.containsKey("ignoreFailure") && context.getBoolean("ignoreFailure")) {
-                    this.complete();
-                    return "ok";
-                }
+
                 this.error(new RSException((String) o));
             } else {
                 this.complete();

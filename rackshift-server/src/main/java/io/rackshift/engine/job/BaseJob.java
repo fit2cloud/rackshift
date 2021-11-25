@@ -451,12 +451,18 @@ public abstract class BaseJob {
             task.put("state", ServiceConstants.RackHDTaskStatusEnum.failed.name());
             task.put("error", e.getMessage());
             this._status = ServiceConstants.RackHDTaskStatusEnum.failed.name();
-            this.task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
-            setTask(task);
-            deleteQueue();
-            JSONObject result = new JSONObject();
-            result.put("result", false);
-            sendBMLifecycleEvent(LifeEventType.POST_OTHER_WORKFLOW_END, result);
+            //compatible with ignoreFailure
+            if (context.containsKey("ignoreFailure") || context.getBoolean("ignoreFailure")) {
+                setTask(task);
+                nextTask(ServiceConstants.RackHDTaskStatusEnum.finished.name());
+            } else {
+                this.task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
+                deleteQueue();
+                JSONObject result = new JSONObject();
+                result.put("result", false);
+                sendBMLifecycleEvent(LifeEventType.POST_OTHER_WORKFLOW_END, result);
+                setTask(task);
+            }
         }
     }
 
