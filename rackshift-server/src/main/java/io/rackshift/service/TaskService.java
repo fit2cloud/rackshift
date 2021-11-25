@@ -19,9 +19,7 @@ import io.rackshift.strategy.statemachine.*;
 import io.rackshift.utils.*;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.type.Alias;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -83,6 +81,13 @@ public class TaskService {
         if (task == null) return false;
         if (bareMetalManager.getBareMetalById(task.getBareMetalId()) == null || StringUtils.isBlank(task.getInstanceId())) {
             failTask(task);
+            Workflow workflow = workflowService.getById(task.getWorkFlowId());
+            if (workflow != null && workflow.getInjectableName().equalsIgnoreCase("Graph.rancherDiscovery")) {
+                BareMetal bareMetal = bareMetalManager.getBareMetalById(task.getBareMetalId());
+                if (bareMetal != null && bareMetal.getStatus().equalsIgnoreCase(LifeStatus.discovering.name())) {
+                    bareMetalManager.delBareMetalById(bareMetal.getId());
+                }
+            }
             taskMapper.deleteByPrimaryKey(id);
             try {
                 MqUtil.request(MqConstants.EXCHANGE_NAME, MqConstants.MQ_ROUTINGKEY_DELETION + task.getBareMetalId(), "");
