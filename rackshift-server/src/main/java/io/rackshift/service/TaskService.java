@@ -183,9 +183,9 @@ public class TaskService {
                 task.put("state", ServiceConstants.RackHDTaskStatusEnum.pending.name());
                 task.put("taskStartTime", LocalDateTime.now());
                 if (task.getJSONObject("options") == null) {
-                    task.put("options", extract(workflowName, e.getWorkflowRequestDTO().getParams(), taskFName));
+                    task.put("options", extract(e.getWorkflowRequestDTO().getParams(), taskFName));
                 } else {
-                    JSONObject userOptions = extract(workflowName, e.getWorkflowRequestDTO().getParams(), taskFName);
+                    JSONObject userOptions = extract(e.getWorkflowRequestDTO().getParams(), taskFName);
                     JSONObject options = task.getJSONObject("options");
                     if (userOptions != null)
                         userOptions.keySet().forEach(k -> {
@@ -261,12 +261,11 @@ public class TaskService {
     /**
      * 从参数里面获取参数对应的标签名称
      *
-     * @param workflowName
      * @param params
      * @param label
      * @return
      */
-    private JSONObject extract(String workflowName, JSONObject params, String label) {
+    private JSONObject extract(JSONObject params, String label) {
         if (params != null && params.containsKey("options")) {
             JSONObject options = params.getJSONObject("options");
             JSONObject p = options.getJSONObject(label);
