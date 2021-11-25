@@ -56,9 +56,5 @@ public class JobLinuxShellReboot extends BaseJob {
 
         this.subscribeForRequestOptions(o -> JSONUtils.merge(this.options, this.renderOptions).toJSONString());
 
-//        this.subscribeForCompleteCommands(o -> {
-//            this.complete();
-//            return "ok";
-//        });
     }
 }

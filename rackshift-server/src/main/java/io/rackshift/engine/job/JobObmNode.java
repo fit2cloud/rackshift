@@ -1,6 +1,7 @@
 package io.rackshift.engine.job;
 
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.constants.RackHDConstants;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.domain.OutBand;
 import io.rackshift.mybatis.mapper.TaskMapper;
@@ -70,9 +71,12 @@ public class JobObmNode extends BaseJob {
                     break;
 
                 case "reboot":
-                    IPMIUtil.exeCommand(account, "chassis power off");
-                    Thread.sleep(3000);
-                    IPMIUtil.exeCommand(account, "chassis power on");
+                    String commandResult = IPMIUtil.exeCommand(account, "power status");
+                    if (commandResult.contains(RackHDConstants.PM_POWER_ON) || commandResult.contains("On")) {
+                        IPMIUtil.exeCommand(account, "power reset");
+                    } else if (commandResult.contains(RackHDConstants.PM_POWER_OFF) || commandResult.contains("Off")) {
+                        IPMIUtil.exeCommand(account, "power on");
+                    }
                     break;
 
                 default:

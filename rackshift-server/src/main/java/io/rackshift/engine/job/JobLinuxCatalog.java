@@ -90,6 +90,10 @@ public class JobLinuxCatalog extends BaseJob {
                 JSONObject taskObj = tasksObj.getJSONObject(0);
                 String stderr = taskObj.getString("stderr");
                 if (StringUtils.isNotBlank(stderr)) {
+                    if (context.containsKey("ignoreFailure") && context.getBoolean("ignoreFailure")) {
+                        this.complete();
+                        return "ok";
+                    }
                     this.error(new RSException(stderr));
                     return "ok";
                 }

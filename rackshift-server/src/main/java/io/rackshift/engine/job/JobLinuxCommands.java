@@ -76,20 +76,13 @@ public class JobLinuxCommands extends BaseJob {
         List<Integer> acceptResponseCode = new ArrayList<Integer>();
         acceptResponseCode.add(1);
         this.subscribeForCompleteCommands(o -> {
-//            JSONArray tasksArr = JSONArray.parseArray((String) o);
-//            for (int i = 0; i < tasksArr.size(); i++) {
-//                JSONObject t = tasksArr.getJSONObject(i);
-//                if (t.getJSONObject("error") != null && !acceptResponseCode.contains(t.getJSONObject("error").getInteger("code"))) {
-//                    this.error(new RSException(t.getJSONObject("error").toJSONString()));
-//                }
-//            }
-//            if (!this._status.equalsIgnoreCase(ServiceConstants.TaskStatusEnum.failed.name())) {
-//                this.complete();
-//            }
-            //还没调通先直接成功好了
-            if(StringUtils.isNotBlank((String)o) && ((String) o).contains("error")){
-                this.error(new RSException((String)o));
-            }else {
+            if (StringUtils.isNotBlank((String) o) && ((String) o).contains("error")) {
+                if (context.containsKey("ignoreFailure") && context.getBoolean("ignoreFailure")) {
+                    this.complete();
+                    return "ok";
+                }
+                this.error(new RSException((String) o));
+            } else {
                 this.complete();
             }
             return "ok";
