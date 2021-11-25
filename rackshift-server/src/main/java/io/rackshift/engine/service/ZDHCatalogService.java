@@ -22,7 +22,7 @@ public class ZDHCatalogService {
         Catalog catalog = new Catalog();
         catalog.setId(UUIDUtil.newUUID());
         catalog.setBareMetalId(bareMetalId);
-        catalog.setSource(result.getString("source"));
+        catalog.setSource(result.getString("source").trim());
         catalog.setData(result.getString("data"));
         catalog.setCreateTime(System.currentTimeMillis());
         catalogMapper.insert(catalog);

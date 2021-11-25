@@ -3,7 +3,9 @@ package io.rackshift.engine.job;
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.RackHDConstants;
 import io.rackshift.model.RSException;
+import io.rackshift.mybatis.domain.CatalogExample;
 import io.rackshift.mybatis.domain.OutBand;
+import io.rackshift.mybatis.mapper.CatalogMapper;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.service.OutBandService;
 import io.rackshift.utils.IPMIUtil;
@@ -61,8 +63,17 @@ public class JobObmNode extends BaseJob {
         private void run() throws Exception {
             OutBandService outBandService = (OutBandService) applicationContext.getBean("outBandService");
             OutBand outBand = outBandService.getByBareMetalId(bareMetalId);
+            CatalogMapper catalogMapper = applicationContext.getBean(CatalogMapper.class);
+            CatalogExample ce = new CatalogExample();
+            ce.createCriteria().andBareMetalIdEqualTo(bareMetalId).andSourceEqualTo("bmc");
             if (outBand == null) {
-                RSException.throwExceptions("no obm info set!");
+                if (catalogMapper.countByExample(ce) > 0) {
+                    //has bmc
+                    RSException.throwExceptions("no obm info set!");
+                } else {
+                    //no bmc
+                    return;
+                }
             }
             IPMIUtil.Account account = IPMIUtil.Account.build(outBand);
             switch (action) {
