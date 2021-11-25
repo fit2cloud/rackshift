@@ -168,8 +168,8 @@ public class TaskService {
                 JSONObject taskObj = null;
                 JSONObject baseTaskObj = null;
                 if (StringUtils.isNotBlank(taskName)) {
-                    taskObj = (JSONObject) JSONObject.toJSON(taskObject.get(taskName));
-                    baseTaskObj = (JSONObject) JSONObject.toJSON(baseTask.get(taskObj.getString("implementsTask")));
+                    taskObj = JSONObject.parseObject(JSONObject.toJSONString(taskObject.get(taskName)));
+                    baseTaskObj = JSONObject.parseObject(JSONObject.toJSONString(baseTask.get(taskObj.getString("implementsTask"))));
                 } else if (task.getJSONObject("taskDefinition") != null) {
                     taskObj = task.getJSONObject("taskDefinition");
                     baseTaskObj = (JSONObject) JSONObject.toJSON(baseTask.get(taskObj.getString("implementsTask")));
