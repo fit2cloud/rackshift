@@ -26,7 +26,6 @@ public class BareMetal {
         if (!this.status.equalsIgnoreCase("onrack") && !this.status.equalsIgnoreCase("discovering")) {
             return true;
         }
-
         return false;
     }
 
