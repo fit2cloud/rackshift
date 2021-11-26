@@ -6,7 +6,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
-import io.rackshift.dhcpproxy.util.ConfigurationUtil;
 import io.rackshift.dhcpproxy.util.ConsoleUtil;
 
 public class DHCPProxyServer {

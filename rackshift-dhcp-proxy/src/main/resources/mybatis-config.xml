@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <properties url="file:/opt/rackshift/conf/rackshift.properties"></properties>
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
@@ -14,5 +15,8 @@
             </dataSource>
         </environment>
     </environments>
-
+    <mappers>
+        <mapper resource="mapper/BareMetalMapper.xml"></mapper>
+        <mapper resource="mapper/TaskMapper.xml"></mapper>
+    </mappers>
 </configuration>

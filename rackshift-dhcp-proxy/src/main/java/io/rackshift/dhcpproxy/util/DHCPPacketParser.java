@@ -3,13 +3,12 @@ package io.rackshift.dhcpproxy.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import io.rackshift.dhcpproxy.constants.ConfigConstants;
 import io.rackshift.dhcpproxy.constants.DHCPProtocolConstants;
+import org.apache.commons.lang.StringUtils;
 
 import java.nio.charset.Charset;
-
-import io.netty.buffer.*;
-import org.apache.commons.lang.StringUtils;
 
 public class DHCPPacketParser {
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.rackshift.dhcpproxy.mapper.BareMetalMapper">
+    <resultMap id="bareMetal" type="io.rackshift.dhcpproxy.model.BareMetal">
+        <id column="id" property="id"></id>
+        <result column="pxe_mac" property="pxeMac" javaType="String"></result>
+        <result column="status" property="status" javaType="String"></result>
+    </resultMap>
+
+    <select id="findByMac" resultMap="bareMetal">
+        select *
+        from bare_metal
+        where pxe_mac = #{pxeMac}
+    </select>
+</mapper>
