@@ -57,6 +57,11 @@ public class TaskService {
     private HoganService hoganService;
     @Resource
     private AbstractHandler abstractHandler;
+    private static List<String> endStatus = new ArrayList<String>() {{
+        add(ServiceConstants.TaskStatusEnum.failed.name());
+        add(ServiceConstants.TaskStatusEnum.cancelled.name());
+        add(ServiceConstants.TaskStatusEnum.succeeded.name());
+    }};
 
     private List<String> runningStatus = new ArrayList<String>() {{
         add(ServiceConstants.TaskStatusEnum.created.name());
@@ -80,7 +85,9 @@ public class TaskService {
         Task task = taskMapper.selectByPrimaryKey(id);
         if (task == null) return false;
         if (bareMetalManager.getBareMetalById(task.getBareMetalId()) == null || StringUtils.isBlank(task.getInstanceId())) {
-            failTask(task);
+            if (!endStatus.contains(task.getStatus())) {
+                failTask(task);
+            }
             Workflow workflow = workflowService.getById(task.getWorkFlowId());
             if (workflow != null && workflow.getInjectableName().equalsIgnoreCase("Graph.rancherDiscovery")) {
                 BareMetal bareMetal = bareMetalManager.getBareMetalById(task.getBareMetalId());
