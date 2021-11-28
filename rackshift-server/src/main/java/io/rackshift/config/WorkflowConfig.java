@@ -88,10 +88,8 @@ public class WorkflowConfig {
         baseTasks.forEach(baseTaskGraph -> {
             WorkflowWithBLOBs w = workflowService.getByInjectableName(baseTaskGraph.getValue().getInjectableName());
             if (w != null) {
-                if (StringUtils.isBlank(w.getTasks())) {
-                    w.setTasks(baseTaskGraph.getValue().getTasks().toJSONString());
-                }
-                if (StringUtils.isBlank(w.getOptions()) && baseTaskGraph.getValue().getOptions() != null) {
+                w.setTasks(baseTaskGraph.getValue().getTasks().toJSONString());
+                if (baseTaskGraph.getValue().getOptions() != null) {
                     w.setOptions(baseTaskGraph.getValue().getOptions().toJSONString());
                 }
                 workflowService.update(w);
