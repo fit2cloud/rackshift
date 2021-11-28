@@ -10,6 +10,7 @@ import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.strategy.statemachine.LifeEvent;
 import io.rackshift.strategy.statemachine.LifeEventType;
 import io.rackshift.strategy.statemachine.StateMachine;
+import io.rackshift.utils.JSONUtils;
 import io.rackshift.utils.MqUtil;
 import io.rackshift.utils.SpringUtils;
 import org.springframework.amqp.core.Message;
@@ -351,6 +352,15 @@ public abstract class BaseJob {
     protected void setTask(JSONObject task) {
         JSONObject graphObjects = JSONObject.parseObject(this.task.getGraphObjects());
         graphObjects.put(instanceId, task);
+        this.task.setGraphObjects(graphObjects.toJSONString());
+        taskMapper.updateByPrimaryKeyWithBLOBs(this.task);
+    }
+
+    protected void updateAllOptions(JSONObject options) {
+        JSONObject graphObjects = JSONObject.parseObject(this.task.getGraphObjects());
+        for (String k : graphObjects.keySet()) {
+            graphObjects.getJSONObject(k).put("options", JSONUtils.merge(options, graphObjects.getJSONObject(k).getJSONObject("options")));
+        }
         this.task.setGraphObjects(graphObjects.toJSONString());
         taskMapper.updateByPrimaryKeyWithBLOBs(this.task);
     }

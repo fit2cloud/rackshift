@@ -179,7 +179,7 @@ public class TaskService {
                     baseTaskObj = JSONObject.parseObject(JSONObject.toJSONString(baseTask.get(taskObj.getString("implementsTask"))));
                 } else if (task.getJSONObject("taskDefinition") != null) {
                     taskObj = task.getJSONObject("taskDefinition");
-                    baseTaskObj = (JSONObject) JSONObject.toJSON(baseTask.get(taskObj.getString("implementsTask")));
+                    baseTaskObj = JSONObject.parseObject(JSONObject.toJSONString(baseTask.get(taskObj.getString("implementsTask"))));
                 }
                 JSONObject finalTaskObj = taskObj;
                 taskObj.keySet().forEach(k -> {

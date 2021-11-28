@@ -13,6 +13,7 @@ import org.springframework.context.ApplicationContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Jobs("Job.Linux.Commands")
 public class JobLinuxCommands extends BaseJob {
@@ -44,6 +45,15 @@ public class JobLinuxCommands extends BaseJob {
 
     @Override
     public void run() {
+        //支持直接跳过执行命令的子任务提高效率
+        if (options.getString("label").equalsIgnoreCase(options.getString("jumpTask"))) {
+            JSONObject thisTask = getTaskByInstanceId(instanceId);
+            thisTask.put("info", String.format("jump this task : %s", options.getString("jumpTask")));
+            setTask(thisTask);
+            this.complete();
+            return;
+        }
+
         JSONObject r = new JSONObject();
         r.put("identifier", bareMetalId);
         this.subscribeForRequestCommand((o) -> {

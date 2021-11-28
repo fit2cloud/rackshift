@@ -12,7 +12,7 @@ module.exports = {
         'finish-bootstrap-trigger': {
             'triggerGroup': 'bootstrap'
         },
-        'skip-reboot-post-discovery' : {
+        'skip-reboot-post-discovery': {
             skipReboot: 'false',
             when: '{{options.skipReboot}}'
         }
@@ -34,10 +34,35 @@ module.exports = {
             }
         },
         {
+            label: 'generate-pass',
+            taskDefinition: {
+                friendlyName: 'Generate BMC Password',
+                injectableName: 'Task.Generate.BMC.Password',
+                implementsTask: 'Task.Base.Generate.Password',
+                properties: {},
+                options: {
+                    user: null
+
+                }
+            },
+            waitOn: {
+                'catalog-ohai': 'finished'
+            },
+            ignoreFailure: true
+        },
+        {
+            label: 'set-bmc',
+            taskName: 'Task.Set.BMC.Credentials',
+            waitOn: {
+                'generate-pass': 'succeeded'
+            },
+            ignoreFailure: true
+        },
+        {
             label: 'catalog-bmc',
             taskName: 'Task.Catalog.bmc',
             waitOn: {
-                'catalog-ohai': 'finished'
+                'set-bmc': 'finished'
             },
             ignoreFailure: true
         },
@@ -125,7 +150,7 @@ module.exports = {
                 "properties": {}
             },
             waitOn: {
-               'catalog-lldp': 'finished'
+                'catalog-lldp': 'finished'
             }
         },
         {
