@@ -8,7 +8,7 @@ public class ServiceConstants {
 
     public static final String IPMI_Rest = "IPMI+Rest";
     public static final String SNMP = "SNMP";
-    public static final String TYPE_SYS = "sys";
+    public static final String TYPE_SYS = "system";
     public static final String TYPE_USER = "user";
     public static final String PARAM_ALL_BRANDS = "brands";
 
