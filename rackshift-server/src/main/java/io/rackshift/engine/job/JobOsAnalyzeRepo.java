@@ -2,16 +2,14 @@ package io.rackshift.engine.job;
 
 import com.alibaba.fastjson.JSONObject;
 import io.rackshift.mybatis.mapper.TaskMapper;
-import io.rackshift.strategy.statemachine.LifeEventType;
-import io.rackshift.utils.JSONUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
 
-@Jobs("Job.Wait.Notification")
-public class JobWaitNotification extends BaseJob {
-    public JobWaitNotification() {
+@Jobs("Job.Os.Analyze.Repo")
+public class JobOsAnalyzeRepo extends BaseJob {
+    public JobOsAnalyzeRepo() {
 
     }
 
@@ -23,7 +21,7 @@ public class JobWaitNotification extends BaseJob {
      * @param applicationContext
      * @param rabbitTemplate
      */
-    public JobWaitNotification(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext, RabbitTemplate rabbitTemplate) {
+    public JobOsAnalyzeRepo(String taskId, String instanceId, JSONObject context, TaskMapper taskMapper, ApplicationContext applicationContext, RabbitTemplate rabbitTemplate) {
         this.instanceId = instanceId;
         this.taskId = taskId;
         this.context = context;
@@ -39,12 +37,6 @@ public class JobWaitNotification extends BaseJob {
 
     @Override
     public void run() {
-        this.subscribeForRequestOptions(o -> JSONUtils.merge(this.options, this.renderOptions).toJSONString());
-        //success
-        this.subscribeForNotification(o -> {
-            this.complete();
-            return "ok";
-        });
+        this.complete();
     }
-
 }

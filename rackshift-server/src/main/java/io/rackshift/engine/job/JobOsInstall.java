@@ -62,6 +62,7 @@ public class JobOsInstall extends BaseJob {
                 //encry password for linux
                 try {
                     options.put("rootEncryptedPassword", encrypt(options.getString("rootPassword")));
+                    options.put("rootPlainPassword", options.getString("rootPassword"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -74,7 +75,7 @@ public class JobOsInstall extends BaseJob {
             return "ok";
         });
 
-        this.subscribeForNotification(o->{
+        this.subscribeForNotification(o -> {
             this.complete();
             return "ok";
         });
