@@ -85,14 +85,15 @@ public class TaskService {
         Task task = taskMapper.selectByPrimaryKey(id);
         if (task == null) return false;
         if (bareMetalManager.getBareMetalById(task.getBareMetalId()) == null || StringUtils.isBlank(task.getInstanceId())) {
-            if (!endStatus.contains(task.getStatus())) {
-                failTask(task);
-            }
             Workflow workflow = workflowService.getById(task.getWorkFlowId());
             if (workflow != null && workflow.getInjectableName().equalsIgnoreCase("Graph.rancherDiscovery")) {
                 BareMetal bareMetal = bareMetalManager.getBareMetalById(task.getBareMetalId());
-                if (bareMetal != null && bareMetal.getStatus().equalsIgnoreCase(LifeStatus.discovering.name())) {
+                if (bareMetal != null) {
                     bareMetalManager.delBareMetalById(bareMetal.getId());
+                }
+            } else {
+                if (!endStatus.contains(task.getStatus())) {
+                    failTask(task);
                 }
             }
             taskMapper.deleteByPrimaryKey(id);
@@ -242,11 +243,15 @@ public class TaskService {
                 Matcher m = p.matcher(optionStr);
                 while (m.find()) {
                     if (m.group(1).contains("options")) {
-                        optionStr = optionStr.replace(m.group(), thisOptions.get(m.group(1).trim().replace("options.", "")));
+                        if (StringUtils.isNotBlank(thisOptions.get(m.group(1).trim().replace("options.", "")))) {
+                            optionStr = optionStr.replace(m.group(), thisOptions.get(m.group(1).trim().replace("options.", "")));
+                        }
                     } else if (m.group(1).contains("task.nodeId")) {
                         optionStr = optionStr.replace(m.group(), task.getString("bareMetalId"));
                     } else {
-                        optionStr = optionStr.replace(m.group(), renderOptions.get(m.group(1).trim()));
+                        if (StringUtils.isNotBlank(renderOptions.get(m.group(1).trim()))) {
+                            optionStr = optionStr.replace(m.group(), renderOptions.get(m.group(1).trim()));
+                        }
                     }
                 }
             }

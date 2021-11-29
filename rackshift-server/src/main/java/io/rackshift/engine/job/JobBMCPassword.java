@@ -43,7 +43,7 @@ public class JobBMCPassword extends BaseJob {
         SystemParameter createCredential = applicationContext.getBean(SystemParameterMapper.class).selectByPrimaryKey("bmc_credentials");
         String userName = Optional.ofNullable(applicationContext.getBean(SystemParameterMapper.class).selectByPrimaryKey("bmc_username")).orElse(new SystemParameter()).getParamValue();
         String password = Optional.ofNullable(applicationContext.getBean(SystemParameterMapper.class).selectByPrimaryKey("bmc_password")).orElse(new SystemParameter()).getParamValue();
-        if (createCredential != null && "true".equalsIgnoreCase(createCredential.getParamKey())) {
+        if (createCredential != null && "true".equalsIgnoreCase(createCredential.getParamValue())) {
             JSONObject param = new JSONObject();
             param.put("user", Optional.ofNullable(userName).orElse("rackshift"));
             param.put("password", Optional.ofNullable(password).orElse("rackshift"));

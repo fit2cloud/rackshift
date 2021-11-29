@@ -2,7 +2,6 @@ package io.rackshift.engine.job;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.RSException;
 import io.rackshift.mybatis.mapper.TaskMapper;
 import io.rackshift.utils.JSONUtils;
@@ -13,7 +12,6 @@ import org.springframework.context.ApplicationContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Jobs("Job.Linux.Commands")
 public class JobLinuxCommands extends BaseJob {
@@ -46,7 +44,7 @@ public class JobLinuxCommands extends BaseJob {
     @Override
     public void run() {
         //支持直接跳过执行命令的子任务提高效率
-        if (options.getString("label").equalsIgnoreCase(options.getString("jumpTask"))) {
+        if (context.getString("label").equalsIgnoreCase(options.getString("jumpTask"))) {
             JSONObject thisTask = getTaskByInstanceId(instanceId);
             thisTask.put("info", String.format("jump this task : %s", options.getString("jumpTask")));
             setTask(thisTask);
@@ -87,7 +85,6 @@ public class JobLinuxCommands extends BaseJob {
         acceptResponseCode.add(1);
         this.subscribeForCompleteCommands(o -> {
             if (StringUtils.isNotBlank((String) o) && ((String) o).contains("error")) {
-
                 this.error(new RSException((String) o));
             } else {
                 this.complete();

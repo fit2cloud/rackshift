@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import io.rackshift.constants.MqConstants;
 import io.rackshift.constants.ServiceConstants;
 import io.rackshift.model.WorkflowRequestDTO;
-import io.rackshift.mybatis.domain.Task;
-import io.rackshift.mybatis.domain.TaskWithBLOBs;
+import io.rackshift.mybatis.domain.*;
+import io.rackshift.mybatis.mapper.BareMetalMapper;
+import io.rackshift.mybatis.mapper.SystemParameterMapper;
 import io.rackshift.mybatis.mapper.TaskMapper;
+import io.rackshift.mybatis.mapper.WorkflowMapper;
+import io.rackshift.service.OutBandService;
 import io.rackshift.strategy.statemachine.LifeEvent;
 import io.rackshift.strategy.statemachine.LifeEventType;
 import io.rackshift.strategy.statemachine.StateMachine;
@@ -441,8 +444,29 @@ public abstract class BaseJob {
                 setTask(task);
                 JSONObject result = new JSONObject();
                 result.put("result", true);
-                sendBMLifecycleEvent(LifeEventType.POST_OTHER_WORKFLOW_END, result);
+                Workflow w = applicationContext.getBean(WorkflowMapper.class).selectByPrimaryKey(this.task.getWorkFlowId());
+                //
+                if (w == null) return;
+                if (!w.getInjectableName().equalsIgnoreCase("Graph.rancherDiscovery")) {
+                    sendBMLifecycleEvent(LifeEventType.POST_OTHER_WORKFLOW_END, result);
+                } else {
+                    generateOutband();
+                }
             }
+        }
+    }
+
+    private void generateOutband() {
+        SystemParameter createCredential = applicationContext.getBean(SystemParameterMapper.class).selectByPrimaryKey("bmc_credentials");
+        String userName = Optional.ofNullable(applicationContext.getBean(SystemParameterMapper.class).selectByPrimaryKey("bmc_username")).orElse(new SystemParameter()).getParamValue();
+        String password = Optional.ofNullable(applicationContext.getBean(SystemParameterMapper.class).selectByPrimaryKey("bmc_password")).orElse(new SystemParameter()).getParamValue();
+        if (createCredential != null && Boolean.TRUE.toString().equalsIgnoreCase(createCredential.getParamValue())) {
+            OutBand outBand = new OutBand();
+            outBand.setIp(Optional.ofNullable(applicationContext.getBean(BareMetalMapper.class).selectByPrimaryKey(bareMetalId)).orElse(new BareMetal()).getManagementIp());
+            outBand.setUserName(Optional.ofNullable(userName).orElse("rackshift"));
+            outBand.setPwd(Optional.ofNullable(password).orElse("rackshift"));
+            outBand.setBareMetalId(bareMetalId);
+            applicationContext.getBean(OutBandService.class).saveOrUpdate(outBand, false);
         }
     }
 
