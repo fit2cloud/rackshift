@@ -46,7 +46,7 @@
       >
         <el-table-column type="selection" align="left"></el-table-column>
 
-        <el-table-column prop="pxe_mac" :label="$t('pxe_mac')" align="left"  width="140"
+        <el-table-column prop="pxe_mac" :label="$t('pxe_mac')" align="left" width="140"
                          sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.pxeMac }}
@@ -1555,7 +1555,7 @@ export default {
           }
 
           if (duplicated) continue;
-          if (_.findIndex(originWf.brands, w => w == that.multipleSelection[k].machineBrand) == -1) {
+          if (that.multipleSelection[k].machineBrand && _.findIndex(originWf.brands, w => w == that.multipleSelection[k].machineBrand) == -1) {
             that.$message.error(originWf.friendlyName + that.$t('not_supported_brand!') + ' ' + that.multipleSelection[k].machineBrand);
             continue;
           }
