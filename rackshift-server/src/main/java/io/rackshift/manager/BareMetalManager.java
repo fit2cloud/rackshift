@@ -137,6 +137,7 @@ public class BareMetalManager {
             if (dbBareMetal == null) {
                 bareMetalMapper.insertSelective(bareMetal);
             } else {
+                bareMetal.setId(dbBareMetal.getId());
                 removeDuplicate(bareMetal);
                 update(bareMetal, true);
             }

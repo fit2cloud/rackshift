@@ -88,7 +88,11 @@ public class CatalogParser {
             physicalMachine.setIpArray(jsonArray.toString());
         }
         //新发现的一律设置为未知 只有填写好带外信息 能定时获取到状态到才有该字段
-        physicalMachine.setPower(getPmPower(machineEntity.getBmcIp()));
+        try {
+            physicalMachine.setPower(getPmPower(machineEntity.getBmcIp()));
+        } catch (Exception e) {
+            LogUtil.error("获取 power 失败！" + JSONObject.toJSONString(e));
+        }
         return physicalMachine;
     }
 
