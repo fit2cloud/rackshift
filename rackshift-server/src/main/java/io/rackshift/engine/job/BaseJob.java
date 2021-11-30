@@ -450,7 +450,7 @@ public abstract class BaseJob {
                 if (!w.getInjectableName().equalsIgnoreCase("Graph.rancherDiscovery")) {
                     sendBMLifecycleEvent(LifeEventType.POST_OTHER_WORKFLOW_END, result);
                 } else {
-                    sendBMLifecycleEvent(LifeEventType.POST_OS_WORKFLOW_END, result);
+                    sendBMLifecycleEvent(LifeEventType.POST_DISCOVERY_WORKFLOW_END, result);
                     generateOutband();
                 }
             }
