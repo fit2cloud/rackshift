@@ -33,4 +33,8 @@ public class ConfigurationUtil {
         return Optional.ofNullable(config.getString(key)).orElse(defaultS);
     }
 
+    public static String[] getConfigs(String key, String defaultS) {
+        return Optional.ofNullable(config.getString(key).split(",")).orElse(new String[]{defaultS});
+    }
+
 }
