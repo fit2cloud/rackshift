@@ -151,7 +151,8 @@ module.exports = {
             },
             waitOn: {
                 'catalog-lldp': 'finished'
-            }
+            },
+            ignoreFailure: true
         },
         {
             label: 'skip-reboot-post-discovery',
@@ -166,28 +167,32 @@ module.exports = {
             taskName: 'Task.ProcShellReboot',
             waitOn: {
                 'skip-reboot-post-discovery': 'failed'
-            }
+            },
+            ignoreFailure: true
         },
         {
             label: 'noop',
             taskName: 'Task.noop',
             waitOn: {
                 'skip-reboot-post-discovery': 'succeeded'
-            }
+            },
+            ignoreFailure: true
         },
         {
             label: 'finish-bootstrap-trigger',
             taskName: 'Task.Trigger.Send.Finish',
             waitOn: {
                 'set-boot-pxe': 'finished'
-            }
+            },
+            ignoreFailure: true
         },
         {
             label: 'node-discovered-alert',
             taskName: 'Task.Alert.Node.Discovered',
             waitOn: {
                 'finish-bootstrap-trigger': 'finished'
-            }
+            },
+            ignoreFailure: true
         }
     ]
 };
