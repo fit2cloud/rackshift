@@ -48,14 +48,19 @@ jobs:
             sh -c "$(curl -sSL https://github.com/rackshift/rackshift/releases/latest/download/quick_start.sh)"
             ```
 
-            ## 重构
-            - 重写了装机引擎
-            - 去掉了 RackHD 的服务依赖，减小了一半安装包体积
+            ## 新增
+            - PXE 自动发现可以设置默认账号密码
+            - 支持虚拟机发现和装机
+            - 支持多网段装机
+
+            ## 修复
+            - DHCP ipxe 卡住的问题
+            - esxi 安装报错
 
             # 产品文档
             点击 [完整文档](https://rackshift.io) 查看完整的安装和使用文档
             # 离线安装包
-            [离线安装包下载地址](https://community.fit2cloud.com/#/download/rackshift/v1-6-0)
+            [离线安装包下载地址](https://community.fit2cloud.com/#/download/rackshift/v1-7-0)
 
       - name: Upload Release Asset
         id: upload-release-asset
