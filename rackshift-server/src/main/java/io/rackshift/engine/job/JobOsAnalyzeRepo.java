@@ -37,6 +37,10 @@ public class JobOsAnalyzeRepo extends BaseJob {
 
     @Override
     public void run() {
+        //validate esxi repo
+        JSONObject param = new JSONObject();
+        param.put("mbootFile", "mboot.c32");
+        updateAllOptions(param);
         this.complete();
     }
 }
