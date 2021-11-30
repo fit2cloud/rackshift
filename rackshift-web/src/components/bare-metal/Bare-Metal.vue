@@ -536,7 +536,7 @@
                 </el-col>
 
                 <el-col :span="10">
-                  {{ w.machineModel + ' ' + w.machineSn }}
+                  {{ w.machineModel ? (w.machineModel + ' ' + w.machineSn) : w.pxeMac }}
                   <br>
                   {{ w.friendlyNameInternational }}
                 </el-col>

@@ -487,7 +487,7 @@ public abstract class BaseJob {
             task.put("error", e.getMessage());
             this._status = ServiceConstants.RackHDTaskStatusEnum.failed.name();
             //compatible with ignoreFailure
-            if (context.containsKey("ignoreFailure") || context.getBoolean("ignoreFailure")) {
+            if (context.containsKey("ignoreFailure") || context.getBooleanValue("ignoreFailure")) {
                 setTask(task);
                 nextTask(ServiceConstants.RackHDTaskStatusEnum.finished.name());
             } else {
