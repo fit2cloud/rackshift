@@ -68,12 +68,13 @@ public class JobOsAnalyzeRepo extends BaseJob {
         });
 
         result.put("mbootFile", "mboot.c32");
+        result.put("kargs", "");
         return result;
     }
 
     private static String getValue(String pattern, String c) {
         int startIndex = c.indexOf(pattern);
         int endIndex = c.substring(startIndex + pattern.length()).indexOf("\n");
-        return c.substring(startIndex + pattern.length()).substring(0, endIndex);
+        return c.substring(startIndex + pattern.length()).substring(0, endIndex).replaceAll("/", "");
     }
 }
