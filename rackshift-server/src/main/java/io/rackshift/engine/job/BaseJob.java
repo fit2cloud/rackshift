@@ -447,11 +447,13 @@ public abstract class BaseJob {
                 Workflow w = applicationContext.getBean(WorkflowMapper.class).selectByPrimaryKey(this.task.getWorkFlowId());
                 //
                 if (w == null) return;
-                if (!w.getInjectableName().equalsIgnoreCase("Graph.rancherDiscovery")) {
-                    sendBMLifecycleEvent(LifeEventType.POST_OTHER_WORKFLOW_END, result);
-                } else {
+                if (w.getInjectableName().contains("Graph.Install")) {
+                    sendBMLifecycleEvent(LifeEventType.POST_OS_WORKFLOW_END, result);
+                } else if (w.getInjectableName().equalsIgnoreCase("Graph.rancherDiscovery")) {
                     sendBMLifecycleEvent(LifeEventType.POST_DISCOVERY_WORKFLOW_END, result);
                     generateOutband();
+                } else {
+                    sendBMLifecycleEvent(LifeEventType.POST_OTHER_WORKFLOW_END, result);
                 }
             }
         }
