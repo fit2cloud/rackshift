@@ -1471,13 +1471,6 @@ export default {
         this.$message.error(this.$t('pls_select_workflow') + "!");
         return;
       }
-      for (let i = 0; i < this.selectedWorkflow.length; i++) {
-        let obj = _.find(this.tableData, (o) => o.id == this.selectedWorkflow[i].bareMetalId);
-        if (!obj.outBandList.length) {
-          this.$message.error(obj.machineModel + '' + obj.machineSn + ' ' + this.$t('obm_not_exists') + "!");
-          return;
-        }
-      }
       let that = this;
       let reqList = _.map(this.copy(this.selectedWorkflow), (wf) => {
         return that.buildRequest(wf);
