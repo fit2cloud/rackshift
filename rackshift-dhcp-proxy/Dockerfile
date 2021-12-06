@@ -6,4 +6,4 @@ WORKDIR /usr/src/myapp
 
 VOLUME /opt/rackshift/conf
 
-CMD ["java", "-jar", "-Xdebug -Xrunjdwp:transport=dt_socket,address=5003,server=y,suspend=n","app.jar"]
+CMD java -jar -Xdebug -Xrunjdwp:transport=dt_socket,address=5003,server=y,suspend=n app.jar
