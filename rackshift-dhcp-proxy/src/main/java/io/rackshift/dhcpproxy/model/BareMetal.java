@@ -48,7 +48,7 @@ public class BareMetal {
             for (String s : tasks.keySet()) {
                 JSONObject task = tasks.getJSONObject(s);
                 if (task.containsKey("options")) {
-                    if (task.getJSONObject("options").containsKey("profile") && !StringUtils.equals(task.getString("state"), "succeeded")) {
+                    if (task.getJSONObject("options").containsKey("profile") && !StringUtils.equals(task.getString("state"), "succeeded") && task.getString("label").equalsIgnoreCase("install-os")) {
                         shouldProxy = true;
                         break;
                     }
