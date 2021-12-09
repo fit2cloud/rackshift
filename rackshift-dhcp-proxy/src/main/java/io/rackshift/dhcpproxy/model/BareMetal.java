@@ -48,7 +48,7 @@ public class BareMetal {
             for (String s : tasks.keySet()) {
                 JSONObject task = tasks.getJSONObject(s);
                 if (task.containsKey("options")) {
-                    if (task.getJSONObject("options").containsKey("profile") && !StringUtils.equals(task.getString("state"), "succeeded") && task.getString("label").contains("install-")) {
+                    if (shouldProxy(task)) {
                         shouldProxy = true;
                         break;
                     }
@@ -57,6 +57,28 @@ public class BareMetal {
             return shouldProxy;
         }
 
+        return false;
+    }
+
+    /**
+     * 判断是否应该进入 ipxe
+     * 1. install- 装机工作流相关
+     * 2. bootstrap-rancher
+     *
+     * @param task
+     * @return
+     */
+    private boolean shouldProxy(JSONObject task) {
+        if (task.getJSONObject("options").containsKey("profile")) {
+            if (!StringUtils.equals(task.getString("state"), "succeeded")) {
+                if (task.getString("label").contains("install-")) {
+                    return true;
+                }
+                if (task.getString("taskName").equalsIgnoreCase("Task.Linux.Bootstrap.Rancher")) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 }
