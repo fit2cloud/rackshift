@@ -142,6 +142,7 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
             }
         });
         ConsoleUtil.log("send: " + bootfileName + " ! to" + datagramPacket.sender() + " macaddress:" + dhcpAckPacket.getString("chaddr"));
+        ConsoleUtil.log("send: " + dhcpAckPacket.toJSONString());
     }
 
     @Override
