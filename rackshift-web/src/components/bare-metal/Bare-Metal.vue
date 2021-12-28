@@ -778,15 +778,6 @@ export default {
     if (!this.websocket) {
       this.websocket = new WebSocketUtil();
       this.websocket.openSocket('lifecycle', this.notify);
-      let that = this;
-      // this.websocketInterval = setInterval(function () {
-      //   try {
-      //     that.websocket.sendMessage("hello");
-      //   } catch (e) {
-      //     sessionStorage.removeItem("rsSocket");
-      //     that.websocket.openSocket('lifecycle', that.notify);
-      //   }
-      // }, 3000);
       this.getData();
     }
     this.getAllGraphDefinitions();
