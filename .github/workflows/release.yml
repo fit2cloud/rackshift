@@ -3,7 +3,7 @@ name: upload release asset
 on:
   create:
     tag:
-      - "v1.7.0"
+      - "v1.7.1"
 
 jobs:
   build:
@@ -49,18 +49,21 @@ jobs:
             ```
 
             ## 新增
-            - PXE 自动发现可以设置默认账号密码
-            - 支持虚拟机发现和装机
-            - 支持多网段装机
+            - 联想 WEBKVM
+            - 支持添加单台裸金属
+            - 支持给裸金属备注
+            - 增加是否检查网络连通开关
+            - 支持 CentOS6.X 装机
 
             ## 修复
-            - DHCP ipxe 卡住的问题
-            - esxi 安装报错
+            - IP 排序问题
+            - 日志打印过多
+            - websocket 卡死
 
             # 产品文档
             点击 [完整文档](https://rackshift.io) 查看完整的安装和使用文档
             # 离线安装包
-            [离线安装包下载地址](https://community.fit2cloud.com/#/download/rackshift/v1-7-0)
+            [离线安装包下载地址](https://community.fit2cloud.com/#/download/rackshift/v1-7-1)
 
       - name: Upload Release Asset
         id: upload-release-asset
