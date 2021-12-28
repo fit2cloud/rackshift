@@ -373,6 +373,76 @@ public class SystemParameterExample {
             addCriterion("sort not between", value1, value2, "sort");
             return (Criteria) this;
         }
+
+        public Criteria andDesIsNull() {
+            addCriterion("des is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesIsNotNull() {
+            addCriterion("des is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesEqualTo(String value) {
+            addCriterion("des =", value, "des");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesNotEqualTo(String value) {
+            addCriterion("des <>", value, "des");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesGreaterThan(String value) {
+            addCriterion("des >", value, "des");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesGreaterThanOrEqualTo(String value) {
+            addCriterion("des >=", value, "des");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesLessThan(String value) {
+            addCriterion("des <", value, "des");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesLessThanOrEqualTo(String value) {
+            addCriterion("des <=", value, "des");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesLike(String value) {
+            addCriterion("des like", value, "des");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesNotLike(String value) {
+            addCriterion("des not like", value, "des");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesIn(List<String> values) {
+            addCriterion("des in", values, "des");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesNotIn(List<String> values) {
+            addCriterion("des not in", values, "des");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesBetween(String value1, String value2) {
+            addCriterion("des between", value1, value2, "des");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesNotBetween(String value1, String value2) {
+            addCriterion("des not between", value1, value2, "des");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

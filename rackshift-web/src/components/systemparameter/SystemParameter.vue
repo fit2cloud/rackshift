@@ -114,6 +114,10 @@ export default {
           label: this.$t('param_value'),
           prop: "paramValue"
         },
+        {
+          label: this.$t('desc'),
+          prop: "des"
+        },
       ],
       editDialogVisible: false,
       editType: 'edit',

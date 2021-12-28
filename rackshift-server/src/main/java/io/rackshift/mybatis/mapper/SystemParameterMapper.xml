@@ -6,6 +6,7 @@
     <result column="param_value" jdbcType="VARCHAR" property="paramValue" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="des" jdbcType="VARCHAR" property="des" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    param_key, param_value, type, sort
+    param_key, param_value, type, sort, des
   </sql>
   <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.SystemParameterExample" resultMap="BaseResultMap">
     select
@@ -100,9 +101,9 @@
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.SystemParameter">
     insert into system_parameter (param_key, param_value, type, 
-      sort)
+      sort, des)
     values (#{paramKey,jdbcType=VARCHAR}, #{paramValue,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
-      #{sort,jdbcType=INTEGER})
+      #{sort,jdbcType=INTEGER}, #{des,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.SystemParameter">
     insert into system_parameter
@@ -119,6 +120,9 @@
       <if test="sort != null">
         sort,
       </if>
+      <if test="des != null">
+        des,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="paramKey != null">
@@ -132,6 +136,9 @@
       </if>
       <if test="sort != null">
         #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="des != null">
+        #{des,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -156,6 +163,9 @@
       <if test="record.sort != null">
         sort = #{record.sort,jdbcType=INTEGER},
       </if>
+      <if test="record.des != null">
+        des = #{record.des,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -166,7 +176,8 @@
     set param_key = #{record.paramKey,jdbcType=VARCHAR},
       param_value = #{record.paramValue,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=VARCHAR},
-      sort = #{record.sort,jdbcType=INTEGER}
+      sort = #{record.sort,jdbcType=INTEGER},
+      des = #{record.des,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -183,6 +194,9 @@
       <if test="sort != null">
         sort = #{sort,jdbcType=INTEGER},
       </if>
+      <if test="des != null">
+        des = #{des,jdbcType=VARCHAR},
+      </if>
     </set>
     where param_key = #{paramKey,jdbcType=VARCHAR}
   </update>
@@ -190,7 +204,8 @@
     update system_parameter
     set param_value = #{paramValue,jdbcType=VARCHAR},
       type = #{type,jdbcType=VARCHAR},
-      sort = #{sort,jdbcType=INTEGER}
+      sort = #{sort,jdbcType=INTEGER},
+      des = #{des,jdbcType=VARCHAR}
     where param_key = #{paramKey,jdbcType=VARCHAR}
   </update>
 </mapper>

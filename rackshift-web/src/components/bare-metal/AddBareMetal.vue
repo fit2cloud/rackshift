@@ -1,6 +1,11 @@
 <template>
   <el-dialog :title="$t('add')" :visible.sync="addBareMetal" width="35vw" :close-on-click-modal="false">
     <el-form :model="form">
+      <el-link>
+        <el-tooltip class="dark" :content="$t('pxe_desc')">
+          <i class="el-icon-question">{{ $t('why') }}</i>
+        </el-tooltip>
+      </el-link>
       <el-form-item :label="$t('pxe_mac')" :label-width="formLabelWidth">
         <el-input v-model="curObm.pxeMac" autocomplete="off"></el-input>
       </el-form-item>
@@ -24,7 +29,7 @@ export default {
       loading: false,
       curObm: {},
       form: {},
-      formLabelWidth : "100px"
+      formLabelWidth: "100px"
     }
   },
   methods: {

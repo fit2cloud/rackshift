@@ -165,7 +165,7 @@ export default {
     "sync_status": "Sync Status",
     "pls_input_username": "Please enter a username",
     "pwd": "Password",
-    "Subnet": "Subnet",
+    "Subnet": "DHCP Subnet",
     "add_success": "Add success",
     "view_execution_log": "View deployment log",
     "status": "Status",
@@ -530,4 +530,7 @@ export default {
     "no_param": "No param!",
     "pxe_mac": "PXE MAC",
     "remark": "remark",
+    "why": "WHY?",
+    "pxe_desc": "The installed platform uses the MAC address of the network card as the unique identifier to distinguish the physical machines in PXE to achieve different boot processes for different machines",
+    "not_required": " Not required",
 }
