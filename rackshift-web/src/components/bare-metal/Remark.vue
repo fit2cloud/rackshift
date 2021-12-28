@@ -4,7 +4,7 @@
       <el-link v-if="curObj.remark" @click="openEdit">{{ formatRemark() }}</el-link>
     </el-tooltip>
 
-    <RSButton v-if="curObj.remark=='' || !curObj.remark" type="add" @click="openEdit"></RSButton>
+    <el-link v-if="curObj.remark=='' || !curObj.remark" type="add" @click="openEdit">{{$t('add')}}</el-link>
 
     <el-dialog :title="$t('edit') + $t('remark')" :visible.sync="edit" width="35vw" :close-on-click-modal="false">
       <el-form :model="form">
