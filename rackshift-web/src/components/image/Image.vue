@@ -101,7 +101,7 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item :label="$t('profile')" prop="profile">
+              <el-form-item :label="$t('profile') + $t('not_required')" prop="profile">
                 <el-select v-model="editObj.profileId" :placeholder="$t('pls_select') + $t('profile')"
                            class="input-element">
                   <el-option
@@ -113,7 +113,7 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item :label="$t('template')" prop="template">
+              <el-form-item :label="$t('template') + $t('not_required')" prop="template">
                 <el-select v-model="editObj.templateId" :placeholder="$t('pls_select') + $t('template')"
                            class="input-element">
                   <el-option
