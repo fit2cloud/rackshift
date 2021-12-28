@@ -4,6 +4,9 @@
     "name": "Centos 64位",
     "versions": [
       {
+        "name": "6.X"
+      },
+      {
         "name": "7.X"
       }
     ]
