@@ -73,10 +73,6 @@ public class SyncOutBandJob {
                             o.setMac(p.getBmcMac());
                             outBandMapper.updateByPrimaryKey(o);
                             updatePmStatusInfo(ipmiResult, p);
-                            String nodeId = p.getServerId();
-                            if (StringUtils.isBlank(nodeId)) {
-                                return;
-                            }
                         });
                     }
                 } catch (Exception e) {
