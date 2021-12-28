@@ -1561,10 +1561,9 @@ export default {
           let extraParams = null;
           if (that.workflowParamList.length) {
             let paramTemplate = _.find(that.workflowParamList, function (p) {
-              if (!p.workflowId)
-                return p.bareMetalId == that.multipleSelection[k].id;
-              else
+              if (p.workflowId)
                 return p.bareMetalId == that.multipleSelection[k].id && p.workflowId == that.getWorkflowById().id;
+              return false;
             });
             if (paramTemplate == null) {
               params = _.cloneDeep(originWf.defaultParams);
