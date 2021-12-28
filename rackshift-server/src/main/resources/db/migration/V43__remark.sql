@@ -79,4 +79,4 @@ set options = (select a.options from (select options from workflow where friendl
 where friendly_name = '安装 CentOS6 64位版';
 
 insert into system_parameter
-values ('wait_os_callback', 'true', 'text', null, '装完系统后是否检查网络联通（true/false）');
+values ('wait_os_callback', 'false', 'text', null, '装完系统后是否检查网络联通（true/false）');
