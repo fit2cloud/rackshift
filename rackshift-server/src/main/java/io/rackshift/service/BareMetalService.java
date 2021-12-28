@@ -14,6 +14,7 @@ import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.BeanUtils;
 import io.rackshift.utils.IPMIUtil;
 import io.rackshift.utils.Translator;
+import io.rackshift.utils.UUIDUtil;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 import org.apache.commons.lang3.StringUtils;
@@ -266,5 +267,20 @@ public class BareMetalService {
 
     public BareMetal getById(String nodeId) {
         return bareMetalManager.getBareMetalById(nodeId);
+    }
+
+    public ResultHolder add(BareMetalDTO request) {
+        if (StringUtils.isBlank(request.getPxeMac())) {
+            return ResultHolder.error("add error! no pxe mac");
+        }
+        request.setId(UUIDUtil.newUUID());
+        request.setStatus(LifeStatus.onrack.name());
+        if (bareMetalManager.getBareMetalByPXEMac(request.getPxeMac()) != null) {
+            return ResultHolder.error("add error! pxe mac :" + request.getPxeMac() + "exists !");
+        }
+        if (bareMetalManager.addToBareMetal(request)) {
+            return ResultHolder.success("");
+        }
+        return ResultHolder.error("opt error");
     }
 }

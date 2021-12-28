@@ -3,6 +3,7 @@ package io.rackshift.controller;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.rackshift.constants.AuthorizationConstants;
+import io.rackshift.model.BareMetalDTO;
 import io.rackshift.model.BareMetalQueryVO;
 import io.rackshift.model.ResultHolder;
 import io.rackshift.mybatis.domain.BareMetal;
@@ -66,5 +67,11 @@ public class BareMetalController {
     @GetMapping("allBrands")
     public ResultHolder allBrands() {
         return bareMetalService.allBrands();
+    }
+
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @PostMapping("add")
+    public ResultHolder add(@RequestBody BareMetalDTO request) {
+        return bareMetalService.add(request);
     }
 }

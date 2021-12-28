@@ -3,6 +3,7 @@
     <el-tab-pane :label="$t('Bare Metal Server')" name="bare-metal">
       <div class="machine-title2">
         <el-button-group class="batch-button">
+          <el-button type="primary" icon="el-icon-add" @click="openAdd">{{ $t('add') }}</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="delAllSelection">{{ $t('del') }}
           </el-button>
           <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
@@ -589,6 +590,8 @@
         </div>
       </template>
     </el-dialog>
+
+    <AddBareMetal ref="addBareMetal" @confirm="getData"></AddBareMetal>
   </el-tabs>
 </template>
 
@@ -607,6 +610,7 @@ import bus from '../../common/bus/bus'
 import {paramMap, isInherit} from '../../rackparams/params'
 import {ipValidator, maskValidator, requiredValidator} from "@/common/validator/CommonValidator";
 import RSCodeMirror from "@/common/script/RSCodeMirror";
+import AddBareMetal from "@/components/bare-metal/AddBareMetal";
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -759,7 +763,7 @@ export default {
   },
   components: {
     RSCodeMirror,
-    OBM, Discovery, PowerStatus
+    OBM, Discovery, PowerStatus, AddBareMetal
   },
   computed: {},
   destroyed() {
@@ -775,14 +779,14 @@ export default {
       this.websocket = new WebSocketUtil();
       this.websocket.openSocket('lifecycle', this.notify);
       let that = this;
-      this.websocketInterval = setInterval(function () {
-        try {
-          that.websocket.sendMessage("hello");
-        } catch (e) {
-          sessionStorage.removeItem("rsSocket");
-          that.websocket.openSocket('lifecycle', that.notify);
-        }
-      }, 3000);
+      // this.websocketInterval = setInterval(function () {
+      //   try {
+      //     that.websocket.sendMessage("hello");
+      //   } catch (e) {
+      //     sessionStorage.removeItem("rsSocket");
+      //     that.websocket.openSocket('lifecycle', that.notify);
+      //   }
+      // }, 3000);
       this.getData();
     }
     this.getAllGraphDefinitions();
@@ -790,6 +794,9 @@ export default {
   }
   ,
   methods: {
+    openAdd() {
+      this.$refs.addBareMetal.open();
+    },
     receiveValue(val) {
       this.bp.postInstallCommands = val;
     },
