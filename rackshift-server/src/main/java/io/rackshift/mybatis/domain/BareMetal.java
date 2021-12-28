@@ -77,5 +77,7 @@ public class BareMetal implements Serializable {
 
     private String pxeMac;
 
+    private String remark;
+
     private static final long serialVersionUID = 1L;
 }

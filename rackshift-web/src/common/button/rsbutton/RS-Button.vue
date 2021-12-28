@@ -1,5 +1,5 @@
 <template>
-  <el-tooltip class="item" effect="dark" :content="tip ? tip : type == 'del' ? $t('delete') : $t('edit')"
+  <el-tooltip class="item" effect="dark" :content="getContent()"
               placement="bottom-end">
     <el-button
         type="button"
@@ -9,6 +9,8 @@
         style="cursor: pointer;font-size: 12px;"
         circle
     >
+      <template v-slot:default>
+      </template>
     </el-button>
   </el-tooltip>
 </template>
@@ -30,6 +32,8 @@ export default {
   computed: {
     typeClass() {
       switch (this.type) {
+        case "add":
+          return "el-button";
         case "edit":
           return "el-button";
         case "del":
@@ -66,6 +70,29 @@ export default {
   methods: {
     handleEdit(row, type) {
       this.$emit('click', row, type);
+    },
+    getContent() {
+      if (this.tip) {
+        return this.tip;
+      }
+      switch (this.type) {
+        case "add":
+          return this.$t("add");
+        case "edit":
+          return this.$t("edit");
+        case "del":
+          return this.$t("del");
+        case "sync":
+          return this.$t("sync");
+        case "view":
+          return this.$t("view");
+        case "run":
+          return this.$t("run");
+        case "copy":
+          return this.$t("copy");
+        default :
+          return "";
+      }
     }
   }
 }

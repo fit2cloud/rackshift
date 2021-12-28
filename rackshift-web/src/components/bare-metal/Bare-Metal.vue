@@ -3,7 +3,7 @@
     <el-tab-pane :label="$t('Bare Metal Server')" name="bare-metal">
       <div class="machine-title2">
         <el-button-group class="batch-button">
-          <el-button type="primary" icon="el-icon-add" @click="openAdd">{{ $t('add') }}</el-button>
+          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="openAdd">{{ $t('add') }}</el-button>
           <el-button type="primary" icon="el-icon-delete" @click="delAllSelection">{{ $t('del') }}
           </el-button>
           <el-button type="primary" icon="el-icon-refresh" @click="getData">{{ $t('refresh') }}</el-button>
@@ -97,6 +97,12 @@
           <template slot-scope="scope">
             <i class="el-icon-loading" v-if="scope.row.status && scope.row.status.indexOf('ing') != -1"></i>
             <span v-html="statusFilter(scope.row)"></span>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="remark" :label="$t('remark')" align="left">
+          <template slot-scope="scope">
+            <Remark :cur-obj="scope.row"></Remark>
           </template>
         </el-table-column>
 
@@ -611,6 +617,7 @@ import {paramMap, isInherit} from '../../rackparams/params'
 import {ipValidator, maskValidator, requiredValidator} from "@/common/validator/CommonValidator";
 import RSCodeMirror from "@/common/script/RSCodeMirror";
 import AddBareMetal from "@/components/bare-metal/AddBareMetal";
+import Remark from "@/components/bare-metal/Remark";
 
 Vue.filter('statusFilter', function (row) {
   return i18n.t('PXE') + ' ' + i18n.t(row.status);
@@ -763,7 +770,7 @@ export default {
   },
   components: {
     RSCodeMirror,
-    OBM, Discovery, PowerStatus, AddBareMetal
+    OBM, Discovery, PowerStatus, AddBareMetal, Remark
   },
   computed: {},
   destroyed() {

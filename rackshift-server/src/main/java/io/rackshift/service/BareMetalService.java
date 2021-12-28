@@ -283,4 +283,15 @@ public class BareMetalService {
         }
         return ResultHolder.error("opt error");
     }
+
+    public ResultHolder remark(BareMetalDTO request) {
+        if (StringUtils.isBlank(request.getId())) {
+            return ResultHolder.error(Translator.get("error"));
+        }
+        BareMetal bareMetal = new BareMetal();
+        bareMetal.setId(request.getId());
+        bareMetal.setRemark(request.getRemark());
+        bareMetalManager.updateByPrimaryKeySelective(bareMetal);
+        return ResultHolder.success("");
+    }
 }

@@ -60,9 +60,9 @@
         <!--要生成的数据库表 -->
 
 <!--        <table tableName="endpoint"/>-->
-        <table tableName="catalog"/>
+<!--        <table tableName="catalog"/>-->
 <!--        <table tableName="network"/>-->
-<!--        <table tableName="bare_metal_rule"/>-->
+        <table tableName="bare_metal"/>
 <!--        <table tableName="cpu"/>-->
 <!--        <table tableName="disk"/>-->
 <!--        <table tableName="memory"/>-->

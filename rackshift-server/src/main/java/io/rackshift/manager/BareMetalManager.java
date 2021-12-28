@@ -123,6 +123,10 @@ public class BareMetalManager {
         bareMetalMapper.updateByPrimaryKey(bareMetal);
     }
 
+    public void updateByPrimaryKeySelective(BareMetal bareMetal) {
+        bareMetalMapper.updateByPrimaryKeySelective(bareMetal);
+    }
+
     public BareMetal saveOrUpdateEntity(MachineEntity e) {
         if (StringUtils.isAllBlank(e.getPxeMac(), e.getSerialNo())) {
             return null;

@@ -540,5 +540,6 @@ export default {
     "mount_text": "默认 http 服务器挂载地址在 /opt/rackshift/rackhd/files/mount/common，也可以直接使用其他第三方 http 服务器",
     "i18n_lvmname_null": "LVM 卷名不能为空",
     "no_param" : "参数不存在",
-    "pxe_mac" : "PXE MAC"
+    "pxe_mac" : "PXE MAC",
+    "remark" : "备注",
 }

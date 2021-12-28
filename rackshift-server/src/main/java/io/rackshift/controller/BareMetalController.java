@@ -74,4 +74,10 @@ public class BareMetalController {
     public ResultHolder add(@RequestBody BareMetalDTO request) {
         return bareMetalService.add(request);
     }
+
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @PostMapping("remark")
+    public ResultHolder remark(@RequestBody BareMetalDTO request) {
+        return bareMetalService.remark(request);
+    }
 }
