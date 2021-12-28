@@ -1,8 +1,9 @@
 package io.rackshift.engine.job;
 
 import com.alibaba.fastjson.JSONObject;
+import io.rackshift.mybatis.domain.SystemParameter;
+import io.rackshift.mybatis.mapper.SystemParameterMapper;
 import io.rackshift.mybatis.mapper.TaskMapper;
-import io.rackshift.strategy.statemachine.LifeEventType;
 import io.rackshift.utils.JSONUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
@@ -39,6 +40,14 @@ public class JobWaitNotification extends BaseJob {
 
     @Override
     public void run() {
+
+        //如果跳过 callback 装机直接成功
+        SystemParameter waitOsCallback = applicationContext.getBean(SystemParameterMapper.class).selectByPrimaryKey("wait_os_callback");
+        if (waitOsCallback != null && !waitOsCallback.getParamValue().equalsIgnoreCase(Boolean.TRUE.toString())) {
+            this.complete();
+            return;
+        }
+
         this.subscribeForRequestOptions(o -> JSONUtils.merge(this.options, this.renderOptions).toJSONString());
         //success
         this.subscribeForNotification(o -> {
