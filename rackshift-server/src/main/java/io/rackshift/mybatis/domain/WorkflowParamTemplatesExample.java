@@ -383,6 +383,76 @@ public class WorkflowParamTemplatesExample {
             addCriterion("workflow_name not between", value1, value2, "workflowName");
             return (Criteria) this;
         }
+
+        public Criteria andWorkflowIdIsNull() {
+            addCriterion("workflow_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdIsNotNull() {
+            addCriterion("workflow_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdEqualTo(String value) {
+            addCriterion("workflow_id =", value, "workflowId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdNotEqualTo(String value) {
+            addCriterion("workflow_id <>", value, "workflowId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdGreaterThan(String value) {
+            addCriterion("workflow_id >", value, "workflowId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdGreaterThanOrEqualTo(String value) {
+            addCriterion("workflow_id >=", value, "workflowId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdLessThan(String value) {
+            addCriterion("workflow_id <", value, "workflowId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdLessThanOrEqualTo(String value) {
+            addCriterion("workflow_id <=", value, "workflowId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdLike(String value) {
+            addCriterion("workflow_id like", value, "workflowId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdNotLike(String value) {
+            addCriterion("workflow_id not like", value, "workflowId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdIn(List<String> values) {
+            addCriterion("workflow_id in", values, "workflowId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdNotIn(List<String> values) {
+            addCriterion("workflow_id not in", values, "workflowId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdBetween(String value1, String value2) {
+            addCriterion("workflow_id between", value1, value2, "workflowId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkflowIdNotBetween(String value1, String value2) {
+            addCriterion("workflow_id not between", value1, value2, "workflowId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

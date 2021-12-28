@@ -1,8 +1,7 @@
 package io.rackshift.mybatis.domain;
 
-import lombok.Data;
-
 import java.io.Serializable;
+import lombok.Data;
 
 @Data
 public class WorkflowParamTemplates implements Serializable {
@@ -13,6 +12,8 @@ public class WorkflowParamTemplates implements Serializable {
     private String bareMetalId;
 
     private String workflowName;
+
+    private String workflowId;
 
     private static final long serialVersionUID = 1L;
 }

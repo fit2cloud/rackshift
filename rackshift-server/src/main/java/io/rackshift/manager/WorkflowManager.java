@@ -41,6 +41,7 @@ public class WorkflowManager {
             workflowParamTemplates = new WorkflowParamTemplatesWithBLOBs();
             workflowParamTemplates.setUserId(SessionUtil.getUser().getId());
             workflowParamTemplates.setWorkflowName(requestDTO.getWorkflowName());
+            workflowParamTemplates.setWorkflowId(requestDTO.getWorkflowId());
             workflowParamTemplates.setBareMetalId(requestDTO.getBareMetalId());
             workflowParamTemplates.setParamsTemplate(requestDTO.getParams().toJSONString());
             workflowParamTemplates.setExtraParams(requestDTO.getExtraParams().toJSONString());
@@ -49,6 +50,7 @@ public class WorkflowManager {
             workflowParamTemplates = templates.get(0);
             workflowParamTemplates.setUserId(SessionUtil.getUser().getId());
             workflowParamTemplates.setBareMetalId(requestDTO.getBareMetalId());
+            workflowParamTemplates.setWorkflowId(requestDTO.getWorkflowId());
             workflowParamTemplates.setWorkflowName(requestDTO.getWorkflowName());
             workflowParamTemplates.setParamsTemplate(requestDTO.getParams().toJSONString());
             workflowParamTemplates.setExtraParams(requestDTO.getExtraParams().toJSONString());

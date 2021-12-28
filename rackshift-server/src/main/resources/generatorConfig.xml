@@ -62,7 +62,7 @@
 <!--        <table tableName="endpoint"/>-->
 <!--        <table tableName="catalog"/>-->
 <!--        <table tableName="network"/>-->
-        <table tableName="system_parameter"/>
+<!--        <table tableName="system_parameter"/>-->
 <!--        <table tableName="cpu"/>-->
 <!--        <table tableName="disk"/>-->
 <!--        <table tableName="memory"/>-->
@@ -78,6 +78,7 @@
 <!--        <table tableName="profile"/>-->
 <!--        <table tableName="template"/>-->
 <!--        <table tableName="image"/>-->
+        <table tableName="workflow_param_templates"/>
 
     </context>
 </generatorConfiguration>

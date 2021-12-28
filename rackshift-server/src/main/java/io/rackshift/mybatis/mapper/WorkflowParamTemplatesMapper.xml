@@ -6,6 +6,7 @@
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="bare_metal_id" jdbcType="VARCHAR" property="bareMetalId" />
     <result column="workflow_name" jdbcType="VARCHAR" property="workflowName" />
+    <result column="workflow_id" jdbcType="VARCHAR" property="workflowId" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.rackshift.mybatis.domain.WorkflowParamTemplatesWithBLOBs">
     <result column="params_template" jdbcType="LONGVARCHAR" property="paramsTemplate" />
@@ -70,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, bare_metal_id, workflow_name
+    id, user_id, bare_metal_id, workflow_name, workflow_id
   </sql>
   <sql id="Blob_Column_List">
     params_template, extra_params
@@ -125,11 +126,11 @@
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.WorkflowParamTemplatesWithBLOBs">
     insert into workflow_param_templates (id, user_id, bare_metal_id, 
-      workflow_name, params_template, extra_params
-      )
+      workflow_name, workflow_id, params_template, 
+      extra_params)
     values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{bareMetalId,jdbcType=VARCHAR}, 
-      #{workflowName,jdbcType=VARCHAR}, #{paramsTemplate,jdbcType=LONGVARCHAR}, #{extraParams,jdbcType=LONGVARCHAR}
-      )
+      #{workflowName,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, #{paramsTemplate,jdbcType=LONGVARCHAR}, 
+      #{extraParams,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.WorkflowParamTemplatesWithBLOBs">
     insert into workflow_param_templates
@@ -145,6 +146,9 @@
       </if>
       <if test="workflowName != null">
         workflow_name,
+      </if>
+      <if test="workflowId != null">
+        workflow_id,
       </if>
       <if test="paramsTemplate != null">
         params_template,
@@ -165,6 +169,9 @@
       </if>
       <if test="workflowName != null">
         #{workflowName,jdbcType=VARCHAR},
+      </if>
+      <if test="workflowId != null">
+        #{workflowId,jdbcType=VARCHAR},
       </if>
       <if test="paramsTemplate != null">
         #{paramsTemplate,jdbcType=LONGVARCHAR},
@@ -195,6 +202,9 @@
       <if test="record.workflowName != null">
         workflow_name = #{record.workflowName,jdbcType=VARCHAR},
       </if>
+      <if test="record.workflowId != null">
+        workflow_id = #{record.workflowId,jdbcType=VARCHAR},
+      </if>
       <if test="record.paramsTemplate != null">
         params_template = #{record.paramsTemplate,jdbcType=LONGVARCHAR},
       </if>
@@ -212,6 +222,7 @@
       user_id = #{record.userId,jdbcType=VARCHAR},
       bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
       workflow_name = #{record.workflowName,jdbcType=VARCHAR},
+      workflow_id = #{record.workflowId,jdbcType=VARCHAR},
       params_template = #{record.paramsTemplate,jdbcType=LONGVARCHAR},
       extra_params = #{record.extraParams,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
@@ -223,7 +234,8 @@
     set id = #{record.id,jdbcType=VARCHAR},
       user_id = #{record.userId,jdbcType=VARCHAR},
       bare_metal_id = #{record.bareMetalId,jdbcType=VARCHAR},
-      workflow_name = #{record.workflowName,jdbcType=VARCHAR}
+      workflow_name = #{record.workflowName,jdbcType=VARCHAR},
+      workflow_id = #{record.workflowId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -240,6 +252,9 @@
       <if test="workflowName != null">
         workflow_name = #{workflowName,jdbcType=VARCHAR},
       </if>
+      <if test="workflowId != null">
+        workflow_id = #{workflowId,jdbcType=VARCHAR},
+      </if>
       <if test="paramsTemplate != null">
         params_template = #{paramsTemplate,jdbcType=LONGVARCHAR},
       </if>
@@ -254,6 +269,7 @@
     set user_id = #{userId,jdbcType=VARCHAR},
       bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
       workflow_name = #{workflowName,jdbcType=VARCHAR},
+      workflow_id = #{workflowId,jdbcType=VARCHAR},
       params_template = #{paramsTemplate,jdbcType=LONGVARCHAR},
       extra_params = #{extraParams,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
@@ -262,7 +278,8 @@
     update workflow_param_templates
     set user_id = #{userId,jdbcType=VARCHAR},
       bare_metal_id = #{bareMetalId,jdbcType=VARCHAR},
-      workflow_name = #{workflowName,jdbcType=VARCHAR}
+      workflow_name = #{workflowName,jdbcType=VARCHAR},
+      workflow_id = #{workflowId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>
