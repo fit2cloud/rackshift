@@ -71,15 +71,14 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="management_ip" :label="$t('management_ip')" align="left"
+        <el-table-column prop="inet_aton(management_ip)" :label="$t('management_ip')" align="left"
                          sortable="custom">
           <template slot-scope="scope">
             {{ scope.row.managementIp }}
           </template>
         </el-table-column>
 
-        <el-table-column prop="ip_array" :label="$t('IP')" align="left"
-                         sortable="custom">
+        <el-table-column prop="ip_array" :label="$t('IP')" align="left">
           <template slot-scope="scope">
             {{ scope.row.ipArray }}
           </template>
