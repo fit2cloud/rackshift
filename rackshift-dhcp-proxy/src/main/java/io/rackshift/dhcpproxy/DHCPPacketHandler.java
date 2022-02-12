@@ -62,7 +62,7 @@ public class DHCPPacketHandler extends SimpleChannelInboundHandler<DatagramPacke
         }
 
         if (StringUtils.isNotBlank(vendorClassIdentifier)) {
-            if (archType == 9) {
+            if (archType == 7 || archType == 9) {
                 return "monorail-efi64-snponly.efi";
             }
             if (archType == 6) {
