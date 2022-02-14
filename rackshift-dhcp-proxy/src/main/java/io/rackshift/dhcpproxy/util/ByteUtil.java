@@ -32,7 +32,7 @@ public class ByteUtil {
     }
 
     public static String readIp(byte[] data, int skips) {
-        if (skips < data.length)
+        if (skips + 3 < data.length)
             return getUInt(data[skips]) + "." + getUInt(data[skips + 1]) + "." + getUInt(data[skips + 2]) + "." + getUInt(data[skips + 3]);
         return null;
     }

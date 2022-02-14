@@ -59,7 +59,7 @@ public class DHCPPacketParser {
                     break;
                 case 3:
                     JSONArray routerOptions = new JSONArray();
-                    for (int i = 0; i < len; i++) {
+                    for (int i = 0; i < len / 4; i++) {
                         String ip = ByteUtil.readIp(dataByte, offset);
                         routerOptions.add(ip);
                         offset += 4;
@@ -227,6 +227,7 @@ public class DHCPPacketParser {
         packet.getJSONObject("options").put("dhcpMessageType",
                 DHCPProtocolConstants.DHCPMessageType.DHCPACK.getCode());
 
+        packet.put("isPXEefi", isPXEefi);
         return packet;
     }
 
