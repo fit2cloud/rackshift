@@ -72,7 +72,6 @@ public class AbstractHandler implements IStateHandler {
         try {
             handleYourself(event);
         } catch (Exception e) {
-            executionLogService.saveLogDetail(taskId, task.getUserId(), ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), String.format("错误：%s", ExceptionUtils.getExceptionDetail(e)));
         }
     }
 
@@ -84,7 +83,6 @@ public class AbstractHandler implements IStateHandler {
             paramPreProcess(event);
             handleYourself(event);
         } catch (Exception e) {
-            executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), String.format("错误：%s", ExceptionUtils.getExceptionDetail(e)));
             revert(event);
             throw new RuntimeException(e);
         }
@@ -111,7 +109,6 @@ public class AbstractHandler implements IStateHandler {
         task.setStatus(ServiceConstants.TaskStatusEnum.failed.name());
         taskService.update(task);
         changeStatus(event, LifeStatus.ready, false);
-        executionLogService.saveLogDetail(task.getId(), task.getUserId(), ExecutionLogConstants.OperationEnum.ERROR.name(), event.getBareMetalId(), String.format("错误：event:%s:worflow:%ss,参数:%s,回滚状态至%s", event.getEventType().getDesc(), Optional.ofNullable(event.getWorkflowRequestDTO().getWorkflowName()).orElse("无"), (Optional.ofNullable(event.getWorkflowRequestDTO().getParams()).orElse(new JSONObject())).toJSONString(), LifeStatus.ready));
     }
 
     protected void beforeChange(LifeStatus curStatus) {
