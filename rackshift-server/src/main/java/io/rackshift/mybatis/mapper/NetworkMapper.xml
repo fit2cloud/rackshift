@@ -6,6 +6,7 @@
     <result column="endpoint_id" jdbcType="VARCHAR" property="endpointId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="vlan_id" jdbcType="VARCHAR" property="vlanId" />
+    <result column="interFace" jdbcType="VARCHAR" property="interFace" />
     <result column="start_ip" jdbcType="VARCHAR" property="startIp" />
     <result column="end_ip" jdbcType="VARCHAR" property="endIp" />
     <result column="netmask" jdbcType="VARCHAR" property="netmask" />
@@ -72,7 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, endpoint_id, name, vlan_id, start_ip, end_ip, netmask, dhcp_enable, pxe_enable, 
+    id, endpoint_id, name, vlan_id,interFace,start_ip, end_ip, netmask, dhcp_enable, pxe_enable, 
     create_time
   </sql>
   <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.NetworkExample" resultMap="BaseResultMap">
@@ -106,7 +107,7 @@
     </if>
   </delete>
   <insert id="insert" parameterType="io.rackshift.mybatis.domain.Network">
-    insert into network (id, endpoint_id, name, 
+    insert into network (id, endpoint_id, name, interFace,
       vlan_id, start_ip, end_ip, 
       netmask, dhcp_enable, pxe_enable, 
       create_time)
@@ -130,6 +131,9 @@
       <if test="vlanId != null">
         vlan_id,
       </if>
+       <if test="interFace != null">
+        interFace,
+      </if
       <if test="startIp != null">
         start_ip,
       </if>
@@ -162,6 +166,9 @@
       <if test="vlanId != null">
         #{vlanId,jdbcType=VARCHAR},
       </if>
+       <if test="interFace != null">
+        #{interFace,jdbcType=VARCHAR},
+      </if
       <if test="startIp != null">
         #{startIp,jdbcType=VARCHAR},
       </if>
@@ -203,6 +210,9 @@
       <if test="record.vlanId != null">
         vlan_id = #{record.vlanId,jdbcType=VARCHAR},
       </if>
+      <if test="record.interFace != null">
+        interFace = #{record.interFace,jdbcType=VARCHAR},
+      </if
       <if test="record.startIp != null">
         start_ip = #{record.startIp,jdbcType=VARCHAR},
       </if>
@@ -232,6 +242,7 @@
       endpoint_id = #{record.endpointId,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       vlan_id = #{record.vlanId,jdbcType=VARCHAR},
+      interFace = #{record.interFace,jdbcType=VARCHAR},
       start_ip = #{record.startIp,jdbcType=VARCHAR},
       end_ip = #{record.endIp,jdbcType=VARCHAR},
       netmask = #{record.netmask,jdbcType=VARCHAR},
@@ -254,6 +265,9 @@
       <if test="vlanId != null">
         vlan_id = #{vlanId,jdbcType=VARCHAR},
       </if>
+      <if test="interFace != null">
+        interFace = #{interFace,jdbcType=VARCHAR},
+      </if
       <if test="startIp != null">
         start_ip = #{startIp,jdbcType=VARCHAR},
       </if>
@@ -280,6 +294,7 @@
     set endpoint_id = #{endpointId,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       vlan_id = #{vlanId,jdbcType=VARCHAR},
+      interFace = #{interFace,jdbcType=VARCHAR},
       start_ip = #{startIp,jdbcType=VARCHAR},
       end_ip = #{endIp,jdbcType=VARCHAR},
       netmask = #{netmask,jdbcType=VARCHAR},

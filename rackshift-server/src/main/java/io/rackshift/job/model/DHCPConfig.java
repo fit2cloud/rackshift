@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Objects;
 
 public class DHCPConfig {
+    private String interFace;
     private String startIp;
     private String endIp;
     private String netmask;
@@ -26,7 +27,13 @@ public class DHCPConfig {
     public String getStartIp() {
         return startIp;
     }
+     public String getinterFace() {
+        return interFace;
+    }
 
+    public void setinterFace(String interFace) {
+        this.interFace = interFace;
+    }
     public void setStartIp(String startIp) {
         this.startIp = startIp;
     }
@@ -69,6 +76,7 @@ public class DHCPConfig {
         if (o == null || getClass() != o.getClass()) return false;
         DHCPConfig config = (DHCPConfig) o;
         return pxeEnabled == config.pxeEnabled &&
+                Objects.equals(interFace,config.interFace) &&
                 Objects.equals(startIp, config.startIp) &&
                 Objects.equals(endIp, config.endIp) &&
                 Objects.equals(netmask, config.netmask) &&
@@ -77,6 +85,6 @@ public class DHCPConfig {
 
     @Override
     public int hashCode() {
-        return Objects.hash(startIp, endIp, netmask, gateway, pxeEnabled);
+        return Objects.hash(interFace,startIp, endIp, netmask, gateway, pxeEnabled);
     }
 }
