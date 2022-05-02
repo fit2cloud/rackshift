@@ -157,7 +157,12 @@ function ipValidator(rule, value, callback) {
     }
     callback();
 }
-
+function interfaceValidator(rule,value,callback) {
+    if (value === '' || !value ) {
+        callback(new Error(rule.vue.$t('cannt_be_null')))
+    }
+    callback()
+}
 function vlanValidator(rule, value, callback) {
     if (rule.require) {
         if (value === '' || !value || value.length === 0) {

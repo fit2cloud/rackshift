@@ -94,7 +94,10 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-
+              <el-form-item :label="$t('interFace')" prop="pxe网卡名称">
+                <el-input v-model="editObj.interFace" autocomplete="off"
+                          :placeholder="$t('pls_input_interface')"></el-input>
+              </el-form-item>
               <el-form-item :label="$t('startIp')" prop="startIp">
                 <el-input v-model="editObj.startIp" autocomplete="off"
                           :placeholder="$t('pls_input_start_ip')"></el-input>
@@ -151,6 +154,7 @@
 import HttpUtil from "../../common/utils/HttpUtil"
 import {
   ipValidator,
+  interfaceValidator,
   requiredSelectValidator,
   maskValidator,
   requiredValidator
@@ -168,6 +172,9 @@ export default {
         ],
         endpointId: [
           {validator: requiredSelectValidator, trigger: 'blur', vue: this},
+        ],
+        interFace: [
+          {validator: interfaceValidator, trigger: 'blur', vue: this},
         ],
         startIp: [
           {validator: ipValidator, trigger: 'blur', vue: this},
