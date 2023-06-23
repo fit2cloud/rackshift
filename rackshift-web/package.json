@@ -6,6 +6,7 @@
     "serve": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
     "wserve": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
     "build": "vue-cli-service build",
+    "wbuild": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

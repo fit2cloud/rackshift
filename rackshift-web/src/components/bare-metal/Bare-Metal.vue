@@ -144,7 +144,7 @@
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="webKVM(scope.row)"> {{ $t('open_webkvm') }}
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="closewebKVMSession(scope.row)"> {{ $t('close_webkvm_session') }}
+                <el-dropdown-item @click.native="closewebKVMSession(scope.row.id)"> {{ $t('close_webkvm_session') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -1312,6 +1312,15 @@ export default {
       }, (data) => {
         this.$alert(data.message);
         this.webkvmLoading = false;
+      });
+    },
+    closewebKVMSession(bareMetalId) {
+      HttpUtil.get("/bare-metal/closeKVMSession", {params: {bareMetalId: bareMetalId}}, (res) => {
+        this.$message.success(this.$t('success'));
+        this.getData();
+        this.fillWebkvm = false;
+      }, (data) => {
+        this.$alert(data.message);
       });
     },
     submitOBM() {

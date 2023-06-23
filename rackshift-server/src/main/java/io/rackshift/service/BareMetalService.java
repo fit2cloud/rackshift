@@ -333,6 +333,12 @@ public class BareMetalService {
             if (CollectionUtils.isNotEmpty(b.getOutBandList())) {
                 if (drac8RestSpider.login(b.getManagementIp(), b.getOutBandList().get(0).getUserName(), b.getOutBandList().get(0).getPwd())) {
                     if (drac8RestSpider.closeAllVirtualSession(b.getManagementIp())) {
+                        if (dockerClientService.isRunning(b.getContainerId())) {
+                            dockerClientService.stopAndRemoveContainer(b.getContainerId());
+                            b.setContainerId(null);
+                            bareMetalMapper.updateByPrimaryKey(b);
+                        }
+                        drac8RestSpider.logout(b.getManagementIp());
                         return ResultHolder.success();
                     } else {
                         return ResultHolder.error(Translator.get("close_kvm_error"));
