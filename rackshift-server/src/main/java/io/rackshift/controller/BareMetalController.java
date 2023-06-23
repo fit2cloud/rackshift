@@ -76,6 +76,12 @@ public class BareMetalController {
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @GetMapping("closeKVMSession")
+    public ResultHolder closeKVMSession(@RequestParam String bareMetalId) {
+        return bareMetalService.closeKVMSession(bareMetalId);
+    }
+
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @GetMapping("allBrands")
     public ResultHolder allBrands() {
         return bareMetalService.allBrands();

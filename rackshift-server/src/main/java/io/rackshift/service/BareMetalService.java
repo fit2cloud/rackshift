@@ -9,6 +9,7 @@ import io.rackshift.mybatis.domain.*;
 import io.rackshift.mybatis.mapper.BareMetalMapper;
 import io.rackshift.mybatis.mapper.OutBandMapper;
 import io.rackshift.mybatis.mapper.SystemParameterMapper;
+import io.rackshift.plugin.dell.utils.IDrac8RestSpider;
 import io.rackshift.strategy.ipmihandler.base.IPMIHandlerDecorator;
 import io.rackshift.strategy.statemachine.LifeStatus;
 import io.rackshift.utils.BeanUtils;
@@ -52,6 +53,7 @@ public class BareMetalService {
     private Set<Integer> portSet = new HashSet<>();
     private Random random = new Random();
     private int novncPort = 5800;
+    private IDrac8RestSpider drac8RestSpider = new IDrac8RestSpider();
 
     public List<BareMetalDTO> list(BareMetalQueryVO queryVO) {
         return bareMetalManager.list(queryVO);
@@ -323,5 +325,25 @@ public class BareMetalService {
         }
         bareMetalManager.update(b);
         return ResultHolder.success();
+    }
+
+    public ResultHolder closeKVMSession(String bareMetalId) {
+        BareMetalDTO b = bareMetalManager.getBareMetalWithOutbandInfo(bareMetalId);
+        if (b != null) {
+            if (CollectionUtils.isNotEmpty(b.getOutBandList())) {
+                if (drac8RestSpider.login(b.getManagementIp(), b.getOutBandList().get(0).getUserName(), b.getOutBandList().get(0).getPwd())) {
+                    if (drac8RestSpider.closeAllVirtualSession(b.getManagementIp())) {
+                        return ResultHolder.success();
+                    } else {
+                        return ResultHolder.error(Translator.get("close_kvm_error"));
+                    }
+                } else {
+                    return ResultHolder.error(Translator.get("login_outband_error"));
+                }
+            } else {
+                return ResultHolder.error(Translator.get("no_outband_info"));
+            }
+        }
+        return ResultHolder.error("no error message!");
     }
 }

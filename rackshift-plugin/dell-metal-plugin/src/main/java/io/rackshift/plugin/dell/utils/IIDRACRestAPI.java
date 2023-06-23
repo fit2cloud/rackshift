@@ -7,6 +7,8 @@ public interface IIDRACRestAPI {
 
     boolean logout(String ip);
 
+    boolean closeAllVirtualSession(String ip);
+
     MachineEntity getMachineEntity(String ip, String userName, String password);
 
     Integer getPowerMetric(String ip, String userName, String password);

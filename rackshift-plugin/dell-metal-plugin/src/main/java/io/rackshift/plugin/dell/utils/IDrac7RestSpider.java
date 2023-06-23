@@ -144,6 +144,11 @@ public class IDrac7RestSpider implements IIDRACRestAPI {
         return false;
     }
 
+    @Override
+    public boolean closeAllVirtualSession(String ip) {
+        return false;
+    }
+
     private void removeSession(String ip) {
         headersMap.remove(ip);
     }

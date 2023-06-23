@@ -158,6 +158,11 @@ public class IDrac6NewRestSpider implements IIDRACRestAPI {
         return false;
     }
 
+    @Override
+    public boolean closeAllVirtualSession(String ip) {
+        return false;
+    }
+
     public void removeSession(String ip) {
         headersMap.remove(ip);
     }

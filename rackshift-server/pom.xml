@@ -232,6 +232,11 @@
             <artifactId>j2v8_linux_x86_64</artifactId>
             <version>4.8.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.rackshfit</groupId>
+            <artifactId>dell-metal-plugin</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
     </dependencies>
     <profiles>

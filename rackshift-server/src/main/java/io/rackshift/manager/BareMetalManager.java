@@ -85,6 +85,18 @@ public class BareMetalManager {
         return bareMetalMapper.selectByPrimaryKey(id);
     }
 
+    public BareMetalDTO getBareMetalWithOutbandInfo(String id) {
+        BareMetal bareMetal = bareMetalMapper.selectByPrimaryKey(id);
+        if (bareMetal != null) {
+            BareMetalDTO bareMetalDTO = new BareMetalDTO();
+            BeanUtils.copyBean(bareMetalDTO, bareMetal);
+            List<OutBand> outBand = outBandManager.getByBareMetalId(id);
+            bareMetalDTO.setOutBandList(outBand);
+            return bareMetalDTO;
+        }
+        return null;
+    }
+
     public int delBareMetalById(String id) {
         CpuExample c = new CpuExample();
         c.createCriteria().andBareMetalIdEqualTo(id);

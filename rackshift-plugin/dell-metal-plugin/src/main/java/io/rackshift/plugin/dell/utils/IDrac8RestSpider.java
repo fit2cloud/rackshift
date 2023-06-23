@@ -15,6 +15,7 @@ import io.rackshift.plugin.dell.model.DellPdDTO;
 import io.rackshift.plugin.dell.model.idrac7.DellIDrac7CpuDTO;
 import io.rackshift.plugin.dell.model.idrac7.DellIDrac7DiskDTO;
 import io.rackshift.plugin.dell.model.idrac7.DellIDrac7MemoryDTO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -23,7 +24,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.jdom.Document;
@@ -55,6 +55,8 @@ public class IDrac8RestSpider implements IIDRACRestAPI {
     private static final String getCookieUrl = "https://%s/login.html";
     private static final String getSt1Url = "https://%s/data/login";
     private static final String logoutUrl = "https://%s/data/logout";
+    private static final String activeSessionUrl = "https://%s/data?get=activeSessions";
+    private static final String closeSessionUrl = "https://%s/data?set=killSession(%s)";
 
     private static final String getCPUUrl = "https://%s/sysmgmt/2012/server/processor";
     private static final String getMemoryUrl = "https://%s/sysmgmt/2012/server/memory";
@@ -145,6 +147,39 @@ public class IDrac8RestSpider implements IIDRACRestAPI {
             if (StringUtils.isNotBlank(result)) {
                 removeSession(ip);
                 return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean closeAllVirtualSession(String ip) {
+        Map headers = headersMap.get(ip);
+        if (headers != null) {
+            try {
+                String result = HttpFutureUtils.getHttps(String.format(activeSessionUrl, ip), headers);
+                if (StringUtils.isNotBlank(result)) {
+                    JAXBContext context = JAXBContext.newInstance(SessionObject.class);
+                    Unmarshaller unmarshaller = context.createUnmarshaller();
+                    SessionObject sessionObject = (SessionObject) unmarshaller.unmarshal(new StringReader(result));
+                    if (sessionObject != null && sessionObject.getSessionList() != null) {
+                        List<Session> sessionList = sessionObject.getSessionList().getSession().stream().filter(s -> StringUtils.equalsIgnoreCase(s.getSessionType(), "vKVM")).collect(Collectors.toList());
+                        if (CollectionUtils.isNotEmpty(sessionList)) {
+                            for (Session session : sessionList) {
+                                String closeResult = HttpFutureUtils.getHttps(String.format(closeSessionUrl, ip, session.getSessionId()), headers);
+                                if (StringUtils.isNotBlank(closeResult)) {
+                                    LogUtil.info(String.format("爬取Dell idrac8 %s关闭虚拟会话成功！%s", ip, closeResult));
+                                } else {
+                                    LogUtil.error(String.format("爬取Dell idrac8 %s关闭虚拟会话失败！%s", ip, closeResult));
+                                }
+                            }
+                            return true;
+                        }
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return false;
@@ -720,6 +755,87 @@ public class IDrac8RestSpider implements IIDRACRestAPI {
         }
     }
 
+    public class Codebeautify {
+        SessionObject RootObject;
+
+
+        // Getter Methods
+
+        public SessionObject getRoot() {
+            return RootObject;
+        }
+
+        // Setter Methods
+
+        public void setRoot(SessionObject rootObject) {
+            this.RootObject = rootObject;
+        }
+    }
+
+    @XmlRootElement(name = "root")
+    public static class SessionObject {
+        SessionList SessionListObject;
+        private String status;
+
+
+        // Getter Methods
+
+        public SessionList getSessionList() {
+            return SessionListObject;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        // Setter Methods
+
+        public void setSessionList(SessionList sessionListObject) {
+            this.SessionListObject = sessionListObject;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+    }
+
+    @XmlRootElement(name = "sessionList")
+    public static class SessionList {
+        ArrayList<Session> session = new ArrayList<Session>();
+
+        public ArrayList<Session> getSession() {
+            return session;
+        }
+
+        public void setSession(ArrayList<Session> session) {
+            this.session = session;
+        }
+
+    }
+
+    @XmlRootElement(name = "session")
+    public static class Session {
+        private String sessionId;
+        private String sessionType;
+
+        public String getSessionId() {
+            return sessionId;
+        }
+
+        public void setSessionId(String sessionId) {
+            this.sessionId = sessionId;
+        }
+
+        public String getSessionType() {
+            return sessionType;
+        }
+
+        public void setSessionType(String sessionType) {
+            this.sessionType = sessionType;
+        }
+    }
+
+
     @Override
     public Integer getPowerMetric(String ip, String userName, String password) {
         if (login(ip, userName, password)) {
@@ -740,7 +856,7 @@ public class IDrac8RestSpider implements IIDRACRestAPI {
         return null;
     }
 
-    public static void main(String[] args) throws IOException, SAXException, DocumentException {
+    public static void main(String[] args) throws IOException, SAXException, JAXBException {
 //        String ip = "10.132.47.215";
 //        Header[] cookies = HttpFutureUtils.getHttpsReponseHeader(String.format(getCookieUrl, ip), null);
 //        Map<String, String> headers = new HashMap<>();
@@ -781,59 +897,88 @@ public class IDrac8RestSpider implements IIDRACRestAPI {
 //        System.out.printloadln(EntityUtils.toString(HttpFutureUtils.getHttps("https://10.132.47.215/sysmgmt/2012/server/memory", headers).getEntity()));
 //        System.out.println(pageST2);
 
-        List<Disk> diskList = new LinkedList<>();
-        JSONObject pdSummaryList = JSONObject.parseObject("{\"PDisks\": {\n" +
-                "    \"304|C|Disk.Bay.0:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|C|Disk.Bay.1:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|C|Disk.Bay.2:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|C|Disk.Bay.3:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|C|Disk.Bay.4:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|C|Disk.Bay.5:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|C|Disk.Bay.6:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|C|Disk.Bay.7:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|P|Disk.Bay.0:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|P|Disk.Bay.1:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|P|Disk.Bay.2:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|P|Disk.Bay.3:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|P|Disk.Bay.4:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|P|Disk.Bay.5:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|P|Disk.Bay.6:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
-                "    \"304|P|Disk.Bay.7:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {}\n" +
-                "}}");
-        StringBuffer idSb = new StringBuffer();
-        // 所有物理机磁盘ids
-        if (pdSummaryList.containsKey("PDisks")) {
-            JSONObject pdisks = pdSummaryList.getJSONObject("PDisks");
-            for (String id : pdisks.keySet()) {
-                if (id.contains("|C|")) {
-                    idSb.append(id).append(",");
-                }
-            }
-        }
-        if (idSb.length() > 0) {
-            idSb = new StringBuffer(idSb.substring(0, idSb.length() - 1));
-        }
+//        List<Disk> diskList = new LinkedList<>();
+//        JSONObject pdSummaryList = JSONObject.parseObject("{\"PDisks\": {\n" +
+//                "    \"304|C|Disk.Bay.0:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|C|Disk.Bay.1:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|C|Disk.Bay.2:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|C|Disk.Bay.3:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|C|Disk.Bay.4:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|C|Disk.Bay.5:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|C|Disk.Bay.6:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|C|Disk.Bay.7:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|P|Disk.Bay.0:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|P|Disk.Bay.1:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|P|Disk.Bay.2:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|P|Disk.Bay.3:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|P|Disk.Bay.4:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|P|Disk.Bay.5:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|P|Disk.Bay.6:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {},\n" +
+//                "    \"304|P|Disk.Bay.7:Enclosure.Internal.0-1:RAID.Integrated.1-1\": {}\n" +
+//                "}}");
+//        StringBuffer idSb = new StringBuffer();
+//        // 所有物理机磁盘ids
+//        if (pdSummaryList.containsKey("PDisks")) {
+//            JSONObject pdisks = pdSummaryList.getJSONObject("PDisks");
+//            for (String id : pdisks.keySet()) {
+//                if (id.contains("|C|")) {
+//                    idSb.append(id).append(",");
+//                }
+//            }
+//        }
+//        if (idSb.length() > 0) {
+//            idSb = new StringBuffer(idSb.substring(0, idSb.length() - 1));
+//        }
+//
+//        //物理磁盘
+//        JSONObject pdList = JSONObject.parseObject("");
+//        // 所有物理机磁盘ids
+//        if (pdList.containsKey("PDisks")) {
+//            JSONObject pdisks = pdList.getJSONObject("PDisks");
+//            for (String pdName : pdisks.keySet()) {
+//                DellPdDTO dellPdDTO = gson.fromJson(pdisks.getJSONObject(pdName).toJSONString(), DellPdDTO.class);
+//                Disk disk = new Disk();
+//                disk.setDrive(dellPdDTO.getSlot() + "");
+//                disk.setManufactor(dellPdDTO.getManufacturer());
+//                disk.setSn(dellPdDTO.getSerialNumber());
+//                disk.setModel(dellPdDTO.getProductId());
+//                disk.setSize(DiskUtils.getDiskManufactorValue((dellPdDTO.getSize() * 1.0 / (1024 * 1024 * 1024)) + ""));
+//                disk.setSyncTime(System.currentTimeMillis());
+//                disk.setControllerId(0);
+//                disk.setType(dellPdDTO.getSasAddress() != null ? "SAS" : "SSD");
+//                diskList.add(disk);
+//            }
+//        }
+//
+//        System.out.println(diskList);
 
-        //物理磁盘
-        JSONObject pdList = JSONObject.parseObject("");
-        // 所有物理机磁盘ids
-        if (pdList.containsKey("PDisks")) {
-            JSONObject pdisks = pdList.getJSONObject("PDisks");
-            for (String pdName : pdisks.keySet()) {
-                DellPdDTO dellPdDTO = gson.fromJson(pdisks.getJSONObject(pdName).toJSONString(), DellPdDTO.class);
-                Disk disk = new Disk();
-                disk.setDrive(dellPdDTO.getSlot() + "");
-                disk.setManufactor(dellPdDTO.getManufacturer());
-                disk.setSn(dellPdDTO.getSerialNumber());
-                disk.setModel(dellPdDTO.getProductId());
-                disk.setSize(DiskUtils.getDiskManufactorValue((dellPdDTO.getSize() * 1.0 / (1024 * 1024 * 1024)) + ""));
-                disk.setSyncTime(System.currentTimeMillis());
-                disk.setControllerId(0);
-                disk.setType(dellPdDTO.getSasAddress() != null ? "SAS" : "SSD");
-                diskList.add(disk);
-            }
-        }
+        String sessionStr = "<root><sessionList><session><sessionId>18</sessionId>\n" +
+                "<userName>root</userName>\n" +
+                "<ipAddress>192.168.70.102</ipAddress>\n" +
+                "<sessionType>webgui</sessionType>\n" +
+                "<consoleType>webgui</consoleType>\n" +
+                "<loginDateTime>06/23/2023 09:32:25</loginDateTime>\n" +
+                "<isKillable>1</isKillable>\n" +
+                "</session><session><sessionId>15</sessionId>\n" +
+                "<userName>root</userName>\n" +
+                "<ipAddress>192.168.70.103</ipAddress>\n" +
+                "<sessionType>vMedia</sessionType>\n" +
+                "<consoleType>vMedia</consoleType>\n" +
+                "<loginDateTime>06/23/2023 07:59:22</loginDateTime>\n" +
+                "<isKillable>1</isKillable>\n" +
+                "</session><session><sessionId>14</sessionId>\n" +
+                "<userName>root</userName>\n" +
+                "<ipAddress>192.168.70.103</ipAddress>\n" +
+                "<sessionType>vKVM</sessionType>\n" +
+                "<consoleType>vKVM</consoleType>\n" +
+                "<loginDateTime>06/23/2023 07:59:13</loginDateTime>\n" +
+                "<isKillable>1</isKillable>\n" +
+                "</session></sessionList><status>ok</status>\n" +
+                "</root>";
 
-        System.out.println(diskList);
+        JAXBContext context = JAXBContext.newInstance(SessionObject.class);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        SessionObject dell = (SessionObject) unmarshaller.unmarshal(new StringReader(sessionStr));
+
     }
 }
