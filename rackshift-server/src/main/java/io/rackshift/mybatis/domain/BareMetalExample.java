@@ -2603,6 +2603,66 @@ public class BareMetalExample {
             addCriterion("remark not between", value1, value2, "remark");
             return (Criteria) this;
         }
+
+        public Criteria andWebkvmPortIsNull() {
+            addCriterion("webkvm_port is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebkvmPortIsNotNull() {
+            addCriterion("webkvm_port is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebkvmPortEqualTo(Integer value) {
+            addCriterion("webkvm_port =", value, "webkvmPort");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebkvmPortNotEqualTo(Integer value) {
+            addCriterion("webkvm_port <>", value, "webkvmPort");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebkvmPortGreaterThan(Integer value) {
+            addCriterion("webkvm_port >", value, "webkvmPort");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebkvmPortGreaterThanOrEqualTo(Integer value) {
+            addCriterion("webkvm_port >=", value, "webkvmPort");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebkvmPortLessThan(Integer value) {
+            addCriterion("webkvm_port <", value, "webkvmPort");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebkvmPortLessThanOrEqualTo(Integer value) {
+            addCriterion("webkvm_port <=", value, "webkvmPort");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebkvmPortIn(List<Integer> values) {
+            addCriterion("webkvm_port in", values, "webkvmPort");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebkvmPortNotIn(List<Integer> values) {
+            addCriterion("webkvm_port not in", values, "webkvmPort");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebkvmPortBetween(Integer value1, Integer value2) {
+            addCriterion("webkvm_port between", value1, value2, "webkvmPort");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebkvmPortNotBetween(Integer value1, Integer value2) {
+            addCriterion("webkvm_port not between", value1, value2, "webkvmPort");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

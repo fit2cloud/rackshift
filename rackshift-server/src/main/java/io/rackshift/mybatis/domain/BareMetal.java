@@ -79,5 +79,7 @@ public class BareMetal implements Serializable {
 
     private String remark;
 
+    private Integer webkvmPort;
+
     private static final long serialVersionUID = 1L;
 }

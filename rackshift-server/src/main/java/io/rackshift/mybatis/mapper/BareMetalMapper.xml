@@ -39,6 +39,7 @@
     <result column="container_id" jdbcType="VARCHAR" property="containerId" />
     <result column="pxe_mac" jdbcType="VARCHAR" property="pxeMac" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="webkvm_port" jdbcType="INTEGER" property="webkvmPort" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -103,7 +104,7 @@
     memory_type, disk_type, disk, management_ip, bmc_mac, ip_array, os_type, os_version, 
     machine_brand, machine_model, server_id, machine_sn, status, power, workspace_id, 
     recycled_time, ssh_user, ssh_pwd, ssh_port, provider_id, rule_id, apply_user, create_time, 
-    update_time, container_id, pxe_mac, remark
+    update_time, container_id, pxe_mac, remark, webkvm_port
   </sql>
   <select id="selectByExample" parameterType="io.rackshift.mybatis.domain.BareMetalExample" resultMap="BaseResultMap">
     select
@@ -148,7 +149,7 @@
       ssh_pwd, ssh_port, provider_id, 
       rule_id, apply_user, create_time, 
       update_time, container_id, pxe_mac, 
-      remark)
+      remark, webkvm_port)
     values (#{id,jdbcType=VARCHAR}, #{endpointId,jdbcType=VARCHAR}, #{hostname,jdbcType=VARCHAR}, 
       #{machineType,jdbcType=VARCHAR}, #{cpu,jdbcType=INTEGER}, #{cpuType,jdbcType=VARCHAR}, 
       #{cpuFre,jdbcType=VARCHAR}, #{core,jdbcType=INTEGER}, #{thread,jdbcType=INTEGER}, 
@@ -161,7 +162,7 @@
       #{sshPwd,jdbcType=VARCHAR}, #{sshPort,jdbcType=INTEGER}, #{providerId,jdbcType=VARCHAR}, 
       #{ruleId,jdbcType=VARCHAR}, #{applyUser,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, 
       #{updateTime,jdbcType=BIGINT}, #{containerId,jdbcType=VARCHAR}, #{pxeMac,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR})
+      #{remark,jdbcType=VARCHAR}, #{webkvmPort,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="io.rackshift.mybatis.domain.BareMetal">
     insert into bare_metal
@@ -277,6 +278,9 @@
       <if test="remark != null">
         remark,
       </if>
+      <if test="webkvmPort != null">
+        webkvm_port,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -389,6 +393,9 @@
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="webkvmPort != null">
+        #{webkvmPort,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -512,6 +519,9 @@
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
+      <if test="record.webkvmPort != null">
+        webkvm_port = #{record.webkvmPort,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -555,7 +565,8 @@
       update_time = #{record.updateTime,jdbcType=BIGINT},
       container_id = #{record.containerId,jdbcType=VARCHAR},
       pxe_mac = #{record.pxeMac,jdbcType=VARCHAR},
-      remark = #{record.remark,jdbcType=VARCHAR}
+      remark = #{record.remark,jdbcType=VARCHAR},
+      webkvm_port = #{record.webkvmPort,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -671,6 +682,9 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="webkvmPort != null">
+        webkvm_port = #{webkvmPort,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -711,7 +725,8 @@
       update_time = #{updateTime,jdbcType=BIGINT},
       container_id = #{containerId,jdbcType=VARCHAR},
       pxe_mac = #{pxeMac,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR}
+      remark = #{remark,jdbcType=VARCHAR},
+      webkvm_port = #{webkvmPort,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

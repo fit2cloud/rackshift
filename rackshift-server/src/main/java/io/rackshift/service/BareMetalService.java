@@ -17,11 +17,13 @@ import io.rackshift.utils.Translator;
 import io.rackshift.utils.UUIDUtil;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BareMetalService {
@@ -178,7 +180,7 @@ public class BareMetalService {
         envs.add(String.format("USER=%s", ob.getUserName()));
         envs.add(String.format("PASSWD=%s", ob.getPwd()));
         envs.add(String.format("APP_NAME=%s", bareMetal.getMachineModel() + " " + bareMetal.getMachineSn() + " " + bareMetal.getManagementIp()));
-        int exposedPort = chooseSinglePort();
+        int exposedPort = chooseSinglePort(bareMetal);
         String src = "/opt/rackshift/rackhd/files/mount/common";
         CreateContainerResponse r = dockerClientService.createContainer(kvmImage.getParamValue(), novncPort, exposedPort, envs, src, "/vmedia");
         dockerClientService.startContainer(r.getId());
@@ -207,7 +209,10 @@ public class BareMetalService {
         bareMetalManager.update(bareMetal);
     }
 
-    private synchronized int chooseSinglePort() {
+    private synchronized int chooseSinglePort(BareMetal bareMetal) {
+        if (bareMetal.getWebkvmPort() != null) {
+            return bareMetal.getWebkvmPort();
+        }
         int port = 0;
         do {
             port = 10000 + random.nextInt(10000);
@@ -293,5 +298,30 @@ public class BareMetalService {
         bareMetal.setRemark(request.getRemark());
         bareMetalManager.updateByPrimaryKeySelective(bareMetal);
         return ResultHolder.success("");
+    }
+
+    public ResultHolder checkKVMPort(String id) {
+        BareMetal b = bareMetalManager.getBareMetalById(id);
+        if (b == null || b.getWebkvmPort() == null) {
+            return ResultHolder.error(Translator.get("no_kvm_port"));
+        }
+        return ResultHolder.success();
+    }
+
+    public ResultHolder setKVMPort(String id, Integer port) {
+        BareMetal b = bareMetalManager.getBareMetalById(id);
+        if (b == null || port == null) {
+            return ResultHolder.error(Translator.get("no_kvm_port"));
+        }
+        BareMetalExample e = new BareMetalExample();
+        e.createCriteria().andIdNotEqualTo(id);
+        List<Integer> ports = bareMetalMapper.selectByExample(e).stream().map(BareMetal::getWebkvmPort).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(ports) || !ports.contains(port)) {
+            b.setWebkvmPort(port);
+        } else {
+            return ResultHolder.error(Translator.get("kvm_port_exists"));
+        }
+        bareMetalManager.update(b);
+        return ResultHolder.success();
     }
 }

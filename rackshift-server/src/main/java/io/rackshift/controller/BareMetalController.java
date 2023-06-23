@@ -64,6 +64,18 @@ public class BareMetalController {
     }
 
     @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @GetMapping("checkKVMPort")
+    public ResultHolder checkKVMPort(@RequestParam String id) {
+        return bareMetalService.checkKVMPort(id);
+    }
+
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
+    @GetMapping("setKVMPort")
+    public ResultHolder setKVMPort(@RequestParam String bareMetalId, @RequestParam Integer port) {
+        return bareMetalService.setKVMPort(bareMetalId, port);
+    }
+
+    @RequiresRoles(AuthorizationConstants.ROLE_ADMIN)
     @GetMapping("allBrands")
     public ResultHolder allBrands() {
         return bareMetalService.allBrands();

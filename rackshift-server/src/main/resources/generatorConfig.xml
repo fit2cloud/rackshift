@@ -79,6 +79,7 @@
 <!--        <table tableName="template"/>-->
 <!--        <table tableName="image"/>-->
         <table tableName="workflow_param_templates"/>
+        <table tableName="bare_metal"/>
 
     </context>
 </generatorConfiguration>

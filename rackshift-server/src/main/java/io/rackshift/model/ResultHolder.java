@@ -59,6 +59,10 @@ public class ResultHolder {
         return new ResultHolder(obj);
     }
 
+    public static ResultHolder success() {
+        return new ResultHolder();
+    }
+
     public static ResultHolder error(String message) {
         return new ResultHolder(false, message, null);
     }

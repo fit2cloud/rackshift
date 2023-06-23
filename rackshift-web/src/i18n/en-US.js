@@ -533,4 +533,6 @@ export default {
     "why": "WHY?",
     "pxe_desc": "The installed platform uses the MAC address of the network card as the unique identifier to distinguish the physical machines in PXE to achieve different boot processes for different machines",
     "not_required": " Not required",
+    "web_kvm_port": "WEBKVM port",
+    "close_webkvm_session": "close WEBKVM session",
 }

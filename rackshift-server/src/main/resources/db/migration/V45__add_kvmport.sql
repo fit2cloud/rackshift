@@ -1,0 +1,1 @@
+alter table bare_metal add column webkvm_port int;

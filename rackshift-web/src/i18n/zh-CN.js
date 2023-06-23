@@ -545,4 +545,6 @@ export default {
     "why": "为什么？",
     "pxe_desc": "装机平台以网卡的 MAC 地址为唯一标识，对 PXE 中的物理机进行区分以实现不同机器不同引导流程",
     "not_required": "(非必选，需要自定义脚本时可选择)",
+    "web_kvm_port": "WEBKVM 映射端口",
+    "close_webkvm_session": "关闭 WEBKVM 会话",
 }

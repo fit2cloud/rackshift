@@ -85,7 +85,8 @@
           </template>
         </el-table-column>
 
-        <el-table-column :prop="c.prop" :label="$t(c.label)" align="left" v-for="c in columns" sortable="custom"
+        <el-table-column :prop="c.prop" :label="$t(c.label)" align="left" v-for="c in columns"
+                         :sortable="c.sortable ? 'custom': false"
                          :width="resizeWith(c)">
           <template slot-scope="scope">
             <span v-if="!c.custom">{{ scope.row[c.prop] }}</span>
@@ -139,7 +140,11 @@
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="fillOBM(scope.row)"> {{ $t('OBM') + $t('info') }}
                 </el-dropdown-item>
+                <el-dropdown-item @click.native="fillWebkvmPort(scope.row)"> {{ $t('web_kvm_port') }}
+                </el-dropdown-item>
                 <el-dropdown-item @click.native="webKVM(scope.row)"> {{ $t('open_webkvm') }}
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="closewebKVMSession(scope.row)"> {{ $t('close_webkvm_session') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -205,6 +210,21 @@
           </div>
         </template>
       </el-dialog>
+
+      <el-dialog :title="$t('WEBKVM')" :visible.sync="fillWebkvm" width="35vw" :close-on-click-modal="false">
+        <el-form :model="form">
+          <el-form-item :label="$t('port')" :label-width="formLabelWidth">
+            <el-input-number v-model="curObkvm.port" controls-position="right" :min="10000"></el-input-number>
+          </el-form-item>
+        </el-form>
+        <template v-slot:footer>
+          <div class="dialog-footer">
+            <el-button @click="fillWebkvm = false">{{ $t('cancel') }}</el-button>
+            <el-button type="primary" @click="submitWebkvm" :loading="webkvmLoading">{{ $t('confirm') }}</el-button>
+          </div>
+        </template>
+      </el-dialog>
+
 
       <!--参数配置-->
       <el-dialog :title="currentParamConfig" :visible.sync="fillWfParams" ref="paramDialog" width="90vw"
@@ -613,7 +633,7 @@ import PowerStatus from '../../common/powerstatus/Power-Status'
 import axios from 'axios'
 import {getIPRange} from 'get-ip-range'
 import bus from '../../common/bus/bus'
-import {paramMap, isInherit} from '../../rackparams/params'
+import {isInherit, paramMap} from '../../rackparams/params'
 import {ipValidator, maskValidator, requiredValidator} from "@/common/validator/CommonValidator";
 import RSCodeMirror from "@/common/script/RSCodeMirror";
 import AddBareMetal from "@/components/bare-metal/AddBareMetal";
@@ -695,7 +715,8 @@ export default {
       columns: [
         {
           label: 'CPU',
-          prop: "cpu"
+          prop: "cpu",
+          sortable: true
         },
         {
           label: 'memory',
@@ -707,7 +728,8 @@ export default {
               return parseInt(item) + ' GB'
             }
             return item;
-          }
+          },
+          sortable: true
         },
         {
           label: 'disk',
@@ -718,7 +740,13 @@ export default {
               return parseInt(item) / 1000 + ' TB'
             }
             return item;
-          }
+          },
+          sortable: true
+        },
+        {
+          label: this.$t('web_kvm_port'),
+          prop: "webkvmPort",
+          sortable: false
         },
       ],
       detailDrawer: false,
@@ -740,13 +768,19 @@ export default {
       selectedWorkflow: [],
       selectedWorkflowComponent: {},
       fillOutObms: false,
+      fillWebkvm: false,
       curObm: {
         ip: null,
         userName: null,
         pwd: null,
         bareMetalId: null
       },
+      curObkvm: {
+        port: null,
+        bareMetalId: null
+      },
       obmLoading: false,
+      webkvmLoading: false,
       fillWfParamsLoading: false,
       machine: {},
       detailShowName: 'detail',
@@ -798,9 +832,14 @@ export default {
     receiveValue(val) {
       this.bp.postInstallCommands = val;
     },
-    webKVM(bareMetal) {
-      this.loadingList = true;
+    async webKVM(bareMetal) {
       let that = this;
+      let check = await HttpUtil.getAsync("/bare-metal/checkKVMPort?id=" + bareMetal.id);
+      if (!check.data.success) {
+        that.$alert(check.data.message);
+        return;
+      }
+      this.loadingList = true;
       HttpUtil.get("/bare-metal/webkvm?id=" + bareMetal.id + "&host=" + window.location.origin, {}, (res) => {
         window.open(res.data);
         that.loadingList = false;
@@ -1255,6 +1294,25 @@ export default {
       }
       this.fillOBMMode = mode;
       this.fillOutObms = true;
+    },
+    fillWebkvmPort(val, mode) {
+      this.curObkvm = {
+        port: val.webkvmPort,
+        bareMetalId: val.id
+      }
+      this.fillWebkvm = true;
+    },
+    submitWebkvm() {
+      this.webkvmLoading = true;
+      HttpUtil.get("/bare-metal/setKVMPort", {params: this.curObkvm}, (res) => {
+        this.$message.success(this.$t('success'));
+        this.getData();
+        this.webkvmLoading = false;
+        this.fillWebkvm = false;
+      }, (data) => {
+        this.$alert(data.message);
+        this.webkvmLoading = false;
+      });
     },
     submitOBM() {
       this.obmLoading = true;
