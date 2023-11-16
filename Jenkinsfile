@@ -20,8 +20,6 @@ pipeline {
                     cnpm install
                     cnpm run build
                     cp -r ${WORKSPACE}/rackshift-web/dist/* ${WORKSPACE}/rackshift-server/src/main/resources/static
-                    cd ${WORKSPACE}/rackshift-plugin
-                    mvn clean install
                     cd ${WORKSPACE}/rackshift-dhcp-proxy
                     mvn clean install
                    '''
@@ -33,12 +31,12 @@ pipeline {
                     docker login registry.cn-qingdao.aliyuncs.com -u ${DOCKER_USR} -p ${DOCKER_PSW}
                     cd ${WORKSPACE}/rackshift-server
                     mvn clean install -DskipTests
-                    docker build -t ${IMAGE_PREFIX}/${IMAGE_NAME}:v${BRANCH_NAME}-dev .
-                    docker push ${IMAGE_PREFIX}/${IMAGE_NAME}:v${BRANCH_NAME}-dev
+                    docker build -t ${IMAGE_PREFIX}/${IMAGE_NAME}:v${BRANCH_NAME} .
+                    docker push ${IMAGE_PREFIX}/${IMAGE_NAME}:v${BRANCH_NAME}
 
                     cd ${WORKSPACE}/rackshift-dhcp-proxy
-                    docker build -t ${IMAGE_PREFIX}/rackshift-dhcp-proxy:v${BRANCH_NAME}-dev .
-                    docker push ${IMAGE_PREFIX}/rackshift-dhcp-proxy:v${BRANCH_NAME}-dev
+                    docker build -t ${IMAGE_PREFIX}/rackshift-dhcp-proxy:v${BRANCH_NAME} .
+                    docker push ${IMAGE_PREFIX}/rackshift-dhcp-proxy:v${BRANCH_NAME}
                    '''
             }
         }
