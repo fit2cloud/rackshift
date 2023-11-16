@@ -20,6 +20,8 @@ pipeline {
                     cnpm install
                     cnpm run build
                     cp -r ${WORKSPACE}/rackshift-web/dist/* ${WORKSPACE}/rackshift-server/src/main/resources/static
+                    cd ${WORKSPACE}/rackshift-plugin
+                    mvn clean install
                     cd ${WORKSPACE}/rackshift-dhcp-proxy
                     mvn clean install
                    '''
