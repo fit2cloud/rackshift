@@ -37,8 +37,8 @@ pipeline {
                     docker push ${IMAGE_PREFIX}/${IMAGE_NAME}:v${BRANCH_NAME}-dev
 
                     cd ${WORKSPACE}/rackshift-dhcp-proxy
-                    docker build -t ${IMAGE_PREFIX}/rackshift-dhcp-proxy:v${BRANCH_NAME} .
-                    docker push ${IMAGE_PREFIX}/rackshift-dhcp-proxy:v${BRANCH_NAME}
+                    docker build -t ${IMAGE_PREFIX}/rackshift-dhcp-proxy:v${BRANCH_NAME}-dev .
+                    docker push ${IMAGE_PREFIX}/rackshift-dhcp-proxy:v${BRANCH_NAME}-dev
                    '''
             }
         }
