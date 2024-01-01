@@ -13,6 +13,8 @@ public class Network implements Serializable {
     private String name;
 
     private String vlanId;
+    
+    private String interFace;
 
     private String startIp;
 

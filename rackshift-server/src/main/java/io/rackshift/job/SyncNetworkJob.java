@@ -57,6 +57,7 @@ public class SyncNetworkJob {
         dhcpconfigs.forEach(c -> {
             DHCPConfig c1 = JSONObject.parseObject(c.toString(), DHCPConfig.class);
             Network network = new Network();
+            network.setInterFace(c1.getinterFace());
             network.setStartIp(c1.getStartIp());
             network.setEndIp(c1.getEndIp());
             network.setNetmask(c1.getNetmask());
